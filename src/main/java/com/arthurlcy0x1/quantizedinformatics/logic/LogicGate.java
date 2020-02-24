@@ -4,6 +4,19 @@ public abstract class LogicGate {
 
 	public static final class ALU extends CompoundLogicGate {
 
+		public static boolean passTest(ALU gate, int f, boolean cin, boolean m, int testID) {
+			int n = gate.Nn;
+			for (int i = 0; i < 1 << n; i++)
+				for (int j = 0; j < 1 << n; j++)
+					if (testCase(i, j, testID) != gate.compute(i, j, f, cin, m))
+						return false;
+			return true;
+		}
+
+		private static int testCase(int testID, int a, int b) {
+			return 0;// TODO
+		}
+
 		private final int[] A, B, S, F;
 
 		private final int Nn, Ns, Ci, Co, M;
@@ -19,14 +32,6 @@ public abstract class LogicGate {
 			M = m;
 			Nn = A.length;
 			Ns = S.length;
-		}
-		public boolean passTest(ALU gate, int f, boolean cin, boolean m, int testID) {
-			int n = gate.Nn;
-			for (int i = 0; i < 1 << n; i++)
-				for (int j = 0; j < 1 << n; j++)
-					if (testCase(i, j, testID) != gate.compute(i, j, f, cin, m))
-						return false;
-			return true;
 		}
 
 		private int compute(int a, int b, int s, boolean cin, boolean m) {
@@ -52,10 +57,6 @@ public abstract class LogicGate {
 			if ((output & 1 << Co) != 0)
 				ans |= 1 << Nn;
 			return ans;
-		}
-
-		private int testCase(int testID, int a, int b) {
-			return 0;// TODO
 		}
 
 	}
