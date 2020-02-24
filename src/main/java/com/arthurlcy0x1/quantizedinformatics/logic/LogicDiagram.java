@@ -56,18 +56,13 @@ public abstract class LogicDiagram {
 		}
 
 		@Override
-		protected BoolArr getGateMap() {
-			return gate.map;
+		protected LogicGate getGateMap() {
+			return gate;
 		}
 
 		@Override
 		protected GatePin[] getPins() {
 			return pins;
-		}
-
-		@Override
-		protected int getSelfDelay() {
-			return gate.delay;
 		}
 
 		@Override
@@ -82,6 +77,8 @@ public abstract class LogicDiagram {
 		private final List<GateContainer> list = new ArrayList<>();
 		private final GatePin[] output;
 		private final int inlen, outlen;
+
+		private int compCount = 0;
 
 		public ParentDiagram() {
 			this(LogicGate.MAX, LogicGate.MAX);
@@ -98,7 +95,17 @@ public abstract class LogicDiagram {
 		public GateContainer addGate(LogicGate g) {
 			GateContainer cont = new GateContainer(this, g);
 			list.add(cont);
+			if (!(g instanceof LogicGate.SimpleLogicGate))
+				compCount++;
 			return cont;
+		}
+
+		@Override
+		public int compute(int in) {
+			for (GateContainer gc : list)
+				gc.resetVal();
+			resetVal();
+			return super.compute(in);
 		}
 
 		public int getCost() {
@@ -118,6 +125,10 @@ public abstract class LogicDiagram {
 
 		@Override
 		public BoolArr getMap() {
+			if (compCount > 0)
+				throw new LogicRE("contains complicated component, not going to calculate map");
+			if (inlen > 6 || outlen > 6)
+				throw new LogicRE("inlen or outlen larger than 6, not going to calculate map");
 			for (GateContainer gc : list)
 				gc.resetMap();
 			resetMap();
@@ -130,7 +141,9 @@ public abstract class LogicDiagram {
 		}
 
 		public LogicGate toGate() {
-			return new LogicGate(inlen, outlen, getDelay(), getCost(), getMap());
+			if (inlen > 6 || outlen > 6)
+				throw new LogicRE("inlen or outlen slarger than 6, not going to calculate map");
+			return new LogicGate.SimpleLogicGate(inlen, outlen, getDelay(), getCost(), getMap());
 		}
 
 		@Override
@@ -144,18 +157,13 @@ public abstract class LogicDiagram {
 		}
 
 		@Override
-		protected BoolArr getGateMap() {
+		protected LogicGate getGateMap() {
 			return null;
 		}
 
 		@Override
 		protected GatePin[] getPins() {
 			return output;
-		}
-
-		@Override
-		protected int getSelfDelay() {
-			return 0;
 		}
 
 		@Override
@@ -179,6 +187,25 @@ public abstract class LogicDiagram {
 
 	private int delay = -2;
 	private BoolArr map;
+	private int val = -1;
+
+	protected int compute(int in) {
+		if (val >= 0)
+			return val;
+		int srclen = srclen();
+		int input = 0;
+		for (int i = 0; i < srclen; i++) {
+			GatePin p = getPins()[i];
+			int pinin = p.src.compute(in);
+			if ((pinin & 1 << p.pin) != 0)
+				input |= 1 << i;
+		}
+		LogicGate gate = getGateMap();
+		if (gate == null)
+			return val;
+		val = gate.compute(input);
+		return val;
+	}
 
 	protected abstract int dstlen();
 
@@ -193,12 +220,12 @@ public abstract class LogicDiagram {
 				delay = Math.max(delay, p.src.getDelay());
 			else if (p.pin >= 0)
 				delay = Math.max(delay, 0);
-		if (delay >= 0)
-			delay += getSelfDelay();
+		if (delay >= 0 && getGateMap() != null)
+			delay += getGateMap().delay;
 		return delay;
 	}
 
-	protected abstract BoolArr getGateMap();
+	protected abstract LogicGate getGateMap();
 
 	protected BoolArr getMap() {
 		if (map != null)
@@ -226,10 +253,10 @@ public abstract class LogicDiagram {
 
 		}
 
-		BoolArr gateMap = getGateMap();
-		if (gateMap == null)
+		LogicGate gate = getGateMap();
+		if (gate == null)
 			return pinmap;
-
+		BoolArr gateMap = ((LogicGate.SimpleLogicGate) gate).map;
 		byte[] pinval = new byte[1 << envlen];
 		for (byte i = 0; i < 1 << envlen; i++)
 			for (int j = 0; j < srclen; j++)
@@ -247,14 +274,16 @@ public abstract class LogicDiagram {
 
 	protected abstract GatePin[] getPins();
 
-	protected abstract int getSelfDelay();
-
 	protected void resetDelay() {
 		delay = -2;
 	}
 
 	protected void resetMap() {
 		map = null;
+	}
+
+	protected void resetVal() {
+		val = -1;
 	}
 
 	protected abstract int srclen();
