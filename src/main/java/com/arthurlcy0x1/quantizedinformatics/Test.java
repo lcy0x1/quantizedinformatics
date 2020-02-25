@@ -7,9 +7,6 @@ import com.arthurlcy0x1.quantizedinformatics.logic.LogicGate;
 public class Test {
 
 	public static void main(String[] args) {
-		System.out.println(alu_0());
-		xor_0();
-		xor_1();
 	}
 
 	private static LogicGate alu_0() {
