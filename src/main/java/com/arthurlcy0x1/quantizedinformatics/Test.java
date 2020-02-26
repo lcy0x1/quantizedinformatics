@@ -54,9 +54,9 @@ public class Test {
 			GateContainer xor = diag.addGate(LogicGate.getPrimeGate(LogicGate.XOR, 2));
 			xor.setInput(0, ps[i], 0);
 			xor.setInput(1, ps[i], 1);
-			GateContainer[] and = new GateContainer[i+1];
-			for(int j=0;j<=i;j++) {
-				and[j] = diag.addGate(LogicGate.getPrimeGate(LogicGate.AND, j+2));
+			GateContainer[] and = new GateContainer[i + 1];
+			for (int j = 0; j <= i; j++) {
+				and[j] = diag.addGate(LogicGate.getPrimeGate(LogicGate.AND, j + 2));
 			}
 		}
 

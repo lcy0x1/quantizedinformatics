@@ -1,8 +1,15 @@
 package com.arthurlcy0x1.quantizedinformatics;
 
+import java.util.stream.Collectors;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -14,16 +21,10 @@ import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.util.stream.Collectors;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod("quantizedinformatics")
 public class QuantizedInformatics {
-
-	public static final String MODID = "quantizedinformatics";
 
 	// You can use EventBusSubscriber to automatically subscribe events on the
 	// contained class (this is subscribing to the MOD
@@ -32,14 +33,26 @@ public class QuantizedInformatics {
 	public static class RegistryEvents {
 		@SubscribeEvent
 		public static void onBlocksRegistry(final RegistryEvent.Register<Block> event) {
-			Registrar.registerBlock(event);
+			Registrar.getList(event, Block.class);
+		}
+
+		@SubscribeEvent
+		public static void onContainerTypeRegistry(final RegistryEvent.Register<ContainerType<?>> event) {
+			Registrar.registerContainerType(event);
 		}
 
 		@SubscribeEvent
 		public static void onItemRegistry(final RegistryEvent.Register<Item> event) {
-			Registrar.registerItem(event);
+			Registrar.getList(event, Item.class);
+		}
+
+		@SubscribeEvent
+		public static void onTileEntityTypeRegistry(final RegistryEvent.Register<TileEntityType<?>> event) {
+			Registrar.registerTileEntityType(event);
 		}
 	}
+
+	public static final String MODID = "quantizedinformatics";
 
 	// Directly reference a log4j logger.
 	private static final Logger LOGGER = LogManager.getLogger();

@@ -2,6 +2,22 @@ package com.arthurlcy0x1.quantizedinformatics.logic;
 
 public abstract class LogicGate {
 
+	public static class CompoundLogicGate extends LogicGate {
+
+		private final LogicDiagram.ParentDiagram diag;
+
+		public CompoundLogicGate(int inp, int out, int del, int cost, LogicDiagram.ParentDiagram ld) {
+			super(inp, out, del, cost);
+			diag = ld;
+		}
+
+		@Override
+		public int compute(int in) {
+			return diag.compute(in);
+		}
+
+	}
+
 	public static final class PreALU extends CompoundLogicGate {
 
 		public static final int ADD = 16, MINUS = 17;
@@ -37,7 +53,7 @@ public abstract class LogicGate {
 								cor |= 1 << j;
 						}
 						if (cor != e0 || cor != e1)
-							return false; //output mismatch
+							return false; // output mismatch
 					}
 			}
 			return true;
@@ -96,22 +112,6 @@ public abstract class LogicGate {
 			if ((output & 1 << Co) != 0)
 				ans |= 1 << Nn;
 			return ans;
-		}
-
-	}
-
-	public static class CompoundLogicGate extends LogicGate {
-
-		private final LogicDiagram.ParentDiagram diag;
-
-		public CompoundLogicGate(int inp, int out, int del, int cost, LogicDiagram.ParentDiagram ld) {
-			super(inp, out, del, cost);
-			diag = ld;
-		}
-
-		@Override
-		public int compute(int in) {
-			return diag.compute(in);
 		}
 
 	}

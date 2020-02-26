@@ -12,10 +12,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 
-public class DraftWire extends SixWayBlock implements DraftBlock {
+public abstract class DraftWireAbstract extends SixWayBlock implements DraftBlock {
 
-	public DraftWire() {
-		super(0.25f, Block.Properties.create(Material.EARTH));
+	public DraftWireAbstract() {
+		super(0.125f, Block.Properties.create(Material.EARTH));
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public class DraftWire extends SixWayBlock implements DraftBlock {
 	@Override
 	public BlockState updatePostPlacement(BlockState os, Direction f, BlockState fs, IWorld w, BlockPos op,
 			BlockPos fp) {
-		return os.with(FACING_TO_PROPERTY_MAP.get(f), fs.getBlock() instanceof DraftBlock);
+		return makeConnections(w, op);
 	}
 
 	@Override
