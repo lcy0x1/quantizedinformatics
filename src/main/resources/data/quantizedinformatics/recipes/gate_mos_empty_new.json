@@ -1,7 +1,7 @@
 {
     "type": "minecraft:crafting_shaped",
     "pattern": [
-        "000",
+        "020",
         "010",
         "000"
     ],
@@ -11,6 +11,9 @@
         },
         "1": {
             "item": "quantizedinformatics:elem_si"
+        },
+        "2": {
+            "item": "quantizedinformatics:gate_wire"
         }
     },
     "result": {

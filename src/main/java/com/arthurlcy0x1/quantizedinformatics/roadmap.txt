@@ -141,7 +141,7 @@ logic gates:
 NOT(~)111	NAND(&)221	NOR(|)221	BUF(=)222	AND(a)332	OR(o)332	XOR(x)883				
 
 .P.			IPP			IP.			I~.			I..			I..			I~&		I~|	
-I.I			.NI			.PI			~I.			&~I			|~I			.&I		.|I	
+I.-			.N-			.P-			~-.			&~-			|~-			.&-		.|-	
 .N.			IN.			INN			...			I..			I..			I~&		I~|
 
 
