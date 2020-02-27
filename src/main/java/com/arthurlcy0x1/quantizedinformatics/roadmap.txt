@@ -138,11 +138,11 @@ p-p		n-n
 
 logic gates:
 
-NOT(~)111	NAND(&)221	NOR(|)221	BUF(=)222	AND(a)332	OR(o)332	XOR(x)883				
+NOT(~)111	NAND(&)221	NOR(|)221	BUF(=)222	AND(a)332	OR(o)332	XOR(x)662				
 
-.P.			IPP			IP.			I~.			I..			I..			I~&		I~|	
-I.-			.N-			.P-			~-.			&~-			|~-			.&-		.|-	
-.N.			IN.			INN			...			I..			I..			I~&		I~|
+.P.			IPP			IP.			I~.			I..			I..			~pp
+I.-			.N-			.P-			~-.			&~-			|~-			~~-
+.N.			IN.			INN			...			I..			I..			~nn
 
 
 Gate - Implemented Draft	=	Redstone Draft + CMOS Draft

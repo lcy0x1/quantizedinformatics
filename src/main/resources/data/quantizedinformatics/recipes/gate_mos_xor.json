@@ -1,0 +1,25 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "~pp",
+        "~~-",
+        "~nn"
+    ],
+    "key": {
+        "~": {
+            "item": "quantizedinformatics:gate_mos_not"
+        },
+        "n": {
+            "item": "quantizedinformatics:gate_nmos"
+        },
+        "p": {
+            "item": "quantizedinformatics:gate_pmos"
+        },
+        "-": {
+            "item": "quantizedinformatics:gate_mos_empty"
+        }
+    },
+    "result": {
+        "item": "quantizedinformatics:gate_mos_xor"
+    }
+}
