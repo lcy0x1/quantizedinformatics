@@ -2,8 +2,8 @@
 	"parent": "block/block",
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "quantizedinformatics:blocks/wire",
-		"particle": "quantizedinformatics:blocks/wire"
+		"0": "quantizedinformatics:blocks/quantum_fog",
+		"particle": "quantizedinformatics:blocks/quantum_fog"
 	},
 	"elements": [
 		{

@@ -33,4 +33,9 @@ public class DraftGate extends HorizontalBlock implements DraftBlock {
 	public boolean hasTileEntity(BlockState state) {
 		return true;
 	}
+
+	@Override
+	public int type() {
+		return GATE;
+	}
 }

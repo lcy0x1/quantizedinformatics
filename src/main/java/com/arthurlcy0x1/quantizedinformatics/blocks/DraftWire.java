@@ -14,8 +14,11 @@ import net.minecraft.world.IWorld;
 
 public class DraftWire extends SixWayBlock implements DraftBlock {
 
-	public DraftWire() {
+	private final int type;
+
+	public DraftWire(int n) {
 		super(0.25f, Block.Properties.create(Material.EARTH));
+		type = n;
 	}
 
 	@Override
@@ -25,13 +28,13 @@ public class DraftWire extends SixWayBlock implements DraftBlock {
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return this.makeConnections(context.getWorld(), context.getPos());
+		return makeConnections(context.getWorld(), context.getPos());
 	}
 
 	@Override
 	public BlockState updatePostPlacement(BlockState os, Direction f, BlockState fs, IWorld w, BlockPos op,
 			BlockPos fp) {
-		return os.with(FACING_TO_PROPERTY_MAP.get(f), fs.getBlock() instanceof DraftBlock);
+		return os.with(FACING_TO_PROPERTY_MAP.get(f), connectable(fs.getBlock()));
 	}
 
 	@Override
@@ -43,9 +46,14 @@ public class DraftWire extends SixWayBlock implements DraftBlock {
 		BlockState s = this.getDefaultState();
 		for (Direction d : Direction.values()) {
 			Block bl = world.getBlockState(pos.offset(d)).getBlock();
-			s = s.with(FACING_TO_PROPERTY_MAP.get(d), bl instanceof DraftBlock);
+			s = s.with(FACING_TO_PROPERTY_MAP.get(d), connectable(bl));
 		}
 		return s;
+	}
+
+	@Override
+	public int type() {
+		return type;
 	}
 
 }

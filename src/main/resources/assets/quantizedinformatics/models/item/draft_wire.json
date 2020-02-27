@@ -1,6 +1,3 @@
 {
-    "parent": "block/cube_all",
-    "textures": {
-        "all": "quantizedinformatics:blocks/wire"
-    }
+    "parent": "quantizedinformatics:block/wire_core"
 }

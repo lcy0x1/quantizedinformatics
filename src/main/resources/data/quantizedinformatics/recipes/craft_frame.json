@@ -1,19 +1,22 @@
 {
     "type": "minecraft:crafting_shaped",
     "pattern": [
-        "000",
-        "010",
-        "000"
+        "020",
+        "212",
+        "020"
     ],
     "key": {
         "0": {
             "item": "quantizedinformatics:quantum_fog"
         },
         "1": {
-            "item": "quartz"
+            "item": "iron_nugget"
+        },
+        "2":{
+            "item":"stone"
         }
     },
     "result": {
-        "item": "quantizedinformatics:gate_red_empty"
+        "item": "quantizedinformatics:craft_frame"
     }
 }

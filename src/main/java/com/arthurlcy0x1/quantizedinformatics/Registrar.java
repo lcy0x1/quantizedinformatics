@@ -31,14 +31,16 @@ public class Registrar extends ItemGroup {
 	public static final String MODID = "quantizedinformatics";
 
 	public static final Block B_FOG = generate("quantum_fog", Material.EARTH);
-	public static final Block BD_WIRE = addName(new DraftWire(), "draft_wire");
+	public static final Block BD_WIRE = addName(new DraftWire(DraftGate.GATE), "draft_wire");
 	public static final Block BD_GATE = addName(new DraftGate(), "draft_gate");
+	public static final Block BC_FRAME = addName(new DraftWire(DraftGate.CRAFT), "craft_frame");
 
 	public static final ItemGroup ITEM_GROUP = new Registrar();
 
 	public static final Item IB_FOG = convert(B_FOG);
 	public static final Item IBD_WIRE = convert(BD_WIRE);
 	public static final Item IBD_GATE = convert(BD_GATE);
+	public static final Item IBC_FRAME = convert(BC_FRAME);
 
 	private static final String[] STR_TYPE = { "red", "mos", "imp" };
 	private static final String[] STR_GATE = { "buff", "not", "nand", "nor", "and", "or", "xor" };
@@ -55,14 +57,15 @@ public class Registrar extends ItemGroup {
 	public static final Item IDR_DIRTY = generate("gate_red_dirty", 64);
 	public static final Item IDM_EMPTY = generate("gate_mos_empty", 64);
 	public static final Item IDM_DIRTY = generate("gate_mos_dirty", 64);
-	public static final Item IDI_DIRTY = generate("gate_imp_dirty", 64);
+
+	public static final Item IDI_CPLX = generate("gate_imp_cplx", 1);
 
 	public static final Item ID_NMOS = generate("gate_nmos", IDM_DIRTY);
 	public static final Item ID_PMOS = generate("gate_pmos", IDM_DIRTY);
 	public static final Item[][] IDS;
 
 	static {
-		Item[] cont = new Item[] { IDR_DIRTY, IDM_DIRTY, IDI_DIRTY };
+		Item[] cont = new Item[] { IDR_DIRTY, IDM_DIRTY, null };
 		IDS = new Item[STR_TYPE.length][STR_GATE.length];
 		for (int i = 0; i < STR_TYPE.length; i++)
 			for (int j = 0; j < STR_GATE.length; j++) {
@@ -112,6 +115,8 @@ public class Registrar extends ItemGroup {
 	}
 
 	private static Item generate(String str, Item c) {
+		if (c == null)
+			return generate(str, 1);
 		Item.Properties p = new Item.Properties();
 		p.group(ITEM_GROUP);
 		p.maxStackSize(1);

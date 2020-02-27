@@ -1,0 +1,63 @@
+3D Crafter
+	Fixed
+202	0 - Craft Column
+010	1 - Craft Table
+202 2 - piston
+
+Reduction Oven
+000 000 000	0 - Obsidian
+100 0 0 000	1 - Oven
+000 000 000
+
+0 1 -> 2 3	0/1 - Material
+---		2/3 - Product
+ 4		4 - Coal
+ |  		5 - Fuel
+ 5  -> 6	6 - Fuel Remain
+
+Oxidation Oven
+000 0 0 000	0 - Obsidian
+100     0 0	1 - Oven
+000 0 0 000
+
+0 1 -> 2 3
+---
+ 4  -> 5
+
+Bone Dust 		-O> Phosphorous Oxide	+ Limestone
+Glowstone dust 		-O> Boron Oxide
+Sand / Glass 		-O> Quartz
+Iron Tools		-O> Iron Oxide
+Gold Tools		-O> Gold
+Rotten Meat		-O> Dark Element
+Soul Sand		-O> Quartz		+ Soul Element
+Tear drop		-O> Dark Element	+ Life Element
+
+Phosphorous Oxide 	-R> Phosphorous
+Boron Oxide 		-R> Boron
+Quartz 			-R> Silicon
+Iron Oxide		-R> Iron
+
+
+Quantum Ore
+000 020 000	0 - Stone
+020 212 020	1 - Quantum Ore
+000 020 000	2 - Glass
+
+Cage
+000 000 000	0 - Iron Frame
+000 010 000	1 - Cage
+000 000 000 
+
+Soul Trap
+020		0 - Soul Element
+212		1 - Ender Pearl
+020		2 - Dark Element
+
+Spawn Egg
+020		0 - Life Element
+212		1 - Trapped Soul
+020		2 - Egg
+
+
+	
