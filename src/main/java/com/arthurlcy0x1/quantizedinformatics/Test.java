@@ -1,12 +1,33 @@
 package com.arthurlcy0x1.quantizedinformatics;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+
+import javax.imageio.ImageIO;
+
 import com.arthurlcy0x1.quantizedinformatics.logic.LogicDiagram;
 import com.arthurlcy0x1.quantizedinformatics.logic.LogicDiagram.GateContainer;
 import com.arthurlcy0x1.quantizedinformatics.logic.LogicGate;
 
 public class Test {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
+		String[] ss1 = new String[] { "elem_p", "elem_b", "elem_si", "gate_dope_n", "gate_dope_p", "gate_wire",
+				"gate_cap", "gate_nmos", "gate_pmos" };
+		String path = "./src/main/resources/assets/quantizedinformatics/models/item/";
+		String pre = "{\n\t\"parent\": \"item/generated\",\n\t\"textures\": {\n\t\"layer0\": \"quantizedinformatics:items/";
+		String post = "\"\n\t}\n}";
+		for (String s1 : ss1) {
+			String name = s1;
+			File f = new File(path + name + ".json");
+			if (!f.exists())
+				f.createNewFile();
+			PrintStream ps = new PrintStream(f);
+			ps.println(pre + name + post);
+			ps.close();
+		}
 	}
 
 	private static LogicGate alu_0() {
@@ -61,6 +82,59 @@ public class Test {
 		}
 
 		return diag.toGate();
+	}
+
+	private static void generateItemModel() throws IOException {
+		String[] ss0 = { "red", "mos", "imp" };
+		String[] ss1 = { "empty", "dirty", "buff", "not", "nand", "nor", "and", "or", "xor" };
+		String path = "./src/main/resources/assets/quantizedinformatics/models/item/";
+		String pre = "{\n\t\"parent\": \"item/generated\",\n\t\"textures\": {\n\t\"layer0\": \"quantizedinformatics:items/";
+		String post = "\"\n\t}\n}";
+		for (String s0 : ss0)
+			for (String s1 : ss1) {
+				String name = "gate_" + s0 + "_" + s1;
+				File f = new File(path + name + ".json");
+				if (!f.exists())
+					f.createNewFile();
+				PrintStream ps = new PrintStream(f);
+				ps.println(pre + name + post);
+				ps.close();
+			}
+	}
+
+	private static void recolor() throws IOException {
+		File fp = new File("./src/main/resources/assets/quantizedinformatics/textures/items/elem_p.png");
+		File fb = new File("./src/main/resources/assets/quantizedinformatics/textures/items/elem_si.png");
+		BufferedImage bimg = ImageIO.read(fp);
+		int w = bimg.getWidth();
+		int h = bimg.getHeight();
+		for (int i = 0; i < w; i++)
+			for (int j = 0; j < h; j++) {
+				int p = bimg.getRGB(i, j);
+				int b = p & 255;
+				int g = p >> 8 & 255;
+				int r = p >> 16 & 255;
+				int a = p >> 24;
+				p = a << 24 | b << 16 | r << 8 | g;
+				bimg.setRGB(i, j, p);
+			}
+		ImageIO.write(bimg, "PNG", fb);
+
+	}
+
+	private static void renameItemTexture() throws IOException {
+		String[] ss0 = { "red", "mos", "imp" };
+		String[] ss1 = { "empty", "dirty", "buff", "not", "nand", "nor", "and", "or", "xor" };
+		String path = "./src/main/resources/assets/quantizedinformatics/textures/items/";
+
+		for (String s0 : ss0)
+			for (String s1 : ss1) {
+				String n0 = "gate" + s0 + s1;
+				String n1 = "gate_" + s0 + "_" + s1;
+				File f = new File(path + n0 + ".png");
+				f.renameTo(new File(path + n1 + ".png"));
+
+			}
 	}
 
 	private static void xor_0() {

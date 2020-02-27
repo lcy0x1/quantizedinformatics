@@ -48,6 +48,11 @@ public class DraftGateTE extends TileEntity implements IInventory, INamedContain
 	}
 
 	@Override
+	public int getInventoryStackLimit() {
+		return 1;
+	}
+
+	@Override
 	public int getSizeInventory() {
 		return inv.getSizeInventory();
 	}
@@ -60,6 +65,11 @@ public class DraftGateTE extends TileEntity implements IInventory, INamedContain
 	@Override
 	public boolean isEmpty() {
 		return inv.isEmpty();
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int index, ItemStack stack) {
+		return stack.getItem() == Registrar.ID_GATECHIP;
 	}
 
 	@Override

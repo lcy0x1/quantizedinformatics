@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "redstone_torch"
+        },
+        {
+            "item": "redstone_torch"
+        },
+        {
+            "item": "redstone"
+        },
+        {
+            "item": "quantizedinformatics:gate_red_empty"
+        }
+    ],
+    "result": {
+        "item": "quantizedinformatics:gate_red_nand"
+    }
+}

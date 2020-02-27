@@ -1,8 +1,140 @@
-transistors:
+3D Crafter
+	Fixed
+000	0 - Quantum Fog
+010	1 - Craft Table
+000
+
+3D Craft Column
+	Fixed
+000	0 - Quantum Fog
+010	1 - CobbleStone
+000
+
+Wire Block
+	Fixed
+000	0 - Quantum Fog
+010	1 - Redstone Dust
+000
+
+Gate Block
+	Fixed
+000	0 - Quantum Fog
+212	1 - Quartz
+000	2 - Wire Block
+
+Empty Gate - Redstone Draft
+	Fixed
+000 	0 - Quantum Fog
+010 	1 - Quartz 	or 	Dirty Gate - Redstone Draft
+000
+
+Reduction Oven
+000 000 000	0 - Obsidian
+100 0 0 000	1 - Oven
+000 000 000
+
+0 1 -> 2 3	0/1 - Material
+---		2/3 - Product
+ 4		4 - Coal
+ |  		5 - Fuel
+ 5  -> 6	6 - Fuel Remain
+
+Oxidation Oven
+000 0 0 000	0 - Obsidian
+100     0 0	1 - Oven
+000 0 0 000
+
+0 1 -> 2 3
+---
+ 4  -> 5
+
+Bone Dust 		-O> Phosphorous Oxide	+ Limestone
+Glowstone dust 		-O> Boron Oxide
+Sand / Glass 		-O> Quartz
+Iron Tools		-O> Iron Oxide
+Gold Tools		-O> Gold
+Rotten Meat		-O> Dark Element
+Soul Sand		-O> Quartz		+ Soul Element
+Tear drop		-O> Dark Element	+ Life Element
+
+Phosphorous Oxide 	-R> Phosphorous
+Boron Oxide 		-R> Boron
+Quartz 			-R> Silicon
+Iron Oxide		-R> Iron
+
+
+Quantum Ore
+000 020 000	0 - Stone
+020 212 020	1 - Quantum Ore
+000 020 000	2 - Glass
+
+Cage
+000 000 000	0 - Iron Frame
+000 010 000	1 - Cage
+000 000 000 
+
+Soul Trap
+020		0 - Soul Element
+212		1 - Ender Pearl
+020		2 - Dark Element
+
+Spawn Egg
+020		0 - Life Element
+212		1 - Trapped Soul
+020		2 - Egg
+
+
+NOT Gate - Redstone Draft
+	Flexible
+	x1	Empty Gate - Redstone Draft
+	x1	Redstone Torch
+
+NAND gate - Redstone Draft 
+	Flexible
+	0 	- Empty Gate - Redstone Draft
+	1 x2	- Redstone Torch
+	2 	- Redstone dust
+
+BUFF Gate - Redstone		=	NOT + NOT
+AND Gate - Redstone Draft	=	NAND + NOT
+OR Gate - Redstone Draft	=	[NOT + NOT] + NAND
+NOR Gate - Redstone Draft	=	[NOT + NOT] + NAND + NOT
+XOR Gate - Redstone Draft	=	[NOT + NOT] + [NAND + NAND] + NAND
+
+Empty Gate - CMOS Draft
+	Fixed
+000	0 - Quantum Fog
+012	1 - Silicon	or	Dirty Gate - CMOS Draft
+000 2 - Wire
+
+Metal Gate - CMOS Draft (M)
+	Fixed
+010	0 - Quantum Fog
+111	1 - iron (returned)
+010
+
+Wire - CMOS Draft (I)
+	Fixed
+010	0 - Quantum Fog
+010	1 - iron (returned)
+010
+
+P Dopant - CMOS Draft (p)
+	Fixed
+000	0 - Quantum Fog
+010	1 - Boron (returned)
+000
+
+N Dopant - CMOS Draft (n)
+	Fixed
+000	0 - Quantum Fog
+010	1 - Phosphorous (returned)
+000
+
 NMOS	PMOS
 IMI		IMI
 npn		pnp
-ppp		nnn
+p-p		n-n
 
 logic gates:
 
@@ -12,6 +144,9 @@ NOT(~)111	NAND(&)221	NOR(|)221	BUF(=)222	AND(a)332	OR(o)332	XOR(x)883
 I.I			.NI			.PI			~I.			&~I			|~I			.&I		.|I	
 .N.			IN.			INN			...			I..			I..			I~&		I~|
 
-ALU:
 
-1I1O
+Gate - Implemented Draft	=	Redstone Draft + CMOS Draft
+
+
+
+	

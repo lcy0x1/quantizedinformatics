@@ -19,11 +19,6 @@ public class DraftGateCont extends Container {
 		}
 
 		@Override
-		public int getSlotStackLimit() {
-			return 1;
-		}
-
-		@Override
 		public boolean isItemValid(ItemStack stack) {
 			return stack.getItem() == Registrar.ID_GATECHIP;
 		}

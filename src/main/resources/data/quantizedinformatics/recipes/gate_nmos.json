@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "IMI",
+        "npn",
+        "p-p"
+    ],
+    "key": {
+        "I": {
+            "item": "quantizedinformatics:gate_wire"
+        },
+        "M": {
+            "item": "quantizedinformatics:gate_cap"
+        },
+        "n": {
+            "item": "quantizedinformatics:gate_dope_n"
+        },
+        "p": {
+            "item": "quantizedinformatics:gate_dope_p"
+        },
+        "-": {
+            "item": "quantizedinformatics:gate_mos_empty"
+        }
+    },
+    "result": {
+        "item": "quantizedinformatics:gate_nmos"
+    }
+}

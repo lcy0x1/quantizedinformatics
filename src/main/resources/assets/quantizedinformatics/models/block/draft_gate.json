@@ -1,10 +1,10 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "quantizedinformatics:blocks/gateout",
-		"1": "quantizedinformatics:blocks/gatein",
-		"2": "quantizedinformatics:blocks/gateside",
-		"particle": "quantizedinformatics:blocks/gateout"
+		"0": "quantizedinformatics:blocks/gate_out",
+		"1": "quantizedinformatics:blocks/gate_in",
+		"2": "quantizedinformatics:blocks/gate_side",
+		"particle": "quantizedinformatics:blocks/gate_out"
 	},
 	"elements": [
 		{

@@ -38,17 +38,19 @@ public class QuantizedInformatics {
 
 		@SubscribeEvent
 		public static void onContainerTypeRegistry(final RegistryEvent.Register<ContainerType<?>> event) {
-			Registrar.registerContainerType(event);
+			event.getRegistry().registerAll(Registrar.CTS);
 		}
 
 		@SubscribeEvent
 		public static void onItemRegistry(final RegistryEvent.Register<Item> event) {
 			Registrar.getList(event, Item.class);
+			for (Item[] its : Registrar.IDS)
+				event.getRegistry().registerAll(its);
 		}
 
 		@SubscribeEvent
 		public static void onTileEntityTypeRegistry(final RegistryEvent.Register<TileEntityType<?>> event) {
-			Registrar.registerTileEntityType(event);
+			event.getRegistry().registerAll(Registrar.TETS);
 		}
 	}
 

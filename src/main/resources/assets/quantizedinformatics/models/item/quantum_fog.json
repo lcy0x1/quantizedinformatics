@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "quantizedinformatics:blocks/quantumfog"
+        "all": "quantizedinformatics:blocks/quantum_fog"
     }
 }

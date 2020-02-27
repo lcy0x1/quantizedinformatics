@@ -1,0 +1,19 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "010",
+        "111",
+        "010"
+    ],
+    "key": {
+        "0": {
+            "item": "quantizedinformatics:quantum_fog"
+        },
+        "1": {
+            "item": "iron_ingot"
+        }
+    },
+    "result": {
+        "item": "quantizedinformatics:gate_cap"
+    }
+}
