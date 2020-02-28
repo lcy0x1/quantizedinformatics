@@ -1,0 +1,14 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{
+			"item": "quantizedinformatics:gate_red_and_5"
+		},
+		{
+			"item": "quantizedinformatics:gate_mos_and_5"
+		}
+	],
+	"result": {
+		"item": "quantizedinformatics:gate_imp_and_5"
+	}
+}

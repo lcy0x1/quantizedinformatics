@@ -3,6 +3,8 @@ package com.arthurlcy0x1.quantizedinformatics.blocks;
 import org.apache.logging.log4j.LogManager;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
+import com.arthurlcy0x1.quantizedinformatics.items.DraftLogicGate;
+import com.arthurlcy0x1.quantizedinformatics.items.LogicDraft;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -69,7 +71,7 @@ public class DraftGateTE extends TileEntity implements IInventory, INamedContain
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack) {
-		return stack.getItem() == Registrar.ID_GATECHIP;
+		return stack.getItem() instanceof LogicDraft;
 	}
 
 	@Override

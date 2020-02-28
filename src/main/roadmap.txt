@@ -38,6 +38,22 @@ Boron Oxide 		-R> Boron
 Quartz 			-R> Silicon
 Iron Oxide		-R> Iron
 
+Si -B> P-Substrate
+P-Substrate -O> Oxidized P-S
+Oxidized P-S + Photo resist
+masked light
+removal of dissolved resist
+acidic etching
+removal of resist
+n dope
+acidic etching
+gate deposition
+removal of unwanted gate
+Oxidation
+masking
+n dope
+n dope
+
 
 Quantum Ore
 000 020 000	0 - Stone

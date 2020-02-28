@@ -30,21 +30,22 @@ public class Registrar extends ItemGroup {
 
 	public static final String MODID = "quantizedinformatics";
 
+	// blocks
 	public static final Block B_FOG = generate("quantum_fog", Material.EARTH);
 	public static final Block BD_WIRE = addName(new DraftWire(DraftGate.GATE), "draft_wire");
-	public static final Block BD_GATE = addName(new DraftGate(), "draft_gate");
 	public static final Block BC_FRAME = addName(new DraftWire(DraftGate.CRAFT), "craft_frame");
+	public static final Block BD_GATE = addName(new DraftGate(), "draft_gate");
 
 	public static final ItemGroup ITEM_GROUP = new Registrar();
 
+	// block items
 	public static final Item IB_FOG = convert(B_FOG);
 	public static final Item IBD_WIRE = convert(BD_WIRE);
-	public static final Item IBD_GATE = convert(BD_GATE);
 	public static final Item IBC_FRAME = convert(BC_FRAME);
+	public static final Item IBD_GATE = convert(BD_GATE);
 
-	private static final String[] STR_TYPE = { "red", "mos", "imp" };
-	private static final String[] STR_GATE = { "buff", "not", "nand", "nor", "and", "or", "xor" };
-
+	// items
+	public static final Item I_GATECHIP = generate("chip", 1);
 	public static final Item IE_P = generate("elem_p", 64);
 	public static final Item IE_B = generate("elem_b", 64);
 	public static final Item IE_SI = generate("elem_si", 64);
@@ -53,29 +54,35 @@ public class Registrar extends ItemGroup {
 	public static final Item ID_CAP = generate("gate_cap", 64);
 	public static final Item ID_WIRE = generate("gate_wire", 64);
 
+	// draft related
 	public static final Item IDR_EMPTY = generate("gate_red_empty", 64);
 	public static final Item IDR_DIRTY = generate("gate_red_dirty", 64);
 	public static final Item IDM_EMPTY = generate("gate_mos_empty", 64);
 	public static final Item IDM_DIRTY = generate("gate_mos_dirty", 64);
-
-	public static final Item IDI_CPLX = generate("gate_imp_cplx", 1);
-
 	public static final Item ID_NMOS = generate("gate_nmos", IDM_DIRTY);
 	public static final Item ID_PMOS = generate("gate_pmos", IDM_DIRTY);
+	public static final Item IDI_CPLX = generate("gate_imp_cplx", 1);
 	public static final Item[][] IDS;
 
 	static {
+		String[] type = { "red", "mos", "imp" };
+		String[] gate = { "not", "nand", "nor", "buff", "and", "or", "xor" };
+		String[] gmul = { "nand", "nor", "and", "or" };
+		String[] nmul = { "_3", "_4", "_5", "_6" };
 		Item[] cont = new Item[] { IDR_DIRTY, IDM_DIRTY, null };
-		IDS = new Item[STR_TYPE.length][STR_GATE.length];
-		for (int i = 0; i < STR_TYPE.length; i++)
-			for (int j = 0; j < STR_GATE.length; j++) {
-				String name = "gate_" + STR_TYPE[i] + "_" + STR_GATE[j];
+		IDS = new Item[type.length][gate.length + gmul.length * nmul.length];
+		for (int i = 0; i < type.length; i++) {
+			for (int j = 0; j < gate.length; j++) {
+				String name = "gate_" + type[i] + "_" + gate[j];
 				IDS[i][j] = generate(name, cont[i]);
 			}
-
+			for (int j = 0; j < nmul.length; j++)
+				for (int k = 0; k < gmul.length; k++) {
+					String name = "gate_" + type[i] + "_" + gmul[k] + nmul[j];
+					IDS[i][gate.length + k * nmul.length + j] = generate(name, cont[i]);
+				}
+		}
 	}
-
-	public static final Item ID_GATECHIP = generate("draft_gate_chip", 1);
 
 	public static final ContainerType<DraftGateCont> CT_GATE = getCT(DraftGateCont::new, "draft_gate_c");
 

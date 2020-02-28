@@ -14,20 +14,25 @@ import com.arthurlcy0x1.quantizedinformatics.logic.LogicGate;
 public class Test {
 
 	public static void main(String[] args) throws IOException {
-		String[] ss1 = new String[] { "elem_p", "elem_b", "elem_si", "gate_dope_n", "gate_dope_p", "gate_wire",
-				"gate_cap", "gate_nmos", "gate_pmos" };
-		String path = "./src/main/resources/assets/quantizedinformatics/models/item/";
-		String pre = "{\n\t\"parent\": \"item/generated\",\n\t\"textures\": {\n\t\"layer0\": \"quantizedinformatics:items/";
-		String post = "\"\n\t}\n}";
-		for (String s1 : ss1) {
-			String name = s1;
-			File f = new File(path + name + ".json");
-			if (!f.exists())
-				f.createNewFile();
-			PrintStream ps = new PrintStream(f);
-			ps.println(pre + name + post);
-			ps.close();
-		}
+		String[] type = { "red", "mos", "imp" };
+		String[] gmul = { "nand", "nor", "and", "or" };
+		String[] nmul = { "_3", "_4", "_5", "_6" };
+		String path = "./src/main/resources/data/quantizedinformatics/recipes/";
+		String pre = "{\n\t\"type\": \"minecraft:crafting_shapeless\",\n\t\"ingredients\": [\n"
+				+ "\t\t{\n\t\t\t\"item\": \"quantizedinformatics:gate_red_###\"\n\t\t},\n"
+				+ "\t\t{\n\t\t\t\"item\": \"quantizedinformatics:gate_mos_###\"\n\t\t}\n"
+				+ "\t],\n\t\"result\": {\n\t\t\"item\": \"quantizedinformatics:gate_imp_###\"\n\t}\n}";
+
+		for (int j = 0; j < nmul.length; j++)
+			for (int k = 0; k < gmul.length; k++) {
+				String name = "gate_imp_" + gmul[k];
+				File f = new File(path + name + nmul[j] + ".json");
+				if (!f.exists())
+					f.createNewFile();
+				PrintStream ps = new PrintStream(f);
+				ps.println(pre.replaceAll("###", gmul[k] + nmul[j]));
+				ps.close();
+			}
 	}
 
 	private static LogicGate alu_0() {

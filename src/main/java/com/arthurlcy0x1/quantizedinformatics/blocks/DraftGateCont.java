@@ -1,6 +1,8 @@
 package com.arthurlcy0x1.quantizedinformatics.blocks;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
+import com.arthurlcy0x1.quantizedinformatics.items.DraftLogicGate;
+import com.arthurlcy0x1.quantizedinformatics.items.LogicDraft;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -20,7 +22,7 @@ public class DraftGateCont extends Container {
 
 		@Override
 		public boolean isItemValid(ItemStack stack) {
-			return stack.getItem() == Registrar.ID_GATECHIP;
+			return stack.getItem() instanceof LogicDraft;
 		}
 
 	}
