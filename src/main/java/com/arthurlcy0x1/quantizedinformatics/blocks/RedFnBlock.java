@@ -8,15 +8,15 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.world.IBlockReader;
 
-public class DraftGate extends HorizontalBlock implements DraftBlock {
+public class RedFnBlock extends HorizontalBlock {
 
-	public DraftGate() {
+	public RedFnBlock() {
 		super(Block.Properties.create(Material.ROCK));
 	}
 
 	@Override
-	public DraftGateTE createTileEntity(BlockState state, IBlockReader world) {
-		return new DraftGateTE();
+	public RedFnTE createTileEntity(BlockState state, IBlockReader world) {
+		return new RedFnTE();
 	}
 
 	@Override
@@ -32,10 +32,5 @@ public class DraftGate extends HorizontalBlock implements DraftBlock {
 	@Override
 	public boolean hasTileEntity(BlockState state) {
 		return true;
-	}
-
-	@Override
-	public int type() {
-		return GATE;
 	}
 }

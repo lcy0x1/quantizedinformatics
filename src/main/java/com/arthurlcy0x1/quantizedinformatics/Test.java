@@ -9,35 +9,23 @@ import javax.imageio.ImageIO;
 
 import com.arthurlcy0x1.quantizedinformatics.logic.LogicDiagram;
 import com.arthurlcy0x1.quantizedinformatics.logic.LogicDiagram.GateContainer;
+import com.arthurlcy0x1.quantizedinformatics.logic.LogicDiagram.ParentDiagram;
 import com.arthurlcy0x1.quantizedinformatics.logic.LogicGate;
 
 public class Test {
 
 	public static void main(String[] args) throws IOException {
-		String[] type = { "red", "mos", "imp" };
-		String[] gmul = { "nand", "nor", "and", "or" };
-		String[] nmul = { "_3", "_4", "_5", "_6" };
-		String path = "./src/main/resources/data/quantizedinformatics/recipes/";
-		String pre = "{\n\t\"type\": \"minecraft:crafting_shapeless\",\n\t\"ingredients\": [\n"
-				+ "\t\t{\n\t\t\t\"item\": \"quantizedinformatics:gate_red_###\"\n\t\t},\n"
-				+ "\t\t{\n\t\t\t\"item\": \"quantizedinformatics:gate_mos_###\"\n\t\t}\n"
-				+ "\t],\n\t\"result\": {\n\t\t\"item\": \"quantizedinformatics:gate_imp_###\"\n\t}\n}";
-
-		for (int j = 0; j < nmul.length; j++)
-			for (int k = 0; k < gmul.length; k++) {
-				String name = "gate_imp_" + gmul[k];
-				File f = new File(path + name + nmul[j] + ".json");
-				if (!f.exists())
-					f.createNewFile();
-				PrintStream ps = new PrintStream(f);
-				ps.println(pre.replaceAll("###", gmul[k] + nmul[j]));
-				ps.close();
-			}
+		System.out.println("start");
+		alu_0().equals(alu_0());
+		long t0 = System.nanoTime();
+		ParentDiagram.decode(alu_0().toTag());
+		long t1 = System.nanoTime() - t0;
+		System.out.println("time: " + t1);
 	}
 
-	private static LogicGate alu_0() {
+	private static ParentDiagram alu_0() {
 		// AB0123, XY
-		LogicDiagram.ParentDiagram diag = new LogicDiagram.ParentDiagram(6, 2);
+		ParentDiagram diag = new ParentDiagram(6, 2);
 		GateContainer not0 = diag.addGate(LogicGate.getPrimeGate(LogicGate.NOT, 1));
 		GateContainer and0 = diag.addGate(LogicGate.getPrimeGate(LogicGate.AND, 2));
 		GateContainer and1 = diag.addGate(LogicGate.getPrimeGate(LogicGate.AND, 2));
@@ -62,12 +50,12 @@ public class Test {
 		nor1.setInput(1, and3, 0);
 		diag.setInput(0, nor0, 0);
 		diag.setInput(1, nor1, 0);
-		return diag.toGate();
+		return diag;// .toGate();
 	}
 
 	private static LogicGate alu_1() {
 		LogicDiagram.ParentDiagram diag = new LogicDiagram.ParentDiagram(14, 5);
-		LogicGate pre = alu_0();
+		LogicGate pre = alu_0().toGate();
 		GateContainer nm = diag.addGate(LogicGate.getPrimeGate(LogicGate.NOT, 1));
 		nm.setInput(0, null, 13);
 		GateContainer[] ps = new GateContainer[4];

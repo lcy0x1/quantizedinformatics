@@ -9,6 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
+import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
@@ -32,24 +33,29 @@ public class QuantizedInformatics {
 	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 	public static class RegistryEvents {
 		@SubscribeEvent
-		public static void onBlocksRegistry(final RegistryEvent.Register<Block> event) {
+		public static void regBlock(final RegistryEvent.Register<Block> event) {
 			Registrar.getList(event, Block.class);
 		}
 
 		@SubscribeEvent
-		public static void onContainerTypeRegistry(final RegistryEvent.Register<ContainerType<?>> event) {
+		public static void regContainerType(final RegistryEvent.Register<ContainerType<?>> event) {
 			event.getRegistry().registerAll(Registrar.CTS);
 		}
 
 		@SubscribeEvent
-		public static void onItemRegistry(final RegistryEvent.Register<Item> event) {
+		public static void regIRecipeSerializer(RegistryEvent.Register<IRecipeSerializer<?>> event) {
+			event.getRegistry().registerAll(Registrar.RSS);
+		}
+
+		@SubscribeEvent
+		public static void regItem(final RegistryEvent.Register<Item> event) {
 			Registrar.getList(event, Item.class);
 			for (Item[] its : Registrar.IDS)
 				event.getRegistry().registerAll(its);
 		}
 
 		@SubscribeEvent
-		public static void onTileEntityTypeRegistry(final RegistryEvent.Register<TileEntityType<?>> event) {
+		public static void regTileEntityType(final RegistryEvent.Register<TileEntityType<?>> event) {
 			event.getRegistry().registerAll(Registrar.TETS);
 		}
 	}

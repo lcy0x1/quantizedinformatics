@@ -1,7 +1,10 @@
 package com.arthurlcy0x1.quantizedinformatics.logic;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import net.minecraft.nbt.CompoundNBT;
 
 public abstract class LogicDiagram {
 
@@ -74,7 +77,96 @@ public abstract class LogicDiagram {
 
 	public static final class ParentDiagram extends LogicDiagram {
 
+		private static class Triplet {
+
+			private final GateContainer[] larr;
+			private final int[] index;
+			private final List<LogicGate> pset;
+
+			private Triplet(ParentDiagram pd) {
+				larr = pd.list.toArray(new GateContainer[0]);
+				index = new int[larr.length];
+				pset = new ArrayList<>();
+				for (int i = 0; i < larr.length; i++) {
+					index[i] = -1;
+					for (int j = 0; j < pset.size(); j++)
+						if (pset.get(j).equals(larr[i].gate)) {
+							index[i] = j;
+							break;
+						}
+					if (index[i] == -1) {
+						index[i] = pset.size();
+						pset.add(larr[i].gate);
+					}
+				}
+			}
+
+			private int find(GateContainer src) {
+				if (src != null)
+					for (int k = 0; k < larr.length; k++)
+						if (larr[k] == src)
+							return k;
+				return -1;
+			}
+
+			private void put(CompoundNBT sub, int j, GatePin p) {
+				sub.putInt("ind_" + j, p.pin);
+				sub.putInt("src_" + j, find(p.src));
+			}
+
+		}
+
+		public static ParentDiagram decode(CompoundNBT tag) {
+			int ver = tag.getByte("version");
+			switch (ver) {
+			case 1: {
+				int in = tag.getInt("in");
+				int out = tag.getInt("out");
+				int[][] vals = new int[out][2];
+				for (int i = 0; i < out; i++) {
+					vals[i][0] = tag.getInt("ind_" + i);
+					vals[i][1] = tag.getInt("src_" + i);
+				}
+				int sl = tag.getInt("set_len");
+				LogicGate[] lgs = new LogicGate[sl];
+				for (int i = 0; i < sl; i++)
+					lgs[i] = LogicGate.decode(tag.getCompound("set_" + i));
+				int gl = tag.getInt("gate_len");
+				GateContainer[] list = new GateContainer[gl];
+				int[][][] values = new int[gl][][];
+				ParentDiagram ans = new ParentDiagram(in, out);
+				for (int i = 0; i < gl; i++) {
+					CompoundNBT sub = tag.getCompound("gate_" + i);
+					int ind = sub.getInt("gate");
+					LogicGate gate = lgs[ind];
+					list[i] = new GateContainer(ans, gate);
+					values[i] = new int[gate.input][2];
+					for (int j = 0; j < gate.input; j++) {
+						values[i][j][0] = sub.getInt("ind_" + j);
+						values[i][j][1] = sub.getInt("src_" + j);
+					}
+				}
+				for (int i = 0; i < out; i++) {
+					int ind = vals[i][1];
+					GateContainer gc = ind == -1 ? null : list[ind];
+					ans.setInput(i, gc, vals[i][0]);
+				}
+				for (int i = 0; i < gl; i++)
+					for (int j = 0; j < list[i].gate.input; j++) {
+						int ind = values[i][j][1];
+						GateContainer gc = ind == -1 ? null : list[ind];
+						list[i].setInput(j, gc, values[i][j][0]);
+					}
+				ans.list.addAll(Arrays.asList(list));
+				return ans;
+			}
+			default:
+				throw new LogicRE("unsupported version");
+			}
+		}
+
 		private final List<GateContainer> list = new ArrayList<>();
+
 		private final GatePin[] output;
 		private final int inlen, outlen;
 
@@ -106,6 +198,14 @@ public abstract class LogicDiagram {
 				gc.resetVal();
 			resetVal();
 			return super.compute(in);
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (!(o instanceof ParentDiagram))
+				return false;
+			ParentDiagram d = (ParentDiagram) o;
+			return toTag().equals(d.toTag()); // TODO better algorithm?
 		}
 
 		public int getCost() {
@@ -142,8 +242,34 @@ public abstract class LogicDiagram {
 
 		public LogicGate toGate() {
 			if (inlen > 6 || outlen > 6)
-				throw new LogicRE("inlen or outlen slarger than 6, not going to calculate map");
-			return new LogicGate.SimpleLogicGate(inlen, outlen, getDelay(), getCost(), getMap());
+				return new LogicGate.CompoundLogicGate(inlen, outlen, getDelay(), getCost(), this);
+			return new LogicGate.SimpleLogicGate(inlen, outlen, getDelay(), getCost(), LogicGate.SIMP, getMap());
+		}
+
+		public CompoundNBT toTag() {
+			CompoundNBT ans = new CompoundNBT();
+			ans.putByte("version", (byte) 1);
+			Triplet t = new Triplet(this);
+			List<LogicGate> pset = t.pset;
+			GateContainer[] larr = t.larr;
+			int[] index = t.index;
+			ans.putInt("in", inlen);
+			ans.putInt("out", outlen);
+			for (int i = 0; i < outlen; i++)
+				t.put(ans, i, output[i]);
+			ans.putInt("set_len", pset.size());
+			for (int i = 0; i < pset.size(); i++)
+				ans.put("set_" + i, LogicGate.encode(pset.get(i)));
+			ans.putInt("gate_len", larr.length);
+			for (int i = 0; i < larr.length; i++) {
+				CompoundNBT sub = new CompoundNBT();
+				sub.putInt("gate", index[i]);
+				for (int j = 0; j < larr[i].gate.input; j++)
+					t.put(sub, j, larr[i].pins[j]);
+				ans.put("gate_" + i, sub);
+			}
+
+			return ans;
 		}
 
 		@Override
@@ -170,6 +296,7 @@ public abstract class LogicDiagram {
 		protected int srclen() {
 			return outlen;
 		}
+
 	}
 
 	private static final class GatePin {

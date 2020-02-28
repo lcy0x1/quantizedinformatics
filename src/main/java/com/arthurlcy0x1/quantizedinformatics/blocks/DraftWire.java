@@ -32,6 +32,11 @@ public class DraftWire extends SixWayBlock implements DraftBlock {
 	}
 
 	@Override
+	public int type() {
+		return type;
+	}
+
+	@Override
 	public BlockState updatePostPlacement(BlockState os, Direction f, BlockState fs, IWorld w, BlockPos op,
 			BlockPos fp) {
 		return os.with(FACING_TO_PROPERTY_MAP.get(f), connectable(fs.getBlock()));
@@ -49,11 +54,6 @@ public class DraftWire extends SixWayBlock implements DraftBlock {
 			s = s.with(FACING_TO_PROPERTY_MAP.get(d), connectable(bl));
 		}
 		return s;
-	}
-
-	@Override
-	public int type() {
-		return type;
 	}
 
 }

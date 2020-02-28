@@ -3,11 +3,10 @@ package com.arthurlcy0x1.quantizedinformatics.blocks;
 import org.apache.logging.log4j.LogManager;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
-import com.arthurlcy0x1.quantizedinformatics.items.LogicDraft;
+import com.arthurlcy0x1.quantizedinformatics.recipe.OxiInv;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
@@ -16,16 +15,18 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
-public class DraftGateTE extends TileEntity implements IInventory, INamedContainerProvider {
+public class OxiFnTE extends TileEntity implements OxiInv, INamedContainerProvider {
+
+	private static final int[] SLOTS = { 0, 1, 2, 3, 4, 5, 6 };
 
 	private static final ITextComponent title = new TranslationTextComponent(
-			"quantizedinformatics::container.draft_gate");
+			"quantizedinformatics::container.oxidation_furance");
 
-	private final Inventory inv = new Inventory(1);
+	private final Inventory inv = new Inventory(7);
 
-	public DraftGateTE() {
-		super(Registrar.TET_GATE);
-		LogManager.getLogger().warn("draft gate entity active");
+	public OxiFnTE() {
+		super(Registrar.TET_OXIFN);
+		LogManager.getLogger().warn("oxidation furance entity active");
 	}
 
 	@Override
@@ -35,7 +36,7 @@ public class DraftGateTE extends TileEntity implements IInventory, INamedContain
 
 	@Override
 	public Container createMenu(int type, PlayerInventory inv, PlayerEntity ent) {
-		return new DraftGateCont(type, inv, this);
+		return new OxiFnCont(type, inv, this);
 	}
 
 	@Override
@@ -59,6 +60,11 @@ public class DraftGateTE extends TileEntity implements IInventory, INamedContain
 	}
 
 	@Override
+	public int[] getSlots() {
+		return SLOTS;
+	}
+
+	@Override
 	public ItemStack getStackInSlot(int index) {
 		return inv.getStackInSlot(index);
 	}
@@ -70,7 +76,7 @@ public class DraftGateTE extends TileEntity implements IInventory, INamedContain
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack) {
-		return stack.getItem() instanceof LogicDraft;
+		return true;// TODO add validation
 	}
 
 	@Override

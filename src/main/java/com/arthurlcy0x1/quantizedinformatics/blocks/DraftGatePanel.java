@@ -12,8 +12,7 @@ public class DraftGatePanel extends ContainerScreen<DraftGateCont> {
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-		// TODO Auto-generated method stub
-
+		// TODO draw gui
 	}
 
 }
