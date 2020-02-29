@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "quantizedinformatics:block/craft_3d"
+    },
+    "facing=east": {
+      "model": "quantizedinformatics:block/craft_3d",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "quantizedinformatics:block/craft_3d",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "quantizedinformatics:block/craft_3d",
+      "y": 270
+    }
+  }
+}

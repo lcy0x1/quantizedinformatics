@@ -3,13 +3,13 @@
     "pattern": [
         [
             "000",
-            "0 0",
+            "000",
             "000"
         ],
         [
+            "000",
             "0 0",
-            "   ",
-            "0 0"
+            "000"
         ],
         [
             "000",
@@ -21,5 +21,5 @@
         "0": "obsidian",
         "1": "furnace"
     },
-    "out": "quantizedinformatics:oxidation_furnace"
+    "out": "quantizedinformatics:reduction_furnace"
 }
