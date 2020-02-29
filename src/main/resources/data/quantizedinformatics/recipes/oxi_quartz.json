@@ -1,0 +1,8 @@
+{
+    "type": "quantizedinformatics:oxidation",
+    "time": 8,
+    "in_main": {
+        "item": "sand"
+    },
+    "out_main": "quartz"
+}

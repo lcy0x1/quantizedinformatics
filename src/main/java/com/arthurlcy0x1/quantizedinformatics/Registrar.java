@@ -5,22 +5,17 @@ import java.util.function.Supplier;
 
 import org.apache.logging.log4j.LogManager;
 
+import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
+import com.arthurlcy0x1.quantizedinformatics.blocks.Craft3D;
 import com.arthurlcy0x1.quantizedinformatics.blocks.DraftGate;
-import com.arthurlcy0x1.quantizedinformatics.blocks.DraftGateCont;
-import com.arthurlcy0x1.quantizedinformatics.blocks.DraftGateTE;
 import com.arthurlcy0x1.quantizedinformatics.blocks.DraftWire;
-import com.arthurlcy0x1.quantizedinformatics.blocks.OxiFnBlock;
-import com.arthurlcy0x1.quantizedinformatics.blocks.OxiFnCont;
-import com.arthurlcy0x1.quantizedinformatics.blocks.OxiFnTE;
-import com.arthurlcy0x1.quantizedinformatics.blocks.RedFnBlock;
-import com.arthurlcy0x1.quantizedinformatics.blocks.RedFnCont;
-import com.arthurlcy0x1.quantizedinformatics.blocks.RedFnTE;
+import com.arthurlcy0x1.quantizedinformatics.blocks.OxiFn;
+import com.arthurlcy0x1.quantizedinformatics.blocks.RedFn;
 import com.arthurlcy0x1.quantizedinformatics.items.DraftGateItem;
 import com.arthurlcy0x1.quantizedinformatics.items.LogicDraft;
-import com.arthurlcy0x1.quantizedinformatics.recipe.OxiRecSerializer;
-import com.arthurlcy0x1.quantizedinformatics.recipe.OxiRecipe;
-import com.arthurlcy0x1.quantizedinformatics.recipe.RedRecSerializer;
+import com.arthurlcy0x1.quantizedinformatics.recipe.C3DRecipe;
 import com.arthurlcy0x1.quantizedinformatics.recipe.RedRecipe;
+import com.arthurlcy0x1.quantizedinformatics.recipe.OxiRecipe;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -48,8 +43,9 @@ public class Registrar extends ItemGroup {
 	public static final Block BD_WIRE = addName(new DraftWire(DraftGate.GATE), "draft_wire");
 	public static final Block BC_FRAME = addName(new DraftWire(DraftGate.CRAFT), "craft_frame");
 	public static final Block BD_GATE = addName(new DraftGate(), "draft_gate");
-	public static final Block B_OXIFN = addName(new OxiFnBlock(), "oxidation_furnace");
-	public static final Block B_REDFN = addName(new RedFnBlock(), "reduction_furance");
+	public static final Block B_OXIFN = addName(new CTEBlock<OxiFn.TE>(OxiFn.TE::new), "oxidation_furnace");
+	public static final Block B_REDFN = addName(new CTEBlock<RedFn.TE>(RedFn.TE::new), "reduction_furnace");
+	public static final Block B_CRAFT3D = addName(new Craft3D(), "craft_3d");
 
 	public static final ItemGroup ITEM_GROUP = new Registrar();
 
@@ -58,6 +54,9 @@ public class Registrar extends ItemGroup {
 	public static final Item IBD_WIRE = convert(BD_WIRE);
 	public static final Item IBC_FRAME = convert(BC_FRAME);
 	public static final Item IBD_GATE = convert(BD_GATE);
+	public static final Item IB_OXIFN = convert(B_OXIFN);
+	public static final Item IB_REDFN = convert(B_REDFN);
+	public static final Item IB_CRAFT3D = convert(B_CRAFT3D);
 
 	// items
 	public static final Item I_GATECHIP = generate("chip", 1);
@@ -99,22 +98,26 @@ public class Registrar extends ItemGroup {
 		}
 	}
 
-	public static final ContainerType<DraftGateCont> CT_GATE = getCT(DraftGateCont::new, "draft_gate_c");
-	public static final ContainerType<OxiFnCont> CT_OXIFN = getCT(OxiFnCont::new, "oxidation_furnace_c");
-	public static final ContainerType<RedFnCont> CT_REDFN = getCT(RedFnCont::new, "reduction_furance_c");
+	public static final ContainerType<DraftGate.Cont> CT_GATE = getCT(DraftGate.Cont::new, "draft_gate_c");
+	public static final ContainerType<OxiFn.Cont> CT_OXIFN = getCT(OxiFn.Cont::new, "oxidation_furnace_c");
+	public static final ContainerType<RedFn.Cont> CT_REDFN = getCT(RedFn.Cont::new, "reduction_furnace_c");
+	public static final ContainerType<Craft3D.Cont> CT_CRAFT3D = getCT(Craft3D.Cont::new, "craft_3d_c");
 
-	public static final TileEntityType<DraftGateTE> TET_GATE = getTET(DraftGateTE::new, BD_GATE, "draft_gate_te");
-	public static final TileEntityType<OxiFnTE> TET_OXIFN = getTET(OxiFnTE::new, B_OXIFN, "oxidation_furnace_te");
-	public static final TileEntityType<RedFnTE> TET_REDFN = getTET(RedFnTE::new, B_REDFN, "reduction_furance_te");
+	public static final TileEntityType<DraftGate.TE> TET_GATE = getTET(DraftGate.TE::new, BD_GATE, "draft_gate_te");
+	public static final TileEntityType<OxiFn.TE> TET_OXIFN = getTET(OxiFn.TE::new, B_OXIFN, "oxidation_furnace_te");
+	public static final TileEntityType<RedFn.TE> TET_REDFN = getTET(RedFn.TE::new, B_REDFN, "reduction_furnace_te");
+	public static final TileEntityType<Craft3D.TE> TET_CRAFT3D = getTET(Craft3D.TE::new, B_CRAFT3D, "craft_3d_te");
 
-	public static final IRecipeType<OxiRecipe> RT_OXI = IRecipeType.register("oxidation");
-	public static final IRecipeType<RedRecipe> RT_RED = IRecipeType.register("reduction");
-	public static final OxiRecSerializer RS_OXI = new OxiRecSerializer();
-	public static final RedRecSerializer RS_RED = new RedRecSerializer();
+	public static final IRecipeType<OxiRecipe> RT_OXI = IRecipeType.register("quantizedinformatics:oxidation");
+	public static final IRecipeType<RedRecipe> RT_RED = IRecipeType.register("quantizedinformatics:reduction");
+	public static final IRecipeType<C3DRecipe> RT_C3D = IRecipeType.register("quantizedinformatics:craft_3d");
+	public static final IRecipeSerializer<?> RS_OXI = new OxiRecipe.Serializer().setRegistryName(MODID, "oxidation");
+	public static final IRecipeSerializer<?> RS_RED = new RedRecipe.Serializer().setRegistryName(MODID, "reduction");
+	public static final IRecipeSerializer<?> RS_C3D = new C3DRecipe.Serializer().setRegistryName(MODID, "craft_3d");
 
-	public static final ContainerType<?>[] CTS = { CT_GATE, CT_OXIFN, CT_REDFN };
-	public static final TileEntityType<?>[] TETS = { TET_GATE, TET_OXIFN, TET_REDFN };
-	public static final IRecipeSerializer<?>[] RSS = { RS_OXI, RS_RED };
+	public static final ContainerType<?>[] CTS = { CT_GATE, CT_OXIFN, CT_REDFN, CT_CRAFT3D };
+	public static final TileEntityType<?>[] TETS = { TET_GATE, TET_OXIFN, TET_REDFN, TET_CRAFT3D };
+	public static final IRecipeSerializer<?>[] RSS = { RS_OXI, RS_RED, RS_C3D };
 
 	@SuppressWarnings("unchecked")
 	protected static <T extends IForgeRegistryEntry<T>> void getList(RegistryEvent.Register<T> event, Class<T> cls) {

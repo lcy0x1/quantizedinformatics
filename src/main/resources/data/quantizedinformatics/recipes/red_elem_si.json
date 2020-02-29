@@ -1,0 +1,11 @@
+{
+    "type": "quantizedinformatics:reduction",
+    "time": 8,
+    "in_main": {
+        "item": "quartz"
+    },
+    "medium": {
+        "item": "coal"
+    },
+    "out_main": "quantizedinformatics:elem_si"
+}
