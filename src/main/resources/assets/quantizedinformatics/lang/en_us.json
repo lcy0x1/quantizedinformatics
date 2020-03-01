@@ -1,10 +1,12 @@
 {
+    "quantizedinformatics:container.oxidation_furnace":"Oxidation Furnace",
+    "quantizedinformatics:container.reduction_furnace":"Reduction Furnace",
     "block.quantizedinformatics.craft_3d": "3D Crafting System Terminal",
     "block.quantizedinformatics.oxidation_furnace": "Oxidation Furnace",
     "block.quantizedinformatics.reduction_furnace": "Reduction Furnace",
     "block.quantizedinformatics.craft_frame": "3D Crafting System Frame",
     "block.quantizedinformatics.draft_gate": "Implemented Chip Draft Container",
-    "block.quantizedinformatics.craft_wire": "Implemented Chip Draft Wire",
+    "block.quantizedinformatics.draft_wire": "Implemented Chip Draft Wire",
     "block.quantizedinformatics.quantum_fog": "Quantum Fog",
     "item.quantizedinformatics.chip": "Chip",
     "item.quantizedinformatics.elem_b": "B (Boron) - Chemical",

@@ -37,8 +37,6 @@ public class C3DRecipe implements IRecipe<C3DRecipe.Craft3DInv> {
 
 		public int[] getDim();
 
-		public int getSlot();
-
 	}
 
 	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>>

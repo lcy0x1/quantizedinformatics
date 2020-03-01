@@ -77,6 +77,7 @@ public class QuantizedInformatics {
 
 		// Register ourselves for server and other game events we are interested in
 		MinecraftForge.EVENT_BUS.register(this);
+
 	}
 
 	// You can use SubscribeEvent and let the Event Bus discover methods to call

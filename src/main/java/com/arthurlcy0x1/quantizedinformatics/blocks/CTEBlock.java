@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -17,6 +18,7 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer.Builder;
+import net.minecraft.tileentity.AbstractFurnaceTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ActionResultType;
@@ -24,7 +26,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
@@ -32,17 +33,42 @@ public class CTEBlock<T extends TileEntity> extends HorizontalBlock {
 
 	public static class CTECont extends Container {
 
+		protected static class FuelSlot extends Slot {
+
+			public FuelSlot(IInventory inv, int ind, int x, int y) {
+				super(inv, ind, x, y);
+			}
+
+			@Override
+			public boolean isItemValid(ItemStack is) {
+				return AbstractFurnaceTileEntity.isFuel(is);
+			}
+
+		}
+
+		protected static class ResultSlot extends Slot {
+
+			public ResultSlot(IInventory inv, int ind, int x, int y) {
+				super(inv, ind, x, y);
+			}
+
+			@Override
+			public boolean isItemValid(ItemStack is) {
+				return false;
+			}
+
+		}
+
 		protected final IInventory slots;
 
-		protected CTECont(ContainerType<? extends CTECont> type, int id, PlayerInventory inv, IInventory ent) {
+		protected CTECont(ContainerType<? extends CTECont> type, int id, PlayerInventory inv, IInventory ent, int h) {
 			super(type, id);
 			slots = ent;
 			for (int r = 0; r < 3; ++r)
 				for (int c = 0; c < 9; ++c)
-					this.addSlot(new Slot(inv, c + r * 9 + 9, 8 + c * 18, 103 + r * 18));
+					this.addSlot(new Slot(inv, c + r * 9 + 9, 8 + c * 18, h + r * 18));
 			for (int c = 0; c < 9; ++c)
-				this.addSlot(new Slot(inv, c, 8 + c * 18, 161));// FIXME layout
-
+				this.addSlot(new Slot(inv, c, 8 + c * 18, h + 58));
 		}
 
 		@Override
@@ -52,26 +78,44 @@ public class CTEBlock<T extends TileEntity> extends HorizontalBlock {
 
 	}
 
+	public static abstract class CTEScr<T extends CTECont> extends ContainerScreen<T> {
+
+		public CTEScr(T cont, PlayerInventory inv, ITextComponent text, int h) {
+			super(cont, inv, text);
+			ySize = h;
+		}
+
+		@Override
+		public void render(int x, int y, float t) {
+			renderBackground();
+			super.render(x, y, t);
+			renderHoveredToolTip(x, y);
+		}
+
+		@Override
+		protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+			String s = this.title.getFormattedText();
+			this.font.drawString(s, this.xSize / 2 - this.font.getStringWidth(s) / 2, 6.0F, 4210752);
+			this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F,
+					this.ySize - 96 + 2, 4210752);
+		}
+
+	}
+
 	public static abstract class CTETE<T extends CTETE<T>> extends TileEntity
 			implements IInventory, INamedContainerProvider {
 
-		public static interface IFactory {
-
-			public Container create(int type, PlayerInventory inv, IInventory ent);
-
+		public static boolean canMerge(ItemStack is0, ItemStack is1) {
+			return is0 == null || is1 == null || is0.isEmpty() || is1.isEmpty()
+					|| Container.areItemsAndTagsEqual(is0, is1)
+							&& is0.getCount() + is1.getCount() <= is1.getMaxStackSize();
 		}
-
-		private final IFactory fac;
 
 		private final Inventory inv;
 
-		private final ITextComponent title;
-
-		public CTETE(TileEntityType<T> type, IFactory f, int size, String tit) {
+		public CTETE(TileEntityType<T> type, int size) {
 			super(type);
-			fac = f;
-			inv = new Inventory();
-			title = new TranslationTextComponent(tit);
+			inv = new Inventory(size);
 		}
 
 		@Override
@@ -80,18 +124,8 @@ public class CTEBlock<T extends TileEntity> extends HorizontalBlock {
 		}
 
 		@Override
-		public Container createMenu(int type, PlayerInventory inv, PlayerEntity ent) {
-			return fac.create(type, inv, this);
-		}
-
-		@Override
 		public ItemStack decrStackSize(int index, int count) {
 			return inv.decrStackSize(index, count);
-		}
-
-		@Override
-		public ITextComponent getDisplayName() {
-			return title;
 		}
 
 		@Override
@@ -104,13 +138,18 @@ public class CTEBlock<T extends TileEntity> extends HorizontalBlock {
 			return inv.getStackInSlot(index);
 		}
 
+		public void incrOrSet(int index, ItemStack is) {
+			if (inv.getStackInSlot(index).isEmpty())
+				inv.setInventorySlotContents(index, is);
+			else
+				inv.getStackInSlot(index).grow(is.getCount());
+			markDirty();
+		}
+
 		@Override
 		public boolean isEmpty() {
 			return inv.isEmpty();
 		}
-
-		@Override
-		public abstract boolean isItemValidForSlot(int index, ItemStack is);
 
 		@Override
 		public boolean isUsableByPlayer(PlayerEntity player) {
@@ -163,6 +202,11 @@ public class CTEBlock<T extends TileEntity> extends HorizontalBlock {
 	}
 
 	protected ActionResultType onClick(BlockState bs, World w, BlockPos pos, PlayerEntity pl, Hand h) {
-		return ActionResultType.PASS;
+		if (w.isRemote)
+			return ActionResultType.SUCCESS;
+		TileEntity te = w.getTileEntity(pos);
+		if (te instanceof CTETE<?>)
+			pl.openContainer((CTETE<?>) te);
+		return ActionResultType.SUCCESS;
 	}
 }

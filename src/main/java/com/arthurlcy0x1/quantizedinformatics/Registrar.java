@@ -19,6 +19,7 @@ import com.arthurlcy0x1.quantizedinformatics.recipe.OxiRecipe;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
@@ -101,12 +102,10 @@ public class Registrar extends ItemGroup {
 	public static final ContainerType<DraftGate.Cont> CT_GATE = getCT(DraftGate.Cont::new, "draft_gate_c");
 	public static final ContainerType<OxiFn.Cont> CT_OXIFN = getCT(OxiFn.Cont::new, "oxidation_furnace_c");
 	public static final ContainerType<RedFn.Cont> CT_REDFN = getCT(RedFn.Cont::new, "reduction_furnace_c");
-	public static final ContainerType<Craft3D.Cont> CT_CRAFT3D = getCT(Craft3D.Cont::new, "craft_3d_c");
 
 	public static final TileEntityType<DraftGate.TE> TET_GATE = getTET(DraftGate.TE::new, BD_GATE, "draft_gate_te");
 	public static final TileEntityType<OxiFn.TE> TET_OXIFN = getTET(OxiFn.TE::new, B_OXIFN, "oxidation_furnace_te");
 	public static final TileEntityType<RedFn.TE> TET_REDFN = getTET(RedFn.TE::new, B_REDFN, "reduction_furnace_te");
-	public static final TileEntityType<Craft3D.TE> TET_CRAFT3D = getTET(Craft3D.TE::new, B_CRAFT3D, "craft_3d_te");
 
 	public static final IRecipeType<OxiRecipe> RT_OXI = IRecipeType.register("quantizedinformatics:oxidation");
 	public static final IRecipeType<RedRecipe> RT_RED = IRecipeType.register("quantizedinformatics:reduction");
@@ -115,8 +114,13 @@ public class Registrar extends ItemGroup {
 	public static final IRecipeSerializer<?> RS_RED = new RedRecipe.Serializer().setRegistryName(MODID, "reduction");
 	public static final IRecipeSerializer<?> RS_C3D = new C3DRecipe.Serializer().setRegistryName(MODID, "craft_3d");
 
-	public static final ContainerType<?>[] CTS = { CT_GATE, CT_OXIFN, CT_REDFN, CT_CRAFT3D };
-	public static final TileEntityType<?>[] TETS = { TET_GATE, TET_OXIFN, TET_REDFN, TET_CRAFT3D };
+	static {
+		ScreenManager.registerFactory(CT_OXIFN, OxiFn.Scr::new);
+		ScreenManager.registerFactory(CT_REDFN, RedFn.Scr::new);
+	}
+
+	public static final ContainerType<?>[] CTS = { CT_GATE, CT_OXIFN, CT_REDFN };
+	public static final TileEntityType<?>[] TETS = { TET_GATE, TET_OXIFN, TET_REDFN };
 	public static final IRecipeSerializer<?>[] RSS = { RS_OXI, RS_RED, RS_C3D };
 
 	@SuppressWarnings("unchecked")

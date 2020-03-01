@@ -49,8 +49,8 @@ public class RedRecipe implements IRecipe<RedRecipe.Inv> {
 				inc[1] = json.has("in_side_count") ? JSONUtils.getInt(json, "in_side_count") : 1;
 			}
 			if (json.has("medium")) {
-				in[1] = Ingredient.deserialize(JSONUtils.getJsonObject(json, "medium"));
-				inc[1] = json.has("medium_count") ? JSONUtils.getInt(json, "medium_count") : 1;
+				in[2] = Ingredient.deserialize(JSONUtils.getJsonObject(json, "medium"));
+				inc[2] = json.has("medium_count") ? JSONUtils.getInt(json, "medium_count") : 1;
 			}
 			String s0 = JSONUtils.getString(json, "out_main");
 			ResourceLocation rl0 = new ResourceLocation(s0);
@@ -129,28 +129,6 @@ public class RedRecipe implements IRecipe<RedRecipe.Inv> {
 		return width * height >= ing.length + 1;
 	}
 
-	public void craft(Inv inv) {
-		int ing0 = inv.getSlots()[Inv.ING_MAIN];
-		int ing1 = inv.getSlots()[Inv.ING_SIDE];
-		int ing2 = inv.getSlots()[Inv.MEDIUM];
-		inv.decrStackSize(ing0, inc[0]);
-		if (ing[1] != null)
-			inv.decrStackSize(ing1, inc[1]);
-		if (ing[2] != null)
-			inv.decrStackSize(ing2, inc[2]);
-		int res0 = inv.getSlots()[Inv.ING_MAIN];
-		int res1 = inv.getSlots()[Inv.ING_SIDE];
-		if (inv.getStackInSlot(res0) == ItemStack.EMPTY)
-			inv.setInventorySlotContents(res0, output[0].copy());
-		else
-			inv.getStackInSlot(res0).grow(output[0].getCount());
-		if (output[1] != null)
-			if (inv.getStackInSlot(res1) == ItemStack.EMPTY)
-				inv.setInventorySlotContents(res1, output[1].copy());
-			else
-				inv.getStackInSlot(res1).grow(output[1].getCount());
-	}
-
 	public int getCraftCost() {
 		return time;
 	}
@@ -193,26 +171,13 @@ public class RedRecipe implements IRecipe<RedRecipe.Inv> {
 		if (ing[1] != null) {
 			if (!ing[1].test(ig1) || ig1.getCount() < inc[1])
 				return false;
-		} else if (ig1 != ItemStack.EMPTY)
+		} else if (!ig1.isEmpty())
 			return false;
 		if (ing[2] != null) {
 			if (!ing[2].test(ig2) || ig2.getCount() < inc[2])
 				return false;
-		} else if (ig2 != ItemStack.EMPTY)
+		} else if (!ig2.isEmpty())
 			return false;
-		int res0 = inv.getSlots()[Inv.ING_MAIN];
-		int res1 = inv.getSlots()[Inv.ING_SIDE];
-		ItemStack is0 = inv.getStackInSlot(res0);
-		ItemStack is1 = inv.getStackInSlot(res1);
-		if (is0.getCount() + output[0].getCount() > is0.getItem().getItemStackLimit(is0))
-			return false;
-		if (output[1] != null && is1.getCount() + output[1].getCount() > is1.getItem().getItemStackLimit(is1))
-			return false;
-		if (is0 != ItemStack.EMPTY && output[0].getItem() != is0.getItem())
-			return false;
-		if (output[1] != null)
-			if (is1 != ItemStack.EMPTY && output[1].getItem() != is1.getItem())
-				return false;
 		return true;
 	}
 
