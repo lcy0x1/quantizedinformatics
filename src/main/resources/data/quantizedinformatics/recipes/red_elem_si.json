@@ -1,20 +1,11 @@
 {
     "type": "quantizedinformatics:reduction",
-    "time": 64,
+    "time": 200,
     "in_main": {
         "item": "quartz"
     },
-    "in_main_count":16,
-    "in_side": {
-        "item": "quantizedinformatics:elem_b"
-    },
-    "in_side_count":1,
     "medium": {
         "item": "coal"
     },
-    "medium_count": 8,
-    "out_main": "quantizedinformatics:elem_si",
-    "out_main_count":2,
-    "out_side": "sand",
-    "out_side_count":8
+    "out_main": "quantizedinformatics:elem_si"
 }

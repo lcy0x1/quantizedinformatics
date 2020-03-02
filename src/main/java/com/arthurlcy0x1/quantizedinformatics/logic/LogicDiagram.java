@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 
 public abstract class LogicDiagram {
 
@@ -109,9 +110,15 @@ public abstract class LogicDiagram {
 				return -1;
 			}
 
-			private void put(CompoundNBT sub, int j, GatePin p) {
-				sub.putInt("ind_" + j, p.pin);
-				sub.putInt("src_" + j, find(p.src));
+			private void put(CompoundNBT sub, GatePin[] p) {
+				int[] inds = new int[p.length];
+				int[] srcs = new int[p.length];
+				for (int i = 0; i < p.length; i++) {
+					inds[i] = p[i].pin;
+					srcs[i] = find(p[i].src);
+				}
+				sub.putIntArray("inds", inds);
+				sub.putIntArray("srcs", srcs);
 			}
 
 		}
@@ -122,40 +129,36 @@ public abstract class LogicDiagram {
 			case 1: {
 				int in = tag.getInt("in");
 				int out = tag.getInt("out");
-				int[][] vals = new int[out][2];
-				for (int i = 0; i < out; i++) {
-					vals[i][0] = tag.getInt("ind_" + i);
-					vals[i][1] = tag.getInt("src_" + i);
-				}
-				int sl = tag.getInt("set_len");
+				int[] inds = tag.getIntArray("inds");
+				int[] srcs = tag.getIntArray("srcs");
+				ListNBT ltag = tag.getList("set", 10);
+				int sl = ltag.size();
 				LogicGate[] lgs = new LogicGate[sl];
 				for (int i = 0; i < sl; i++)
-					lgs[i] = LogicGate.decode(tag.getCompound("set_" + i));
-				int gl = tag.getInt("gate_len");
+					lgs[i] = LogicGate.decode(ltag.getCompound(i));
+				ListNBT gate = tag.getList("gate", 10);
+				int gl = gate.size();
 				GateContainer[] list = new GateContainer[gl];
-				int[][][] values = new int[gl][][];
+				int[][][] values = new int[gl][2][];
 				ParentDiagram ans = new ParentDiagram(in, out);
 				for (int i = 0; i < gl; i++) {
-					CompoundNBT sub = tag.getCompound("gate_" + i);
+					CompoundNBT sub = gate.getCompound(i);
 					int ind = sub.getInt("gate");
-					LogicGate gate = lgs[ind];
-					list[i] = new GateContainer(ans, gate);
-					values[i] = new int[gate.input][2];
-					for (int j = 0; j < gate.input; j++) {
-						values[i][j][0] = sub.getInt("ind_" + j);
-						values[i][j][1] = sub.getInt("src_" + j);
-					}
+					LogicGate lga = lgs[ind];
+					list[i] = new GateContainer(ans, lga);
+					values[i][0] = sub.getIntArray("inds");
+					values[i][1] = sub.getIntArray("srcs");
 				}
 				for (int i = 0; i < out; i++) {
-					int ind = vals[i][1];
+					int ind = srcs[i];
 					GateContainer gc = ind == -1 ? null : list[ind];
-					ans.setInput(i, gc, vals[i][0]);
+					ans.setInput(i, gc, inds[i]);
 				}
 				for (int i = 0; i < gl; i++)
 					for (int j = 0; j < list[i].gate.input; j++) {
-						int ind = values[i][j][1];
+						int ind = values[i][1][j];
 						GateContainer gc = ind == -1 ? null : list[ind];
-						list[i].setInput(j, gc, values[i][j][0]);
+						list[i].setInput(j, gc, values[i][0][j]);
 					}
 				ans.list.addAll(Arrays.asList(list));
 				return ans;
@@ -255,20 +258,19 @@ public abstract class LogicDiagram {
 			int[] index = t.index;
 			ans.putInt("in", inlen);
 			ans.putInt("out", outlen);
-			for (int i = 0; i < outlen; i++)
-				t.put(ans, i, output[i]);
-			ans.putInt("set_len", pset.size());
+			t.put(ans, output);
+			ListNBT ltag = new ListNBT();
 			for (int i = 0; i < pset.size(); i++)
-				ans.put("set_" + i, LogicGate.encode(pset.get(i)));
-			ans.putInt("gate_len", larr.length);
+				ltag.add(LogicGate.encode(pset.get(i)));
+			ans.put("set", ltag);
+			ListNBT gate = new ListNBT();
 			for (int i = 0; i < larr.length; i++) {
 				CompoundNBT sub = new CompoundNBT();
 				sub.putInt("gate", index[i]);
-				for (int j = 0; j < larr[i].gate.input; j++)
-					t.put(sub, j, larr[i].pins[j]);
-				ans.put("gate_" + i, sub);
+				t.put(sub, larr[i].pins);
+				gate.add(sub);
 			}
-
+			ans.put("gate", gate);
 			return ans;
 		}
 

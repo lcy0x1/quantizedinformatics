@@ -1,42 +1,11 @@
-3D Crafter
-	Fixed
-202	0 - Craft Column
-010	1 - Craft Table
-202 2 - piston
-
-Reduction Oven
-000 000 000	0 - Obsidian
-100 0 0 000	1 - Oven
-000 000 000
-
-0 1 -> 2 3	0/1 - Material
----		2/3 - Product
- 4		4 - Coal
- |  		5 - Fuel
- 5  -> 6	6 - Fuel Remain
-
-Oxidation Oven
-000 0 0 000	0 - Obsidian
-100     0 0	1 - Oven
-000 0 0 000
-
-0 1 -> 2 3
----
- 4  -> 5
-
 Bone Dust 		-O> Phosphorous Oxide	+ Limestone
 Glowstone dust 		-O> Boron Oxide
-Sand / Glass 		-O> Quartz
-Iron Tools		-O> Iron Oxide
-Gold Tools		-O> Gold
 Rotten Meat		-O> Dark Element
 Soul Sand		-O> Quartz		+ Soul Element
 Tear drop		-O> Dark Element	+ Life Element
 
 Phosphorous Oxide 	-R> Phosphorous
 Boron Oxide 		-R> Boron
-Quartz 			-R> Silicon
-Iron Oxide		-R> Iron
 
 Si -B> P-Substrate
 P-Substrate -O> Oxidized P-S

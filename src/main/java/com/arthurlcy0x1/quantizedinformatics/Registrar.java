@@ -64,6 +64,7 @@ public class Registrar extends ItemGroup {
 	public static final Item IE_P = generate("elem_p", 64);
 	public static final Item IE_B = generate("elem_b", 64);
 	public static final Item IE_SI = generate("elem_si", 64);
+	public static final Item IE_FEO = generate("elem_feo", 64);
 	public static final Item ID_N = generate("gate_dope_n", 64);
 	public static final Item ID_P = generate("gate_dope_p", 64);
 	public static final Item ID_CAP = generate("gate_cap", 64);
@@ -117,6 +118,7 @@ public class Registrar extends ItemGroup {
 	static {
 		ScreenManager.registerFactory(CT_OXIFN, OxiFn.Scr::new);
 		ScreenManager.registerFactory(CT_REDFN, RedFn.Scr::new);
+		ScreenManager.registerFactory(CT_GATE, DraftGate.Scr::new);
 	}
 
 	public static final ContainerType<?>[] CTS = { CT_GATE, CT_OXIFN, CT_REDFN };

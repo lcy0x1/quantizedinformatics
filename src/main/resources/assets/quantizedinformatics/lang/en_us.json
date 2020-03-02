@@ -1,17 +1,19 @@
 {
-    "quantizedinformatics:container.oxidation_furnace":"Oxidation Furnace",
-    "quantizedinformatics:container.reduction_furnace":"Reduction Furnace",
+    "quantizedinformatics:container.oxidation_furnace": "Oxidation Furnace",
+    "quantizedinformatics:container.reduction_furnace": "Reduction Furnace",
+    "quantizedinformatics:container.draft_gate": "Chip Design Container",
     "block.quantizedinformatics.craft_3d": "3D Crafting System Terminal",
     "block.quantizedinformatics.oxidation_furnace": "Oxidation Furnace",
     "block.quantizedinformatics.reduction_furnace": "Reduction Furnace",
     "block.quantizedinformatics.craft_frame": "3D Crafting System Frame",
-    "block.quantizedinformatics.draft_gate": "Implemented Chip Draft Container",
-    "block.quantizedinformatics.draft_wire": "Implemented Chip Draft Wire",
+    "block.quantizedinformatics.draft_gate": "Chip Design Container",
+    "block.quantizedinformatics.draft_wire": "Chip Design Wire",
     "block.quantizedinformatics.quantum_fog": "Quantum Fog",
     "item.quantizedinformatics.chip": "Chip",
     "item.quantizedinformatics.elem_b": "B (Boron) - Chemical",
     "item.quantizedinformatics.elem_p": "P (Phosphorous) - Chemical",
     "item.quantizedinformatics.elem_si": "Si (Silicon) - Chemical",
+    "item.quantizedinformatics.elem_feo": "Fe2O3 (Iron(II) Oxide) - Chemical",
     "item.quantizedinformatics.gate_wire": "Wire - CMOS Diagram",
     "item.quantizedinformatics.gate_cap": "Metal Cap - CMOS Diagram",
     "item.quantizedinformatics.gate_nmos": "NMOS - CMOS Diagram",
@@ -91,6 +93,5 @@
     "item.quantizedinformatics.gate_imp_or_6": "6-in OR gate - Implemented Diagram",
     "item.quantizedinformatics.gate_red_xor": "XOR gate - Redstone Diagram",
     "item.quantizedinformatics.gate_mos_xor": "XOR gate - CMOS Diagram",
-    "item.quantizedinformatics.gate_imp_xor": "XOR gate - Implemented Diagram",
-    "": ""
+    "item.quantizedinformatics.gate_imp_xor": "XOR gate - Implemented Diagram"
 }

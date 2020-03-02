@@ -1,0 +1,11 @@
+{
+	"type": "quantizedinformatics:oxidation",
+	"time": 200,
+	"in_main": {
+	"item": "golden_shovel"
+	},
+	"out_main": "gold_ingot",
+	"out_main_count": 0,
+	"out_side": "gold_nugget",
+	"out_side_count": 6
+}

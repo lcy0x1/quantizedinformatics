@@ -14,6 +14,26 @@ import com.arthurlcy0x1.quantizedinformatics.logic.LogicGate;
 
 public class Test {
 
+	public static void addRecipe() throws IOException {
+		String path = "./src/main/resources/data/quantizedinformatics/recipes/oxi_iron_";
+		String s0 = "{\n\t\"type\": \"quantizedinformatics:oxidation\",\n\t\"time\": 200,\n\t\"in_main\": {\n\t\"item\": \"iron_";
+		String s1 = "\"\n\t},\n\t\"out_main\": \"quantizedinformatics:elem_feo\",\n\t\"out_main_count\": ";
+		String s3 = "\n}";
+		String[] tools = { "pickaxe", "shovel", "axe", "hoe", "sword", "helmet", "chestplate", "leggings", "boots",
+				"horse_armor" };
+		int[] cost = { 3, 1, 3, 2, 2, 5, 8, 7, 4, 12 };
+		for (int i = 0; i < tools.length; i++) {
+			String cont = s0 + tools[i] + s1 + cost[i] + s3;
+			String name = path + tools[i] + ".json";
+			File f = new File(name);
+			if (!f.exists())
+				f.createNewFile();
+			PrintStream ps = new PrintStream(f);
+			ps.println(cont);
+			ps.close();
+		}
+	}
+
 	public static LogicGate alu_1() {
 		LogicDiagram.ParentDiagram diag = new LogicDiagram.ParentDiagram(14, 5);
 		LogicGate pre = alu_0().toGate();
@@ -57,7 +77,7 @@ public class Test {
 	}
 
 	public static void main(String[] args) throws IOException {
-		System.out.println(alu_0().toGate());
+		addRecipe();
 	}
 
 	public static void recolor() throws IOException {

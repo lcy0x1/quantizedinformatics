@@ -1,0 +1,15 @@
+{
+    "type": "quantizedinformatics:reduction",
+    "time": 200,
+    "in_main": {
+        "item": "quantizedinformatics:elem_feo"
+    },
+    "in_side": {
+        "item": "iron_nugget"
+    },
+    "in_side_count": 3,
+    "medium": {
+        "item": "coal"
+    },
+    "out_main": "iron_ingot"
+}

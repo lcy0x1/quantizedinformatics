@@ -15,7 +15,6 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.AbstractFurnaceTileEntity;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
@@ -39,7 +38,7 @@ public class RedFn {
 			addSlot(new Slot(ent, 0, 56, 21));
 			addSlot(new Slot(ent, 1, 34, 21));
 			addSlot(new Slot(ent, 2, 56, 43));
-			addSlot(new FuelSlot(ent, 3, 38, 61));
+			addSlot(new CondSlot(ent, 3, 38, 61, CTECont::isFuel));
 			addSlot(new ResultSlot(ent, 4, 116, 40));
 			addSlot(new ResultSlot(ent, 5, 138, 40));
 			addSlot(new ResultSlot(ent, 6, 116, 61));
@@ -60,11 +59,6 @@ public class RedFn {
 			if (data.get(0) == 0 || data.get(2) == 0 || data.get(0) > data.get(2))
 				return 0;
 			return 13 * data.get(0) / data.get(2);
-		}
-
-		@Override
-		public ItemStack transferStackInSlot(PlayerEntity ent, int ind) {
-			return ItemStack.EMPTY;//TODO
 		}
 
 	}
@@ -151,13 +145,17 @@ public class RedFn {
 			if (index < FUEL)
 				return true;
 			if (index == FUEL)
-				return AbstractFurnaceTileEntity.isFuel(stack);
+				return CTECont.isFuel(stack);
 			return false;
 		}
 
 		@Override
 		public void read(CompoundNBT tag) {
-			super.read(tag);// TODO
+			super.read(tag);
+			burnTime = tag.getInt("burn");
+			procTime = tag.getInt("proc");
+			burnTotal = tag.getInt("tb");
+			procTotal = tag.getInt("tp");
 		}
 
 		@Override
@@ -205,7 +203,11 @@ public class RedFn {
 		@Override
 		public CompoundNBT write(CompoundNBT tag) {
 			super.write(tag);
-			return tag;// TODO
+			tag.putInt("burn", burnTime);
+			tag.putInt("proc", procTime);
+			tag.putInt("tb", burnTotal);
+			tag.putInt("tp", procTotal);
+			return tag;
 		}
 
 	}

@@ -1,0 +1,9 @@
+{
+	"type": "quantizedinformatics:oxidation",
+	"time": 200,
+	"in_main": {
+	"item": "iron_boots"
+	},
+	"out_main": "quantizedinformatics:elem_feo",
+	"out_main_count": 4
+}

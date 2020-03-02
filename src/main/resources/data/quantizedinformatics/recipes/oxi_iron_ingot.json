@@ -1,0 +1,9 @@
+{
+	"type": "quantizedinformatics:oxidation",
+	"time": 200,
+	"in_main": {
+	"item": "iron_ingot"
+	},
+	"out_main": "quantizedinformatics:iron_oxide",
+	"out_main_count": 1
+}
