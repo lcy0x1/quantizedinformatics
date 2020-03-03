@@ -28,7 +28,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
-public class DraftGate extends CTEBlock<DraftGate.TE> implements DraftWire.DraftIO {
+public class DraftGate extends CTEBlock<DraftGate.TE> implements WireConnect.DraftIO {
 
 	public static class Cont extends CTECont {
 
@@ -182,7 +182,7 @@ public class DraftGate extends CTEBlock<DraftGate.TE> implements DraftWire.Draft
 
 	}
 
-	public static class TE extends CTEBlock.CTETE<TE> implements ITickableTileEntity, DraftWire.DraftTE {
+	public static class TE extends CTEBlock.CTETE<TE> implements ITickableTileEntity, WireConnect.DraftTE {
 
 		private LogicGate chip;
 		private final IntArray data = new IntArray(DATA_LEN);
@@ -212,8 +212,24 @@ public class DraftGate extends CTEBlock<DraftGate.TE> implements DraftWire.Draft
 		}
 
 		@Override
+		public int getOutputChannel(int ind) {
+			int val = data.get(ind + 16) & 31;
+			return val >= 16 ? -1 : val;
+		}
+
+		@Override
+		public int getOutputValue(int ind) {
+			return 0;// TODO
+		}
+
+		@Override
 		public boolean isItemValidForSlot(int index, ItemStack stack) {
 			return Cont.isChip(stack);
+		}
+
+		@Override
+		public int outputCount() {
+			return 16;
 		}
 
 		@Override
@@ -223,6 +239,16 @@ public class DraftGate extends CTEBlock<DraftGate.TE> implements DraftWire.Draft
 			if (arr.length > 0)
 				for (int i = 0; i < DATA_LEN; i++)
 					data.set(i, arr[i]);
+		}
+
+		@Override
+		public void tick() {
+			if (world.isRemote)
+				return;
+			BlockState b = getBlockState();
+			Direction d = b.get(HORIZONTAL_FACING);
+			updateValidity(16, d);
+			updateValidity(0, d.getOpposite());
 		}
 
 		@Override
@@ -259,26 +285,16 @@ public class DraftGate extends CTEBlock<DraftGate.TE> implements DraftWire.Draft
 			return ((LogicDraft) is.getItem()).getLogicGate(is);
 		}
 
-		@Override
-		public void tick() {
-			if (world.isRemote)
-				return;
-			BlockState b = getBlockState();
-			Direction d = b.get(HORIZONTAL_FACING);
-			updateValidity(16, d);
-			updateValidity(0, d.getOpposite());
-		}
-
 		private void updateValidity(int off, Direction d) {
 			BlockPos opos = pos.offset(d);
 			BlockState obs = world.getBlockState(opos);
 			int[] vali = new int[16];
 			if (obs.getBlock() instanceof DraftWire) {
-				BlockPos[][] output = DraftWire.query(world, opos);
+				BlockPos[][] output = DraftWire.queryGate(world, opos);
 				for (BlockPos p : output[1]) {
-					DraftWire.DraftTE te = (DraftWire.DraftTE) world.getTileEntity(p);
+					WireConnect.DraftTE te = (WireConnect.DraftTE) world.getTileEntity(p);
 					for (int i = 0; i < te.outputCount(); i++) {
-						int val = te.getOutput(i);
+						int val = te.getOutputChannel(i);
 						if (val >= 0 && val < 16)
 							vali[val]++;
 					}
@@ -291,17 +307,6 @@ public class DraftGate extends CTEBlock<DraftGate.TE> implements DraftWire.Draft
 				else
 					data.set(i + off, val);
 			}
-		}
-
-		@Override
-		public int outputCount() {
-			return 16;
-		}
-
-		@Override
-		public int getOutput(int ind) {
-			int val = data.get(ind + 16) & 31;
-			return val >= 16 ? -1 : val;
 		}
 
 	}

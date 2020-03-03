@@ -1,25 +1,12 @@
 {
-	"credit": "Made with Blockbench",
-	"parent": "block/block",
+	"parent": "block/cube",
 	"textures": {
-		"1": "quantizedinformatics:blocks/craft_3d_front",
-		"2": "quantizedinformatics:blocks/craft_3d_top",
-		"3": "quantizedinformatics:blocks/quantum_fog",
-		"4": "quantizedinformatics:blocks/craft_3d",
-		"particle": "quantizedinformatics:blocks/craft_3d"
-	},
-	"elements": [
-		{
-			"from": [0, 0, 0],
-			"to": [16, 16, 16],
-			"faces": {
-				"north": {"uv": [0, 0, 16, 16], "texture": "#1"},
-				"east": {"uv": [0, 0, 16, 16], "texture": "#4"},
-				"south": {"uv": [0, 0, 16, 16], "texture": "#4"},
-				"west": {"uv": [0, 0, 16, 16], "texture": "#4"},
-				"up": {"uv": [0, 0, 16, 16], "texture": "#2"},
-				"down": {"uv": [0, 0, 16, 16], "texture": "#3"}
-			}
-		}
-	]
+		"north": "quantizedinformatics:blocks/craft_3d_front",
+		"up": "quantizedinformatics:blocks/craft_3d_top",
+		"down": "quantizedinformatics:blocks/quantum_fog",
+		"south": "quantizedinformatics:blocks/craft_3d",
+		"west": "quantizedinformatics:blocks/craft_3d",
+		"east": "quantizedinformatics:blocks/craft_3d",
+		"particle": "quantizedinformatics:blocks/quantum_fog"
+	}
 }

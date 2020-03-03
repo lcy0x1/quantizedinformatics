@@ -5,12 +5,19 @@ import java.util.function.Supplier;
 
 import org.apache.logging.log4j.LogManager;
 
+import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DIOTerm;
+import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftIO;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.Craft3D;
+import com.arthurlcy0x1.quantizedinformatics.blocks.DraftCntr;
 import com.arthurlcy0x1.quantizedinformatics.blocks.DraftGate;
+import com.arthurlcy0x1.quantizedinformatics.blocks.DraftIn;
+import com.arthurlcy0x1.quantizedinformatics.blocks.DraftLnr;
+import com.arthurlcy0x1.quantizedinformatics.blocks.DraftOut;
 import com.arthurlcy0x1.quantizedinformatics.blocks.DraftWire;
 import com.arthurlcy0x1.quantizedinformatics.blocks.OxiFn;
 import com.arthurlcy0x1.quantizedinformatics.blocks.RedFn;
+import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect;
 import com.arthurlcy0x1.quantizedinformatics.items.DraftGateItem;
 import com.arthurlcy0x1.quantizedinformatics.items.LogicDraft;
 import com.arthurlcy0x1.quantizedinformatics.recipe.C3DRecipe;
@@ -41,23 +48,31 @@ public class Registrar extends ItemGroup {
 
 	// blocks
 	public static final Block B_FOG = generate("quantum_fog", Material.EARTH);
-	public static final Block BD_WIRE = addName(new DraftWire(DraftGate.GATE), "draft_wire");
-	public static final Block BC_FRAME = addName(new DraftWire(DraftGate.CRAFT), "craft_frame");
-	public static final Block BD_GATE = addName(new DraftGate(), "draft_gate");
+	public static final Block BC_FRAME = addName(new DraftWire(WireConnect.CRAFT), "craft_frame");
+	public static final Block B_CRAFT3D = addName(new Craft3D(), "craft_3d");
 	public static final Block B_OXIFN = addName(new CTEBlock<OxiFn.TE>(OxiFn.TE::new), "oxidation_furnace");
 	public static final Block B_REDFN = addName(new CTEBlock<RedFn.TE>(RedFn.TE::new), "reduction_furnace");
-	public static final Block B_CRAFT3D = addName(new Craft3D(), "craft_3d");
+	public static final Block BD_WIRE = addName(new DraftWire(WireConnect.GATE), "draft_wire");
+	public static final Block BD_CNTR = addName(new DIOTerm<>(DraftCntr.TE::new, DraftIO.OUTPUT), "draft_center");
+	public static final Block BD_GATE = addName(new DraftGate(), "draft_gate");
+	public static final Block BD_IN = addName(new DraftIn(), "draft_in");
+	public static final Block BD_OUT = addName(new DraftOut(), "draft_out");
+	public static final Block BD_LNR = addName(new DraftLnr(), "draft_listener");
 
 	public static final ItemGroup ITEM_GROUP = new Registrar();
 
 	// block items
 	public static final Item IB_FOG = convert(B_FOG);
-	public static final Item IBD_WIRE = convert(BD_WIRE);
 	public static final Item IBC_FRAME = convert(BC_FRAME);
-	public static final Item IBD_GATE = convert(BD_GATE);
+	public static final Item IB_CRAFT3D = convert(B_CRAFT3D);
 	public static final Item IB_OXIFN = convert(B_OXIFN);
 	public static final Item IB_REDFN = convert(B_REDFN);
-	public static final Item IB_CRAFT3D = convert(B_CRAFT3D);
+	public static final Item IBD_WIRE = convert(BD_WIRE);
+	public static final Item IBD_CNTR = convert(BD_CNTR);
+	public static final Item IBD_GATE = convert(BD_GATE);
+	public static final Item IBD_IN = convert(BD_IN);
+	public static final Item IBD_OUT = convert(BD_OUT);
+	public static final Item IBD_LNR = convert(BD_LNR);
 
 	// items
 	public static final Item I_GATECHIP = generate("chip", 1);
@@ -104,9 +119,13 @@ public class Registrar extends ItemGroup {
 	public static final ContainerType<OxiFn.Cont> CT_OXIFN = getCT(OxiFn.Cont::new, "oxidation_furnace_c");
 	public static final ContainerType<RedFn.Cont> CT_REDFN = getCT(RedFn.Cont::new, "reduction_furnace_c");
 
-	public static final TileEntityType<DraftGate.TE> TET_GATE = getTET(DraftGate.TE::new, BD_GATE, "draft_gate_te");
 	public static final TileEntityType<OxiFn.TE> TET_OXIFN = getTET(OxiFn.TE::new, B_OXIFN, "oxidation_furnace_te");
 	public static final TileEntityType<RedFn.TE> TET_REDFN = getTET(RedFn.TE::new, B_REDFN, "reduction_furnace_te");
+	public static final TileEntityType<DraftCntr.TE> TET_CNTR = getTET(DraftCntr.TE::new, BD_CNTR, "draft_center_te");
+	public static final TileEntityType<DraftGate.TE> TET_GATE = getTET(DraftGate.TE::new, BD_GATE, "draft_gate_te");
+	public static final TileEntityType<DraftIn.TE> TET_IN = getTET(DraftIn.TE::new, BD_IN, "draft_in_te");
+	public static final TileEntityType<DraftOut.TE> TET_OUT = getTET(DraftOut.TE::new, BD_OUT, "draft_out_te");
+	public static final TileEntityType<DraftLnr.TE> TET_LNR = getTET(DraftLnr.TE::new, BD_LNR, "draft_listener_te");
 
 	public static final IRecipeType<OxiRecipe> RT_OXI = IRecipeType.register("quantizedinformatics:oxidation");
 	public static final IRecipeType<RedRecipe> RT_RED = IRecipeType.register("quantizedinformatics:reduction");
@@ -121,8 +140,9 @@ public class Registrar extends ItemGroup {
 		ScreenManager.registerFactory(CT_GATE, DraftGate.Scr::new);
 	}
 
-	public static final ContainerType<?>[] CTS = { CT_GATE, CT_OXIFN, CT_REDFN };
-	public static final TileEntityType<?>[] TETS = { TET_GATE, TET_OXIFN, TET_REDFN };
+	public static final ContainerType<?>[] CTS = { CT_OXIFN, CT_REDFN, CT_GATE };
+	public static final TileEntityType<?>[] TETS = { TET_OXIFN, TET_REDFN, TET_CNTR, TET_GATE, TET_IN, TET_OUT,
+			TET_LNR };
 	public static final IRecipeSerializer<?>[] RSS = { RS_OXI, RS_RED, RS_C3D };
 
 	@SuppressWarnings("unchecked")

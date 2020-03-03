@@ -165,7 +165,9 @@ public class Craft3D extends HorizontalBlock implements WireConnect {
 	}
 
 	@Override
-	public boolean canConnectFrom(BlockState bs, Direction d) {
+	public boolean canConnectFrom(int type, BlockState bs, Direction d) {
+		if (type != CRAFT)
+			return false;
 		Direction self = bs.get(HORIZONTAL_FACING);
 		return d != self && d != Direction.UP && d != Direction.DOWN;
 	}
@@ -185,11 +187,6 @@ public class Craft3D extends HorizontalBlock implements WireConnect {
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite());
-	}
-
-	@Override
-	public int type() {
-		return GATE;
 	}
 
 }

@@ -22,33 +22,7 @@ import net.minecraft.world.World;
 
 public class DraftWire extends SixWayBlock implements WireConnect {
 
-	public static interface DraftIO extends WireConnect {
-
-		public static final int NONE = 0, INPUT = 1, OUTPUT = 2;
-
-		@Override
-		public default boolean canConnectFrom(BlockState b, Direction d) {
-			return ioType(b, d) != NONE;
-		}
-
-		public int ioType(BlockState b, Direction d);
-
-		@Override
-		public default int type() {
-			return GATE;
-		}
-
-	}
-
-	public static interface DraftTE {
-
-		public int outputCount();
-
-		public int getOutput(int ind);
-
-	}
-
-	public static BlockPos[][] query(World w, BlockPos pb) {
+	public static BlockPos[][] queryGate(World w, BlockPos pb) {
 		List<BlockPos> ans = new ArrayList<>();
 		List<BlockPos> ins = new ArrayList<>();
 		Queue<BlockPos> q = new ArrayDeque<>();
@@ -61,19 +35,19 @@ public class DraftWire extends SixWayBlock implements WireConnect {
 				BlockPos p1 = p0.offset(d);
 				if (visited.contains(p1))
 					continue;
-				visited.add(p1);
 				BlockState st = w.getBlockState(p1);
 				if (st.getBlock() instanceof DraftWire)
 					q.add(p1);
-				else if (st.getBlock() instanceof DraftIO) {
-					DraftIO io = (DraftIO) st.getBlock();
+				else if (st.getBlock() instanceof WireConnect.DraftIO) {
+					WireConnect.DraftIO io = (WireConnect.DraftIO) st.getBlock();
 					int type = io.ioType(st, d.getOpposite());
-					if (type == DraftIO.OUTPUT)
+					if (type == WireConnect.DraftIO.OUTPUT)
 						ans.add(p1);
-					else if (type == DraftIO.INPUT)
+					else if (type == WireConnect.DraftIO.INPUT)
 						ins.add(p1);
-
+					continue;
 				}
+				visited.add(p1);
 			}
 		}
 		BlockPos[][] ret = { ins.toArray(new BlockPos[0]), ans.toArray(new BlockPos[0]) };
@@ -93,19 +67,19 @@ public class DraftWire extends SixWayBlock implements WireConnect {
 	}
 
 	@Override
+	public boolean canConnectFrom(int t, BlockState b, Direction d) {
+		return t == type;
+	}
+
+	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		return makeConnections(context.getWorld(), context.getPos());
 	}
 
 	@Override
-	public int type() {
-		return type;
-	}
-
-	@Override
 	public BlockState updatePostPlacement(BlockState os, Direction f, BlockState fs, IWorld w, BlockPos op,
 			BlockPos fp) {
-		return os.with(FACING_TO_PROPERTY_MAP.get(f), connectable(fs, f));
+		return os.with(FACING_TO_PROPERTY_MAP.get(f), connectable(type, fs, f));
 	}
 
 	@Override
@@ -117,7 +91,7 @@ public class DraftWire extends SixWayBlock implements WireConnect {
 		BlockState s = this.getDefaultState();
 		for (Direction d : Direction.values()) {
 			BlockState bl = world.getBlockState(pos.offset(d));
-			s = s.with(FACING_TO_PROPERTY_MAP.get(d), connectable(bl, d));
+			s = s.with(FACING_TO_PROPERTY_MAP.get(d), connectable(type, bl, d));
 		}
 		return s;
 	}
