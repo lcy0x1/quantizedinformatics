@@ -12,7 +12,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 
-public abstract class DraftWireAbstract extends SixWayBlock implements DraftBlock {
+public abstract class DraftWireAbstract extends SixWayBlock implements WireConnect {
 
 	public DraftWireAbstract() {
 		super(0.125f, Block.Properties.create(Material.EARTH));
@@ -43,7 +43,7 @@ public abstract class DraftWireAbstract extends SixWayBlock implements DraftBloc
 		BlockState s = this.getDefaultState();
 		for (Direction d : Direction.values()) {
 			Block bl = world.getBlockState(pos.offset(d)).getBlock();
-			s = s.with(FACING_TO_PROPERTY_MAP.get(d), bl instanceof DraftBlock);
+			s = s.with(FACING_TO_PROPERTY_MAP.get(d), bl instanceof WireConnect);
 		}
 		return s;
 	}

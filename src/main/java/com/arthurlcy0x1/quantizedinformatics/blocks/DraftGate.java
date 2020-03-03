@@ -17,15 +17,18 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
-public class DraftGate extends CTEBlock<DraftGate.TE> implements DraftBlock {
+public class DraftGate extends CTEBlock<DraftGate.TE> implements DraftWire.DraftIO {
 
 	public static class Cont extends CTECont {
 
@@ -139,8 +142,8 @@ public class DraftGate extends CTEBlock<DraftGate.TE> implements DraftBlock {
 				int x0 = x + 53 - i / 4 * 13;
 				int y0 = y + 18 + i % 4 * 13;
 				int x1 = x + 110 + i / 4 * 13;
-				drawSymbol(x0, y0, i, cont.data.get(i), true);
-				drawSymbol(x1, y0, i, cont.data.get(i + 16), true);
+				drawSymbol(x0, y0, i, cont.data.get(i), false);
+				drawSymbol(x1, y0, i, cont.data.get(i + 16), false);
 			}
 			if (sele >= 0)
 				if (sele < 16)
@@ -152,6 +155,11 @@ public class DraftGate extends CTEBlock<DraftGate.TE> implements DraftBlock {
 		private void drawSymbol(int x, int y, int i, int cv, boolean valid) {
 			if (cv == 19 && i >= 4)
 				return;
+			if (!valid)
+				if (cv >= 32 && cv < 48)
+					cv -= 32;
+				else
+					valid = true;
 			int cx = 176 + cv % 4 * 13;
 			int cy = cv / 4 * 13 + (valid ? 0 : 65);
 			blit(x, y, cx, cy, 13, 13);
@@ -174,7 +182,7 @@ public class DraftGate extends CTEBlock<DraftGate.TE> implements DraftBlock {
 
 	}
 
-	public static class TE extends CTEBlock.CTETE<TE> {
+	public static class TE extends CTEBlock.CTETE<TE> implements ITickableTileEntity, DraftWire.DraftTE {
 
 		private LogicGate chip;
 		private final IntArray data = new IntArray(DATA_LEN);
@@ -251,6 +259,51 @@ public class DraftGate extends CTEBlock<DraftGate.TE> implements DraftBlock {
 			return ((LogicDraft) is.getItem()).getLogicGate(is);
 		}
 
+		@Override
+		public void tick() {
+			if (world.isRemote)
+				return;
+			BlockState b = getBlockState();
+			Direction d = b.get(HORIZONTAL_FACING);
+			updateValidity(16, d);
+			updateValidity(0, d.getOpposite());
+		}
+
+		private void updateValidity(int off, Direction d) {
+			BlockPos opos = pos.offset(d);
+			BlockState obs = world.getBlockState(opos);
+			int[] vali = new int[16];
+			if (obs.getBlock() instanceof DraftWire) {
+				BlockPos[][] output = DraftWire.query(world, opos);
+				for (BlockPos p : output[1]) {
+					DraftWire.DraftTE te = (DraftWire.DraftTE) world.getTileEntity(p);
+					for (int i = 0; i < te.outputCount(); i++) {
+						int val = te.getOutput(i);
+						if (val >= 0 && val < 16)
+							vali[val]++;
+					}
+				}
+			}
+			for (int i = 0; i < 16; i++) {
+				int val = data.get(i + off) & 31;
+				if (val < 16 && vali[val] > 1)
+					data.set(i + off, val + 32);
+				else
+					data.set(i + off, val);
+			}
+		}
+
+		@Override
+		public int outputCount() {
+			return 16;
+		}
+
+		@Override
+		public int getOutput(int ind) {
+			int val = data.get(ind + 16) & 31;
+			return val >= 16 ? -1 : val;
+		}
+
 	}
 
 	private static final int DATA_LEN = 32;
@@ -263,7 +316,8 @@ public class DraftGate extends CTEBlock<DraftGate.TE> implements DraftBlock {
 	}
 
 	@Override
-	public int type() {
-		return GATE;
+	public int ioType(BlockState bs, Direction d) {
+		Direction self = bs.get(HORIZONTAL_FACING);
+		return self == d ? OUTPUT : self == d.getOpposite() ? INPUT : NONE;
 	}
 }

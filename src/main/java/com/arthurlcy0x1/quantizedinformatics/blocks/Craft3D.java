@@ -17,12 +17,13 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 
-public class Craft3D extends HorizontalBlock {
+public class Craft3D extends HorizontalBlock implements WireConnect {
 
 	public static class Handler extends Inventory implements Craft3DInv {
 
@@ -164,6 +165,12 @@ public class Craft3D extends HorizontalBlock {
 	}
 
 	@Override
+	public boolean canConnectFrom(BlockState bs, Direction d) {
+		Direction self = bs.get(HORIZONTAL_FACING);
+		return d != self && d != Direction.UP && d != Direction.DOWN;
+	}
+
+	@Override
 	public void fillStateContainer(Builder<Block, BlockState> builder) {
 		builder.add(HORIZONTAL_FACING);
 	}
@@ -178,6 +185,11 @@ public class Craft3D extends HorizontalBlock {
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite());
+	}
+
+	@Override
+	public int type() {
+		return GATE;
 	}
 
 }
