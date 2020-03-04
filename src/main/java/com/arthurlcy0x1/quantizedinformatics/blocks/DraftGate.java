@@ -1,8 +1,5 @@
 package com.arthurlcy0x1.quantizedinformatics.blocks;
 
-import java.util.function.Supplier;
-
-import com.arthurlcy0x1.quantizedinformatics.PacketHandler;
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.items.LogicDraft;
 import com.arthurlcy0x1.quantizedinformatics.logic.LogicGate;
@@ -16,70 +13,38 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
 
 public class DraftGate extends CTEBlock<DraftGate.TE> implements WireConnect.DraftIO {
 
-	public static class Cont extends CTECont {
+	public static class Cont extends CTECont implements DraftCont {
 
 		private static boolean isChip(ItemStack is) {
 			return is.getItem() instanceof LogicDraft;
 		}
 
-		private final IIntArray data;
+		private final SignalWriter data;
 
 		public Cont(int id, PlayerInventory inv) {
-			this(id, inv, new Inventory(1), new IntArray(DATA_LEN));
+			this(id, inv, new Inventory(1), new IntArray(CNUM * 2));
 		}
 
 		protected Cont(int id, PlayerInventory inv, IInventory ent, IIntArray d) {
-			super(Registrar.CT_GATE, id, inv, ent, 86);
+			super(Registrar.CTD_GATE, id, inv, ent, 86);
 			this.addSlot(new CondSlot(slots, 0, 80, 36, Cont::isChip));
-			trackIntArray(data = d);
+			trackIntArray(d);
+			data = new SignalWriter(CNUM, CNUM, d);
 		}
 
-	}
-
-	public static class Msg {
-
-		public static Msg decode(PacketBuffer packet) {
-			return new Msg(packet.readInt(), packet.readInt());
-		}
-
-		private final int ind, val;
-
-		private Msg(int index, int value) {
-			ind = index;
-			val = value;
-		}
-
-		public void encode(PacketBuffer packet) {
-			packet.writeInt(ind);
-			packet.writeInt(val);
-		}
-
-		public void handle(Context ctx) {
-			Container c = ctx.getSender().openContainer;
-			if (c instanceof Cont) {
-				Cont cont = (Cont) c;
-				cont.data.set(ind, val);
-			}
-		}
-
-		public void handle(Supplier<Context> sup) {
-			Context ctx = sup.get();
-			ctx.enqueueWork(() -> this.handle(ctx));
-			ctx.setPacketHandled(true);
+		@Override
+		public SignalWriter getSignal() {
+			return data;
 		}
 
 	}
@@ -97,24 +62,8 @@ public class DraftGate extends CTEBlock<DraftGate.TE> implements WireConnect.Dra
 
 		@Override
 		public boolean charTyped(char ch, int t) {
-			int bit = -1;
-			if (ch >= '0' && ch <= '9')
-				bit = ch - '0';
-			else if (ch >= 'a' && ch <= 'f')
-				bit = ch - 'a' + 10;
-			else if (ch >= 'A' && ch <= 'F')
-				bit = ch - 'A' + 10;
-			else if (ch == 'L' || ch == 'l')
-				bit = 16;
-			else if (ch == 'H' || ch == 'h')
-				bit = 17;
-			else if (ch == ' ')
-				bit = 18;
 			if (sele >= 0) {
-				if (bit == -1 || sele >= 16 && bit > 16 || sele < 16 && bit == 18)
-					sele = -1;
-				else
-					PacketHandler.send(new Msg(sele, bit));
+				sele = container.data.updateSele(sele, ch);
 				return true;
 			}
 			return super.charTyped(ch, t);
@@ -123,7 +72,7 @@ public class DraftGate extends CTEBlock<DraftGate.TE> implements WireConnect.Dra
 		@Override
 		public boolean mouseClicked(double x, double y, int t) {
 			sele = getSele(x, y);
-			if (sele >= 0 && container.data.get(sele) == 19)
+			if (sele >= 0 && container.data.getChannel(sele) == C_FLOAT)
 				sele = -1;
 			if (sele == -1)
 				return super.mouseClicked(x, y, t);
@@ -142,22 +91,22 @@ public class DraftGate extends CTEBlock<DraftGate.TE> implements WireConnect.Dra
 				int x0 = x + 53 - i / 4 * 13;
 				int y0 = y + 18 + i % 4 * 13;
 				int x1 = x + 110 + i / 4 * 13;
-				drawSymbol(x0, y0, i, cont.data.get(i), false);
-				drawSymbol(x1, y0, i, cont.data.get(i + 16), false);
+				drawSymbol(x0, y0, i, cont.data.getInput(i), false);
+				drawSymbol(x1, y0, i, cont.data.getOutput(i), false);
 			}
 			if (sele >= 0)
-				if (sele < 16)
+				if (sele < CNUM)
 					drawSymbol(x + 53 - sele / 4 * 13, y + 18 + sele % 4 * 13, sele, 36, true);
 				else
-					drawSymbol(x + 58 + sele / 4 * 13, y + 18 + sele % 4 * 13, sele - 16, 36, true);
+					drawSymbol(x + 58 + sele / 4 * 13, y + 18 + sele % 4 * 13, sele - CNUM, 36, true);
 		}
 
 		private void drawSymbol(int x, int y, int i, int cv, boolean valid) {
-			if (cv == 19 && i >= 4)
+			if (cv == C_FLOAT && i >= 4)
 				return;
 			if (!valid)
-				if (cv >= 32 && cv < 48)
-					cv -= 32;
+				if (cv >= C_ERR && cv < C_ERR + CNUM)
+					cv -= C_ERR;
 				else
 					valid = true;
 			int cx = 176 + cv % 4 * 13;
@@ -168,24 +117,24 @@ public class DraftGate extends CTEBlock<DraftGate.TE> implements WireConnect.Dra
 		private int getSele(double x, double y) {
 			int xc = guiLeft;
 			int yc = guiTop;
-			for (int i = 0; i < 16; i++) {
+			for (int i = 0; i < CNUM; i++) {
 				int x0 = xc + 53 - i / 4 * 13;
 				int y0 = yc + 18 + i % 4 * 13;
 				int x1 = xc + 110 + i / 4 * 13;
 				if (x >= x0 && x < x0 + 13 && y > y0 && y < y0 + 13)
 					return i;
 				if (x >= x1 && x < x1 + 13 && y > y0 && y < y0 + 13)
-					return i + 16;
+					return i + CNUM;
 			}
 			return -1;
 		}
 
 	}
 
-	public static class TE extends CTEBlock.CTETE<TE> implements ITickableTileEntity, WireConnect.DraftTE {
+	public static class TE extends CTEBlock.CTETE<TE> implements WireConnect.DraftTE {
 
 		private LogicGate chip;
-		private final IntArray data = new IntArray(DATA_LEN);
+		private final SignalManager data = new SignalManager(this, CNUM, CNUM);
 
 		public TE() {
 			super(Registrar.TET_GATE, 1);
@@ -212,14 +161,8 @@ public class DraftGate extends CTEBlock<DraftGate.TE> implements WireConnect.Dra
 		}
 
 		@Override
-		public int getOutputChannel(int ind) {
-			int val = data.get(ind + 16) & 31;
-			return val >= 16 ? -1 : val;
-		}
-
-		@Override
-		public int getOutputValue(int ind) {
-			return 0;// TODO
+		public SignalManager getSignal() {
+			return data;
 		}
 
 		@Override
@@ -228,36 +171,42 @@ public class DraftGate extends CTEBlock<DraftGate.TE> implements WireConnect.Dra
 		}
 
 		@Override
-		public int outputCount() {
-			return 16;
-		}
-
-		@Override
 		public void read(CompoundNBT tag) {
 			super.read(tag);
-			int[] arr = tag.getIntArray("channels");
-			if (arr.length > 0)
-				for (int i = 0; i < DATA_LEN; i++)
-					data.set(i, arr[i]);
+			data.read(tag);
 		}
 
 		@Override
-		public void tick() {
-			if (world.isRemote)
-				return;
-			BlockState b = getBlockState();
-			Direction d = b.get(HORIZONTAL_FACING);
-			updateValidity(16, d);
-			updateValidity(0, d.getOpposite());
+		public int[] update(int[] vals) {
+			int[] ans = new int[CNUM];
+			if (chip != null) {
+				int input = 0;
+				for (int i = 0; i < chip.input; i++) {
+					int val = vals[data.getInput(i)];
+					if (val == S_FLOAT) {
+						for (int j = 0; j < chip.output; j++)
+							ans[j] = S_FLOAT;
+						return ans;
+					}
+					if (val == S_ERR) {
+						for (int j = 0; j < chip.output; j++)
+							ans[j] = S_ERR;
+						return ans;
+					}
+					if (val == S_HIGH)
+						input |= 1 << i;
+				}
+				int output = chip.compute(input);
+				for (int i = 0; i < chip.output; i++)
+					ans[i] = (output & 1 << i) > 0 ? S_HIGH : S_LOW;
+			}
+			return ans;
 		}
 
 		@Override
 		public CompoundNBT write(CompoundNBT tag) {
 			super.write(tag);
-			int[] arr = new int[DATA_LEN];
-			for (int i = 0; i < DATA_LEN; i++)
-				arr[i] = data.get(i);
-			tag.putIntArray("channels", arr);
+			data.write(tag);
 			return tag;
 		}
 
@@ -266,16 +215,16 @@ public class DraftGate extends CTEBlock<DraftGate.TE> implements WireConnect.Dra
 			chip = loadChip();
 			int cin = chip == null ? 0 : chip.input;
 			int cout = chip == null ? 0 : chip.output;
-			for (int i = 0; i < 16; i++)
+			for (int i = 0; i < CNUM; i++)
 				if (i >= cin)
-					data.set(i, 19);
+					data.setInput(i, C_FORBID);
 				else
-					data.set(i, 16);
-			for (int i = 0; i < 16; i++)
+					data.setInput(i, C_LOW);
+			for (int i = 0; i < CNUM; i++)
 				if (i >= cout)
-					data.set(16 + i, 19);
+					data.setOutput(i, C_FORBID);
 				else
-					data.set(16 + i, 18);
+					data.setOutput(i, C_FLOAT);
 		}
 
 		private LogicGate loadChip() {
@@ -285,33 +234,7 @@ public class DraftGate extends CTEBlock<DraftGate.TE> implements WireConnect.Dra
 			return ((LogicDraft) is.getItem()).getLogicGate(is);
 		}
 
-		private void updateValidity(int off, Direction d) {
-			BlockPos opos = pos.offset(d);
-			BlockState obs = world.getBlockState(opos);
-			int[] vali = new int[16];
-			if (obs.getBlock() instanceof DraftWire) {
-				BlockPos[][] output = DraftWire.queryGate(world, opos);
-				for (BlockPos p : output[1]) {
-					WireConnect.DraftTE te = (WireConnect.DraftTE) world.getTileEntity(p);
-					for (int i = 0; i < te.outputCount(); i++) {
-						int val = te.getOutputChannel(i);
-						if (val >= 0 && val < 16)
-							vali[val]++;
-					}
-				}
-			}
-			for (int i = 0; i < 16; i++) {
-				int val = data.get(i + off) & 31;
-				if (val < 16 && vali[val] > 1)
-					data.set(i + off, val + 32);
-				else
-					data.set(i + off, val);
-			}
-		}
-
 	}
-
-	private static final int DATA_LEN = 32;
 
 	private static final ITextComponent TITLE = new TranslationTextComponent(
 			"quantizedinformatics:container.draft_gate");
@@ -321,8 +244,12 @@ public class DraftGate extends CTEBlock<DraftGate.TE> implements WireConnect.Dra
 	}
 
 	@Override
-	public int ioType(BlockState bs, Direction d) {
-		Direction self = bs.get(HORIZONTAL_FACING);
-		return self == d ? OUTPUT : self == d.getOpposite() ? INPUT : NONE;
+	public Direction getInDire(BlockState b) {
+		return b.get(HORIZONTAL_FACING).getOpposite();
+	}
+
+	@Override
+	public Direction getOutDire(BlockState b) {
+		return b.get(HORIZONTAL_FACING);
 	}
 }

@@ -13,12 +13,49 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.util.Direction;
+import net.minecraft.util.IIntArray;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.IntArray;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 
 public class DraftLnr extends Block implements DraftIO {
+
+	public static class Cont extends DIOCont {
+
+		public Cont(int id, PlayerInventory inv) {
+			this(id, new IntArray(1));
+		}
+
+		protected Cont(int id, IIntArray arr) {
+			super(Registrar.CTD_LNR, id, new SignalWriter(1, 0, arr));
+		}
+
+	}
+
+	public static class TE extends DTETerm<TE> implements INamedContainerProvider {
+
+		public TE() {
+			super(Registrar.TET_LNR, INPUT);
+		}
+
+		@Override
+		public Container createMenu(int id, PlayerInventory pi, PlayerEntity pl) {
+			return new Cont(id, getSignal());
+		}
+
+		@Override
+		public ITextComponent getDisplayName() {
+			return TITLE;
+		}
+
+		@Override
+		public int[] update(int[] vals) {
+			return vals.clone();
+		}
+
+	};
 
 	private static enum Mode implements IStringSerializable {
 		FLOAT("float"), ERROR("error"), HIGH("high"), LOW("low");
@@ -33,26 +70,6 @@ public class DraftLnr extends Block implements DraftIO {
 		public String getName() {
 			return name;
 		}
-	};
-
-	public static class TE extends DTETerm<TE> implements INamedContainerProvider {
-
-		public TE() {
-			super(Registrar.TET_LNR, INPUT);
-		}
-
-		@Override
-		public Container createMenu(int p_createMenu_1_, PlayerInventory p_createMenu_2_,
-				PlayerEntity p_createMenu_3_) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public ITextComponent getDisplayName() {
-			return TITLE;
-		}
-
 	}
 
 	private static final ITextComponent TITLE = new TranslationTextComponent(
@@ -64,12 +81,19 @@ public class DraftLnr extends Block implements DraftIO {
 		super(Block.Properties.create(Material.ROCK));
 	}
 
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		builder.add(PROP);
-	}
-
+	@Override
 	public TE createTileEntity(BlockState bs, IBlockReader w) {
 		return new TE();
+	}
+
+	@Override
+	public Direction getInDire(BlockState b) {
+		return Direction.DOWN;
+	}
+
+	@Override
+	public Direction getOutDire(BlockState b) {
+		return null;
 	}
 
 	@Override
@@ -78,8 +102,8 @@ public class DraftLnr extends Block implements DraftIO {
 	}
 
 	@Override
-	public int ioType(BlockState b, Direction d) {
-		return d == Direction.DOWN ? INPUT : NONE;
+	protected void fillStateContainer(Builder<Block, BlockState> builder) {
+		builder.add(PROP);
 	}
 
 }

@@ -4,7 +4,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import com.arthurlcy0x1.quantizedinformatics.blocks.DraftGate;
+import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect;
 
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
@@ -21,7 +21,7 @@ public class PacketHandler {
 	private static int id = 0;
 
 	public static void registerPackets() {
-		reg(DraftGate.Msg.class, DraftGate.Msg::encode, DraftGate.Msg::decode, DraftGate.Msg::handle);
+		reg(WireConnect.Msg.class, WireConnect.Msg::encode, WireConnect.Msg::decode, WireConnect.Msg::handle);
 	}
 
 	public static <T> void send(T msg) {

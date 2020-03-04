@@ -7,26 +7,34 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.util.IIntArray;
+import net.minecraft.util.IntArray;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
 public class DraftIn extends DIOTerm<DraftIn.TE> {
 
-	public DraftIn() {
-		super(TE::new, OUTPUT);
+	public static class Cont extends DIOCont {
+
+		public Cont(int id, PlayerInventory inv) {
+			this(id, new IntArray(1));
+		}
+
+		protected Cont(int id, IIntArray arr) {
+			super(Registrar.CTD_IN, id, new SignalWriter(0, 1, arr));
+		}
+
 	}
 
 	public static class TE extends DTETerm<TE> implements INamedContainerProvider {
 
 		public TE() {
-			super(Registrar.TET_IN,OUTPUT);
+			super(Registrar.TET_IN, OUTPUT);
 		}
 
 		@Override
-		public Container createMenu(int p_createMenu_1_, PlayerInventory p_createMenu_2_,
-				PlayerEntity p_createMenu_3_) {
-			// TODO Auto-generated method stub
-			return null;
+		public Container createMenu(int id, PlayerInventory pi, PlayerEntity pl) {
+			return new Cont(id, getSignal());
 		}
 
 		@Override
@@ -35,24 +43,18 @@ public class DraftIn extends DIOTerm<DraftIn.TE> {
 		}
 
 		@Override
-		public int getOutputChannel(int ind) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public int getOutputValue(int ind) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public int outputCount() {
-			return 1;
+		public int[] update(int[] vals) {
+			int[] ans = new int[CNUM];
+			// TODO add inputs
+			return ans;
 		}
 
 	}
 
 	private static final ITextComponent TITLE = new TranslationTextComponent("quantizedinformatics:container.draft_in");
+
+	public DraftIn() {
+		super(TE::new, OUTPUT);
+	}
 
 }

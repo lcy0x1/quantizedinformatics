@@ -22,18 +22,23 @@ import net.minecraft.world.World;
 
 public class DraftWire extends SixWayBlock implements WireConnect {
 
+	/**
+	 * return 2 arrays of BlockPos. <br>
+	 * Array 0 is an array of Blocks that reads from the wire <br>
+	 * Array 1 is an array of Blocks that writes to the wire
+	 */
 	public static BlockPos[][] queryGate(World w, BlockPos pb) {
 		List<BlockPos> ans = new ArrayList<>();
 		List<BlockPos> ins = new ArrayList<>();
 		Queue<BlockPos> q = new ArrayDeque<>();
-		Set<BlockPos> visited = new HashSet<>();
+		Set<BlockPos> set = new HashSet<>();
 		q.add(pb);
-		visited.add(pb);
+		set.add(pb);
 		while (q.size() > 0) {
 			BlockPos p0 = q.poll();
 			for (Direction d : Direction.values()) {
 				BlockPos p1 = p0.offset(d);
-				if (visited.contains(p1))
+				if (set.contains(p1))
 					continue;
 				BlockState st = w.getBlockState(p1);
 				if (st.getBlock() instanceof DraftWire)
@@ -41,17 +46,48 @@ public class DraftWire extends SixWayBlock implements WireConnect {
 				else if (st.getBlock() instanceof WireConnect.DraftIO) {
 					WireConnect.DraftIO io = (WireConnect.DraftIO) st.getBlock();
 					int type = io.ioType(st, d.getOpposite());
-					if (type == WireConnect.DraftIO.OUTPUT)
+					if (type == WireConnect.OUTPUT)
 						ans.add(p1);
-					else if (type == WireConnect.DraftIO.INPUT)
+					else if (type == WireConnect.INPUT)
 						ins.add(p1);
 					continue;
 				}
-				visited.add(p1);
+				set.add(p1);
 			}
 		}
 		BlockPos[][] ret = { ins.toArray(new BlockPos[0]), ans.toArray(new BlockPos[0]) };
 		return ret;
+	}
+
+	public static BlockPos[] queryPoint(World w, BlockPos c) {
+		Set<BlockPos> set = new HashSet<>();
+		List<BlockPos> ans = new ArrayList<>();
+		Queue<BlockPos> q = new ArrayDeque<>();
+		set.add(c);
+		q.add(c);
+		while (q.size() > 0) {
+			BlockPos p0 = q.poll();
+			BlockState s = w.getBlockState(p0);
+			WireConnect cn = (WireConnect) s.getBlock();
+			for (Direction d : Direction.values())
+				if (cn.canConnectFrom(CRAFT, s, d)) {
+					BlockPos p = p0.offset(d);
+					if (set.contains(p))
+						continue;
+					set.add(p);
+					BlockState bs = w.getBlockState(p);
+					if (bs.getBlock() instanceof WireConnect) {
+						WireConnect wc = (WireConnect) bs.getBlock();
+						if (!wc.canConnectFrom(CRAFT, bs, d.getOpposite()))
+							continue;
+						if (wc instanceof DraftIO)
+							ans.add(p);
+						q.add(p);
+					}
+
+				}
+		}
+		return ans.toArray(new BlockPos[0]);
 	}
 
 	private final int type;

@@ -115,9 +115,13 @@ public class Registrar extends ItemGroup {
 		}
 	}
 
-	public static final ContainerType<DraftGate.Cont> CT_GATE = getCT(DraftGate.Cont::new, "draft_gate_c");
 	public static final ContainerType<OxiFn.Cont> CT_OXIFN = getCT(OxiFn.Cont::new, "oxidation_furnace_c");
 	public static final ContainerType<RedFn.Cont> CT_REDFN = getCT(RedFn.Cont::new, "reduction_furnace_c");
+	public static final ContainerType<DraftCntr.Cont> CTD_CNTR = getCT(DraftCntr.Cont::new, "draft_cntr_c");
+	public static final ContainerType<DraftGate.Cont> CTD_GATE = getCT(DraftGate.Cont::new, "draft_gate_c");
+	public static final ContainerType<DraftIn.Cont> CTD_IN = getCT(DraftIn.Cont::new, "draft_in_c");
+	public static final ContainerType<DraftOut.Cont> CTD_OUT = getCT(DraftOut.Cont::new, "draft_out_c");
+	public static final ContainerType<DraftLnr.Cont> CTD_LNR = getCT(DraftLnr.Cont::new, "draft_listener_c");
 
 	public static final TileEntityType<OxiFn.TE> TET_OXIFN = getTET(OxiFn.TE::new, B_OXIFN, "oxidation_furnace_te");
 	public static final TileEntityType<RedFn.TE> TET_REDFN = getTET(RedFn.TE::new, B_REDFN, "reduction_furnace_te");
@@ -137,10 +141,11 @@ public class Registrar extends ItemGroup {
 	static {
 		ScreenManager.registerFactory(CT_OXIFN, OxiFn.Scr::new);
 		ScreenManager.registerFactory(CT_REDFN, RedFn.Scr::new);
-		ScreenManager.registerFactory(CT_GATE, DraftGate.Scr::new);
+		ScreenManager.registerFactory(CTD_CNTR, DraftCntr.Scr::new);
+		ScreenManager.registerFactory(CTD_GATE, DraftGate.Scr::new);
 	}
 
-	public static final ContainerType<?>[] CTS = { CT_OXIFN, CT_REDFN, CT_GATE };
+	public static final ContainerType<?>[] CTS = { CT_OXIFN, CT_REDFN, CTD_CNTR, CTD_GATE, CTD_IN, CTD_OUT, CTD_LNR };
 	public static final TileEntityType<?>[] TETS = { TET_OXIFN, TET_REDFN, TET_CNTR, TET_GATE, TET_IN, TET_OUT,
 			TET_LNR };
 	public static final IRecipeSerializer<?>[] RSS = { RS_OXI, RS_RED, RS_C3D };

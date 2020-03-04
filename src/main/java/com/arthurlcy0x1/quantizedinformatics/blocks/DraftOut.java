@@ -7,13 +7,23 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.util.IIntArray;
+import net.minecraft.util.IntArray;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
 public class DraftOut extends DIOTerm<DraftOut.TE> {
 
-	public DraftOut() {
-		super(TE::new, INPUT);
+	public static class Cont extends DIOCont {
+
+		public Cont(int id, PlayerInventory inv) {
+			this(id, new IntArray(1));
+		}
+
+		protected Cont(int id, IIntArray arr) {
+			super(Registrar.CTD_OUT, id, new SignalWriter(1, 0, arr));
+		}
+
 	}
 
 	public static class TE extends DTETerm<TE> implements INamedContainerProvider {
@@ -23,10 +33,8 @@ public class DraftOut extends DIOTerm<DraftOut.TE> {
 		}
 
 		@Override
-		public Container createMenu(int p_createMenu_1_, PlayerInventory p_createMenu_2_,
-				PlayerEntity p_createMenu_3_) {
-			// TODO Auto-generated method stub
-			return null;
+		public Container createMenu(int id, PlayerInventory pi, PlayerEntity pl) {
+			return new Cont(id, getSignal());
 		}
 
 		@Override
@@ -34,9 +42,18 @@ public class DraftOut extends DIOTerm<DraftOut.TE> {
 			return TITLE;
 		}
 
+		@Override
+		public int[] update(int[] vals) {
+			return vals.clone();
+		}
+
 	}
 
 	private static final ITextComponent TITLE = new TranslationTextComponent(
 			"quantizedinformatics:container.draft_out");
+
+	public DraftOut() {
+		super(TE::new, INPUT);
+	}
 
 }
