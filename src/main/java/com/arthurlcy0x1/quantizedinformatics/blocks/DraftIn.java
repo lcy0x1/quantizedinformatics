@@ -45,7 +45,7 @@ public class DraftIn extends DIOTerm<DraftIn.TE> {
 		@Override
 		public int[] update(int[] vals) {
 			int[] ans = new int[CNUM];
-			// TODO add inputs
+			ans[getSignal().getInput(0)] = world.isBlockPowered(pos) ? S_HIGH : S_LOW;
 			return ans;
 		}
 

@@ -52,13 +52,19 @@ public class DraftLnr extends Block implements DraftIO {
 
 		@Override
 		public int[] update(int[] vals) {
-			return vals.clone();
+			Mode m = Mode.get(vals[getSignal().getInput(0)]);
+			world.setBlockState(pos, getBlockState().with(PROP, m));
+			return vals;
 		}
 
 	};
 
 	private static enum Mode implements IStringSerializable {
 		FLOAT("float"), ERROR("error"), HIGH("high"), LOW("low");
+
+		private static Mode get(int type) {
+			return type == S_FLOAT ? FLOAT : type == S_HIGH ? HIGH : type == S_LOW ? LOW : ERROR;
+		}
 
 		private final String name;
 

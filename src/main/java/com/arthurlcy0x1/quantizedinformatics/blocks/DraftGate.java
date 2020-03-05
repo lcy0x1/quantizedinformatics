@@ -72,7 +72,7 @@ public class DraftGate extends CTEBlock<DraftGate.TE> implements WireConnect.Dra
 		@Override
 		public boolean mouseClicked(double x, double y, int t) {
 			sele = getSele(x, y);
-			if (sele >= 0 && container.data.getChannel(sele) == C_FLOAT)
+			if (sele >= 0 && container.data.get(sele) == C_FLOAT)
 				sele = -1;
 			if (sele == -1)
 				return super.mouseClicked(x, y, t);
@@ -160,6 +160,10 @@ public class DraftGate extends CTEBlock<DraftGate.TE> implements WireConnect.Dra
 			return 1;
 		}
 
+		public LogicGate getLogicGate() {
+			return chip;
+		}
+
 		@Override
 		public SignalManager getSignal() {
 			return data;
@@ -182,7 +186,16 @@ public class DraftGate extends CTEBlock<DraftGate.TE> implements WireConnect.Dra
 			if (chip != null) {
 				int input = 0;
 				for (int i = 0; i < chip.input; i++) {
-					int val = vals[data.getInput(i)];
+					int ch = data.getInput(i);
+					int val = S_ERR;
+					if (ch == C_HIGH)
+						val = S_HIGH;
+					if (ch == C_FLOAT)
+						val = S_FLOAT;
+					if (ch == C_LOW)
+						val = S_LOW;
+					if (ch >= 0 && ch < CNUM)
+						val = vals[ch];
 					if (val == S_FLOAT) {
 						for (int j = 0; j < chip.output; j++)
 							ans[j] = S_FLOAT;

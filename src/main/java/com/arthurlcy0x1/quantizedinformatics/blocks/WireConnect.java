@@ -30,7 +30,7 @@ public interface WireConnect {
 		protected DIOCont(ContainerType<?> type, int id, SignalWriter arr) {
 			super(type, id);
 			data = arr;
-			trackIntArray(data.data);
+			trackIntArray(data.getData());
 		}
 
 		@Override
@@ -49,6 +49,7 @@ public interface WireConnect {
 
 		public DIOScr(T cont, PlayerInventory inv, ITextComponent title) {
 			super(cont, inv, title);
+			// TODO reset gui size
 		}
 
 		@Override
@@ -109,7 +110,7 @@ public interface WireConnect {
 
 	public static interface DraftCont {
 
-		public SignalWriter getSignal();
+		public MsgWriter getSignal();
 
 	}
 
@@ -132,7 +133,7 @@ public interface WireConnect {
 
 	public static interface DraftTE {
 
-		public SignalManager getSignal();
+		public ISignalManager getSignal();
 
 		public int[] update(int[] vals);
 
@@ -151,6 +152,26 @@ public interface WireConnect {
 		public SignalManager getSignal() {
 			return data;
 		}
+
+	}
+
+	public static interface ISignalManager extends IIntArray {
+
+		/** warning: be sure to check range before use */
+		public int getInput(int i);
+
+		/** warning: be sure to check range before use */
+		public int getOutput(int i);
+
+		public int[] getSignal();
+
+		public int inputCount();
+
+		public int outputCount();
+
+		public void post();
+
+		public void updateSignal(int[] signal);
 
 	}
 
@@ -182,13 +203,58 @@ public interface WireConnect {
 			Container c = ctx.getSender().openContainer;
 			if (c instanceof DraftCont) {
 				DraftCont cont = (DraftCont) c;
-				cont.getSignal().setChannel(ind, val);
+				cont.getSignal().set(ind, val);
 			}
 		}
 
 	}
 
-	public static class SignalManager implements IIntArray {
+	public static abstract class MsgWriter {
+
+		private final IIntArray data;
+
+		public MsgWriter(IIntArray arr) {
+			data = arr;
+		}
+
+		public int get(int i) {
+			return data.get(i);
+		}
+
+		public IIntArray getData() {
+			return data;
+		}
+
+		public void set(int i, int val) {
+			data.set(i, val);
+		}
+
+		public int updateSele(int sele, char ch) {
+			int bit = -1;
+			if (ch >= '0' && ch <= '9')
+				bit = ch - '0';
+			else if (ch >= 'a' && ch <= 'f')
+				bit = ch - 'a' + 10;
+			else if (ch >= 'A' && ch <= 'F')
+				bit = ch - 'A' + 10;
+			else if (ch == 'L' || ch == 'l')
+				bit = C_LOW;
+			else if (ch == 'H' || ch == 'h')
+				bit = C_HIGH;
+			else if (ch == ' ')
+				bit = C_FLOAT;
+			if (!allowed(sele, bit))
+				sele = -1;
+			else
+				PacketHandler.send(new Msg(sele, bit));
+			return sele;
+		}
+
+		protected abstract boolean allowed(int sele, int bit);
+
+	}
+
+	public static class SignalManager implements ISignalManager {
 
 		private final DraftTE ent;
 		private final int[] channels;
@@ -210,26 +276,32 @@ public interface WireConnect {
 			return channels[index];
 		}
 
+		@Override
 		public int getInput(int i) {
 			return channels[i];
 		}
 
+		@Override
 		public int getOutput(int i) {
 			return channels[i + inps];
 		}
 
+		@Override
 		public int[] getSignal() {
 			return signals;
 		}
 
+		@Override
 		public int inputCount() {
 			return inps;
 		}
 
+		@Override
 		public int outputCount() {
 			return outs;
 		}
 
+		@Override
 		public void post() {
 			signals = temp;
 			temp = null;
@@ -260,6 +332,7 @@ public interface WireConnect {
 			return channels.length;
 		}
 
+		@Override
 		public void updateSignal(int[] vals) {
 			temp = ent.update(vals);
 		}
@@ -280,27 +353,22 @@ public interface WireConnect {
 
 	}
 
-	public static class SignalWriter {
+	public static class SignalWriter extends MsgWriter {
 
-		private final IIntArray data;
 		private final int inps, outs;
 
 		public SignalWriter(int input, int output, IIntArray arr) {
+			super(arr);
 			inps = input;
 			outs = output;
-			data = arr;
-		}
-
-		public int getChannel(int i) {
-			return data.get(i);
 		}
 
 		public int getInput(int i) {
-			return data.get(i);
+			return get(i);
 		}
 
 		public int getOutput(int i) {
-			return data.get(i + inps);
+			return get(i + inps);
 		}
 
 		public int inputCount() {
@@ -312,36 +380,16 @@ public interface WireConnect {
 		}
 
 		public void setInput(int i, int val) {
-			data.set(i, val);
+			set(i, val);
 		}
 
 		public void setOutput(int i, int val) {
-			data.set(i + inps, val);
+			set(i + inps, val);
 		}
 
-		public int updateSele(int sele, char ch) {
-			int bit = -1;
-			if (ch >= '0' && ch <= '9')
-				bit = ch - '0';
-			else if (ch >= 'a' && ch <= 'f')
-				bit = ch - 'a' + 10;
-			else if (ch >= 'A' && ch <= 'F')
-				bit = ch - 'A' + 10;
-			else if (ch == 'L' || ch == 'l')
-				bit = C_LOW;
-			else if (ch == 'H' || ch == 'h')
-				bit = C_HIGH;
-			else if (ch == ' ')
-				bit = C_FLOAT;
-			if (bit == -1 || sele >= inps && bit >= C_LOW && bit != C_FLOAT || sele < inps && bit == C_FLOAT)
-				sele = -1;
-			else
-				PacketHandler.send(new Msg(sele, bit));
-			return sele;
-		}
-
-		private void setChannel(int i, int val) {
-			data.set(i, val);
+		@Override
+		protected boolean allowed(int sele, int bit) {
+			return bit == -1 || sele >= inps && bit >= C_LOW && bit != C_FLOAT || sele < inps && bit == C_FLOAT;
 		}
 
 	}

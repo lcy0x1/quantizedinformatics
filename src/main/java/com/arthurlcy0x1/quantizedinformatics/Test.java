@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.Arrays;
 
 import javax.imageio.ImageIO;
 
@@ -77,7 +78,9 @@ public class Test {
 	}
 
 	public static void main(String[] args) throws IOException {
-		addRecipe();
+		Integer[] a = { 6, 3, 4, 5, 2, 4, 6 };
+		Arrays.sort(a, (x, y) -> x - y);
+		System.out.println(Arrays.asList(a));
 	}
 
 	public static void recolor() throws IOException {

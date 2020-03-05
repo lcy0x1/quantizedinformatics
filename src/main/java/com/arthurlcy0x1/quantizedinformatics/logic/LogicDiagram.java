@@ -35,6 +35,7 @@ public abstract class LogicDiagram {
 			return true;
 		}
 
+		@Override
 		public void setInput(int i, GateContainer gc, int j) {
 			if (i < 0 || i >= gate.input)
 				throw new LogicRE("input index out of range: " + i + ", range: " + gate.input);
@@ -238,6 +239,7 @@ public abstract class LogicDiagram {
 			return super.getMap();
 		}
 
+		@Override
 		public void setInput(int i, GateContainer gc, int j) {
 			output[i].src = gc;
 			output[i].pin = j;
@@ -312,11 +314,13 @@ public abstract class LogicDiagram {
 		}
 	}
 
-	private static final int FALSE = -1, TRUE = -2;
+	public static final int FALSE = -1, TRUE = -2;
 
 	private int delay = -2;
 	private BoolArr map;
 	private int val = -1;
+
+	public abstract void setInput(int i, GateContainer gc, int j);
 
 	protected int compute(int in) {
 		if (val >= 0)
