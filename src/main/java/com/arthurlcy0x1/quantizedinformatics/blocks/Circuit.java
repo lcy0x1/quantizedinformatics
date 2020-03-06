@@ -28,6 +28,7 @@ public class Circuit {
 
 	private static class GateNode implements Comparable<GateNode> {
 
+		private final int type;
 		private final BlockPos pos;
 		private final BlockState bs;
 		private final DraftTE te;
@@ -42,11 +43,23 @@ public class Circuit {
 
 		private int[] rev;
 
-		private GateNode(World w, BlockPos p, int t) {
+		private GateNode(World w, BlockPos p) {
 			pos = p;
 			bs = w.getBlockState(p);
 			te = (DraftTE) w.getTileEntity(p);
 			sm = te.getSignal();
+			if (te instanceof DraftGate.TE)
+				type = T_GATE;
+			else if (te instanceof DraftIn.TE)
+				type = T_EIN;
+			else if (te instanceof DraftOut.TE)
+				type = T_EOUT;
+			else if (te instanceof DraftCntr.TE)
+				type = T_EIN;
+			else if (te instanceof DraftLnr.TE)
+				type = T_LNR;
+			else
+				type = T_UNK;
 		}
 
 		@Override
@@ -67,6 +80,13 @@ public class Circuit {
 			return rev[ch];
 		}
 
+		private void clear() {
+			ids = null;
+			dep = 0;
+			cont = null;
+			rev = null;
+		}
+
 	}
 
 	private static class WireNode {
@@ -74,6 +94,7 @@ public class Circuit {
 		private final GateNode[] nsin, nsou;
 		private int[] vals = null;
 		private int[] lnrs = null;
+		private int[] outs = null;
 		private GateNode[] pvd = null;
 		private boolean dupOut = false;
 		private int errorCode = 0;
@@ -81,6 +102,14 @@ public class Circuit {
 		private WireNode(GateNode[] in, GateNode[] out) {
 			nsin = in;
 			nsou = out;
+		}
+
+		private void clear() {
+			vals = null;
+			lnrs = null;
+			pvd = null;
+			dupOut = false;
+			errorCode = 0;
 		}
 
 		private int getErrorCode() {
@@ -95,22 +124,38 @@ public class Circuit {
 				if (lnr[i] > 0 && sig[i] == S_FLOAT)
 					return errorCode = ERR_FLOAT;
 			if (getProvider() == null)
-				return errorCode = ERR_FLOAT;
+				return errorCode = ERR_CONFLICT;
 			return errorCode = -1;
 		}
 
+		/** for circuit generation */
 		private int[] getLnrs() {
 			if (lnrs != null)
 				return lnrs;
 			lnrs = new int[CNUM];
 			for (GateNode n : nsin)
-				for (int i = 0; i < n.sm.inputCount(); i++) {
-					int ch = n.sm.getInput(i);
-					if (ch >= 0 && ch < CNUM)
-						lnrs[ch]++;
+				if (n.type != T_LNR)
+					for (int i = 0; i < n.sm.inputCount(); i++) {
+						int ch = n.sm.getInput(i);
+						if (ch >= 0 && ch < CNUM)
+							lnrs[ch]++;
 
-				}
+					}
 			return lnrs;
+		}
+
+		private int[] getOuts() {
+			if (outs != null)
+				return outs;
+			outs = new int[CNUM];
+			for (GateNode n : nsou)
+				for (int i = 0; i < n.sm.outputCount(); i++) {
+					int ch = n.sm.getOutput(i);
+					if (ch < 0 || ch >= CNUM)
+						continue;
+					outs[ch]++;
+				}
+			return outs;
 		}
 
 		private GateNode[] getProvider() {
@@ -140,12 +185,11 @@ public class Circuit {
 				return vals;
 			vals = new int[CNUM];
 			for (GateNode n : nsou) {
-				int[] sigs = n.sm.getSignal();
 				for (int i = 0; i < n.sm.outputCount(); i++) {
 					int ch = n.sm.getOutput(i);
 					if (ch < 0 || ch >= CNUM || vals[ch] == S_ERR)
 						continue;
-					int val = sigs[ch];
+					int val = n.sm.getSignal(ch);
 					if (val == S_ERR || vals[ch] != S_FLOAT && val != S_FLOAT && vals[ch] != val)
 						vals[ch] = S_ERR;
 					else if (vals[ch] == S_FLOAT)
@@ -157,7 +201,11 @@ public class Circuit {
 
 	}
 
+	private final static int T_UNK = 0, T_EIN = 1, T_EOUT = 2, T_GATE = 3, T_LNR = 4;
+
 	public static final int ERR_CONFLICT = 1, ERR_FLOAT = 2, ERR_LOOP = 3;
+
+	private final World world;
 
 	/**
 	 * A list of writer blocks that serves as external input point to the circuit
@@ -178,9 +226,10 @@ public class Circuit {
 	/** for constructor use only */
 	private TreeSet<GateNode> ins, ous;
 
-	public Circuit(World world, BlockPos pos) {
+	public Circuit(World w, BlockPos pos) {
+		world = w;
 		BlockPos[] endPoints = DraftWire.queryPoint(world, pos);
-		GateNode self = new GateNode(world, pos, OUTPUT);
+		GateNode self = new GateNode(world, pos);
 
 		nodes.put(pos, self);
 		input.add(self);
@@ -189,7 +238,7 @@ public class Circuit {
 			DraftIO t = (DraftIO) bs.getBlock();
 			boolean hasIn = t.getInDire(bs) != null;
 			boolean hasOut = t.getOutDire(bs) != null;
-			GateNode n = new GateNode(world, p, (hasIn ? INPUT : 0) | (hasOut ? OUTPUT : 0));
+			GateNode n = new GateNode(world, p);
 			if (hasIn)
 				output.add(n);
 			if (hasOut)
@@ -205,7 +254,7 @@ public class Circuit {
 			BlockState bs = n.bs;
 			DraftIO d = (DraftIO) bs.getBlock();
 			BlockPos p0 = n.pos.offset(d.getInDire(bs));
-			addWire(world, p0);
+			addWire(p0);
 		}
 
 		while (ous.size() > 0) {
@@ -213,8 +262,15 @@ public class Circuit {
 			BlockState bs = n.bs;
 			DraftIO d = (DraftIO) bs.getBlock();
 			BlockPos p0 = n.pos.offset(d.getOutDire(bs));
-			addWire(world, p0);
+			addWire(p0);
 		}
+	}
+
+	public void clear() {
+		for (GateNode gn : nodes.values())
+			gn.clear();
+		for (WireNode wn : node)
+			wn.clear();
 	}
 
 	public ParentDiagram getLogic() {
@@ -224,9 +280,9 @@ public class Circuit {
 			gn.ids = new int[CNUM];
 			Arrays.fill(gn.ids, -1);
 			GateNode[] pvd = gn.output.getProvider();
-			for (int i = 0; i < gn.sm.inputCount(); i++) {
-				int ch = gn.sm.getInput(i);
-				if (ch >= 0 && ch < CNUM && gn.sm.getSignal()[ch] != S_FLOAT && pvd[ch] == gn)
+			for (int i = 0; i < gn.sm.outputCount(); i++) {
+				int ch = gn.sm.getOutput(i);
+				if (ch >= 0 && ch < CNUM && gn.sm.getSignal(ch) != S_FLOAT && pvd[ch] == gn)
 					gn.ids[n++] = id++;
 			}
 		}
@@ -234,7 +290,7 @@ public class Circuit {
 		ParentDiagram diag = new ParentDiagram(id, output.size());
 		List<GateNode> cont = new ArrayList<>();
 		for (GateNode gn : nodes.values())
-			if (gn.te instanceof TE) {
+			if (gn.type == T_GATE) {
 				TE te = (TE) gn.te;
 				cont.add(gn);
 				gn.cont = diag.addGate(te.getLogicGate());
@@ -268,23 +324,28 @@ public class Circuit {
 	public void updateSignal() {
 		for (GateNode n : nodes.values())
 			n.sm.updateSignal(n.input.getSignal());
-		for (GateNode n : nodes.values())
+		for (GateNode n : nodes.values()) {
 			n.sm.post();
+			if (n.sm.inputCount() > 0 && n.input != null)
+				n.sm.updateValidity(true, n.input.getOuts());
+			if (n.sm.outputCount() > 0 && n.output != null)
+				n.sm.updateValidity(false, n.output.getOuts());
+		}
 	}
 
-	private void addWire(World world, BlockPos p0) {
+	private void addWire(BlockPos p0) {
 		BlockPos[][] q = DraftWire.queryGate(world, p0);
 		GateNode[] nsin = new GateNode[q[0].length];
 		GateNode[] nsou = new GateNode[q[1].length];
 		WireNode wire = new WireNode(nsin, nsou);
 		for (int i = 0; i < q[0].length; i++) {
-			GateNode gn = nodes.get(q[0][i]);
+			GateNode gn = getNode(q[0][i]);
 			nsin[i] = gn;
 			ins.remove(gn);
 			gn.input = wire;
 		}
 		for (int i = 0; i < q[1].length; i++) {
-			GateNode gn = nodes.get(q[1][i]);
+			GateNode gn = getNode(q[1][i]);
 			nsou[i] = gn;
 			ous.remove(gn);
 			gn.output = wire;
@@ -292,20 +353,33 @@ public class Circuit {
 		node.add(wire);
 	}
 
+	private GateNode getNode(BlockPos p) {
+		if (nodes.containsKey(p))
+			return nodes.get(p);
+		GateNode ans = new GateNode(world, p);
+		nodes.put(p, ans);
+		if (ans.sm.inputCount() > 0)
+			ins.add(ans);
+		if (ans.sm.outputCount() > 0)
+			ous.add(ans);
+		return nodes.get(p);
+	}
+
 	private boolean hasLoop() {
 		for (GateNode gn : nodes.values())
 			gn.dep = 0;
-		for (GateNode gn : nodes.values()) {
-			GateNode[] pvd = gn.input.getProvider();
-			for (int i = 0; i < gn.sm.inputCount(); i++) {
-				int ch = gn.sm.getInput(i);
-				if (ch >= 0 && ch < CNUM)
-					pvd[ch].dep++;
+		for (GateNode gn : nodes.values())
+			if (gn.type != T_LNR) {
+				GateNode[] pvd = gn.input.getProvider();
+				for (int i = 0; i < gn.sm.inputCount(); i++) {
+					int ch = gn.sm.getInput(i);
+					if (ch >= 0 && ch < CNUM)
+						pvd[ch].dep++;
+				}
 			}
-		}
 		Queue<GateNode> q = new ArrayDeque<>();
 		for (GateNode gn : nodes.values())
-			if (gn.dep == 0)
+			if (gn.type != T_LNR && gn.dep == 0)
 				q.add(gn);
 		int rmv = 0;
 		while (q.size() > 0) {

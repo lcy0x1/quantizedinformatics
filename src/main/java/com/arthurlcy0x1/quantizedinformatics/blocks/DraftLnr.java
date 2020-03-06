@@ -1,6 +1,7 @@
 package com.arthurlcy0x1.quantizedinformatics.blocks;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
+import com.arthurlcy0x1.quantizedinformatics.blocks.DIOBlock.*;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftIO;
 
 import net.minecraft.block.Block;
@@ -25,11 +26,11 @@ public class DraftLnr extends Block implements DraftIO {
 	public static class Cont extends DIOCont {
 
 		public Cont(int id, PlayerInventory inv) {
-			this(id, new IntArray(1));
+			this(id, new IntArray(17));
 		}
 
 		protected Cont(int id, IIntArray arr) {
-			super(Registrar.CTD_LNR, id, new SignalWriter(1, 0, arr));
+			super(Registrar.CTD_LNR, id, arr);
 		}
 
 	}

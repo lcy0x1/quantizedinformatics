@@ -1,8 +1,7 @@
 package com.arthurlcy0x1.quantizedinformatics.blocks;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
-import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.*;
-
+import com.arthurlcy0x1.quantizedinformatics.blocks.DIOBlock.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -25,11 +24,11 @@ public class DraftOut extends DIOTerm<DraftOut.TE> {
 	public static class Cont extends DIOCont {
 
 		public Cont(int id, PlayerInventory inv) {
-			this(id, new IntArray(1));
+			this(id, new IntArray(17));
 		}
 
 		protected Cont(int id, IIntArray arr) {
-			super(Registrar.CTD_OUT, id, new SignalWriter(1, 0, arr));
+			super(Registrar.CTD_OUT, id, arr);
 		}
 
 	}

@@ -5,8 +5,8 @@ import java.util.function.Supplier;
 
 import org.apache.logging.log4j.LogManager;
 
-import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DIOScr;
-import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DIOTerm;
+import com.arthurlcy0x1.quantizedinformatics.blocks.DIOBlock.DIOScr;
+import com.arthurlcy0x1.quantizedinformatics.blocks.DIOBlock.DIOTerm;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftIO;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.Craft3D;

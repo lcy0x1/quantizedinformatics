@@ -91,8 +91,8 @@ public class DraftGate extends CTEBlock<DraftGate.TE> implements WireConnect.Dra
 				int x0 = x + 53 - i / 4 * 13;
 				int y0 = y + 18 + i % 4 * 13;
 				int x1 = x + 110 + i / 4 * 13;
-				drawSymbol(x0, y0, i, cont.data.getInput(i), false);
-				drawSymbol(x1, y0, i, cont.data.getOutput(i), false);
+				drawSymbol(x0, y0, i, cont.data.getInputData(i), false);
+				drawSymbol(x1, y0, i, cont.data.getOutputData(i), false);
 			}
 			if (sele >= 0)
 				if (sele < CNUM)

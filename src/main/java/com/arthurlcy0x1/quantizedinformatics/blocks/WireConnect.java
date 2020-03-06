@@ -3,110 +3,16 @@ package com.arthurlcy0x1.quantizedinformatics.blocks;
 import java.util.function.Supplier;
 
 import com.arthurlcy0x1.quantizedinformatics.PacketHandler;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalBlock;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IIntArray;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
 public interface WireConnect {
-
-	public static class DIOCont extends Container implements DraftCont {
-
-		private final SignalWriter data;
-
-		protected DIOCont(ContainerType<?> type, int id, SignalWriter arr) {
-			super(type, id);
-			data = arr;
-			trackIntArray(data.getData());
-		}
-
-		@Override
-		public boolean canInteractWith(PlayerEntity playerIn) {
-			return true;
-		}
-
-		@Override
-		public SignalWriter getSignal() {
-			return data;
-		}
-
-	}
-
-	public static class DIOScr<T extends Container & DraftCont> extends ContainerScreen<T> {
-
-		public DIOScr(T cont, PlayerInventory inv, ITextComponent title) {
-			super(cont, inv, title);
-			// TODO reset gui size
-		}
-
-		@Override
-		public void render(int x, int y, float t) {
-			renderBackground();
-			super.render(x, y, t);
-			renderHoveredToolTip(x, y);
-		}
-
-		@Override
-		protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-			// TODO draw gui
-
-		}
-
-		@Override
-		protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-			String s = this.title.getFormattedText();
-			this.font.drawString(s, this.xSize / 2 - this.font.getStringWidth(s) / 2, 6.0F, 4210752);
-		}
-
-	}
-
-	public static class DIOTerm<T extends TileEntity> extends CTEBlock<T> implements DraftIO {
-
-		private final int type;
-
-		public DIOTerm(Supplier<T> sup, int t) {
-			super(sup);
-			type = t;
-		}
-
-		@Override
-		public boolean canConnectFrom(int type, BlockState b, Direction d) {
-			if (type == CRAFT) {
-				Direction dire = b.get(HorizontalBlock.HORIZONTAL_FACING);
-				return d != dire && d != dire.getOpposite();
-			} else
-				return WireConnect.DraftIO.super.canConnectFrom(type, b, d);
-		}
-
-		@Override
-		public Direction getInDire(BlockState bs) {
-			return type == INPUT ? bs.get(HorizontalBlock.HORIZONTAL_FACING).getOpposite() : null;
-		}
-
-		@Override
-		public Direction getOutDire(BlockState bs) {
-			return type == OUTPUT ? bs.get(HorizontalBlock.HORIZONTAL_FACING).getOpposite() : null;
-		}
-
-		@Override
-		public int ioType(BlockState b, Direction d) {
-			return b.get(HorizontalBlock.HORIZONTAL_FACING) == d.getOpposite() ? type : NONE;
-		}
-
-	}
 
 	public static interface DraftCont {
 
@@ -139,22 +45,6 @@ public interface WireConnect {
 
 	}
 
-	public abstract static class DTETerm<T extends DTETerm<T>> extends TileEntity implements DraftTE {
-
-		private final SignalManager data;
-
-		public DTETerm(TileEntityType<T> t, int type) {
-			super(t);
-			data = new SignalManager(this, 2 - type, type - 1);
-		}
-
-		@Override
-		public SignalManager getSignal() {
-			return data;
-		}
-
-	}
-
 	public static interface ISignalManager extends IIntArray {
 
 		/** warning: be sure to check range before use */
@@ -163,7 +53,7 @@ public interface WireConnect {
 		/** warning: be sure to check range before use */
 		public int getOutput(int i);
 
-		public int[] getSignal();
+		public int getSignal(int ch);
 
 		public int inputCount();
 
@@ -172,6 +62,8 @@ public interface WireConnect {
 		public void post();
 
 		public void updateSignal(int[] signal);
+
+		public void updateValidity(boolean isInput, int[] vali);
 
 	}
 
@@ -243,6 +135,7 @@ public interface WireConnect {
 				bit = C_HIGH;
 			else if (ch == ' ')
 				bit = C_FLOAT;
+			bit = translate(bit);
 			if (!allowed(sele, bit))
 				sele = -1;
 			else
@@ -251,6 +144,10 @@ public interface WireConnect {
 		}
 
 		protected abstract boolean allowed(int sele, int bit);
+
+		protected int translate(int bit) {
+			return bit;
+		}
 
 	}
 
@@ -278,17 +175,17 @@ public interface WireConnect {
 
 		@Override
 		public int getInput(int i) {
-			return channels[i];
+			return channels[i] & C_MASK;
 		}
 
 		@Override
 		public int getOutput(int i) {
-			return channels[i + inps];
+			return channels[i + inps] & C_MASK;
 		}
 
 		@Override
-		public int[] getSignal() {
-			return signals;
+		public int getSignal(int ch) {
+			return signals[ch];
 		}
 
 		@Override
@@ -311,6 +208,7 @@ public interface WireConnect {
 			int[] arr = tag.getIntArray("channels");
 			for (int i = 0; i < Math.min(arr.length, channels.length); i++)
 				channels[i] = arr[i];
+			signals = tag.getIntArray("signals");
 		}
 
 		@Deprecated
@@ -337,6 +235,7 @@ public interface WireConnect {
 			temp = ent.update(vals);
 		}
 
+		@Override
 		public void updateValidity(boolean isInput, int[] vali) {
 			int i0 = isInput ? 0 : inps;
 			int i1 = isInput ? inps : inps + outs;
@@ -349,6 +248,15 @@ public interface WireConnect {
 
 		public void write(CompoundNBT tag) {
 			tag.putIntArray("channels", channels);
+			tag.putIntArray("signals", signals);
+		}
+
+		protected int getRaw(int i) {
+			return get(i);
+		}
+
+		protected void setRaw(int i, int v) {
+			set(i, v);
 		}
 
 	}
@@ -363,11 +271,11 @@ public interface WireConnect {
 			outs = output;
 		}
 
-		public int getInput(int i) {
+		public int getInputData(int i) {
 			return get(i);
 		}
 
-		public int getOutput(int i) {
+		public int getOutputData(int i) {
 			return get(i + inps);
 		}
 
@@ -395,11 +303,18 @@ public interface WireConnect {
 	}
 
 	public static final int CNUM = 16;
-	public static final int NONE = 0, INPUT = 1, OUTPUT = 2;
-	public static final int S_FLOAT = 0, S_LOW = 1, S_HIGH = 2, S_ERR = 3;
-	public static final int C_LOW = 16, C_HIGH = 17, C_FLOAT = 18, C_FORBID = 19, C_ERR = 32, C_MASK = 31;
 
+	/** connection type */
 	public static final int GATE = 0, CRAFT = 1;
+
+	/** face type */
+	public static final int NONE = 0, INPUT = 1, OUTPUT = 2;
+
+	/** signal ID and signal masks */
+	public static final int S_FLOAT = 0, S_LOW = 1, S_HIGH = 2, S_ERR = 3, S_MASK = 15, SC_FLOAT = 16, SC_ERR = 32;
+
+	/** channel ID and channel masks */
+	public static final int C_LOW = 16, C_HIGH = 17, C_FLOAT = 18, C_FORBID = 19, C_ERR = 32, C_MASK = 31;
 
 	public boolean canConnectFrom(int type, BlockState b, Direction d);
 
