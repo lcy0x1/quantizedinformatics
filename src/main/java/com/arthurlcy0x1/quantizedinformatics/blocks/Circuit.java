@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.TreeSet;
 
+import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.blocks.DraftGate.TE;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftIO;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftTE;
@@ -20,7 +21,9 @@ import com.arthurlcy0x1.quantizedinformatics.logic.LogicDiagram;
 import com.arthurlcy0x1.quantizedinformatics.logic.LogicDiagram.GateContainer;
 import com.arthurlcy0x1.quantizedinformatics.logic.LogicDiagram.ParentDiagram;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -253,16 +256,32 @@ public class Circuit {
 			GateNode n = ins.first();
 			BlockState bs = n.bs;
 			DraftIO d = (DraftIO) bs.getBlock();
-			BlockPos p0 = n.pos.offset(d.getInDire(bs));
-			addWire(p0);
+			Direction dir = d.getInDire(bs);
+			BlockPos p0 = n.pos.offset(dir);
+			BlockState bs0 = world.getBlockState(p0);
+			Block b0 = bs0.getBlock();
+			if (b0 == Registrar.BD_WIRE)
+				addWire(DraftWire.queryGate(world, p0));
+			else if (b0 instanceof DraftIO && ((DraftIO) b0).ioType(bs0, dir.getOpposite()) == OUTPUT)
+				addWire(new BlockPos[][] { { n.pos }, { p0 } });
+			else
+				addWire(new BlockPos[][] { { n.pos }, {} });
 		}
 
 		while (ous.size() > 0) {
 			GateNode n = ous.first();
 			BlockState bs = n.bs;
 			DraftIO d = (DraftIO) bs.getBlock();
-			BlockPos p0 = n.pos.offset(d.getOutDire(bs));
-			addWire(p0);
+			Direction dir = d.getOutDire(bs);
+			BlockPos p0 = n.pos.offset(dir);
+			BlockState bs0 = world.getBlockState(p0);
+			Block b0 = bs0.getBlock();
+			if (b0 == Registrar.BD_WIRE)
+				addWire(DraftWire.queryGate(world, p0));
+			else if (b0 instanceof DraftIO && ((DraftIO) b0).ioType(bs0, dir.getOpposite()) == INPUT)
+				addWire(new BlockPos[][] { { p0 }, { n.pos } });
+			else
+				addWire(new BlockPos[][] { {}, { n.pos } });
 		}
 	}
 
@@ -323,8 +342,7 @@ public class Circuit {
 	/** update the blocks in this circuit */
 	public void updateSignal() {
 		for (GateNode n : nodes.values())
-			if (n.input != null)
-				n.sm.updateSignal(n.input.getSignal());
+			n.sm.updateSignal(n.input == null ? null : n.input.getSignal());
 		for (GateNode n : nodes.values()) {
 			n.sm.post();
 			if (n.sm.inputCount() > 0 && n.input != null)
@@ -334,8 +352,7 @@ public class Circuit {
 		}
 	}
 
-	private void addWire(BlockPos p0) {
-		BlockPos[][] q = DraftWire.queryGate(world, p0);
+	private void addWire(BlockPos[][] q) {
 		GateNode[] nsin = new GateNode[q[0].length];
 		GateNode[] nsou = new GateNode[q[1].length];
 		WireNode wire = new WireNode(nsin, nsou);

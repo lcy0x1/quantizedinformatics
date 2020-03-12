@@ -2,7 +2,9 @@ package com.arthurlcy0x1.quantizedinformatics.blocks;
 
 import java.util.function.Supplier;
 
+import com.arthurlcy0x1.quantizedinformatics.PacketHandler;
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
+import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.Msg;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.block.BlockState;
@@ -52,7 +54,8 @@ public class DIOBlock {
 
 		public DIOScr(T cont, PlayerInventory inv, ITextComponent title) {
 			super(cont, inv, title);
-			this.setSize(176, 84);
+			xSize = 176;
+			ySize = 84;
 		}
 
 		@Override
@@ -61,7 +64,7 @@ public class DIOBlock {
 			if (sele == -1)
 				return super.mouseClicked(x, y, t);
 			if (sele >= 0 && sele <= CNUM)
-				container.getSignal().updateSele(0, (char) ('0' + sele));
+				PacketHandler.send(new Msg(0, sele));
 			return true;
 		}
 
@@ -87,7 +90,7 @@ public class DIOBlock {
 				int xi = i % 4 * 13 + (cond == 0 ? 8 * 13 : cond > 1 ? 4 * 13 : 0);
 				int yi = i / 4 * 13;
 				blit(x0, y0, xi, yi, 13, 13);
-				if (data.get(0) == i)
+				if ((data.get(0) & C_MASK) == i)
 					blit(x0, y0, 13 * 12, 0, 13, 13);
 			}
 		}
@@ -99,11 +102,11 @@ public class DIOBlock {
 		}
 
 		private int getSele(double x, double y) {
-			int xc = guiLeft + xSize / 2 - 13 * 2;
-			int yc = guiTop + ySize / 2 - 13 * 2;
+			int xc = guiLeft + xSize / 2 - 26;
+			int yc = guiTop + ySize / 2 - 26;
 			for (int i = 0; i < CNUM; i++) {
-				int x0 = xc + 16 + i % 4 * 13;
-				int y0 = yc + 16 + i / 4 * 13;
+				int x0 = xc + i % 4 * 13;
+				int y0 = yc + i / 4 * 13;
 				if (x >= x0 && x < x0 + 13 && y > y0 && y < y0 + 13)
 					return i;
 			}

@@ -100,6 +100,12 @@ public class DraftLnr extends Block implements DraftIO {
 	}
 
 	@Override
+	public ActionResultType func_225533_a_(BlockState bs, World w, BlockPos pos, PlayerEntity pl, Hand h,
+			BlockRayTraceResult r) {
+		return onClick(bs, w, pos, pl, h);
+	}
+
+	@Override
 	public Direction getInDire(BlockState b) {
 		return Direction.DOWN;
 	}
@@ -114,16 +120,6 @@ public class DraftLnr extends Block implements DraftIO {
 		return true;
 	}
 
-	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		builder.add(PROP);
-	}
-
-	public ActionResultType func_225533_a_(BlockState bs, World w, BlockPos pos, PlayerEntity pl, Hand h,
-			BlockRayTraceResult r) {
-		return onClick(bs, w, pos, pl, h);
-	}
-
 	public ActionResultType onClick(BlockState bs, World w, BlockPos pos, PlayerEntity pl, Hand h) {
 		if (w.isRemote)
 			return ActionResultType.SUCCESS;
@@ -131,6 +127,11 @@ public class DraftLnr extends Block implements DraftIO {
 		if (te instanceof INamedContainerProvider)
 			pl.openContainer((INamedContainerProvider) te);
 		return ActionResultType.SUCCESS;
+	}
+
+	@Override
+	protected void fillStateContainer(Builder<Block, BlockState> builder) {
+		builder.add(PROP);
 	}
 
 }

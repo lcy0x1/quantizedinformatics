@@ -2,6 +2,7 @@ package com.arthurlcy0x1.quantizedinformatics.blocks;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.blocks.DIOBlock.*;
+
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;

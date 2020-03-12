@@ -76,7 +76,7 @@ public interface WireConnect {
 
 		private final int ind, val;
 
-		private Msg(int index, int value) {
+		public Msg(int index, int value) {
 			ind = index;
 			val = value;
 		}

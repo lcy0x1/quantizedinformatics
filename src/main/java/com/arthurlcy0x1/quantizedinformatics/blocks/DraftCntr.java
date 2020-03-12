@@ -159,7 +159,7 @@ public class DraftCntr {
 
 			@Override
 			public int getOutput(int i) {
-				return i;
+				return getSignal(i) == S_FLOAT ? C_FLOAT : i;
 			}
 
 			@Override
