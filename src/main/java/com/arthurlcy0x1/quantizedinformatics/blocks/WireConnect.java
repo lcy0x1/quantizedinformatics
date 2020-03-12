@@ -6,6 +6,7 @@ import com.arthurlcy0x1.quantizedinformatics.PacketHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Direction;
@@ -37,7 +38,7 @@ public interface WireConnect {
 
 	}
 
-	public static interface DraftTE {
+	public static interface DraftTE extends INamedContainerProvider {
 
 		public ISignalManager getSignal();
 
@@ -170,7 +171,7 @@ public interface WireConnect {
 		@Deprecated
 		@Override
 		public int get(int index) {
-			return channels[index];
+			return getRaw(index);
 		}
 
 		@Override
@@ -200,7 +201,8 @@ public interface WireConnect {
 
 		@Override
 		public void post() {
-			signals = temp;
+			if (temp != null)
+				signals = temp;
 			temp = null;
 		}
 
@@ -208,13 +210,15 @@ public interface WireConnect {
 			int[] arr = tag.getIntArray("channels");
 			for (int i = 0; i < Math.min(arr.length, channels.length); i++)
 				channels[i] = arr[i];
-			signals = tag.getIntArray("signals");
+			arr = tag.getIntArray("signals");
+			for (int i = 0; i < Math.min(arr.length, signals.length); i++)
+				signals[i] = arr[i];
 		}
 
 		@Deprecated
 		@Override
 		public void set(int index, int value) {
-			channels[index] = value;
+			setRaw(index, value);
 		}
 
 		public void setInput(int i, int val) {
@@ -252,11 +256,11 @@ public interface WireConnect {
 		}
 
 		protected int getRaw(int i) {
-			return get(i);
+			return channels[i];
 		}
 
 		protected void setRaw(int i, int v) {
-			set(i, v);
+			channels[i] = v;
 		}
 
 	}

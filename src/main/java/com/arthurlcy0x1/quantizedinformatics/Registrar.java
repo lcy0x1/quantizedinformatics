@@ -144,9 +144,9 @@ public class Registrar extends ItemGroup {
 		ScreenManager.registerFactory(CT_REDFN, RedFn.Scr::new);
 		ScreenManager.registerFactory(CTD_CNTR, DraftCntr.Scr::new);
 		ScreenManager.registerFactory(CTD_GATE, DraftGate.Scr::new);
-		ScreenManager.registerFactory(CTD_IN, DIOScr::new);
-		ScreenManager.registerFactory(CTD_OUT, DIOScr::new);
-		ScreenManager.registerFactory(CTD_LNR, DIOScr::new);
+		ScreenManager.registerFactory(CTD_IN, DIOScr<DraftIn.Cont>::new);
+		ScreenManager.registerFactory(CTD_OUT, DIOScr<DraftOut.Cont>::new);
+		ScreenManager.registerFactory(CTD_LNR, DIOScr<DraftLnr.Cont>::new);
 	}
 
 	public static final ContainerType<?>[] CTS = { CT_OXIFN, CT_REDFN, CTD_CNTR, CTD_GATE, CTD_IN, CTD_OUT, CTD_LNR };

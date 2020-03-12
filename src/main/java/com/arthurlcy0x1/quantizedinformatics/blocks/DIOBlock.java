@@ -52,7 +52,17 @@ public class DIOBlock {
 
 		public DIOScr(T cont, PlayerInventory inv, ITextComponent title) {
 			super(cont, inv, title);
-			this.setSize(176, 91);
+			this.setSize(176, 84);
+		}
+
+		@Override
+		public boolean mouseClicked(double x, double y, int t) {
+			int sele = getSele(x, y);
+			if (sele == -1)
+				return super.mouseClicked(x, y, t);
+			if (sele >= 0 && sele <= CNUM)
+				container.getSignal().updateSele(0, (char) ('0' + sele));
+			return true;
 		}
 
 		@Override
@@ -68,7 +78,7 @@ public class DIOBlock {
 			this.minecraft.getTextureManager().bindTexture(GUI);
 			int x = guiLeft;
 			int y = guiTop;
-			blit(x, y, 52, 0, xSize, ySize);
+			blit(x, y, 0, 52, xSize, ySize);
 			TermWriter data = container.getSignal();
 			for (int i = 0; i < 16; i++) {
 				int cond = data.get(i + 1);
@@ -78,18 +88,14 @@ public class DIOBlock {
 				int yi = i / 4 * 13;
 				blit(x0, y0, xi, yi, 13, 13);
 				if (data.get(0) == i)
-					blit(x0, y0, 13 * 16, 0, 13, 13);
+					blit(x0, y0, 13 * 12, 0, 13, 13);
 			}
 		}
 
 		@Override
-		public boolean mouseClicked(double x, double y, int t) {
-			int sele = getSele(x, y);
-			if (sele == -1)
-				return super.mouseClicked(x, y, t);
-			if (sele >= 0 && sele <= CNUM)
-				container.getSignal().updateSele(0, (char) ('0' + sele));
-			return true;
+		protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+			String s = this.title.getFormattedText();
+			this.font.drawString(s, this.xSize / 2 - this.font.getStringWidth(s) / 2, 6.0F, 4210752);
 		}
 
 		private int getSele(double x, double y) {
@@ -102,12 +108,6 @@ public class DIOBlock {
 					return i;
 			}
 			return -1;
-		}
-
-		@Override
-		protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-			String s = this.title.getFormattedText();
-			this.font.drawString(s, this.xSize / 2 - this.font.getStringWidth(s) / 2, 6.0F, 4210752);
 		}
 
 	}
@@ -182,7 +182,8 @@ public class DIOBlock {
 		public void set(int i, int v) {
 			if (i < super.size())
 				super.setRaw(i, v);
-			cond[i - super.size()] = v;
+			else
+				cond[i - super.size()] = v;
 		}
 
 		@Override

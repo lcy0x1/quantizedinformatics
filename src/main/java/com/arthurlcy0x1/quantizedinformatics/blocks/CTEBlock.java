@@ -296,12 +296,6 @@ public class CTEBlock<T extends TileEntity> extends HorizontalBlock {
 	}
 
 	@Override
-	public ActionResultType func_225533_a_(BlockState bs, World w, BlockPos pos, PlayerEntity pl, Hand h,
-			BlockRayTraceResult r) {
-		return onClick(bs, w, pos, pl, h);
-	}
-
-	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite());
 	}
@@ -311,12 +305,17 @@ public class CTEBlock<T extends TileEntity> extends HorizontalBlock {
 		return true;
 	}
 
-	protected ActionResultType onClick(BlockState bs, World w, BlockPos pos, PlayerEntity pl, Hand h) {
+	public ActionResultType func_225533_a_(BlockState bs, World w, BlockPos pos, PlayerEntity pl, Hand h,
+			BlockRayTraceResult r) {
+		return onClick(bs, w, pos, pl, h);
+	}
+
+	public ActionResultType onClick(BlockState bs, World w, BlockPos pos, PlayerEntity pl, Hand h) {
 		if (w.isRemote)
 			return ActionResultType.SUCCESS;
 		TileEntity te = w.getTileEntity(pos);
-		if (te instanceof CTETE<?>)
-			pl.openContainer((CTETE<?>) te);
+		if (te instanceof INamedContainerProvider)
+			pl.openContainer((INamedContainerProvider) te);
 		return ActionResultType.SUCCESS;
 	}
 }

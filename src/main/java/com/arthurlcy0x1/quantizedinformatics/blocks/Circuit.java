@@ -323,7 +323,8 @@ public class Circuit {
 	/** update the blocks in this circuit */
 	public void updateSignal() {
 		for (GateNode n : nodes.values())
-			n.sm.updateSignal(n.input.getSignal());
+			if (n.input != null)
+				n.sm.updateSignal(n.input.getSignal());
 		for (GateNode n : nodes.values()) {
 			n.sm.post();
 			if (n.sm.inputCount() > 0 && n.input != null)

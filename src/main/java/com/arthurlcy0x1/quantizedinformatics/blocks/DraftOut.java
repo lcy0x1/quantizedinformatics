@@ -7,7 +7,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IIntArray;
@@ -33,7 +32,7 @@ public class DraftOut extends DIOTerm<DraftOut.TE> {
 
 	}
 
-	public static class TE extends DTETerm<TE> implements INamedContainerProvider {
+	public static class TE extends DTETerm<TE> {
 
 		public TE() {
 			super(Registrar.TET_OUT, INPUT);

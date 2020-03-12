@@ -44,5 +44,29 @@ Spawn Egg
 212		1 - Trapped Soul
 020		2 - Egg
 
+nether portal * 27 = portal fume
+soul element + ender pearl + portal fume * 8 -R> portal element
+
+ppp		p=portal element
+p p = portal frame
+sss
+
+ender portal * 27 = portal core
+
+enemy identifier
+enemy repeler
+enemy attracter
+enemy killer
+
+recipe maker
+auto crafter
+selection link
+item tunnel
+block placer
+block breaker
+
+
+
+
 
 	

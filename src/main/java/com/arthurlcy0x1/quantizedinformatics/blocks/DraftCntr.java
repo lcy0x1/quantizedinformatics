@@ -105,8 +105,8 @@ public class DraftCntr {
 			blit(x, y, 0, 0, xSize, ySize);
 			Cont cont = container;
 			for (int i = 0; i < 16; i++) {
-				int x0 = x + 16 - i / 4 * 13;
-				int y0 = y + 16 + i % 4 * 13;
+				int x0 = x + 16 + i % 4 * 13;
+				int y0 = y + 16 + i / 4 * 13;
 				drawSymbol(x0, y0, i, cont.data.get(i));
 			}
 			if (sele >= 0)
@@ -122,7 +122,7 @@ public class DraftCntr {
 				if (v > 0)
 					id = 15 + v + m * 2 / SC_ERR;
 				else
-					id = i + m == SC_ERR ? 20 : m == SC_FLOAT ? 40 : 0;
+					id = i + (m == SC_ERR ? 20 : m == SC_FLOAT ? 40 : 0);
 			}
 			blit(x, y, 176 + id % 4 * 13, id / 4 * 13, 13, 13);
 		}

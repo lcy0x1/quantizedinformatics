@@ -5,7 +5,6 @@ import com.arthurlcy0x1.quantizedinformatics.blocks.DIOBlock.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
 import net.minecraft.util.text.ITextComponent;
@@ -25,7 +24,7 @@ public class DraftIn extends DIOTerm<DraftIn.TE> {
 
 	}
 
-	public static class TE extends DTETerm<TE> implements INamedContainerProvider {
+	public static class TE extends DTETerm<TE> {
 
 		public TE() {
 			super(Registrar.TET_IN, OUTPUT);
