@@ -67,16 +67,18 @@ public class DraftLnr extends Block implements DraftIO {
 	};
 
 	private static enum Mode implements IStringSerializable {
-		FLOAT("float"), ERROR("error"), HIGH("high"), LOW("low");
+		FLOAT("float", 0), ERROR("error", 15), HIGH("high", 15), LOW("low", 0);
 
 		private static Mode get(int type) {
 			return type == S_FLOAT ? FLOAT : type == S_HIGH ? HIGH : type == S_LOW ? LOW : ERROR;
 		}
 
 		private final String name;
+		private final int light;
 
-		private Mode(String str) {
+		private Mode(String str, int l) {
 			name = str;
+			light = l;
 		}
 
 		@Override
@@ -105,6 +107,11 @@ public class DraftLnr extends Block implements DraftIO {
 	@Override
 	public Direction getInDire(BlockState b) {
 		return Direction.DOWN;
+	}
+
+	@Override
+	public int getLightValue(BlockState bs) {
+		return bs.get(PROP).light;
 	}
 
 	@Override

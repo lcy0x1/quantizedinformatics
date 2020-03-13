@@ -2,8 +2,8 @@
     "type": "minecraft:crafting_shaped",
     "pattern": [
         "030",
-        "212",
-        "030"
+        "415",
+        "020"
     ],
     "key": {
         "0": {
@@ -17,9 +17,15 @@
         },
         "3": {
             "item": "iron_ingot"
+        },
+        "4": {
+            "item": "red_dye"
+        },
+        "5": {
+            "item": "green_dye"
         }
     },
     "result": {
-        "item": "quantizedinformatics:draft_gate"
+        "item": "quantizedinformatics:draft_listener"
     }
 }

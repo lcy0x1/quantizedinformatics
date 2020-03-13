@@ -359,11 +359,12 @@ public class Circuit {
 	protected int[] getInfo() {
 		int[] ans = new int[nodes.size() * 6];
 		int i = 0;
+		isValid();
 		for (GateNode n : nodes.values()) {
 			int id = Registrar.BDS.indexOf(n.bs.getBlock());
 			int err0 = Math.max(0, n.input == null ? 0 : n.input.getErrorCode());
 			int err1 = Math.max(0, n.output == null ? 0 : n.output.getErrorCode());
-			int err2 = hasLoop() ? 1 : 0;
+			int err2 = n.dep > 0 ? 1 : 0;
 			ans[i++] = id | err0 << 4 | err1 << 6 | err2 << 8 | n.state << 9;
 			ans[i++] = n.pos.getX();
 			ans[i++] = n.pos.getY();

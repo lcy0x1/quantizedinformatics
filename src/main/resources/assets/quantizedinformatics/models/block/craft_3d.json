@@ -2,8 +2,8 @@
 	"parent": "block/cube",
 	"textures": {
 		"north": "quantizedinformatics:blocks/craft_3d_front",
-		"up": "quantizedinformatics:blocks/craft_3d_top",
-		"down": "quantizedinformatics:blocks/quantum_fog",
+		"up": "quantizedinformatics:blocks/craft_3d",
+		"down": "quantizedinformatics:blocks/craft_3d",
 		"south": "quantizedinformatics:blocks/craft_3d",
 		"west": "quantizedinformatics:blocks/craft_3d",
 		"east": "quantizedinformatics:blocks/craft_3d",

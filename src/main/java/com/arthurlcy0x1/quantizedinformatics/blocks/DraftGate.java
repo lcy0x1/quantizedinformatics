@@ -177,6 +177,7 @@ public class DraftGate extends CTEBlock<DraftGate.TE> implements WireConnect.Dra
 		@Override
 		public void read(CompoundNBT tag) {
 			super.read(tag);
+			onChange(-1);
 			data.read(tag);
 		}
 
@@ -228,19 +229,25 @@ public class DraftGate extends CTEBlock<DraftGate.TE> implements WireConnect.Dra
 
 		@Override
 		protected void onChange(int ind) {
+			LogicGate temp = chip;
 			chip = loadChip();
-			int cin = chip == null ? 0 : chip.input;
-			int cout = chip == null ? 0 : chip.output;
-			for (int i = 0; i < CNUM; i++)
-				if (i >= cin)
-					data.setInput(i, C_FORBID);
-				else
-					data.setInput(i, C_LOW);
-			for (int i = 0; i < CNUM; i++)
-				if (i >= cout)
-					data.setOutput(i, C_FORBID);
-				else
-					data.setOutput(i, C_FLOAT);
+			if (temp == null || chip == null || temp.input != chip.input) {
+				int cin = chip == null ? 0 : chip.input;
+				for (int i = 0; i < CNUM; i++)
+					if (i >= cin)
+						data.setInput(i, C_FORBID);
+					else
+						data.setInput(i, C_LOW);
+			}
+			if (temp == null || chip == null || temp.output != chip.output) {
+				int cout = chip == null ? 0 : chip.output;
+
+				for (int i = 0; i < CNUM; i++)
+					if (i >= cout)
+						data.setOutput(i, C_FORBID);
+					else
+						data.setOutput(i, C_FLOAT);
+			}
 		}
 
 		private LogicGate loadChip() {

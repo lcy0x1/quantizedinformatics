@@ -14,6 +14,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
@@ -164,6 +165,19 @@ public class DIOBlock {
 			return data;
 		}
 
+		@Override
+		public void read(CompoundNBT tag) {
+			super.read(tag);
+			data.read(tag);
+		}
+
+		@Override
+		public CompoundNBT write(CompoundNBT tag) {
+			super.write(tag);
+			data.write(tag);
+			return tag;
+		}
+
 	}
 
 	private static class TermManager extends SignalManager {
@@ -179,6 +193,14 @@ public class DIOBlock {
 			if (i < super.size())
 				return super.getRaw(i);
 			return cond[i - super.size()];
+		}
+
+		@Override
+		public void read(CompoundNBT tag) {
+			super.read(tag);
+			int[] arr = tag.getIntArray("cond");
+			for (int i = 0; i < Math.min(arr.length, cond.length); i++)
+				cond[i] = arr[i];
 		}
 
 		@Override
@@ -199,6 +221,12 @@ public class DIOBlock {
 			super.updateValidity(isInput, vali);
 			if (isInput && inputCount() > 0 || !isInput && outputCount() > 0)
 				cond = vali.clone();
+		}
+
+		@Override
+		public void write(CompoundNBT tag) {
+			super.write(tag);
+			tag.putIntArray("cond", cond);
 		}
 
 	}

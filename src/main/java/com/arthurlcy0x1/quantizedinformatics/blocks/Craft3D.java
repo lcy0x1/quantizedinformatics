@@ -169,7 +169,7 @@ public class Craft3D extends HorizontalBlock implements WireConnect {
 		if (type != CRAFT)
 			return false;
 		Direction self = bs.get(HORIZONTAL_FACING);
-		return d != self && d != Direction.UP && d != Direction.DOWN;
+		return d != self;
 	}
 
 	@Override

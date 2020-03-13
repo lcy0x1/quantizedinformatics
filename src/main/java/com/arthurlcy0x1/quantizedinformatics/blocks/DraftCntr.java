@@ -129,6 +129,7 @@ public class DraftCntr {
 		}
 
 		private int sele = -1, scroll = 0;
+		private double scr = 0;
 
 		public Scr(Cont cont, PlayerInventory inv, ITextComponent text) {
 			super(cont, inv, text, 186);
@@ -157,8 +158,13 @@ public class DraftCntr {
 		public boolean mouseScrolled(double x, double y, double t) {
 			int[] data = container.cont.data;
 			int len = data == null ? 0 : data.length;
+			scr += t;
 			int max = Math.max(0, len / 6 - 4);
-			scroll = (int) MathHelper.clamp(scroll - t, 0, max);
+			scroll = (int) MathHelper.clamp(scroll - scr, 0, max);
+			while (scr > 1)
+				scr--;
+			while (scr < -1)
+				scr++;
 			return true;
 		}
 
@@ -267,9 +273,9 @@ public class DraftCntr {
 				if (iy <= -20 || iy >= 80)
 					continue;
 				int stat = data[i * 6];
-				int err0 = stat << 4 & 4;
-				int err1 = stat << 6 & 4;
-				int err2 = stat << 8 & 1;
+				int err0 = stat >> 4 & 4;
+				int err1 = stat >> 6 & 4;
+				int err2 = stat >> 8 & 1;
 				int err = 0;
 				if (err0 > 0 || err1 > 0)
 					err = 2;

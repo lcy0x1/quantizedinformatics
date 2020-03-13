@@ -2,12 +2,12 @@
     "type": "minecraft:crafting_shaped",
     "pattern": [
         "030",
-        "212",
+        "214",
         "030"
     ],
     "key": {
         "0": {
-            "item": "quantizedinformatics:quantum_fog"
+            "item": "quantizedinformatics:craft_frame"
         },
         "1": {
             "item": "quantizedinformatics:elem_si"
@@ -17,9 +17,12 @@
         },
         "3": {
             "item": "iron_ingot"
+        },
+        "4": {
+            "item": "redstone_torch"
         }
     },
     "result": {
-        "item": "quantizedinformatics:draft_gate"
+        "item": "quantizedinformatics:draft_out"
     }
 }

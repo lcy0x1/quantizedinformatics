@@ -1,0 +1,28 @@
+{
+    "type": "quantizedinformatics:craft_3d",
+    "pattern": [
+        [
+            "x0x",
+            "000",
+            "x0x"
+        ],
+        [
+            "x0x",
+            "231",
+            "x0x"
+        ],
+        [
+            "x0x",
+            "000",
+            "x0x"
+        ]
+    ],
+    "keys": {
+        "0": "quantizedinformatics:craft_frame",
+        "1": "quantizedinformatics:draft_in",
+        "2": "quantizedinformatics:draft_gate",
+        "3": "quantizedinformatics:craft_3d",
+        "x": "quantizedinformatics:quantum_fog"
+    },
+    "out": "quantizedinformatics:draft_center"
+}

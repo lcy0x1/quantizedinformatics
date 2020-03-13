@@ -49,7 +49,7 @@ public abstract class LogicDraft extends Item {
 				break;
 			}
 		int t = -1;
-		String[] gate = { "buff", "not", "nand", "nor", "and", "or", "xor" };
+		String[] gate = { "_buff", "_not", "_nand", "_nor", "_and", "_or", "_xor" };
 		for (int i = 0; i < gate.length; i++)
 			if (name.endsWith(gate[i])) {
 				t = i;
