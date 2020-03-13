@@ -13,7 +13,7 @@ import java.util.Queue;
 import java.util.TreeSet;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
-import com.arthurlcy0x1.quantizedinformatics.blocks.DraftWire;
+import com.arthurlcy0x1.quantizedinformatics.blocks.Wire;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftIO;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftTE;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.ISignalManager;
@@ -235,7 +235,7 @@ public class Circuit {
 
 	public Circuit(World w, BlockPos pos) {
 		world = w;
-		BlockPos[] endPoints = DraftWire.queryPoint(world, pos);
+		BlockPos[] endPoints = Wire.queryPoint(world, pos);
 		GateNode self = new GateNode(world, pos);
 
 		nodes.put(pos, self);
@@ -265,7 +265,7 @@ public class Circuit {
 			BlockState bs0 = world.getBlockState(p0);
 			Block b0 = bs0.getBlock();
 			if (b0 == Registrar.BD_WIRE)
-				addWire(DraftWire.queryGate(world, p0));
+				addWire(Wire.queryGate(world, p0));
 			else if (b0 instanceof DraftIO && ((DraftIO) b0).ioType(bs0, dir.getOpposite()) == OUTPUT)
 				addWire(new BlockPos[][] { { n.pos }, { p0 } });
 			else
@@ -281,7 +281,7 @@ public class Circuit {
 			BlockState bs0 = world.getBlockState(p0);
 			Block b0 = bs0.getBlock();
 			if (b0 == Registrar.BD_WIRE)
-				addWire(DraftWire.queryGate(world, p0));
+				addWire(Wire.queryGate(world, p0));
 			else if (b0 instanceof DraftIO && ((DraftIO) b0).ioType(bs0, dir.getOpposite()) == INPUT)
 				addWire(new BlockPos[][] { { p0 }, { n.pos } });
 			else

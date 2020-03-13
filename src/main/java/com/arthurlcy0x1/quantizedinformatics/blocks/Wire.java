@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
+import com.arthurlcy0x1.quantizedinformatics.blocks.auto.PipeHead;
+import com.arthurlcy0x1.quantizedinformatics.blocks.auto.PipeCore;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SixWayBlock;
@@ -20,7 +23,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
-public class DraftWire extends SixWayBlock implements WireConnect {
+public class Wire extends SixWayBlock implements WireConnect {
 
 	/**
 	 * return 2 arrays of BlockPos. <br>
@@ -41,7 +44,7 @@ public class DraftWire extends SixWayBlock implements WireConnect {
 				if (set.contains(p1))
 					continue;
 				BlockState st = w.getBlockState(p1);
-				if (st.getBlock() instanceof DraftWire)
+				if (st.getBlock() instanceof Wire)
 					q.add(p1);
 				else if (st.getBlock() instanceof WireConnect.DraftIO) {
 					WireConnect.DraftIO io = (WireConnect.DraftIO) st.getBlock();
@@ -57,6 +60,41 @@ public class DraftWire extends SixWayBlock implements WireConnect {
 		}
 		BlockPos[][] ret = { ins.toArray(new BlockPos[0]), ans.toArray(new BlockPos[0]) };
 		return ret;
+	}
+
+	/** get a list of PipeHeads and PipeTails */
+	public static BlockPos[][] queryPipe(World w, BlockPos c) {
+		Set<BlockPos> set = new HashSet<>();
+		List<BlockPos> head = new ArrayList<>();
+		List<BlockPos> tail = new ArrayList<>();
+		Queue<BlockPos> q = new ArrayDeque<>();
+		set.add(c);
+		q.add(c);
+		while (q.size() > 0) {
+			BlockPos p0 = q.poll();
+			BlockState s = w.getBlockState(p0);
+			WireConnect cn = (WireConnect) s.getBlock();
+			for (Direction d : Direction.values())
+				if (cn.canConnectFrom(PIPE, s, d)) {
+					BlockPos p = p0.offset(d);
+					if (set.contains(p))
+						continue;
+					set.add(p);
+					BlockState bs = w.getBlockState(p);
+					if (bs.getBlock() instanceof WireConnect) {
+						WireConnect wc = (WireConnect) bs.getBlock();
+						if (!wc.canConnectFrom(PIPE, bs, d.getOpposite()))
+							continue;
+						if (wc instanceof PipeHead)
+							head.add(p);
+						if (wc instanceof PipeCore)
+							tail.add(p);
+						q.add(p);
+					}
+
+				}
+		}
+		return new BlockPos[][] { head.toArray(new BlockPos[0]), tail.toArray(new BlockPos[0]) };
 	}
 
 	public static BlockPos[] queryPoint(World w, BlockPos c) {
@@ -92,7 +130,7 @@ public class DraftWire extends SixWayBlock implements WireConnect {
 
 	private final int type;
 
-	public DraftWire(int n) {
+	public Wire(int n) {
 		super(0.25f, Block.Properties.create(Material.EARTH));
 		type = n;
 	}
@@ -130,6 +168,14 @@ public class DraftWire extends SixWayBlock implements WireConnect {
 			s = s.with(FACING_TO_PROPERTY_MAP.get(d), connectable(type, bl, d));
 		}
 		return s;
+	}
+
+	public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
+		return true;
+	}
+
+	public boolean isNormalCube(BlockState bs, IBlockReader w, BlockPos pos) {
+		return false;
 	}
 
 }

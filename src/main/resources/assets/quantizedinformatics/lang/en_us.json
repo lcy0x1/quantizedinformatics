@@ -6,6 +6,10 @@
     "quantizedinformatics:container.draft_in": "Single External Input",
     "quantizedinformatics:container.draft_out": "Single External Output",
     "quantizedinformatics:container.draft_listener": "Signal Monitor",
+    "quantizedinformatics:container.auto_craft": "Automatic Crafting Table",
+    "quantizedinformatics:container.recipe_maker": "Recipe Maker",
+    "quantizedinformatics:container.pipe_head": "Item Pipe Head",
+    "quantizedinformatics:container.pipe_body": "Item Pipe Core",
 
     "quantizedinformatics:container.draft_center.in": "Input Wire ID = ",
     "quantizedinformatics:container.draft_center.out": "Output Wire ID = ",
@@ -29,10 +33,17 @@
     "block.quantizedinformatics.draft_in": "Single External Input",
     "block.quantizedinformatics.draft_out": "Single External Output",
     "block.quantizedinformatics.draft_listener": "Signal Monitor",
+    "block.quantizedinformatics.auto_craft": "Automatic Crafting Table",
+    "block.quantizedinformatics.recipe_maker": "Recipe Maker",
+    "block.quantizedinformatics.pipe_body": "Item Pipe",
+    "block.quantizedinformatics.pipe_head": "Item Pipe Head",
+    "block.quantizedinformatics.pipe_core": "Item Pipe Controller",
 
     "item.quantizedinformatics.chip": "Chip",
     "item.quantizedinformatics.elem_b": "B (Boron) - Chemical",
     "item.quantizedinformatics.elem_p": "P (Phosphorous) - Chemical",
+    "item.quantizedinformatics.elem_bo": "B2O3 (Boron Oxide) - Chemical",
+    "item.quantizedinformatics.elem_po": "P2O5 (Phosphorous Oxide) - Chemical",
     "item.quantizedinformatics.elem_si": "Si (Silicon) - Chemical",
     "item.quantizedinformatics.elem_feo": "Fe2O3 (Iron(II) Oxide) - Chemical",
 

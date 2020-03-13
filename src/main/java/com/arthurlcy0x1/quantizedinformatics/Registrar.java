@@ -9,8 +9,8 @@ import org.apache.logging.log4j.LogManager;
 
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftIO;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.AutoCraft;
-import com.arthurlcy0x1.quantizedinformatics.blocks.auto.AutoPipe;
-import com.arthurlcy0x1.quantizedinformatics.blocks.auto.PipeTail;
+import com.arthurlcy0x1.quantizedinformatics.blocks.auto.PipeHead;
+import com.arthurlcy0x1.quantizedinformatics.blocks.auto.PipeCore;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.RecMaker;
 import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftCntr;
 import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftGate;
@@ -21,7 +21,7 @@ import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DIOBlock.DIOScr;
 import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DIOBlock.DIOTerm;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.Craft3D;
-import com.arthurlcy0x1.quantizedinformatics.blocks.DraftWire;
+import com.arthurlcy0x1.quantizedinformatics.blocks.Wire;
 import com.arthurlcy0x1.quantizedinformatics.blocks.OxiFn;
 import com.arthurlcy0x1.quantizedinformatics.blocks.RedFn;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect;
@@ -55,11 +55,11 @@ public class Registrar extends ItemGroup {
 
 	// blocks
 	public static final Block B_FOG = generate("quantum_fog", Material.EARTH);
-	public static final Block BC_FRAME = addName(new DraftWire(WireConnect.CRAFT), "craft_frame");
+	public static final Block BC_FRAME = addName(new Wire(WireConnect.CRAFT), "craft_frame");
 	public static final Block B_CRAFT3D = addName(new Craft3D(), "craft_3d");
 	public static final Block B_OXIFN = addName(new CTEBlock<OxiFn.TE>(OxiFn.TE::new), "oxidation_furnace");
 	public static final Block B_REDFN = addName(new CTEBlock<RedFn.TE>(RedFn.TE::new), "reduction_furnace");
-	public static final Block BD_WIRE = addName(new DraftWire(WireConnect.GATE), "draft_wire");
+	public static final Block BD_WIRE = addName(new Wire(WireConnect.GATE), "draft_wire");
 	public static final Block BD_CNTR = addName(new DIOTerm<>(DraftCntr.TE::new, DraftIO.OUTPUT), "draft_center");
 	public static final Block BD_GATE = addName(new DraftGate(), "draft_gate");
 	public static final Block BD_IN = addName(new DraftIn(), "draft_in");
@@ -67,9 +67,9 @@ public class Registrar extends ItemGroup {
 	public static final Block BD_LNR = addName(new DraftLnr(), "draft_listener");
 	public static final Block BA_CRAFT = addName(new AutoCraft(), "auto_craft");
 	public static final Block BA_REC = addName(new RecMaker(), "recipe_maker");
-	public static final Block BA_PIPE_HEAD = addName(new AutoPipe(), "auto_pipe_head");
-	public static final Block BA_PIPE_BODY = addName(new DraftWire(WireConnect.PIPE), "auto_pipe_body");
-	public static final Block BA_PIPE_TAIL = addName(new PipeTail(), "auto_pipe_tail");
+	public static final Block BAP_HEAD = addName(new PipeHead(), "pipe_head");
+	public static final Block BAP_BODY = addName(new Wire(WireConnect.PIPE), "pipe_body");
+	public static final Block BAP_CORE = addName(new PipeCore(), "pipe_core");
 
 	public static final List<Block> BDS = Arrays.asList(BD_CNTR, BD_GATE, BD_IN, BD_OUT, BD_LNR);
 
@@ -89,9 +89,9 @@ public class Registrar extends ItemGroup {
 	public static final Item IBD_LNR = convert(BD_LNR);
 	public static final Item IBA_CRAFT = convert(BA_CRAFT);
 	public static final Item IBA_REC = convert(BA_REC);
-	public static final Item IBA_PIPE_HEAD = convert(BA_PIPE_HEAD);
-	public static final Item IBA_PIPE_BODY = convert(BA_PIPE_BODY);
-	public static final Item IBA_PIPE_TAIL = convert(BA_PIPE_TAIL);
+	public static final Item IBAP_HEAD = convert(BAP_HEAD);
+	public static final Item IBAP_BODY = convert(BAP_BODY);
+	public static final Item IBAP_CORE = convert(BAP_CORE);
 
 	// items
 	public static final Item I_GATECHIP = generate("chip", 1);
@@ -145,7 +145,8 @@ public class Registrar extends ItemGroup {
 	public static final ContainerType<DraftLnr.Cont> CTD_LNR = getCT(DraftLnr.Cont::new, "draft_listener_c");
 	public static final ContainerType<AutoCraft.Cont> CTA_CRAFT = getCT(AutoCraft.Cont::new, "auto_craft_c");
 	public static final ContainerType<RecMaker.Cont> CTA_REC = getCT(RecMaker.Cont::new, "recipe_maker_c");
-	public static final ContainerType<AutoPipe.Cont> CTA_PIPE = getCT(AutoPipe.Cont::new, "auto_pipe_c");
+	public static final ContainerType<PipeHead.Cont> CTAP_HEAD = getCT(PipeHead.Cont::new, "pipe_head_c");
+	public static final ContainerType<PipeCore.Cont> CTAP_CORE = getCT(PipeCore.Cont::new, "pipe_core_c");
 
 	public static final TileEntityType<OxiFn.TE> TET_OXIFN = getTET(OxiFn.TE::new, B_OXIFN, "oxidation_furnace_te");
 	public static final TileEntityType<RedFn.TE> TET_REDFN = getTET(RedFn.TE::new, B_REDFN, "reduction_furnace_te");
@@ -156,7 +157,8 @@ public class Registrar extends ItemGroup {
 	public static final TileEntityType<DraftLnr.TE> TETD_LNR = getTET(DraftLnr.TE::new, BD_LNR, "draft_listener_te");
 	public static final TileEntityType<AutoCraft.TE> TETA_CRAFT = getTET(AutoCraft.TE::new, BA_CRAFT, "auto_craft_te");
 	public static final TileEntityType<RecMaker.TE> TETA_REC = getTET(RecMaker.TE::new, BA_REC, "recipe_maker_te");
-	public static final TileEntityType<AutoPipe.TE> TETA_PIPE = getTET(AutoPipe.TE::new, BA_PIPE_HEAD, "auto_pipe_te");
+	public static final TileEntityType<PipeHead.TE> TETAP_HEAD = getTET(PipeHead.TE::new, BAP_HEAD, "pipe_head_te");
+	public static final TileEntityType<PipeCore.TE> TETAP_CORE = getTET(PipeCore.TE::new, BAP_CORE, "pipe_core_te");
 
 	public static final IRecipeType<OxiRecipe> RT_OXI = IRecipeType.register("quantizedinformatics:oxidation");
 	public static final IRecipeType<RedRecipe> RT_RED = IRecipeType.register("quantizedinformatics:reduction");
@@ -176,9 +178,9 @@ public class Registrar extends ItemGroup {
 	}
 
 	public static final ContainerType<?>[] CTS = { CT_OXIFN, CT_REDFN, CTD_CNTR, CTD_GATE, CTD_IN, CTD_OUT, CTD_LNR,
-			CTA_CRAFT, CTA_REC, CTA_PIPE };
+			CTA_CRAFT, CTA_REC, CTAP_HEAD };
 	public static final TileEntityType<?>[] TETS = { TET_OXIFN, TET_REDFN, TETD_CNTR, TETD_GATE, TETD_IN, TETD_OUT,
-			TETD_LNR, TETA_CRAFT, TETA_REC, TETA_PIPE };
+			TETD_LNR, TETA_CRAFT, TETA_REC, TETAP_HEAD };
 	public static final IRecipeSerializer<?>[] RSS = { RS_OXI, RS_RED, RS_C3D };
 
 	@SuppressWarnings("unchecked")

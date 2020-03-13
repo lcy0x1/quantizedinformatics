@@ -2,7 +2,6 @@ package com.arthurlcy0x1.quantizedinformatics.blocks.auto;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
-import com.arthurlcy0x1.quantizedinformatics.blocks.AllDireBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect;
 
@@ -25,7 +24,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-public class AutoPipe extends AllDireBlock implements WireConnect {
+public class PipeCore extends Block implements WireConnect {
+
 
 	public static class Cont extends CTEBlock.CTECont {
 
@@ -34,7 +34,7 @@ public class AutoPipe extends AllDireBlock implements WireConnect {
 		}
 
 		protected Cont(int id, PlayerInventory inv, IInventory ent) {
-			super(Registrar.CTA_PIPE, id, inv, ent, 0);
+			super(Registrar.CTAP_CORE, id, inv, ent, 0);
 			// TODO Auto-generated constructor stub
 		}
 
@@ -43,7 +43,7 @@ public class AutoPipe extends AllDireBlock implements WireConnect {
 	public static class TE extends CTEBlock.CTETE<TE> {
 
 		public TE() {
-			super(Registrar.TETA_PIPE, SIZE);
+			super(Registrar.TETAP_CORE, SIZE);
 		}
 
 		@Override
@@ -53,20 +53,21 @@ public class AutoPipe extends AllDireBlock implements WireConnect {
 
 		@Override
 		public ITextComponent getDisplayName() {
-			return Translator.getCont("auto_pipe");
+			return Translator.getCont("pipe_core");
 		}
 
 	}
 
 	private static final int SIZE = 5;
 
-	public AutoPipe() {
+	
+	public PipeCore() {
 		super(Block.Properties.create(Material.ROCK));
 	}
 
 	@Override
 	public boolean canConnectFrom(int type, BlockState b, Direction d) {
-		return type == PIPE && b.get(FACING) == d.getOpposite();
+		return type == PIPE;
 	}
 
 	@Override
@@ -93,5 +94,6 @@ public class AutoPipe extends AllDireBlock implements WireConnect {
 			pl.openContainer((INamedContainerProvider) te);
 		return ActionResultType.SUCCESS;
 	}
+
 
 }
