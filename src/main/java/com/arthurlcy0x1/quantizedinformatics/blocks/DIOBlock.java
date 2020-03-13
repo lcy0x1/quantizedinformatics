@@ -31,7 +31,7 @@ public class DIOBlock {
 
 		protected DIOCont(ContainerType<?> type, int id, IIntArray arr) {
 			super(type, id);
-			data = new TermWriter(arr);
+			data = new TermWriter(id, arr);
 			trackIntArray(data.getData());
 		}
 
@@ -64,7 +64,7 @@ public class DIOBlock {
 			if (sele == -1)
 				return super.mouseClicked(x, y, t);
 			if (sele >= 0 && sele <= CNUM)
-				PacketHandler.send(new Msg(0, sele));
+				PacketHandler.send(new Msg(container.windowId, 0, sele));
 			return true;
 		}
 
@@ -205,8 +205,8 @@ public class DIOBlock {
 
 	private static class TermWriter extends MsgWriter {
 
-		private TermWriter(IIntArray arr) {
-			super(arr);
+		private TermWriter(int wid, IIntArray arr) {
+			super(wid, arr);
 		}
 
 		@Override

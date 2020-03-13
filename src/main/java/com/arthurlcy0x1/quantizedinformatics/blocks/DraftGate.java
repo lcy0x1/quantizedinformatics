@@ -39,7 +39,7 @@ public class DraftGate extends CTEBlock<DraftGate.TE> implements WireConnect.Dra
 			super(Registrar.CTD_GATE, id, inv, ent, 86);
 			this.addSlot(new CondSlot(slots, 0, 80, 36, Cont::isChip));
 			trackIntArray(d);
-			data = new SignalWriter(CNUM, CNUM, d);
+			data = new SignalWriter(id, CNUM, CNUM, d);
 		}
 
 		@Override
@@ -72,7 +72,7 @@ public class DraftGate extends CTEBlock<DraftGate.TE> implements WireConnect.Dra
 		@Override
 		public boolean mouseClicked(double x, double y, int t) {
 			sele = getSele(x, y);
-			if (sele >= 0 && container.data.get(sele) == C_FLOAT)
+			if (sele >= 0 && container.data.get(sele) == C_FORBID)
 				sele = -1;
 			if (sele == -1)
 				return super.mouseClicked(x, y, t);
@@ -102,7 +102,7 @@ public class DraftGate extends CTEBlock<DraftGate.TE> implements WireConnect.Dra
 		}
 
 		private void drawSymbol(int x, int y, int i, int cv, boolean valid) {
-			if (cv == C_FLOAT && i >= 4)
+			if (cv == C_FORBID && i >= 4)
 				return;
 			if (!valid)
 				if (cv >= C_ERR && cv < C_ERR + CNUM)
@@ -121,9 +121,9 @@ public class DraftGate extends CTEBlock<DraftGate.TE> implements WireConnect.Dra
 				int x0 = xc + 53 - i / 4 * 13;
 				int y0 = yc + 18 + i % 4 * 13;
 				int x1 = xc + 110 + i / 4 * 13;
-				if (x >= x0 && x < x0 + 13 && y > y0 && y < y0 + 13)
+				if (i < container.data.inputCount() && x >= x0 && x < x0 + 13 && y > y0 && y < y0 + 13)
 					return i;
-				if (x >= x1 && x < x1 + 13 && y > y0 && y < y0 + 13)
+				if (i < container.data.outputCount() && x >= x1 && x < x1 + 13 && y > y0 && y < y0 + 13)
 					return i + CNUM;
 			}
 			return -1;
@@ -210,8 +210,11 @@ public class DraftGate extends CTEBlock<DraftGate.TE> implements WireConnect.Dra
 						input |= 1 << i;
 				}
 				int output = chip.compute(input);
-				for (int i = 0; i < chip.output; i++)
-					ans[i] = (output & 1 << i) > 0 ? S_HIGH : S_LOW;
+				for (int i = 0; i < chip.output; i++) {
+					int ch = data.getOutput(i);
+					if (ch >= 0 && ch < CNUM)
+						ans[ch] = (output & 1 << i) > 0 ? S_HIGH : S_LOW;
+				}
 			}
 			return ans;
 		}

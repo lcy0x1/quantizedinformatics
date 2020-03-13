@@ -33,7 +33,7 @@ public interface WireConnect {
 		public Direction getOutDire(BlockState b);
 
 		public default int ioType(BlockState b, Direction d) {
-			return d == null ? null : d == getInDire(b) ? INPUT : d == getOutDire(b) ? OUTPUT : null;
+			return d == null ? NONE : d == getInDire(b) ? INPUT : d == getOutDire(b) ? OUTPUT : NONE;
 		}
 
 	}
@@ -71,19 +71,21 @@ public interface WireConnect {
 	public static class Msg {
 
 		public static Msg decode(PacketBuffer packet) {
-			return new Msg(packet.readInt(), packet.readInt());
+			return new Msg(packet.readInt(), packet.readVarInt(), packet.readVarInt());
 		}
 
-		private final int ind, val;
+		private final int wid, ind, val;
 
-		public Msg(int index, int value) {
+		public Msg(int id, int index, int value) {
+			wid = id;
 			ind = index;
 			val = value;
 		}
 
 		public void encode(PacketBuffer packet) {
-			packet.writeInt(ind);
-			packet.writeInt(val);
+			packet.writeInt(wid);
+			packet.writeVarInt(ind);
+			packet.writeVarInt(val);
 		}
 
 		public void handle(Supplier<Context> sup) {
@@ -94,7 +96,7 @@ public interface WireConnect {
 
 		private void handle(Context ctx) {
 			Container c = ctx.getSender().openContainer;
-			if (c instanceof DraftCont) {
+			if (c != null && c.windowId == wid && c instanceof DraftCont) {
 				DraftCont cont = (DraftCont) c;
 				cont.getSignal().set(ind, val);
 			}
@@ -104,9 +106,11 @@ public interface WireConnect {
 
 	public static abstract class MsgWriter {
 
+		private final int wid;
 		private final IIntArray data;
 
-		public MsgWriter(IIntArray arr) {
+		public MsgWriter(int id, IIntArray arr) {
+			wid = id;
 			data = arr;
 		}
 
@@ -140,7 +144,7 @@ public interface WireConnect {
 			if (!allowed(sele, bit))
 				sele = -1;
 			else
-				PacketHandler.send(new Msg(sele, bit));
+				PacketHandler.send(new Msg(wid, sele, bit));
 			return sele;
 		}
 
@@ -269,8 +273,8 @@ public interface WireConnect {
 
 		private final int inps, outs;
 
-		public SignalWriter(int input, int output, IIntArray arr) {
-			super(arr);
+		public SignalWriter(int wid, int input, int output, IIntArray arr) {
+			super(wid, arr);
 			inps = input;
 			outs = output;
 		}
@@ -301,7 +305,7 @@ public interface WireConnect {
 
 		@Override
 		protected boolean allowed(int sele, int bit) {
-			return bit == -1 || sele >= inps && bit >= C_LOW && bit != C_FLOAT || sele < inps && bit == C_FLOAT;
+			return bit < CNUM || sele < inps && bit >= C_LOW && bit <= C_HIGH || sele >= inps && bit == C_FLOAT;
 		}
 
 	}

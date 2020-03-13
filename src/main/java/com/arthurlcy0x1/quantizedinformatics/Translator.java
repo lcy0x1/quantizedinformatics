@@ -22,4 +22,12 @@ public class Translator {
 		return get("quantizedinformatics:container." + str);
 	}
 
+	public static String getContText(String str) {
+		return getCont(str).getFormattedText();
+	}
+
+	public static String getText(String str) {
+		return get(str).getFormattedText();
+	}
+
 }

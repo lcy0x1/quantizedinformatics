@@ -7,6 +7,7 @@ import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock.CTEScr;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.*;
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -19,11 +20,14 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
 import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftIO.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class DraftCntr {
@@ -32,8 +36,8 @@ public class DraftCntr {
 
 		private static class TerminalWriter extends MsgWriter {
 
-			public TerminalWriter(IIntArray arr) {
-				super(arr);
+			public TerminalWriter(int wid, IIntArray arr) {
+				super(wid, arr);
 			}
 
 			@Override
@@ -64,7 +68,7 @@ public class DraftCntr {
 			super(Registrar.CTD_CNTR, id, inv, ent, 104);
 			addSlot(new ResultSlot(ent, 0, 51, 71));
 			trackIntArray(arr);
-			data = new TerminalWriter(arr);
+			data = new TerminalWriter(id, arr);
 			cont = c;
 		}
 
@@ -72,7 +76,7 @@ public class DraftCntr {
 		public void detectAndSendChanges() {
 			super.detectAndSendChanges();
 			if (cont.te != null && cont.te.cir != null)
-				PacketHandler.send(new Msg(cont.te.cir.getInfo()));
+				PacketHandler.send(new Msg(windowId, cont.te.cir.getInfo()));
 		}
 
 		@Override
@@ -85,16 +89,19 @@ public class DraftCntr {
 	public static class Msg {
 
 		public static Msg decode(PacketBuffer packet) {
-			return new Msg(packet.readVarIntArray());
+			return new Msg(packet.readInt(), packet.readVarIntArray());
 		}
 
 		private final int[] val;
+		private final int wid;
 
-		public Msg(int[] value) {
+		public Msg(int id, int[] value) {
+			wid = id;
 			val = value;
 		}
 
 		public void encode(PacketBuffer packet) {
+			packet.writeInt(wid);
 			packet.writeVarIntArray(val);
 		}
 
@@ -105,8 +112,8 @@ public class DraftCntr {
 		}
 
 		private void handle(Context ctx) {
-			Container c = ctx.getSender().openContainer;
-			if (c instanceof Cont)
+			Container c = Minecraft.getInstance().player.openContainer;
+			if (c != null && c.windowId == wid && c instanceof Cont)
 				((Cont) c).cont.data = val;
 		}
 
@@ -116,6 +123,10 @@ public class DraftCntr {
 
 		private static final ResourceLocation GUI = new ResourceLocation(Registrar.MODID,
 				"textures/gui/container/draft_center.png");
+
+		private static String getText(String key) {
+			return Translator.getContText("draft_center." + key);
+		}
 
 		private int sele = -1, scroll = 0;
 
@@ -140,6 +151,63 @@ public class DraftCntr {
 			if (sele == -1)
 				return super.mouseClicked(x, y, t);
 			return true;
+		}
+
+		@Override
+		public boolean mouseScrolled(double x, double y, double t) {
+			int[] data = container.cont.data;
+			int len = data == null ? 0 : data.length;
+			int max = Math.max(0, len / 6 - 4);
+			scroll = (int) MathHelper.clamp(scroll - t, 0, max);
+			return true;
+		}
+
+		@Override
+		public void renderHoveredToolTip(int mx, int my) {
+			super.renderHoveredToolTip(mx, my);
+			int[] data = container.cont.data;
+			if (data == null)
+				return;
+			int x = guiLeft;
+			int y = guiTop;
+			int fx = x + 71;
+			int fy = y + 17;
+			if (mx < fx || mx > fx + 90 || my < fy || my > fy + 70)
+				return;
+			for (int i = 0; i < data.length / 6; i++) {
+				int iy = (i - scroll) * 20;
+				if (iy <= -20 || iy >= 80)
+					continue;
+				if (mx >= fx && mx <= fx + 88 && my >= fy + iy && my <= fy + iy + 20) {
+					List<String> list = new ArrayList<>();
+					int stat = data[i * 6];
+					int id = stat & 15;
+					list.add(Translator.getText(Registrar.BDS.get(id).getTranslationKey()));
+					list.add("x = " + data[i * 6 + 1]);
+					list.add("y = " + data[i * 6 + 2]);
+					list.add("z = " + data[i * 6 + 3]);
+					if (data[i * 6 + 4] > 0)
+						list.add(getText("in") + data[i * 6 + 4]);
+					if (data[i * 6 + 5] > 0)
+						list.add(getText("out") + data[i * 6 + 5]);
+					int e0 = stat >> 4 & 4;
+					int e1 = stat >> 6 & 4;
+					int e2 = stat >> 8 & 1;
+					if (e0 == Circuit.ERR_CONFLICT)
+						list.add(getText("conflict.in"));
+					if (e0 == Circuit.ERR_FLOAT)
+						list.add(getText("float.in"));
+					if (e1 == Circuit.ERR_CONFLICT)
+						list.add(getText("conflict.out"));
+					if (e1 == Circuit.ERR_FLOAT)
+						list.add(getText("float.out"));
+					if (e2 == 1)
+						list.add(getText("loop"));
+					if (e0 == 0 && e1 == 0 && e2 == 0)
+						list.add(getText("none"));
+					renderTooltip(list, mx, my);
+				}
+			}
 		}
 
 		@Override
@@ -195,11 +263,10 @@ public class DraftCntr {
 			int fx = x + 71;
 			int fy = y + 17;
 			for (int i = 0; i < data.length / 6; i++) {
-				int iy = i * 20 - scroll;
-				if (iy < -20 || iy >= 70)
+				int iy = (i - scroll) * 20;
+				if (iy <= -20 || iy >= 80)
 					continue;
 				int stat = data[i * 6];
-				int id = stat & 15;
 				int err0 = stat << 4 & 4;
 				int err1 = stat << 6 & 4;
 				int err2 = stat << 8 & 1;
@@ -210,18 +277,20 @@ public class DraftCntr {
 					err = 1;
 				else
 					err = 3;
-				blit(err % 2 * 88, 186 + err / 2 * 20, fx, fy, 88, 20);
-				if (iy < -18 || iy >= 68)
+				blit(fx, fy + iy, err % 2 * 88, 186 + err / 2 * 20, 88, 20);
+			}
+			for (int i = 0; i < data.length / 6; i++) {
+				int iy = (i - scroll) * 20;
+				if (iy <= -20 || iy >= 80)
 					continue;
+				int id = data[i * 6] & 15;
 				ItemStack is = new ItemStack(Registrar.BDS.get(id).asItem());
 				itemRenderer.renderItemAndEffectIntoGUI(this.minecraft.player, is, fx + 2, fy + 2 + iy);
-				String sin = Translator.getCont("draft_center.in").getFormattedText();
-				String sout = Translator.getCont("draft_center.out").getFormattedText();
-				String text = sin + data[i * 6 + 4] + sout + data[i * 6 + 5];
-				this.font.drawString(text, fx, fy + iy + 10 - font.FONT_HEIGHT / 2, COLOR);
+				String text = data[i * 6 + 4] + "->" + data[i * 6 + 5];
+				int tx = fx + 54 - font.getStringWidth(text) / 2;
+				int ty = fy + iy + 10 - font.FONT_HEIGHT / 2;
+				this.font.drawString(text, tx, ty, COLOR);
 			}
-			blit(70, 0, x + 70, y, 90, 17);
-			blit(70, 87, x + 70, y + 87, 90, 17);
 		}
 
 	}

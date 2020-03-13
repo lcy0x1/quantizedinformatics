@@ -7,8 +7,8 @@
     "quantizedinformatics:container.draft_out": "Single External Output",
     "quantizedinformatics:container.draft_listener": "Signal Monitor",
 
-    "quantizedinformatics:container.draft_center.in": "Input Wire ID: ",
-    "quantizedinformatics:container.draft_center.out": ", Output Wire ID: ",
+    "quantizedinformatics:container.draft_center.in": "Input Wire ID = ",
+    "quantizedinformatics:container.draft_center.out": "Output Wire ID = ",
     "quantizedinformatics:container.draft_center.none": "Good for Production",
     "quantizedinformatics:container.draft_center.conflict": "Wire Error: Conflict",
     "quantizedinformatics:container.draft_center.conflict.in": "Input Wire Error: Conflict",
@@ -29,7 +29,7 @@
     "block.quantizedinformatics.draft_in": "Single External Input",
     "block.quantizedinformatics.draft_out": "Single External Output",
     "block.quantizedinformatics.draft_listener": "Signal Monitor",
-    
+
     "item.quantizedinformatics.chip": "Chip",
     "item.quantizedinformatics.elem_b": "B (Boron) - Chemical",
     "item.quantizedinformatics.elem_p": "P (Phosphorous) - Chemical",

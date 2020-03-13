@@ -406,12 +406,15 @@ public class Circuit {
 	}
 
 	private boolean hasLoop() {
+		for (WireNode w : node)
+			if (w.getErrorCode() != -1)
+				return false;
 		if (loop >= 0)
 			return loop == 0;
 		for (GateNode gn : nodes.values())
 			gn.dep = 0;
 		for (GateNode gn : nodes.values())
-			if (gn.type != T_LNR) {
+			if (gn.type != T_LNR && gn.input != null) {
 				GateNode[] pvd = gn.input.getProvider();
 				for (int i = 0; i < gn.sm.inputCount(); i++) {
 					int ch = gn.sm.getInput(i);
