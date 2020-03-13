@@ -6,8 +6,11 @@ import java.util.function.Supplier;
 
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.NetworkManager;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
@@ -26,6 +29,12 @@ public class PacketHandler {
 
 	public static <T> void send(T msg) {
 		CH.sendToServer(msg);
+	}
+
+	public static <T> void update(T msg) {
+		NetworkManager manager = Minecraft.getInstance().getConnection().getNetworkManager();
+		NetworkDirection dir = NetworkDirection.PLAY_TO_CLIENT;
+		CH.sendTo(msg, manager, dir);
 	}
 
 	private static <T> void reg(Class<T> cls, BiConsumer<T, PacketBuffer> encoder, Function<PacketBuffer, T> decoder,

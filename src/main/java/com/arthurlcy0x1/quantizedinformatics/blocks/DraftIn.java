@@ -1,6 +1,7 @@
 package com.arthurlcy0x1.quantizedinformatics.blocks;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
+import com.arthurlcy0x1.quantizedinformatics.Translator;
 import com.arthurlcy0x1.quantizedinformatics.blocks.DIOBlock.*;
 
 import net.minecraft.entity.player.PlayerEntity;
@@ -9,7 +10,6 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 
 public class DraftIn extends DIOTerm<DraftIn.TE> {
 
@@ -38,7 +38,7 @@ public class DraftIn extends DIOTerm<DraftIn.TE> {
 
 		@Override
 		public ITextComponent getDisplayName() {
-			return TITLE;
+			return Translator.getCont("draft_in");
 		}
 
 		@Override
@@ -49,8 +49,6 @@ public class DraftIn extends DIOTerm<DraftIn.TE> {
 		}
 
 	}
-
-	private static final ITextComponent TITLE = new TranslationTextComponent("quantizedinformatics:container.draft_in");
 
 	public DraftIn() {
 		super(TE::new, OUTPUT);

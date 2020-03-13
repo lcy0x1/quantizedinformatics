@@ -7,6 +7,17 @@
     "quantizedinformatics:container.draft_out": "Single External Output",
     "quantizedinformatics:container.draft_listener": "Signal Monitor",
 
+    "quantizedinformatics:container.draft_center.in": "Input Wire ID: ",
+    "quantizedinformatics:container.draft_center.out": ", Output Wire ID: ",
+    "quantizedinformatics:container.draft_center.none": "Good for Production",
+    "quantizedinformatics:container.draft_center.conflict": "Wire Error: Conflict",
+    "quantizedinformatics:container.draft_center.conflict.in": "Input Wire Error: Conflict",
+    "quantizedinformatics:container.draft_center.conflict.out": "Output Wire Error: Conflict",
+    "quantizedinformatics:container.draft_center.float": "Wire Error: Floating",
+    "quantizedinformatics:container.draft_center.float.in": "Input Wire Error: Floating",
+    "quantizedinformatics:container.draft_center.float.out": "Output Wire Error: Floating",
+    "quantizedinformatics:container.draft_center.loop": "Error: In Loop",
+
     "block.quantizedinformatics.quantum_fog": "Quantum Fog",
     "block.quantizedinformatics.craft_3d": "3D Crafting System Terminal",
     "block.quantizedinformatics.oxidation_furnace": "Oxidation Furnace",
@@ -18,12 +29,13 @@
     "block.quantizedinformatics.draft_in": "Single External Input",
     "block.quantizedinformatics.draft_out": "Single External Output",
     "block.quantizedinformatics.draft_listener": "Signal Monitor",
-
+    
     "item.quantizedinformatics.chip": "Chip",
     "item.quantizedinformatics.elem_b": "B (Boron) - Chemical",
     "item.quantizedinformatics.elem_p": "P (Phosphorous) - Chemical",
     "item.quantizedinformatics.elem_si": "Si (Silicon) - Chemical",
     "item.quantizedinformatics.elem_feo": "Fe2O3 (Iron(II) Oxide) - Chemical",
+
     "item.quantizedinformatics.gate_wire": "Wire - CMOS Diagram",
     "item.quantizedinformatics.gate_cap": "Metal Cap - CMOS Diagram",
     "item.quantizedinformatics.gate_nmos": "NMOS - CMOS Diagram",

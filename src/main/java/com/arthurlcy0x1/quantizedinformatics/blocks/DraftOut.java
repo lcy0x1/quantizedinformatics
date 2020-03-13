@@ -1,6 +1,7 @@
 package com.arthurlcy0x1.quantizedinformatics.blocks;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
+import com.arthurlcy0x1.quantizedinformatics.Translator;
 import com.arthurlcy0x1.quantizedinformatics.blocks.DIOBlock.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -13,7 +14,6 @@ import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 
 import static net.minecraft.state.properties.BlockStateProperties.POWER_0_15;
@@ -45,7 +45,7 @@ public class DraftOut extends DIOTerm<DraftOut.TE> {
 
 		@Override
 		public ITextComponent getDisplayName() {
-			return TITLE;
+			return Translator.getCont("draft_out");
 		}
 
 		@Override
@@ -57,9 +57,6 @@ public class DraftOut extends DIOTerm<DraftOut.TE> {
 		}
 
 	}
-
-	private static final ITextComponent TITLE = new TranslationTextComponent(
-			"quantizedinformatics:container.draft_out");
 
 	public DraftOut() {
 		super(TE::new, INPUT);

@@ -1,6 +1,8 @@
 package com.arthurlcy0x1.quantizedinformatics;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Supplier;
 
 import org.apache.logging.log4j.LogManager;
@@ -59,6 +61,8 @@ public class Registrar extends ItemGroup {
 	public static final Block BD_IN = addName(new DraftIn(), "draft_in");
 	public static final Block BD_OUT = addName(new DraftOut(), "draft_out");
 	public static final Block BD_LNR = addName(new DraftLnr(), "draft_listener");
+
+	public static final List<Block> BDS = Arrays.asList(BD_CNTR, BD_GATE, BD_IN, BD_OUT, BD_LNR);
 
 	public static final ItemGroup ITEM_GROUP = new Registrar();
 

@@ -41,7 +41,7 @@ public class Circuit {
 
 		/** assigned and used by circuit */
 		private int[] ids;
-		private int dep;
+		private int dep, state;
 		private GateContainer cont;
 
 		private int[] rev;
@@ -86,6 +86,7 @@ public class Circuit {
 		private void clear() {
 			ids = null;
 			dep = 0;
+			state = 0;
 			cont = null;
 			rev = null;
 		}
@@ -229,6 +230,8 @@ public class Circuit {
 	/** for constructor use only */
 	private TreeSet<GateNode> ins, ous;
 
+	private int loop = -1;
+
 	public Circuit(World w, BlockPos pos) {
 		world = w;
 		BlockPos[] endPoints = DraftWire.queryPoint(world, pos);
@@ -290,6 +293,7 @@ public class Circuit {
 			gn.clear();
 		for (WireNode wn : node)
 			wn.clear();
+		loop = -1;
 	}
 
 	public ParentDiagram getLogic() {
@@ -352,6 +356,24 @@ public class Circuit {
 		}
 	}
 
+	protected int[] getInfo() {
+		int[] ans = new int[nodes.size() * 6];
+		int i = 0;
+		for (GateNode n : nodes.values()) {
+			int id = Registrar.BDS.indexOf(n.bs.getBlock());
+			int err0 = Math.max(0, n.input == null ? 0 : n.input.getErrorCode());
+			int err1 = Math.max(0, n.output == null ? 0 : n.output.getErrorCode());
+			int err2 = hasLoop() ? 1 : 0;
+			ans[i++] = id | err0 << 4 | err1 << 6 | err2 << 8 | n.state << 9;
+			ans[i++] = n.pos.getX();
+			ans[i++] = n.pos.getY();
+			ans[i++] = n.pos.getZ();
+			ans[i++] = n.input == null ? 0 : node.indexOf(n.input) + 1;
+			ans[i++] = n.output == null ? 0 : node.indexOf(n.output) + 1;
+		}
+		return ans;
+	}
+
 	private void addWire(BlockPos[][] q) {
 		GateNode[] nsin = new GateNode[q[0].length];
 		GateNode[] nsou = new GateNode[q[1].length];
@@ -384,6 +406,8 @@ public class Circuit {
 	}
 
 	private boolean hasLoop() {
+		if (loop >= 0)
+			return loop == 0;
 		for (GateNode gn : nodes.values())
 			gn.dep = 0;
 		for (GateNode gn : nodes.values())
@@ -413,7 +437,8 @@ public class Circuit {
 			}
 			rmv++;
 		}
-		return rmv == nodes.size();
+		loop = nodes.size() - rmv;
+		return loop == 0;
 	}
 
 	private void setCont(LogicDiagram cont, GateNode gn, int i, int ch) {

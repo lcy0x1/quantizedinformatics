@@ -147,6 +147,8 @@ public class CTEBlock<T extends TileEntity> extends HorizontalBlock {
 
 	public static abstract class CTEScr<T extends CTECont> extends ContainerScreen<T> {
 
+		public static final int COLOR = 4210752;
+
 		public CTEScr(T cont, PlayerInventory inv, ITextComponent text, int h) {
 			super(cont, inv, text);
 			ySize = h;
@@ -162,9 +164,9 @@ public class CTEBlock<T extends TileEntity> extends HorizontalBlock {
 		@Override
 		protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 			String s = this.title.getFormattedText();
-			this.font.drawString(s, this.xSize / 2 - this.font.getStringWidth(s) / 2, 6.0F, 4210752);
+			this.font.drawString(s, this.xSize / 2 - this.font.getStringWidth(s) / 2, 6.0F, COLOR);
 			this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, this.ySize - 96 + 2,
-					4210752);
+					COLOR);
 		}
 
 	}

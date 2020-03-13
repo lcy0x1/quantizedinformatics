@@ -1,6 +1,7 @@
 package com.arthurlcy0x1.quantizedinformatics.blocks;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
+import com.arthurlcy0x1.quantizedinformatics.Translator;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock.CTECont;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock.CTEScr;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock.CTETE;
@@ -20,7 +21,6 @@ import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.ForgeHooks;
 
 public class OxiFn {
@@ -131,7 +131,7 @@ public class OxiFn {
 
 		@Override
 		public ITextComponent getDisplayName() {
-			return TITLE;
+			return Translator.getCont("oxidation_furnace");
 		}
 
 		@Override
@@ -208,9 +208,6 @@ public class OxiFn {
 		}
 
 	}
-
-	private static final ITextComponent TITLE = new TranslationTextComponent(
-			"quantizedinformatics:container.oxidation_furnace");
 
 	private static final int DATA_LEN = 4, FUEL_CONS = 8;
 

@@ -1,6 +1,7 @@
 package com.arthurlcy0x1.quantizedinformatics.blocks;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
+import com.arthurlcy0x1.quantizedinformatics.Translator;
 import com.arthurlcy0x1.quantizedinformatics.items.LogicDraft;
 import com.arthurlcy0x1.quantizedinformatics.logic.LogicGate;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -18,7 +19,6 @@ import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 
 public class DraftGate extends CTEBlock<DraftGate.TE> implements WireConnect.DraftIO {
@@ -152,7 +152,7 @@ public class DraftGate extends CTEBlock<DraftGate.TE> implements WireConnect.Dra
 
 		@Override
 		public ITextComponent getDisplayName() {
-			return TITLE;
+			return Translator.getCont("draft_gate");
 		}
 
 		@Override
@@ -248,9 +248,6 @@ public class DraftGate extends CTEBlock<DraftGate.TE> implements WireConnect.Dra
 		}
 
 	}
-
-	private static final ITextComponent TITLE = new TranslationTextComponent(
-			"quantizedinformatics:container.draft_gate");
 
 	public DraftGate() {
 		super(TE::new);

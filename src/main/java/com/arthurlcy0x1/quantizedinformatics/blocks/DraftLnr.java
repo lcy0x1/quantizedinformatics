@@ -1,6 +1,7 @@
 package com.arthurlcy0x1.quantizedinformatics.blocks;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
+import com.arthurlcy0x1.quantizedinformatics.Translator;
 import com.arthurlcy0x1.quantizedinformatics.blocks.DIOBlock.*;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftIO;
 
@@ -23,7 +24,6 @@ import net.minecraft.util.IntArray;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
@@ -54,7 +54,7 @@ public class DraftLnr extends Block implements DraftIO {
 
 		@Override
 		public ITextComponent getDisplayName() {
-			return TITLE;
+			return Translator.getCont("draft_listener");
 		}
 
 		@Override
@@ -84,9 +84,6 @@ public class DraftLnr extends Block implements DraftIO {
 			return name;
 		}
 	}
-
-	private static final ITextComponent TITLE = new TranslationTextComponent(
-			"quantizedinformatics:container.draft_listener");
 
 	private static final EnumProperty<Mode> PROP = EnumProperty.create("mode", Mode.class, Mode.values());
 
