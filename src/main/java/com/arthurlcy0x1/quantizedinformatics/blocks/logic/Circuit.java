@@ -1,4 +1,4 @@
-package com.arthurlcy0x1.quantizedinformatics.blocks;
+package com.arthurlcy0x1.quantizedinformatics.blocks.logic;
 
 import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.*;
 import static com.arthurlcy0x1.quantizedinformatics.logic.LogicDiagram.*;
@@ -13,10 +13,11 @@ import java.util.Queue;
 import java.util.TreeSet;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
-import com.arthurlcy0x1.quantizedinformatics.blocks.DraftGate.TE;
+import com.arthurlcy0x1.quantizedinformatics.blocks.DraftWire;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftIO;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftTE;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.ISignalManager;
+import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftGate.TE;
 import com.arthurlcy0x1.quantizedinformatics.logic.LogicDiagram;
 import com.arthurlcy0x1.quantizedinformatics.logic.LogicDiagram.GateContainer;
 import com.arthurlcy0x1.quantizedinformatics.logic.LogicDiagram.ParentDiagram;

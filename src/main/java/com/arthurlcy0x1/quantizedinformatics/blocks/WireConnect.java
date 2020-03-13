@@ -313,7 +313,7 @@ public interface WireConnect {
 	public static final int CNUM = 16;
 
 	/** connection type */
-	public static final int GATE = 0, CRAFT = 1;
+	public static final int GATE = 0, CRAFT = 1, PIPE = 2;
 
 	/** face type */
 	public static final int NONE = 0, INPUT = 1, OUTPUT = 2;

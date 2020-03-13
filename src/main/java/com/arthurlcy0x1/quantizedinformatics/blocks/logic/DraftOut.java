@@ -1,8 +1,9 @@
-package com.arthurlcy0x1.quantizedinformatics.blocks;
+package com.arthurlcy0x1.quantizedinformatics.blocks.logic;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
-import com.arthurlcy0x1.quantizedinformatics.blocks.DIOBlock.*;
+import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DIOBlock.*;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -35,7 +36,7 @@ public class DraftOut extends DIOTerm<DraftOut.TE> {
 	public static class TE extends DTETerm<TE> {
 
 		public TE() {
-			super(Registrar.TET_OUT, INPUT);
+			super(Registrar.TETD_OUT, INPUT);
 		}
 
 		@Override

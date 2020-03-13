@@ -1,10 +1,18 @@
-package com.arthurlcy0x1.quantizedinformatics.blocks;
+package com.arthurlcy0x1.quantizedinformatics.blocks.logic;
 
 import java.util.function.Supplier;
 
 import com.arthurlcy0x1.quantizedinformatics.PacketHandler;
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
+import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
+import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect;
+import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftCont;
+import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftIO;
+import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftTE;
+import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.ISignalManager;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.Msg;
+import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.MsgWriter;
+import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.SignalManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.block.BlockState;

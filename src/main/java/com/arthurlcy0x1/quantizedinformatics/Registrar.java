@@ -7,16 +7,20 @@ import java.util.function.Supplier;
 
 import org.apache.logging.log4j.LogManager;
 
-import com.arthurlcy0x1.quantizedinformatics.blocks.DIOBlock.DIOScr;
-import com.arthurlcy0x1.quantizedinformatics.blocks.DIOBlock.DIOTerm;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftIO;
+import com.arthurlcy0x1.quantizedinformatics.blocks.auto.AutoCraft;
+import com.arthurlcy0x1.quantizedinformatics.blocks.auto.AutoPipe;
+import com.arthurlcy0x1.quantizedinformatics.blocks.auto.PipeTail;
+import com.arthurlcy0x1.quantizedinformatics.blocks.auto.RecMaker;
+import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftCntr;
+import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftGate;
+import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftIn;
+import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftLnr;
+import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftOut;
+import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DIOBlock.DIOScr;
+import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DIOBlock.DIOTerm;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.Craft3D;
-import com.arthurlcy0x1.quantizedinformatics.blocks.DraftCntr;
-import com.arthurlcy0x1.quantizedinformatics.blocks.DraftGate;
-import com.arthurlcy0x1.quantizedinformatics.blocks.DraftIn;
-import com.arthurlcy0x1.quantizedinformatics.blocks.DraftLnr;
-import com.arthurlcy0x1.quantizedinformatics.blocks.DraftOut;
 import com.arthurlcy0x1.quantizedinformatics.blocks.DraftWire;
 import com.arthurlcy0x1.quantizedinformatics.blocks.OxiFn;
 import com.arthurlcy0x1.quantizedinformatics.blocks.RedFn;
@@ -61,6 +65,11 @@ public class Registrar extends ItemGroup {
 	public static final Block BD_IN = addName(new DraftIn(), "draft_in");
 	public static final Block BD_OUT = addName(new DraftOut(), "draft_out");
 	public static final Block BD_LNR = addName(new DraftLnr(), "draft_listener");
+	public static final Block BA_CRAFT = addName(new AutoCraft(), "auto_craft");
+	public static final Block BA_REC = addName(new RecMaker(), "recipe_maker");
+	public static final Block BA_PIPE_HEAD = addName(new AutoPipe(), "auto_pipe_head");
+	public static final Block BA_PIPE_BODY = addName(new DraftWire(WireConnect.PIPE), "auto_pipe_body");
+	public static final Block BA_PIPE_TAIL = addName(new PipeTail(), "auto_pipe_tail");
 
 	public static final List<Block> BDS = Arrays.asList(BD_CNTR, BD_GATE, BD_IN, BD_OUT, BD_LNR);
 
@@ -78,11 +87,18 @@ public class Registrar extends ItemGroup {
 	public static final Item IBD_IN = convert(BD_IN);
 	public static final Item IBD_OUT = convert(BD_OUT);
 	public static final Item IBD_LNR = convert(BD_LNR);
+	public static final Item IBA_CRAFT = convert(BA_CRAFT);
+	public static final Item IBA_REC = convert(BA_REC);
+	public static final Item IBA_PIPE_HEAD = convert(BA_PIPE_HEAD);
+	public static final Item IBA_PIPE_BODY = convert(BA_PIPE_BODY);
+	public static final Item IBA_PIPE_TAIL = convert(BA_PIPE_TAIL);
 
 	// items
 	public static final Item I_GATECHIP = generate("chip", 1);
 	public static final Item IE_P = generate("elem_p", 64);
 	public static final Item IE_B = generate("elem_b", 64);
+	public static final Item IE_PO = generate("elem_po", 64);
+	public static final Item IE_BO = generate("elem_bo", 64);
 	public static final Item IE_SI = generate("elem_si", 64);
 	public static final Item IE_FEO = generate("elem_feo", 64);
 	public static final Item ID_N = generate("gate_dope_n", 64);
@@ -127,14 +143,20 @@ public class Registrar extends ItemGroup {
 	public static final ContainerType<DraftIn.Cont> CTD_IN = getCT(DraftIn.Cont::new, "draft_in_c");
 	public static final ContainerType<DraftOut.Cont> CTD_OUT = getCT(DraftOut.Cont::new, "draft_out_c");
 	public static final ContainerType<DraftLnr.Cont> CTD_LNR = getCT(DraftLnr.Cont::new, "draft_listener_c");
+	public static final ContainerType<AutoCraft.Cont> CTA_CRAFT = getCT(AutoCraft.Cont::new, "auto_craft_c");
+	public static final ContainerType<RecMaker.Cont> CTA_REC = getCT(RecMaker.Cont::new, "recipe_maker_c");
+	public static final ContainerType<AutoPipe.Cont> CTA_PIPE = getCT(AutoPipe.Cont::new, "auto_pipe_c");
 
 	public static final TileEntityType<OxiFn.TE> TET_OXIFN = getTET(OxiFn.TE::new, B_OXIFN, "oxidation_furnace_te");
 	public static final TileEntityType<RedFn.TE> TET_REDFN = getTET(RedFn.TE::new, B_REDFN, "reduction_furnace_te");
-	public static final TileEntityType<DraftCntr.TE> TET_CNTR = getTET(DraftCntr.TE::new, BD_CNTR, "draft_center_te");
-	public static final TileEntityType<DraftGate.TE> TET_GATE = getTET(DraftGate.TE::new, BD_GATE, "draft_gate_te");
-	public static final TileEntityType<DraftIn.TE> TET_IN = getTET(DraftIn.TE::new, BD_IN, "draft_in_te");
-	public static final TileEntityType<DraftOut.TE> TET_OUT = getTET(DraftOut.TE::new, BD_OUT, "draft_out_te");
-	public static final TileEntityType<DraftLnr.TE> TET_LNR = getTET(DraftLnr.TE::new, BD_LNR, "draft_listener_te");
+	public static final TileEntityType<DraftCntr.TE> TETD_CNTR = getTET(DraftCntr.TE::new, BD_CNTR, "draft_center_te");
+	public static final TileEntityType<DraftGate.TE> TETD_GATE = getTET(DraftGate.TE::new, BD_GATE, "draft_gate_te");
+	public static final TileEntityType<DraftIn.TE> TETD_IN = getTET(DraftIn.TE::new, BD_IN, "draft_in_te");
+	public static final TileEntityType<DraftOut.TE> TETD_OUT = getTET(DraftOut.TE::new, BD_OUT, "draft_out_te");
+	public static final TileEntityType<DraftLnr.TE> TETD_LNR = getTET(DraftLnr.TE::new, BD_LNR, "draft_listener_te");
+	public static final TileEntityType<AutoCraft.TE> TETA_CRAFT = getTET(AutoCraft.TE::new, BA_CRAFT, "auto_craft_te");
+	public static final TileEntityType<RecMaker.TE> TETA_REC = getTET(RecMaker.TE::new, BA_REC, "recipe_maker_te");
+	public static final TileEntityType<AutoPipe.TE> TETA_PIPE = getTET(AutoPipe.TE::new, BA_PIPE_HEAD, "auto_pipe_te");
 
 	public static final IRecipeType<OxiRecipe> RT_OXI = IRecipeType.register("quantizedinformatics:oxidation");
 	public static final IRecipeType<RedRecipe> RT_RED = IRecipeType.register("quantizedinformatics:reduction");
@@ -153,9 +175,10 @@ public class Registrar extends ItemGroup {
 		ScreenManager.registerFactory(CTD_LNR, DIOScr<DraftLnr.Cont>::new);
 	}
 
-	public static final ContainerType<?>[] CTS = { CT_OXIFN, CT_REDFN, CTD_CNTR, CTD_GATE, CTD_IN, CTD_OUT, CTD_LNR };
-	public static final TileEntityType<?>[] TETS = { TET_OXIFN, TET_REDFN, TET_CNTR, TET_GATE, TET_IN, TET_OUT,
-			TET_LNR };
+	public static final ContainerType<?>[] CTS = { CT_OXIFN, CT_REDFN, CTD_CNTR, CTD_GATE, CTD_IN, CTD_OUT, CTD_LNR,
+			CTA_CRAFT, CTA_REC, CTA_PIPE };
+	public static final TileEntityType<?>[] TETS = { TET_OXIFN, TET_REDFN, TETD_CNTR, TETD_GATE, TETD_IN, TETD_OUT,
+			TETD_LNR, TETA_CRAFT, TETA_REC, TETA_PIPE };
 	public static final IRecipeSerializer<?>[] RSS = { RS_OXI, RS_RED, RS_C3D };
 
 	@SuppressWarnings("unchecked")

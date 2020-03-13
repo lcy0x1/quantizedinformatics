@@ -1,9 +1,9 @@
-package com.arthurlcy0x1.quantizedinformatics.blocks;
+package com.arthurlcy0x1.quantizedinformatics.blocks.logic;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
-import com.arthurlcy0x1.quantizedinformatics.blocks.DIOBlock.*;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftIO;
+import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DIOBlock.*;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -44,7 +44,7 @@ public class DraftLnr extends Block implements DraftIO {
 	public static class TE extends DTETerm<TE> {
 
 		public TE() {
-			super(Registrar.TET_LNR, INPUT);
+			super(Registrar.TETD_LNR, INPUT);
 		}
 
 		@Override

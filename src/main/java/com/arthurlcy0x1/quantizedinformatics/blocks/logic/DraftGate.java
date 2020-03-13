@@ -1,7 +1,9 @@
-package com.arthurlcy0x1.quantizedinformatics.blocks;
+package com.arthurlcy0x1.quantizedinformatics.blocks.logic;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
+import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
+import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect;
 import com.arthurlcy0x1.quantizedinformatics.items.LogicDraft;
 import com.arthurlcy0x1.quantizedinformatics.logic.LogicGate;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -137,7 +139,7 @@ public class DraftGate extends CTEBlock<DraftGate.TE> implements WireConnect.Dra
 		private final SignalManager data = new SignalManager(this, CNUM, CNUM);
 
 		public TE() {
-			super(Registrar.TET_GATE, 1);
+			super(Registrar.TETD_GATE, 1);
 			onChange(-1);
 		}
 

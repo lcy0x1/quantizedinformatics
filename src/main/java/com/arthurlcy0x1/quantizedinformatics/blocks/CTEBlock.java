@@ -36,7 +36,7 @@ public class CTEBlock<T extends TileEntity> extends HorizontalBlock {
 
 	public static abstract class CTECont extends Container {
 
-		protected static class CondSlot extends Slot {
+		public static class CondSlot extends Slot {
 
 			private final Predicate<ItemStack> p;
 
@@ -52,7 +52,7 @@ public class CTEBlock<T extends TileEntity> extends HorizontalBlock {
 
 		}
 
-		protected static class ResultSlot extends Slot {
+		public static class ResultSlot extends Slot {
 
 			public ResultSlot(IInventory inv, int ind, int x, int y) {
 				super(inv, ind, x, y);

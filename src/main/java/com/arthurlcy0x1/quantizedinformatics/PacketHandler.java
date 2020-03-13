@@ -4,8 +4,8 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import com.arthurlcy0x1.quantizedinformatics.blocks.DraftCntr;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect;
+import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftCntr;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.NetworkManager;

@@ -1,8 +1,9 @@
-package com.arthurlcy0x1.quantizedinformatics.blocks;
+package com.arthurlcy0x1.quantizedinformatics.blocks.logic;
 
 import com.arthurlcy0x1.quantizedinformatics.PacketHandler;
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
+import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock.CTEScr;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.*;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -380,7 +381,7 @@ public class DraftCntr {
 		private final TerminalSignal data = new TerminalSignal();
 
 		public TE() {
-			super(Registrar.TET_CNTR, 1);
+			super(Registrar.TETD_CNTR, 1);
 		}
 
 		@Override
