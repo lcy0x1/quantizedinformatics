@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "111",
+        "000",
+        "111"
+    ],
+    "key": {
+        "0": {
+            "item": "quantizedinformatics:quantum_fog"
+        },
+        "1": {
+            "tag": "planks"
+        }
+    },
+    "result": {
+        "item": "quantizedinformatics:pipe_body",
+        "count": 6
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "type": "quantizedinformatics:craft_3d",
+    "pattern": [
+        [
+            "000",
+            "000",
+            "000"
+        ],
+        [
+            "000",
+            "010",
+            "000"
+        ],
+        [
+            "000",
+            "000",
+            "000"
+        ]
+    ],
+    "keys": {
+        "0": "quantizedinformatics:pipe_body",
+        "1": "quantizedinformatics:draft_center"
+    },
+    "out": "quantizedinformatics:pipe_core"
+}
