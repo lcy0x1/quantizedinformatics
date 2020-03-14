@@ -12,6 +12,7 @@ import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
@@ -353,4 +354,23 @@ public class CTEBlock<T extends TileEntity> extends HorizontalBlock {
 			pl.openContainer((INamedContainerProvider) te);
 		return ActionResultType.SUCCESS;
 	}
+
+	@SuppressWarnings("deprecation")
+	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+		if (state.getBlock() != newState.getBlock()) {
+			TileEntity tileentity = worldIn.getTileEntity(pos);
+			if (tileentity != null && tileentity instanceof IInventory) {
+				InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory) tileentity);
+				worldIn.updateComparatorOutputLevel(pos, this);
+			}
+
+			super.onReplaced(state, worldIn, pos, newState, isMoving);
+		}
+	}
+
+	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
+		TileEntity te = worldIn.getTileEntity(pos);
+		return te == null ? 0 : Container.calcRedstone(te);
+	}
+
 }

@@ -2,6 +2,7 @@ package com.arthurlcy0x1.quantizedinformatics;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Arrays;
@@ -31,6 +32,24 @@ public class Test {
 				f.createNewFile();
 			PrintStream ps = new PrintStream(f);
 			ps.println(cont);
+			ps.close();
+		}
+	}
+
+	public static void addBlocks() throws IOException {
+		String[] list = { "quantum_fog", "craft_frame", "craft_3d", "oxidation_furnace", "reduction_furnace",
+				"draft_wire", "draft_center", "draft_gate", "draft_in", "draft_out", "draft_listener", "auto_craft",
+				"recipe_maker", "pipe_body", "pipe_head", "pipe_core" };
+		String path = "./src/main/resources/data/quantizedinformatics/loot_tables/blocks/";
+		String pre = "{\"type\": \"minecraft:block\",\"pools\": [{\"rolls\": 1,\"entries\": [{\"type\": \"minecraft:item\",\"name\": \"quantizedinformatics:";
+		String post = "\"}],\"conditions\": [{\"condition\": \"minecraft:survives_explosion\"}]}]}";
+		for (String b : list) {
+			String name = path + b + ".json";
+			File f = new File(name);
+			if (!f.exists())
+				f.createNewFile();
+			PrintStream ps = new PrintStream(f);
+			ps.println(pre + b + post);
 			ps.close();
 		}
 	}
@@ -78,9 +97,7 @@ public class Test {
 	}
 
 	public static void main(String[] args) throws IOException {
-		Integer[] a = { 6, 3, 4, 5, 2, 4, 6 };
-		Arrays.sort(a, (x, y) -> x - y);
-		System.out.println(Arrays.asList(a));
+		addBlocks();
 	}
 
 	public static void recolor() throws IOException {
