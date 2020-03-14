@@ -30,4 +30,8 @@ public class Translator {
 		return get(str).getFormattedText();
 	}
 
+	public static ITextComponent getTooltip(String str) {
+		return get("quantizedinformatics:tooltip." + str);
+	}
+
 }

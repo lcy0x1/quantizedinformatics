@@ -22,7 +22,7 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 
 public class OxiRecipe implements IRecipe<OxiRecipe.Inv> {
 
-	public interface Inv extends IInventory {
+	public static interface Inv extends IInventory {
 
 		public static final int ING_MAIN = 0, ING_SIDE = 1, FUEL = 2, RES_MAIN = 3, RES_SIDE = 4, FUEL_REMAIN = 5;
 

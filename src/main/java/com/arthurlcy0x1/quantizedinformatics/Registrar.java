@@ -3,6 +3,7 @@ package com.arthurlcy0x1.quantizedinformatics;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.apache.logging.log4j.LogManager;
@@ -25,6 +26,7 @@ import com.arthurlcy0x1.quantizedinformatics.blocks.Wire;
 import com.arthurlcy0x1.quantizedinformatics.blocks.OxiFn;
 import com.arthurlcy0x1.quantizedinformatics.blocks.RedFn;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect;
+import com.arthurlcy0x1.quantizedinformatics.items.AutoRecipe;
 import com.arthurlcy0x1.quantizedinformatics.items.DraftGateItem;
 import com.arthurlcy0x1.quantizedinformatics.items.LogicDraft;
 import com.arthurlcy0x1.quantizedinformatics.recipe.C3DRecipe;
@@ -105,6 +107,7 @@ public class Registrar extends ItemGroup {
 	public static final Item ID_P = generate("gate_dope_p", 64);
 	public static final Item ID_CAP = generate("gate_cap", 64);
 	public static final Item ID_WIRE = generate("gate_wire", 64);
+	public static final Item IA_RECIPE = generate("auto_recipe", 1, AutoRecipe::new);
 
 	// draft related
 	public static final Item IDR_EMPTY = generate("gate_red_empty", 64);
@@ -175,12 +178,16 @@ public class Registrar extends ItemGroup {
 		ScreenManager.registerFactory(CTD_IN, DIOScr<DraftIn.Cont>::new);
 		ScreenManager.registerFactory(CTD_OUT, DIOScr<DraftOut.Cont>::new);
 		ScreenManager.registerFactory(CTD_LNR, DIOScr<DraftLnr.Cont>::new);
+		ScreenManager.registerFactory(CTAP_HEAD, PipeHead.Scr::new);
+		ScreenManager.registerFactory(CTAP_CORE, PipeCore.Scr::new);
+		ScreenManager.registerFactory(CTA_REC, RecMaker.Scr::new);
+		ScreenManager.registerFactory(CTA_CRAFT, AutoCraft.Scr::new);
 	}
 
 	public static final ContainerType<?>[] CTS = { CT_OXIFN, CT_REDFN, CTD_CNTR, CTD_GATE, CTD_IN, CTD_OUT, CTD_LNR,
-			CTA_CRAFT, CTA_REC, CTAP_HEAD };
+			CTA_CRAFT, CTA_REC, CTAP_HEAD, CTAP_CORE };
 	public static final TileEntityType<?>[] TETS = { TET_OXIFN, TET_REDFN, TETD_CNTR, TETD_GATE, TETD_IN, TETD_OUT,
-			TETD_LNR, TETA_CRAFT, TETA_REC, TETAP_HEAD };
+			TETD_LNR, TETA_CRAFT, TETA_REC, TETAP_HEAD, TETAP_CORE };
 	public static final IRecipeSerializer<?>[] RSS = { RS_OXI, RS_RED, RS_C3D };
 
 	@SuppressWarnings("unchecked")
@@ -220,6 +227,13 @@ public class Registrar extends ItemGroup {
 		p.group(ITEM_GROUP);
 		p.maxStackSize(size);
 		return addName(new Item(p), str);
+	}
+
+	private static Item generate(String str, int size, Function<Item.Properties, Item> f) {
+		Item.Properties p = new Item.Properties();
+		p.group(ITEM_GROUP);
+		p.maxStackSize(size);
+		return addName(f.apply(p), str);
 	}
 
 	private static Block generate(String str, Material mat) {

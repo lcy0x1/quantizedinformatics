@@ -1,5 +1,6 @@
 package com.arthurlcy0x1.quantizedinformatics.blocks;
 
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -52,6 +53,24 @@ public class CTEBlock<T extends TileEntity> extends HorizontalBlock {
 
 		}
 
+		public static class CondsSlot extends SizeSlot {
+
+			private final BiPredicate<Integer, ItemStack> p;
+			private final int i;
+
+			public CondsSlot(IInventory inv, int ind, int x, int y, BiPredicate<Integer, ItemStack> pred, int siz) {
+				super(inv, ind, x, y, siz);
+				p = pred;
+				i = ind;
+			}
+
+			@Override
+			public boolean isItemValid(ItemStack is) {
+				return p.test(i, is);
+			}
+
+		}
+
 		public static class ResultSlot extends Slot {
 
 			public ResultSlot(IInventory inv, int ind, int x, int y) {
@@ -61,6 +80,22 @@ public class CTEBlock<T extends TileEntity> extends HorizontalBlock {
 			@Override
 			public boolean isItemValid(ItemStack is) {
 				return false;
+			}
+
+		}
+
+		public static class SizeSlot extends Slot {
+
+			private final int size;
+
+			public SizeSlot(IInventory inv, int ind, int x, int y, int siz) {
+				super(inv, ind, x, y);
+				size = siz;
+			}
+
+			@Override
+			public int getSlotStackLimit() {
+				return size;
 			}
 
 		}
@@ -163,10 +198,9 @@ public class CTEBlock<T extends TileEntity> extends HorizontalBlock {
 
 		@Override
 		protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-			String s = this.title.getFormattedText();
-			this.font.drawString(s, this.xSize / 2 - this.font.getStringWidth(s) / 2, 6.0F, COLOR);
-			this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, this.ySize - 96 + 2,
-					COLOR);
+			String s = title.getFormattedText();
+			font.drawString(s, xSize / 2 - font.getStringWidth(s) / 2, 6.0F, COLOR);
+			font.drawString(playerInventory.getDisplayName().getFormattedText(), 8.0F, ySize - 96 + 2, COLOR);
 		}
 
 	}
@@ -197,11 +231,8 @@ public class CTEBlock<T extends TileEntity> extends HorizontalBlock {
 		@Override
 		public ItemStack decrStackSize(int index, int count) {
 			ItemStack itemstack = ItemStackHelper.getAndSplit(inv, index, count);
-			if (!itemstack.isEmpty()) {
-				onChange(index);
-				markDirty();
-			}
-
+			onChange(index);
+			markDirty();
 			return itemstack;
 		}
 
@@ -245,6 +276,7 @@ public class CTEBlock<T extends TileEntity> extends HorizontalBlock {
 		public void read(CompoundNBT tag) {
 			super.read(tag);
 			ItemStackHelper.loadAllItems(tag, inv);
+			onChange(-1);
 		}
 
 		@Override

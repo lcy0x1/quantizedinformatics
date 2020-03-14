@@ -400,6 +400,11 @@ public class DraftCntr {
 		}
 
 		@Override
+		public boolean isItemValidForSlot(int index, ItemStack stack) {
+			return false;
+		}
+
+		@Override
 		public void read(CompoundNBT tag) {
 			super.read(tag);
 			data.read(tag);
@@ -411,6 +416,8 @@ public class DraftCntr {
 			if (world.isRemote)
 				return;
 			cir = new Circuit(world, pos);
+			if (cir.multiCntr())
+				return;
 			cir.updateSignal();
 		}
 

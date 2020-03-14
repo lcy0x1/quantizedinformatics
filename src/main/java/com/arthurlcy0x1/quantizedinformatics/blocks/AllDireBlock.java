@@ -17,7 +17,7 @@ public class AllDireBlock extends Block {
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return this.getDefaultState().with(FACING, context.getFace());
+		return this.getDefaultState().with(FACING, context.getFace().getOpposite());
 	}
 
 	@Override

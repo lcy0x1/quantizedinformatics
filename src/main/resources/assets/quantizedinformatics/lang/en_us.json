@@ -9,7 +9,7 @@
     "quantizedinformatics:container.auto_craft": "Automatic Crafting Table",
     "quantizedinformatics:container.recipe_maker": "Recipe Maker",
     "quantizedinformatics:container.pipe_head": "Item Pipe Head",
-    "quantizedinformatics:container.pipe_body": "Item Pipe Core",
+    "quantizedinformatics:container.pipe_core": "Item Pipe Core",
 
     "quantizedinformatics:container.draft_center.in": "Input Wire ID = ",
     "quantizedinformatics:container.draft_center.out": "Output Wire ID = ",
@@ -21,6 +21,13 @@
     "quantizedinformatics:container.draft_center.float.in": "Input Wire Error: Floating",
     "quantizedinformatics:container.draft_center.float.out": "Output Wire Error: Floating",
     "quantizedinformatics:container.draft_center.loop": "Error: In Loop",
+    "quantizedinformatics:container.pipe_head.insert": "Items to Insert",
+    "quantizedinformatics:container.pipe_head.extract": "Items to Extract",
+    "quantizedinformatics:container.pipe_core.cpu": "CPU",
+    "quantizedinformatics:container.pipe_core.ram": "RAM",
+
+    "quantizedinformatics:tooltip.ingredient": "Ingredients:",
+    "quantizedinformatics:tooltip.result": "Result:",
 
     "block.quantizedinformatics.quantum_fog": "Quantum Fog",
     "block.quantizedinformatics.craft_3d": "3D Crafting System Terminal",
@@ -46,6 +53,7 @@
     "item.quantizedinformatics.elem_po": "P2O5 (Phosphorous Oxide) - Chemical",
     "item.quantizedinformatics.elem_si": "Si (Silicon) - Chemical",
     "item.quantizedinformatics.elem_feo": "Fe2O3 (Iron(II) Oxide) - Chemical",
+    "item.quantizedinformatics.auto_recipe": "Automatic Crafting Recipe",
 
     "item.quantizedinformatics.gate_wire": "Wire - CMOS Diagram",
     "item.quantizedinformatics.gate_cap": "Metal Cap - CMOS Diagram",

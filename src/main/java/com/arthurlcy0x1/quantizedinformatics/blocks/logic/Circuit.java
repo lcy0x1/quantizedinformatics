@@ -344,6 +344,14 @@ public class Circuit {
 		return -1;
 	}
 
+	public boolean multiCntr() {
+		int count = 0;
+		for (GateNode gn : nodes.values())
+			if (gn.te instanceof DraftCntr.TE)
+				count++;
+		return count > 1;
+	}
+
 	/** update the blocks in this circuit */
 	public void updateSignal() {
 		for (GateNode n : nodes.values())
