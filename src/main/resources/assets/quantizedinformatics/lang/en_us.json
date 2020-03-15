@@ -43,9 +43,11 @@
     "block.quantizedinformatics.draft_listener": "Signal Monitor",
     "block.quantizedinformatics.auto_craft": "Automatic Crafting Table",
     "block.quantizedinformatics.recipe_maker": "Recipe Maker",
-    "block.quantizedinformatics.pipe_body": "Item Pipe",
-    "block.quantizedinformatics.pipe_head": "Item Pipe Head",
+    "block.quantizedinformatics.pipe_body": "Item Pipe - Primary",
+    "block.quantizedinformatics.pipe_head": "Item Pipe Head - Primary",
     "block.quantizedinformatics.pipe_core": "Item Pipe Controller",
+    "block.quantizedinformatics.pipe_sub_body": "Item Pipe - Secondary",
+    "block.quantizedinformatics.pipe_sub_head": "Item Pipe Head - Secondary",
 
     "item.quantizedinformatics.chip": "Chip",
     "item.quantizedinformatics.elem_b": "B (Boron) - Chemical",
