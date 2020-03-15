@@ -29,6 +29,7 @@
     "quantizedinformatics:tooltip.ingredient": "Ingredients:",
     "quantizedinformatics:tooltip.result": "Result:",
 
+    "block.quantizedinformatics.quantum_ore": "Quantum Ore",
     "block.quantizedinformatics.quantum_fog": "Quantum Fog",
     "block.quantizedinformatics.craft_3d": "3D Crafting System Terminal",
     "block.quantizedinformatics.oxidation_furnace": "Oxidation Furnace",

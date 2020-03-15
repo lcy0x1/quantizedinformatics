@@ -114,7 +114,7 @@ public class PipeHead extends BaseBlock implements WireConnect {
 
 	@Override
 	public boolean canConnectFrom(int type, BlockState b, Direction d) {
-		return type == PIPE && b.get(FACING) == d.getOpposite();
+		return type == SPIPE && b.get(FACING) == d || type == PIPE && b.get(FACING) == d.getOpposite();
 	}
 
 }

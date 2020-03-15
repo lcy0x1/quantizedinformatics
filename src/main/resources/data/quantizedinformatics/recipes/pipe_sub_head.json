@@ -1,0 +1,19 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "000",
+        "010",
+        "000"
+    ],
+    "key": {
+        "0": {
+            "item": "quantizedinformatics:quantum_fog"
+        },
+        "2": {
+            "item": "quantizedinformatics:pipe_head"
+        }
+    },
+    "result": {
+        "item": "quantizedinformatics:pipe_sub_head"
+    }
+}

@@ -13,6 +13,7 @@ import com.arthurlcy0x1.quantizedinformatics.blocks.auto.AutoCraft;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.PipeHead;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.PipeCore;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.RecMaker;
+import com.arthurlcy0x1.quantizedinformatics.blocks.auto.SPipeHead;
 import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftCntr;
 import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftGate;
 import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftIn;
@@ -74,6 +75,8 @@ public class Registrar extends ItemGroup {
 	public static final Block BAP_HEAD = addName(new PipeHead(), "pipe_head");
 	public static final Block BAP_BODY = addName(new Wire(WireConnect.PIPE), "pipe_body");
 	public static final Block BAP_CORE = addName(new PipeCore(), "pipe_core");
+	public static final Block BAP_SUB = addName(new Wire(WireConnect.SPIPE), "pipe_sub_body");
+	public static final Block BAP_SHEAD = addName(new SPipeHead(), "pipe_sub_head");
 
 	public static final List<Block> BDS = Arrays.asList(BD_CNTR, BD_GATE, BD_IN, BD_OUT, BD_LNR);
 
@@ -97,6 +100,8 @@ public class Registrar extends ItemGroup {
 	public static final Item IBAP_HEAD = convert(BAP_HEAD);
 	public static final Item IBAP_BODY = convert(BAP_BODY);
 	public static final Item IBAP_CORE = convert(BAP_CORE);
+	public static final Item IBAP_SUB = convert(BAP_SUB);
+	public static final Item IBAP_SHEAD = convert(BAP_SHEAD);
 
 	// items
 	public static final Item I_GATECHIP = generate("chip", 1);
