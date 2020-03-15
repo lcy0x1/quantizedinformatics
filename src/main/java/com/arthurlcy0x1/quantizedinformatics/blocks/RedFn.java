@@ -11,12 +11,14 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
 import net.minecraft.util.ResourceLocation;
@@ -90,7 +92,7 @@ public class RedFn {
 
 	}
 
-	public static class TE extends CTETE<TE> implements RedRecipe.Inv, ITickableTileEntity {
+	public static class TE extends CTETE<TE> implements RedRecipe.Inv, ITickableTileEntity, ISidedInventory {
 
 		private static final int[] SLOTS = { 0, 1, 2, 3, 4, 5, 6 };
 
@@ -126,6 +128,25 @@ public class RedFn {
 		}
 
 		@Override
+		public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
+			return index == RES_MAIN || index == RES_SIDE || index == FUEL_REMAIN;
+		}
+
+		@Override
+		public boolean canInsertItem(int index, ItemStack is, Direction d) {
+			if (d == Direction.UP)
+				return index == ING_MAIN;
+			if (d == this.getBlockState().get(BaseBlock.HORIZONTAL_FACING).getOpposite())
+				return index == MEDIUM;
+			if (d == this.getBlockState().get(BaseBlock.HORIZONTAL_FACING))
+				return index == FUEL && CTECont.isFuel(is);
+			if (d == Direction.DOWN)
+				return false;
+			return index == ING_SIDE;
+
+		}
+
+		@Override
 		public Container createMenu(int type, PlayerInventory pi, PlayerEntity pl) {
 			return new Cont(type, pi, this, data);
 		}
@@ -137,6 +158,11 @@ public class RedFn {
 
 		@Override
 		public int[] getSlots() {
+			return SLOTS;
+		}
+
+		@Override
+		public int[] getSlotsForFace(Direction side) {
 			return SLOTS;
 		}
 
@@ -190,9 +216,9 @@ public class RedFn {
 						decrStackSize(ING_SIDE, rec.inc[1]);
 					if (rec.inc[2] > 0)
 						decrStackSize(MEDIUM, rec.inc[2]);
-					incrOrSet(RES_MAIN, rec.output[0]);
+					incrOrSet(RES_MAIN, rec.output[0].copy());
 					if (rec.output[1] != null)
-						incrOrSet(RES_SIDE, rec.output[1]);
+						incrOrSet(RES_SIDE, rec.output[1].copy());
 					procTotal = 0;
 				}
 			}

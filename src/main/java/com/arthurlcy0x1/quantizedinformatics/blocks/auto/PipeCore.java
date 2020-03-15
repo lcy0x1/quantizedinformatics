@@ -6,6 +6,7 @@ import com.arthurlcy0x1.quantizedinformatics.blocks.BaseBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.Wire;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect;
+import com.arthurlcy0x1.quantizedinformatics.items.ALUItem;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.block.BlockState;
@@ -77,6 +78,8 @@ public class PipeCore extends BaseBlock implements WireConnect {
 		private static final double DEF_SPEED = 0.04;
 
 		public static boolean isValid(int index, ItemStack is) {
+			if (index < 5)
+				return is.getItem() instanceof ALUItem;
 			return false;// TODO
 		}
 
@@ -163,7 +166,10 @@ public class PipeCore extends BaseBlock implements WireConnect {
 		}
 
 		private double getSpeed() {
-			return 0;// TODO
+			int ans = 0;
+			for (int i = 0; i < 5; i++)
+				ans += ALUItem.getSpeed(getStackInSlot(i));
+			return ans;
 		}
 
 		private int transfer(PipeHead.TE[] te, IInventory[] inv, Direction[] dir, int src, int dst, int cap) {

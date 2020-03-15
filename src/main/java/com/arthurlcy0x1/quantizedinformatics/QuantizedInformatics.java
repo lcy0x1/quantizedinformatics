@@ -111,6 +111,8 @@ public class QuantizedInformatics {
 		// some preinit code
 		LOGGER.info("HELLO FROM PREINIT");
 		LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
+
+		WorldGen.addOres();
 	}
 
 }

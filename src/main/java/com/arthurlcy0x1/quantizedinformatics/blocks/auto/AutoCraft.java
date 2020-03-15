@@ -3,6 +3,7 @@ package com.arthurlcy0x1.quantizedinformatics.blocks.auto;
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
+import com.arthurlcy0x1.quantizedinformatics.items.ALUItem;
 import com.arthurlcy0x1.quantizedinformatics.items.AutoRecipe;
 import com.mojang.blaze3d.systems.RenderSystem;
 
@@ -89,8 +90,9 @@ public class AutoCraft {
 				return false;
 			if (ind == 30)
 				return is.getItem() instanceof AutoRecipe;
-			return false;// TODO is ALU
+			return is.getItem() instanceof ALUItem;
 		}
+
 		private double prog;
 
 		private NonNullList<ItemStack> list;
@@ -129,10 +131,6 @@ public class AutoCraft {
 		@Override
 		public int[] getSlotsForFace(Direction side) {
 			return SLOTS;
-		}
-
-		public int getSpeed() {
-			return 1;// TODO
 		}
 
 		@Override
@@ -263,6 +261,13 @@ public class AutoCraft {
 					cap += in.getMaxStackSize() - in.getCount();
 			}
 			return cap / res.getCount();
+		}
+
+		private int getSpeed() {
+			int ans = 1;
+			for (int i = 31; i < 36; i++)
+				ans += ALUItem.getSpeed(getStackInSlot(i));
+			return ans;
 		}
 
 	}

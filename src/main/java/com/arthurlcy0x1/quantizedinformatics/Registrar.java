@@ -24,6 +24,7 @@ import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.Craft3D;
 import com.arthurlcy0x1.quantizedinformatics.blocks.Wire;
 import com.arthurlcy0x1.quantizedinformatics.blocks.OxiFn;
+import com.arthurlcy0x1.quantizedinformatics.blocks.QuantumOre;
 import com.arthurlcy0x1.quantizedinformatics.blocks.RedFn;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect;
 import com.arthurlcy0x1.quantizedinformatics.items.AutoRecipe;
@@ -56,6 +57,7 @@ public class Registrar extends ItemGroup {
 	public static final String MODID = "quantizedinformatics";
 
 	// blocks
+	public static final Block B_FOGORE = addName(new QuantumOre(), "quantum_ore");
 	public static final Block B_FOG = generate("quantum_fog", Material.EARTH);
 	public static final Block BC_FRAME = addName(new Wire(WireConnect.CRAFT), "craft_frame");
 	public static final Block B_CRAFT3D = addName(new Craft3D(), "craft_3d");
@@ -78,6 +80,7 @@ public class Registrar extends ItemGroup {
 	public static final ItemGroup ITEM_GROUP = new Registrar();
 
 	// block items
+	public static final Item IB_FOGORE = convert(B_FOGORE);
 	public static final Item IB_FOG = convert(B_FOG);
 	public static final Item IBC_FRAME = convert(BC_FRAME);
 	public static final Item IB_CRAFT3D = convert(B_CRAFT3D);
