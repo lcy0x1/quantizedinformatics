@@ -2,39 +2,25 @@ package com.arthurlcy0x1.quantizedinformatics.blocks;
 
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.AbstractFurnaceTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
 
-public class CTEBlock<T extends TileEntity> extends HorizontalBlock {
+public class CTEBlock extends BaseBlock {
 
 	public static abstract class CTECont extends Container {
 
@@ -313,64 +299,8 @@ public class CTEBlock<T extends TileEntity> extends HorizontalBlock {
 
 	}
 
-	private final Supplier<T> s;
-
-	public CTEBlock(Supplier<T> sup) {
-		super(Block.Properties.create(Material.ROCK));
-		s = sup;
-	}
-
-	@Override
-	public T createTileEntity(BlockState state, IBlockReader world) {
-		return s.get();
-	}
-
-	@Override
-	public void fillStateContainer(Builder<Block, BlockState> builder) {
-		builder.add(HORIZONTAL_FACING);
-	}
-
-	@Override
-	public ActionResultType func_225533_a_(BlockState bs, World w, BlockPos pos, PlayerEntity pl, Hand h,
-			BlockRayTraceResult r) {
-		return onClick(bs, w, pos, pl, h);
-	}
-
-	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite());
-	}
-
-	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
-	public ActionResultType onClick(BlockState bs, World w, BlockPos pos, PlayerEntity pl, Hand h) {
-		if (w.isRemote)
-			return ActionResultType.SUCCESS;
-		TileEntity te = w.getTileEntity(pos);
-		if (te instanceof INamedContainerProvider)
-			pl.openContainer((INamedContainerProvider) te);
-		return ActionResultType.SUCCESS;
-	}
-
-	@SuppressWarnings("deprecation")
-	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (state.getBlock() != newState.getBlock()) {
-			TileEntity tileentity = worldIn.getTileEntity(pos);
-			if (tileentity != null && tileentity instanceof IInventory) {
-				InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory) tileentity);
-				worldIn.updateComparatorOutputLevel(pos, this);
-			}
-
-			super.onReplaced(state, worldIn, pos, newState, isMoving);
-		}
-	}
-
-	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
-		TileEntity te = worldIn.getTileEntity(pos);
-		return te == null ? 0 : Container.calcRedstone(te);
+	public CTEBlock(STE sup) {
+		super(construct(Material.ROCK).addImpls(sup, HOR));
 	}
 
 }

@@ -9,6 +9,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
@@ -16,13 +17,14 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
-public class AutoCraft extends CTEBlock<AutoCraft.TE> {
+public class AutoCraft {
 
 	public static class Cont extends CTEBlock.CTECont {
 
@@ -68,9 +70,17 @@ public class AutoCraft extends CTEBlock<AutoCraft.TE> {
 
 	}
 
-	public static class TE extends CTEBlock.CTETE<TE> implements ITickableTileEntity, IIntArray {
+	public static class TE extends CTEBlock.CTETE<TE> implements ITickableTileEntity, IIntArray, ISidedInventory {
 
 		private static final double DEF_SPEED = 0.04;
+
+		private static final int[] SLOTS;
+
+		static {
+			SLOTS = new int[30];
+			for (int i = 0; i < 30; i++)
+				SLOTS[i] = i;
+		}
 
 		private static final boolean isValid(int ind, ItemStack is) {
 			if (ind < 15)
@@ -81,14 +91,24 @@ public class AutoCraft extends CTEBlock<AutoCraft.TE> {
 				return is.getItem() instanceof AutoRecipe;
 			return false;// TODO is ALU
 		}
-
 		private double prog;
 
 		private NonNullList<ItemStack> list;
+
 		private ItemStack res;
 
 		public TE() {
 			super(Registrar.TETA_CRAFT, SIZE);
+		}
+
+		@Override
+		public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
+			return index >= 15 && index < 30;
+		}
+
+		@Override
+		public boolean canInsertItem(int index, ItemStack itemStackIn, Direction direction) {
+			return index < 15;
 		}
 
 		@Override
@@ -104,6 +124,11 @@ public class AutoCraft extends CTEBlock<AutoCraft.TE> {
 		@Override
 		public ITextComponent getDisplayName() {
 			return Translator.getCont("auto_craft");
+		}
+
+		@Override
+		public int[] getSlotsForFace(Direction side) {
+			return SLOTS;
 		}
 
 		public int getSpeed() {
@@ -243,9 +268,5 @@ public class AutoCraft extends CTEBlock<AutoCraft.TE> {
 	}
 
 	private static final int SIZE = 36;
-
-	public AutoCraft() {
-		super(TE::new);
-	}
 
 }

@@ -26,7 +26,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
-public class RecMaker extends CTEBlock<RecMaker.TE> {
+public class RecMaker {
 
 	public static class Cont extends CTEBlock.CTECont {
 
@@ -170,9 +170,5 @@ public class RecMaker extends CTEBlock<RecMaker.TE> {
 	}
 
 	private static final int SIZE = 12;
-
-	public RecMaker() {
-		super(TE::new);
-	}
 
 }

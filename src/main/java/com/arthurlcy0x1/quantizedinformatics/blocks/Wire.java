@@ -76,19 +76,20 @@ public class Wire extends SixWayBlock implements WireConnect {
 				if (cn.canConnectFrom(PIPE, s, d)) {
 					BlockPos p = p0.offset(d);
 					BlockState bs = w.getBlockState(p);
-					if (bs.getBlock() instanceof WireConnect) {
-						WireConnect wc = (WireConnect) bs.getBlock();
-						if (!wc.canConnectFrom(PIPE, bs, d.getOpposite()))
-							continue;
-						if (wc instanceof PipeHead)
-							head.add(p);
-						q.add(p);
-					}
 					if (set.contains(p))
 						continue;
-					set.add(p);
 					if (bs.getBlock() instanceof PipeCore)
 						return null;
+					if (bs.getBlock() instanceof WireConnect) {
+						WireConnect wc = (WireConnect) bs.getBlock();
+						if (wc instanceof PipeHead)
+							if (wc.canConnectFrom(PIPE, bs, d.getOpposite()))
+								head.add(p);
+							else
+								continue;
+						q.add(p);
+					}
+					set.add(p);
 
 				}
 		}

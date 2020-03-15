@@ -2,10 +2,11 @@ package com.arthurlcy0x1.quantizedinformatics;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
 
 import javax.imageio.ImageIO;
 
@@ -15,6 +16,69 @@ import com.arthurlcy0x1.quantizedinformatics.logic.LogicDiagram.ParentDiagram;
 import com.arthurlcy0x1.quantizedinformatics.logic.LogicGate;
 
 public class Test {
+
+	public static class A {
+
+		public List<String> list = new ArrayList<>();
+
+		public A(String str) {
+			list.add(str);
+			add(list);
+			System.out.println(list);
+		}
+
+		public void add(List<String> list) {
+		}
+
+	}
+
+	public static class AA extends A {
+
+		public static Sup TEMP;
+
+		public static String handler(String s, Sup sup) {
+			TEMP = sup;
+			return s;
+		}
+
+		public Sup sup;
+
+		public AA(String str, Sup s) {
+			super(handler(str, s));
+			System.out.println(s instanceof Isup);
+		}
+
+		@Override
+		public void add(List<String> list) {
+			sup = TEMP;
+			list.add(sup.get());
+		}
+
+	}
+
+	public static interface Isup {
+	}
+
+	public static interface Sup extends Isup, Supplier<String> {
+	}
+
+	public static void addBlocks() throws IOException {
+		String[] list = { "quantum_fog", "craft_frame", "craft_3d", "oxidation_furnace", "reduction_furnace",
+				"draft_wire", "draft_center", "draft_gate", "draft_in", "draft_out", "draft_listener", "auto_craft",
+				"recipe_maker", "pipe_body", "pipe_head", "pipe_core" };
+		String path = "./src/main/resources/data/quantizedinformatics/loot_tables/blocks/";
+		String pre = "{\"type\": \"minecraft:block\",\"pools\": [{\"rolls\": 1,\"entries\": [{\"type\": \"minecraft:item\",\"name\": \"quantizedinformatics:";
+		String post = "\"}],\"conditions\": [{\"condition\": \"minecraft:survives_explosion\"}]}]}";
+		for (String b : list) {
+			String name = path + b + ".json";
+			File f = new File(name);
+			if (!f.exists())
+				f.createNewFile();
+			PrintStream ps = new PrintStream(f);
+			ps.println(pre + b + post);
+			ps.close();
+		}
+	}
 
 	public static void addRecipe() throws IOException {
 		String path = "./src/main/resources/data/quantizedinformatics/recipes/oxi_iron_";
@@ -32,24 +96,6 @@ public class Test {
 				f.createNewFile();
 			PrintStream ps = new PrintStream(f);
 			ps.println(cont);
-			ps.close();
-		}
-	}
-
-	public static void addBlocks() throws IOException {
-		String[] list = { "quantum_fog", "craft_frame", "craft_3d", "oxidation_furnace", "reduction_furnace",
-				"draft_wire", "draft_center", "draft_gate", "draft_in", "draft_out", "draft_listener", "auto_craft",
-				"recipe_maker", "pipe_body", "pipe_head", "pipe_core" };
-		String path = "./src/main/resources/data/quantizedinformatics/loot_tables/blocks/";
-		String pre = "{\"type\": \"minecraft:block\",\"pools\": [{\"rolls\": 1,\"entries\": [{\"type\": \"minecraft:item\",\"name\": \"quantizedinformatics:";
-		String post = "\"}],\"conditions\": [{\"condition\": \"minecraft:survives_explosion\"}]}]}";
-		for (String b : list) {
-			String name = path + b + ".json";
-			File f = new File(name);
-			if (!f.exists())
-				f.createNewFile();
-			PrintStream ps = new PrintStream(f);
-			ps.println(pre + b + post);
 			ps.close();
 		}
 	}
@@ -97,7 +143,7 @@ public class Test {
 	}
 
 	public static void main(String[] args) throws IOException {
-		addBlocks();
+		new AA("0", () -> "1");
 	}
 
 	public static void recolor() throws IOException {

@@ -2,32 +2,23 @@ package com.arthurlcy0x1.quantizedinformatics.blocks.logic;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
+import com.arthurlcy0x1.quantizedinformatics.blocks.BaseBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftIO;
 import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DIOBlock.*;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.IntArray;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
 
-public class DraftLnr extends Block implements DraftIO {
+public class DraftLnr extends BaseBlock implements DraftIO {
 
 	public static class Cont extends DIOCont {
 
@@ -90,18 +81,8 @@ public class DraftLnr extends Block implements DraftIO {
 	private static final EnumProperty<Mode> PROP = EnumProperty.create("mode", Mode.class, Mode.values());
 
 	public DraftLnr() {
-		super(Block.Properties.create(Material.ROCK));
-	}
-
-	@Override
-	public TE createTileEntity(BlockState bs, IBlockReader w) {
-		return new TE();
-	}
-
-	@Override
-	public ActionResultType func_225533_a_(BlockState bs, World w, BlockPos pos, PlayerEntity pl, Hand h,
-			BlockRayTraceResult r) {
-		return onClick(bs, w, pos, pl, h);
+		super(construct(Material.ROCK).addImpls((STE) TE::new, (IState) (b) -> b.add(PROP),
+				(ILight) b -> b.get(PROP).light));
 	}
 
 	@Override
@@ -110,32 +91,8 @@ public class DraftLnr extends Block implements DraftIO {
 	}
 
 	@Override
-	public int getLightValue(BlockState bs) {
-		return bs.get(PROP).light;
-	}
-
-	@Override
 	public Direction getOutDire(BlockState b) {
 		return null;
-	}
-
-	@Override
-	public boolean hasTileEntity(BlockState bs) {
-		return true;
-	}
-
-	public ActionResultType onClick(BlockState bs, World w, BlockPos pos, PlayerEntity pl, Hand h) {
-		if (w.isRemote)
-			return ActionResultType.SUCCESS;
-		TileEntity te = w.getTileEntity(pos);
-		if (te instanceof INamedContainerProvider)
-			pl.openContainer((INamedContainerProvider) te);
-		return ActionResultType.SUCCESS;
-	}
-
-	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		builder.add(PROP);
 	}
 
 }

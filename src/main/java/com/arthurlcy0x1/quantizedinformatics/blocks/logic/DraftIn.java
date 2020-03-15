@@ -4,6 +4,8 @@ import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
 import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DIOBlock.*;
 
+import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.*;
+
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -11,7 +13,7 @@ import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
 import net.minecraft.util.text.ITextComponent;
 
-public class DraftIn extends DIOTerm<DraftIn.TE> {
+public class DraftIn {
 
 	public static class Cont extends DIOCont {
 
@@ -48,10 +50,6 @@ public class DraftIn extends DIOTerm<DraftIn.TE> {
 			return ans;
 		}
 
-	}
-
-	public DraftIn() {
-		super(TE::new, OUTPUT);
 	}
 
 }

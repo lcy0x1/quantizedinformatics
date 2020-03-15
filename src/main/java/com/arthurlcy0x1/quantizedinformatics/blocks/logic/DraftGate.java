@@ -2,13 +2,15 @@ package com.arthurlcy0x1.quantizedinformatics.blocks.logic;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
-import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
+import com.arthurlcy0x1.quantizedinformatics.blocks.BaseBlock;
+import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock.*;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect;
 import com.arthurlcy0x1.quantizedinformatics.items.LogicDraft;
 import com.arthurlcy0x1.quantizedinformatics.logic.LogicGate;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -23,7 +25,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockReader;
 
-public class DraftGate extends CTEBlock<DraftGate.TE> implements WireConnect.DraftIO {
+public class DraftGate extends BaseBlock implements WireConnect.DraftIO {
 
 	public static class Cont extends CTECont implements DraftCont {
 
@@ -133,7 +135,7 @@ public class DraftGate extends CTEBlock<DraftGate.TE> implements WireConnect.Dra
 
 	}
 
-	public static class TE extends CTEBlock.CTETE<TE> implements WireConnect.DraftTE {
+	public static class TE extends CTETE<TE> implements WireConnect.DraftTE {
 
 		private LogicGate chip;
 		private final SignalManager data = new SignalManager(this, CNUM, CNUM);
@@ -262,7 +264,7 @@ public class DraftGate extends CTEBlock<DraftGate.TE> implements WireConnect.Dra
 	}
 
 	public DraftGate() {
-		super(TE::new);
+		super(construct(Material.ROCK).addImpls((STE) TE::new, HOR));
 	}
 
 	@Override

@@ -1,11 +1,9 @@
 package com.arthurlcy0x1.quantizedinformatics.blocks.logic;
 
-import java.util.function.Supplier;
-
 import com.arthurlcy0x1.quantizedinformatics.PacketHandler;
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
-import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect;
+import com.arthurlcy0x1.quantizedinformatics.blocks.BaseBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftCont;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftIO;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftTE;
@@ -16,7 +14,7 @@ import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.SignalManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalBlock;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -124,19 +122,19 @@ public class DIOBlock {
 
 	}
 
-	public static class DIOTerm<T extends TileEntity> extends CTEBlock<T> implements DraftIO {
+	public static class DIOTerm extends BaseBlock implements DraftIO {
 
 		private final int type;
 
-		public DIOTerm(Supplier<T> sup, int t) {
-			super(sup);
+		public DIOTerm(STE sup, int t) {
+			super(construct(Material.ROCK).addImpls(sup, HOR));
 			type = t;
 		}
 
 		@Override
 		public boolean canConnectFrom(int type, BlockState b, Direction d) {
 			if (type == CRAFT) {
-				Direction dire = b.get(HorizontalBlock.HORIZONTAL_FACING);
+				Direction dire = b.get(HORIZONTAL_FACING);
 				return d != dire && d != dire.getOpposite();
 			} else
 				return WireConnect.DraftIO.super.canConnectFrom(type, b, d);
@@ -144,17 +142,17 @@ public class DIOBlock {
 
 		@Override
 		public Direction getInDire(BlockState bs) {
-			return type == INPUT ? bs.get(HorizontalBlock.HORIZONTAL_FACING).getOpposite() : null;
+			return type == INPUT ? bs.get(HORIZONTAL_FACING).getOpposite() : null;
 		}
 
 		@Override
 		public Direction getOutDire(BlockState bs) {
-			return type == OUTPUT ? bs.get(HorizontalBlock.HORIZONTAL_FACING).getOpposite() : null;
+			return type == OUTPUT ? bs.get(HORIZONTAL_FACING).getOpposite() : null;
 		}
 
 		@Override
 		public int ioType(BlockState b, Direction d) {
-			return b.get(HorizontalBlock.HORIZONTAL_FACING) == d.getOpposite() ? type : NONE;
+			return b.get(HORIZONTAL_FACING) == d.getOpposite() ? type : NONE;
 		}
 
 	}

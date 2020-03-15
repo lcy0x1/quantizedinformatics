@@ -7,23 +7,17 @@ import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.recipe.C3DRecipe;
 import com.arthurlcy0x1.quantizedinformatics.recipe.C3DRecipe.Craft3DInv;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 
-public class Craft3D extends HorizontalBlock implements WireConnect {
+public class Craft3D extends BaseBlock implements WireConnect {
 
 	public static class Handler extends Inventory implements Craft3DInv {
 
@@ -160,7 +154,10 @@ public class Craft3D extends HorizontalBlock implements WireConnect {
 	}
 
 	public Craft3D() {
-		super(Block.Properties.create(Material.ROCK));
+		super(construct(Material.ROCK).addImpl(HOR).addImpl((IClick) (bs, w, pos, pl, h) -> {
+			new Handler(w, pos).react(pl);
+			return ActionResultType.SUCCESS;
+		}));
 
 	}
 
@@ -170,23 +167,6 @@ public class Craft3D extends HorizontalBlock implements WireConnect {
 			return false;
 		Direction self = bs.get(HORIZONTAL_FACING);
 		return d != self;
-	}
-
-	@Override
-	public void fillStateContainer(Builder<Block, BlockState> builder) {
-		builder.add(HORIZONTAL_FACING);
-	}
-
-	@Override
-	public ActionResultType func_225533_a_(BlockState bs, World w, BlockPos pos, PlayerEntity pl, Hand h,
-			BlockRayTraceResult r) {
-		new Handler(w, pos).react(pl);
-		return ActionResultType.SUCCESS;
-	}
-
-	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite());
 	}
 
 }

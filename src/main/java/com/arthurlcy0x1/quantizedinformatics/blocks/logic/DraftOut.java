@@ -4,22 +4,15 @@ import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
 import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DIOBlock.*;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.util.Direction;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.IBlockReader;
-
 import static net.minecraft.state.properties.BlockStateProperties.POWER_0_15;
 
-public class DraftOut extends DIOTerm<DraftOut.TE> {
+public class DraftOut extends DIOTerm {
 
 	public static class Cont extends DIOCont {
 
@@ -64,19 +57,8 @@ public class DraftOut extends DIOTerm<DraftOut.TE> {
 	}
 
 	@Override
-	public boolean canProvidePower(BlockState state) {
-		return true;
-	}
-
-	@Override
-	public void fillStateContainer(Builder<Block, BlockState> builder) {
-		super.fillStateContainer(builder);
-		builder.add(POWER_0_15);
-	}
-
-	@Override
-	public int getWeakPower(BlockState bs, IBlockReader r, BlockPos pos, Direction d) {
-		return bs.get(POWER_0_15);
+	protected void addImpls(BlockImplementor impl) {
+		impl.addImpl(POW);
 	}
 
 }

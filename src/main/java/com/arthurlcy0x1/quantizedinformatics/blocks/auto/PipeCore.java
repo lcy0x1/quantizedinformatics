@@ -2,13 +2,12 @@ package com.arthurlcy0x1.quantizedinformatics.blocks.auto;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
-import com.arthurlcy0x1.quantizedinformatics.blocks.AllDireBlock;
+import com.arthurlcy0x1.quantizedinformatics.blocks.BaseBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.Wire;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect;
 import com.mojang.blaze3d.systems.RenderSystem;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,23 +16,17 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.HopperTileEntity;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
 
-public class PipeCore extends Block implements WireConnect {
+public class PipeCore extends BaseBlock implements WireConnect {
 
 	public static class Cont extends CTEBlock.CTECont {
 
@@ -131,7 +124,7 @@ public class PipeCore extends Block implements WireConnect {
 					head[i] = (PipeHead.TE) te;
 					BlockState bs = world.getBlockState(ps[i]);
 					if (bs.getBlock() instanceof PipeHead) {
-						dire[i] = bs.get(AllDireBlock.FACING);
+						dire[i] = bs.get(FACING);
 						TileEntity cont = world.getTileEntity(ps[i].offset(dire[i]));
 						if (cont instanceof IInventory) {
 							inv[i] = (IInventory) cont;
@@ -218,37 +211,12 @@ public class PipeCore extends Block implements WireConnect {
 	private static final int SIZE = 5;
 
 	public PipeCore() {
-		super(Block.Properties.create(Material.ROCK));
+		super(construct(Material.ROCK).addImpl((STE) TE::new));
 	}
 
 	@Override
 	public boolean canConnectFrom(int type, BlockState b, Direction d) {
 		return type == PIPE;
-	}
-
-	@Override
-	public TE createTileEntity(BlockState state, IBlockReader world) {
-		return new TE();
-	}
-
-	@Override
-	public ActionResultType func_225533_a_(BlockState bs, World w, BlockPos pos, PlayerEntity pl, Hand h,
-			BlockRayTraceResult r) {
-		return onClick(bs, w, pos, pl, h);
-	}
-
-	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
-	public ActionResultType onClick(BlockState bs, World w, BlockPos pos, PlayerEntity pl, Hand h) {
-		if (w.isRemote)
-			return ActionResultType.SUCCESS;
-		TileEntity te = w.getTileEntity(pos);
-		if (te instanceof INamedContainerProvider)
-			pl.openContainer((INamedContainerProvider) te);
-		return ActionResultType.SUCCESS;
 	}
 
 }
