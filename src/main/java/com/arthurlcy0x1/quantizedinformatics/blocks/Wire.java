@@ -7,10 +7,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
-import com.arthurlcy0x1.quantizedinformatics.blocks.auto.PipeCore;
-import com.arthurlcy0x1.quantizedinformatics.blocks.auto.PipeHead;
-import com.arthurlcy0x1.quantizedinformatics.blocks.auto.SPipeHead;
-
+import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SixWayBlock;
@@ -77,19 +74,20 @@ public class Wire extends SixWayBlock implements WireConnect {
 			for (Direction d : Direction.values())
 				if (cn.canConnectFrom(PIPE, s, d)) {
 					BlockPos p = p0.offset(d);
-					BlockState bs = w.getBlockState(p);
 					if (set.contains(p))
 						continue;
-					if (bs.getBlock() instanceof PipeCore)
+					BlockState bs = w.getBlockState(p);
+					if (bs.getBlock() == Registrar.BAP_CORE)
 						return null;
 					if (bs.getBlock() instanceof WireConnect) {
 						WireConnect wc = (WireConnect) bs.getBlock();
-						if (wc instanceof PipeHead)
+						if (wc == Registrar.BAP_HEAD)
 							if (wc.canConnectFrom(PIPE, bs, d.getOpposite()))
 								head.add(p);
 							else
 								continue;
-						q.add(p);
+						else if (wc.canConnectFrom(PIPE, bs, d.getOpposite()))
+							q.add(p);
 					}
 					set.add(p);
 
@@ -143,19 +141,21 @@ public class Wire extends SixWayBlock implements WireConnect {
 			for (Direction d : Direction.values())
 				if (cn.canConnectFrom(SPIPE, s, d)) {
 					BlockPos p = p0.offset(d);
-					BlockState bs = w.getBlockState(p);
 					if (set.contains(p))
 						continue;
-					if (bs.getBlock() instanceof PipeHead)
-						return null;
+					BlockState bs = w.getBlockState(p);
 					if (bs.getBlock() instanceof WireConnect) {
 						WireConnect wc = (WireConnect) bs.getBlock();
-						if (wc instanceof SPipeHead)
+						if (wc == Registrar.BAP_SHEAD)
 							if (wc.canConnectFrom(SPIPE, bs, d.getOpposite()))
 								head.add(p);
 							else
 								continue;
-						q.add(p);
+						else if (wc.canConnectFrom(SPIPE, bs, d.getOpposite()))
+							if (wc == Registrar.BAP_HEAD)
+								return null;
+							else
+								q.add(p);
 					}
 					set.add(p);
 

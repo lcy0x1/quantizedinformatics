@@ -8,6 +8,8 @@ public class ALUItem extends Item {
 	public static int getSpeed(ItemStack is) {
 		if (is.isEmpty())
 			return 0;
+		if (is.getItem() instanceof ALUItem)
+			return 64;
 		return 0;// TODO
 	}
 

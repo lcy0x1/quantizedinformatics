@@ -28,6 +28,8 @@
 
     "quantizedinformatics:tooltip.ingredient": "Ingredients:",
     "quantizedinformatics:tooltip.result": "Result:",
+    "quantizedinformatics:tooltip.max": "Maximum Target Item Count:",
+    "quantizedinformatics:tooltip.infinity": "infinity",
 
     "block.quantizedinformatics.quantum_ore": "Quantum Ore",
     "block.quantizedinformatics.quantum_fog": "Quantum Fog",
@@ -49,7 +51,6 @@
     "block.quantizedinformatics.pipe_sub_body": "Item Pipe - Secondary",
     "block.quantizedinformatics.pipe_sub_head": "Item Pipe Head - Secondary",
 
-    "item.quantizedinformatics.chip": "Chip",
     "item.quantizedinformatics.elem_b": "B (Boron) - Chemical",
     "item.quantizedinformatics.elem_p": "P (Phosphorous) - Chemical",
     "item.quantizedinformatics.elem_bo": "B2O3 (Boron Oxide) - Chemical",
@@ -57,6 +58,7 @@
     "item.quantizedinformatics.elem_si": "Si (Silicon) - Chemical",
     "item.quantizedinformatics.elem_feo": "Fe2O3 (Iron(II) Oxide) - Chemical",
     "item.quantizedinformatics.auto_recipe": "Automatic Crafting Recipe",
+    "item.quantizedinformatics.alu": "Arithmtic Logic Unit",
 
     "item.quantizedinformatics.gate_wire": "Wire - CMOS Diagram",
     "item.quantizedinformatics.gate_cap": "Metal Cap - CMOS Diagram",

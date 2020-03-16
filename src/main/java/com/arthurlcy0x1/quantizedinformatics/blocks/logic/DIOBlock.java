@@ -1,14 +1,17 @@
 package com.arthurlcy0x1.quantizedinformatics.blocks.logic;
 
+import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.CNUM;
+import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.C_MASK;
+
 import com.arthurlcy0x1.quantizedinformatics.PacketHandler;
+import com.arthurlcy0x1.quantizedinformatics.PacketHandler.IntMsg;
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
-import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect;
 import com.arthurlcy0x1.quantizedinformatics.blocks.BaseBlock;
+import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftCont;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftIO;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftTE;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.ISignalManager;
-import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.Msg;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.MsgWriter;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.SignalManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -27,8 +30,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-
-import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.*;
 
 public class DIOBlock {
 
@@ -71,7 +72,7 @@ public class DIOBlock {
 			if (sele == -1)
 				return super.mouseClicked(x, y, t);
 			if (sele >= 0 && sele <= CNUM)
-				PacketHandler.send(new Msg(container.windowId, 0, sele));
+				PacketHandler.send(new IntMsg(container.windowId, 0, sele));
 			return true;
 		}
 

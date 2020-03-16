@@ -149,6 +149,7 @@ public class RecMaker {
 				decrStackSize(10, 1);
 				ItemStack out = rec.getCraftingResult(ci).copy();
 				setInventorySlotContents(11, AutoRecipe.addTag(il, out));
+				markDirty();
 			}
 		}
 

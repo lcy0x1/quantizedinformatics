@@ -2,6 +2,7 @@ package com.arthurlcy0x1.quantizedinformatics.blocks;
 
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;

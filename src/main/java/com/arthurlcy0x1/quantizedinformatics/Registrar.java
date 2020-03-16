@@ -8,32 +8,33 @@ import java.util.function.Supplier;
 
 import org.apache.logging.log4j.LogManager;
 
+import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
+import com.arthurlcy0x1.quantizedinformatics.blocks.Craft3D;
+import com.arthurlcy0x1.quantizedinformatics.blocks.OxiFn;
+import com.arthurlcy0x1.quantizedinformatics.blocks.QuantumOre;
+import com.arthurlcy0x1.quantizedinformatics.blocks.RedFn;
+import com.arthurlcy0x1.quantizedinformatics.blocks.Wire;
+import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftIO;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.AutoCraft;
-import com.arthurlcy0x1.quantizedinformatics.blocks.auto.PipeHead;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.PipeCore;
+import com.arthurlcy0x1.quantizedinformatics.blocks.auto.PipeHead;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.RecMaker;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.SPipeHead;
+import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DIOBlock.DIOScr;
+import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DIOBlock.DIOTerm;
 import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftCntr;
 import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftGate;
 import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftIn;
 import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftLnr;
 import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftOut;
-import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DIOBlock.DIOScr;
-import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DIOBlock.DIOTerm;
-import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
-import com.arthurlcy0x1.quantizedinformatics.blocks.Craft3D;
-import com.arthurlcy0x1.quantizedinformatics.blocks.Wire;
-import com.arthurlcy0x1.quantizedinformatics.blocks.OxiFn;
-import com.arthurlcy0x1.quantizedinformatics.blocks.QuantumOre;
-import com.arthurlcy0x1.quantizedinformatics.blocks.RedFn;
-import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect;
+import com.arthurlcy0x1.quantizedinformatics.items.ALUItem;
 import com.arthurlcy0x1.quantizedinformatics.items.AutoRecipe;
 import com.arthurlcy0x1.quantizedinformatics.items.DraftGateItem;
 import com.arthurlcy0x1.quantizedinformatics.items.LogicDraft;
 import com.arthurlcy0x1.quantizedinformatics.recipe.C3DRecipe;
-import com.arthurlcy0x1.quantizedinformatics.recipe.RedRecipe;
 import com.arthurlcy0x1.quantizedinformatics.recipe.OxiRecipe;
+import com.arthurlcy0x1.quantizedinformatics.recipe.RedRecipe;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -104,7 +105,6 @@ public class Registrar extends ItemGroup {
 	public static final Item IBAP_SHEAD = convert(BAP_SHEAD);
 
 	// items
-	public static final Item I_GATECHIP = generate("chip", 1);
 	public static final Item IE_P = generate("elem_p", 64);
 	public static final Item IE_B = generate("elem_b", 64);
 	public static final Item IE_PO = generate("elem_po", 64);
@@ -116,6 +116,7 @@ public class Registrar extends ItemGroup {
 	public static final Item ID_CAP = generate("gate_cap", 64);
 	public static final Item ID_WIRE = generate("gate_wire", 64);
 	public static final Item IA_RECIPE = generate("auto_recipe", 1, AutoRecipe::new);
+	public static final Item I_ALU = generate("alu", 1, ALUItem::new);
 
 	// draft related
 	public static final Item IDR_EMPTY = generate("gate_red_empty", 64);

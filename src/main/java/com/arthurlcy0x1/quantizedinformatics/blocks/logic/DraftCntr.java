@@ -1,11 +1,29 @@
 package com.arthurlcy0x1.quantizedinformatics.blocks.logic;
 
+import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.CNUM;
+import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.C_FLOAT;
+import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.C_HIGH;
+import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.C_LOW;
+import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.SC_ERR;
+import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.SC_FLOAT;
+import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.S_FLOAT;
+import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.S_HIGH;
+import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.S_LOW;
+import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.S_MASK;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
+
 import com.arthurlcy0x1.quantizedinformatics.PacketHandler;
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock.CTEScr;
-import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.*;
+import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftCont;
+import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftTE;
+import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.ISignalManager;
+import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.MsgWriter;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.Minecraft;
@@ -24,12 +42,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
-
-import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftIO.*;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
 
 public class DraftCntr {
 
@@ -308,6 +320,12 @@ public class DraftCntr {
 
 			private int[] data = new int[CNUM];
 
+			private final TE ent;
+
+			private TerminalSignal(TE te) {
+				ent = te;
+			}
+
 			@Override
 			public int get(int index) {
 				return data[index];
@@ -351,6 +369,7 @@ public class DraftCntr {
 			@Override
 			public void set(int index, int value) {
 				data[index] = value;
+				ent.markDirty();
 			}
 
 			@Override
@@ -378,7 +397,7 @@ public class DraftCntr {
 
 		private Circuit cir;
 
-		private final TerminalSignal data = new TerminalSignal();
+		private final TerminalSignal data = new TerminalSignal(this);
 
 		public TE() {
 			super(Registrar.TETD_CNTR, 1);

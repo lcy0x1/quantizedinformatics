@@ -4,12 +4,13 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect;
 import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftCntr;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.IIntArray;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
@@ -18,6 +19,45 @@ import net.minecraftforge.fml.network.simple.SimpleChannel;
 
 public class PacketHandler {
 
+	public interface DataCont {
+
+		public IIntArray getData();
+
+	}
+
+	public static class IntMsg {
+
+		public static IntMsg decode(PacketBuffer packet) {
+			return new IntMsg(packet.readInt(), packet.readVarInt(), packet.readVarInt());
+		}
+
+		private final int wid, ind, val;
+
+		public IntMsg(int id, int index, int value) {
+			wid = id;
+			ind = index;
+			val = value;
+		}
+
+		public void encode(PacketBuffer packet) {
+			packet.writeInt(wid);
+			packet.writeVarInt(ind);
+			packet.writeVarInt(val);
+		}
+
+		public void handle(Supplier<Context> sup) {
+			Context ctx = sup.get();
+			ctx.enqueueWork(() -> this.handle(ctx));
+			ctx.setPacketHandled(true);
+		}
+
+		private void handle(Context ctx) {
+			Container c = ctx.getSender().openContainer;
+			if (c != null && c.windowId == wid && c instanceof DataCont)
+				((DataCont) c).getData().set(ind, val);
+		}
+	}
+
 	private static final String VER = "1";
 	private static final ResourceLocation NAME = new ResourceLocation(Registrar.MODID, "main");
 	private static final SimpleChannel CH = NetworkRegistry.newSimpleChannel(NAME, () -> VER, VER::equals, VER::equals);
@@ -25,7 +65,7 @@ public class PacketHandler {
 	private static int id = 0;
 
 	public static void registerPackets() {
-		reg(WireConnect.Msg.class, WireConnect.Msg::encode, WireConnect.Msg::decode, WireConnect.Msg::handle);
+		reg(IntMsg.class, IntMsg::encode, IntMsg::decode, IntMsg::handle);
 		reg(DraftCntr.Msg.class, DraftCntr.Msg::encode, DraftCntr.Msg::decode, DraftCntr.Msg::handle);
 	}
 
