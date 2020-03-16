@@ -182,22 +182,25 @@ public class PipeHead extends BaseBlock implements WireConnect {
 			return false;
 		}
 
-		protected boolean canInsert(ItemStack is, IInventory id, Direction dir) {
+		protected int canInsert(ItemStack is, IInventory id, Direction dir) {
 			if (is.isEmpty())
-				return false;
+				return 0;
 			if ((flags & INSERT_ALL) != 0)
-				return true;
+				return -1;
 			for (int i = 5; i < 10; i++) {
 				ItemStack in = getStackInSlot(i);
-				if (!in.isEmpty() && checkEqual(is, in) && checkCount(is, id, dir))
-					return true;
+				if (!in.isEmpty() && checkEqual(is, in)) {
+					int ans = checkCount(is, id, dir);
+					if (ans != 0)
+						return ans;
+				}
 			}
-			return false;
+			return 0;
 		}
 
-		private boolean checkCount(ItemStack is, IInventory id, Direction dir) {
+		private int checkCount(ItemStack is, IInventory id, Direction dir) {
 			if (insertCount == 0)
-				return true;
+				return -1;
 			int count = 0;
 			if (id instanceof ISidedInventory) {
 				ISidedInventory isi = (ISidedInventory) id;
@@ -212,7 +215,7 @@ public class PipeHead extends BaseBlock implements WireConnect {
 					if (checkEqual(is, it))
 						count += it.getCount();
 				}
-			return count < 1 << 2 * (insertCount - 1);
+			return (1 << 2 * (insertCount - 1)) - count;
 		}
 
 		private boolean checkEqual(ItemStack i0, ItemStack i1) {

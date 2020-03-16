@@ -223,7 +223,8 @@ public class PipeCore extends BaseBlock implements WireConnect {
 				ItemStack i0 = is.getStackInSlot(i).copy();
 				if (i0.isEmpty())
 					continue;
-				if (!ts.canExtract(i0) || !td.canInsert(i0, id, dd))
+				int inst = td.canInsert(i0, id, dd);
+				if (!ts.canExtract(i0) || inst == 0)
 					continue;
 				if (is instanceof ISidedInventory) {
 					ISidedInventory isi = (ISidedInventory) is;
@@ -234,6 +235,8 @@ public class PipeCore extends BaseBlock implements WireConnect {
 				}
 				int c0 = i0.getCount();
 				int c1 = Math.min(c0, cap);
+				if (inst > 0)
+					c1 = Math.min(inst, c1);
 				i0.setCount(c1);
 				ItemStack i1 = HopperTileEntity.putStackInInventoryAllSlots(null, id, i0.copy(), dd);
 				int c2 = i1.getCount();
@@ -250,7 +253,7 @@ public class PipeCore extends BaseBlock implements WireConnect {
 		}
 	}
 
-	private static final int SIZE = 5;
+	private static final int SIZE = 10;
 
 	public PipeCore() {
 		super(construct(Material.ROCK).addImpl((STE) TE::new));
