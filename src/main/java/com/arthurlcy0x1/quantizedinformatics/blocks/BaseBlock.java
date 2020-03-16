@@ -11,7 +11,6 @@ import com.arthurlcy0x1.quantizedinformatics.logic.LogicRE;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
@@ -223,8 +222,8 @@ public abstract class BaseBlock extends Block {
 
 	private static BlockImplementor TEMP;
 
-	public static BlockImplementor construct(Material mat) {
-		return new BlockImplementor(Block.Properties.create(mat));
+	public static BlockImplementor construct(BlockProp bb) {
+		return new BlockImplementor(bb.getProps());
 	}
 
 	private static Properties handler(BlockImplementor bi) {

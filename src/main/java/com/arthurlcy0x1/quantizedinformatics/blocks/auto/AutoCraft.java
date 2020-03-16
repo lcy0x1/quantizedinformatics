@@ -1,12 +1,8 @@
 package com.arthurlcy0x1.quantizedinformatics.blocks.auto;
 
-import com.arthurlcy0x1.quantizedinformatics.PacketHandler.DataCont;
-import com.arthurlcy0x1.quantizedinformatics.PacketHandler.IntMsg;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import com.arthurlcy0x1.quantizedinformatics.PacketHandler;
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
@@ -34,16 +30,14 @@ import net.minecraft.util.text.ITextComponent;
 
 public class AutoCraft {
 
-	public static class Cont extends CTEBlock.CTECont implements DataCont {
-
-		private final IIntArray data;
+	public static class Cont extends CTEBlock.CommCont {
 
 		public Cont(int id, PlayerInventory inv) {
 			this(id, inv, new Inventory(SIZE), new IntArray(2));
 		}
 
 		protected Cont(int id, PlayerInventory inv, IInventory ent, IIntArray arr) {
-			super(Registrar.CTA_CRAFT, id, inv, ent, 120);
+			super(Registrar.CTA_CRAFT, id, inv, ent, 120, arr);
 			for (int i = 0; i < 15; i++)
 				addSlot(new Slot(ent, i, 31 + i % 3 * 18, 17 + i / 3 * 18));
 			for (int i = 0; i < 15; i++)
@@ -51,17 +45,11 @@ public class AutoCraft {
 			addSlot(new CondsSlot(ent, 30, 91, 35, TE::isValid, 1));
 			for (int i = 0; i < 5; i++)
 				addSlot(new CondsSlot(ent, 31 + i, 9, 17 + i * 18, TE::isValid, 1));
-			trackIntArray(data = arr);
-		}
-
-		@Override
-		public IIntArray getData() {
-			return data;
 		}
 
 	}
 
-	public static class Scr extends CTEBlock.CTEScr<Cont> {
+	public static class Scr extends CTEBlock.CommScr<Cont> {
 
 		private static final ResourceLocation GUI = new ResourceLocation(Registrar.MODID,
 				"textures/gui/container/auto_craft.png");
@@ -74,9 +62,9 @@ public class AutoCraft {
 		public boolean mouseClicked(double x, double y, int t) {
 			int i = guiLeft + 91;
 			int j = guiTop + 89;
-			if (x >= i && x <= i + 18 && y >= j && y <= j + 18) {
-				PacketHandler.send(new IntMsg(container.windowId, 1, (container.data.get(1) + 1) % 5));
-			} else
+			if (x >= i && x <= i + 18 && y >= j && y <= j + 18)
+				send(1, (get(1) + 1) % 5);
+			else
 				return super.mouseClicked(x, y, t);
 			return true;
 		}
@@ -89,7 +77,7 @@ public class AutoCraft {
 			if (mx >= i && mx <= i + 18 && my >= j && my <= j + 18) {
 				List<String> list = new ArrayList<>();
 				list.add(Translator.getTooltipText("max"));
-				int c = container.data.get(1);
+				int c = get(1);
 				list.add(c > 0 ? "" + (1 << 2 * (c - 1)) : Translator.getTooltipText("infinity"));
 				renderTooltip(list, mx, my);
 			}
@@ -102,9 +90,9 @@ public class AutoCraft {
 			int i = guiLeft;
 			int j = guiTop;
 			blit(i, j, 0, 0, xSize, ySize);
-			if (container.data.get(0) > 0)
-				blit(i + 88, j + 60, 176, 0, container.data.get(0), 15);
-			int count = container.data.get(1);
+			if (get(0) > 0)
+				blit(i + 88, j + 60, 176, 0, get(0), 15);
+			int count = get(1);
 			int loc = count == 0 ? 7 : count - 1;
 			blit(i + 91, j + 89, 176 + loc % 4 * 18, 15 + loc / 4 * 18, 18, 18);
 		}

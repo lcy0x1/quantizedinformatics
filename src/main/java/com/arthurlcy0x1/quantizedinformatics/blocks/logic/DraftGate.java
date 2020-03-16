@@ -3,16 +3,16 @@ package com.arthurlcy0x1.quantizedinformatics.blocks.logic;
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
 import com.arthurlcy0x1.quantizedinformatics.blocks.BaseBlock;
+import com.arthurlcy0x1.quantizedinformatics.blocks.BlockProp;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock.CTECont;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock.CTEScr;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock.CTETE;
-import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect;
+import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect;
 import com.arthurlcy0x1.quantizedinformatics.items.LogicDraft;
 import com.arthurlcy0x1.quantizedinformatics.logic.LogicGate;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -266,7 +266,7 @@ public class DraftGate extends BaseBlock implements WireConnect.DraftIO {
 	}
 
 	public DraftGate() {
-		super(construct(Material.ROCK).addImpls((STE) TE::new, HOR));
+		super(construct(BlockProp.M_DRAFT).addImpls((STE) TE::new, HOR));
 	}
 
 	@Override

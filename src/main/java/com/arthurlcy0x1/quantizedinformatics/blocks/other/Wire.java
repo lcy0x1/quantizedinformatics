@@ -1,4 +1,4 @@
-package com.arthurlcy0x1.quantizedinformatics.blocks;
+package com.arthurlcy0x1.quantizedinformatics.blocks.other;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -8,10 +8,11 @@ import java.util.Queue;
 import java.util.Set;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
+import com.arthurlcy0x1.quantizedinformatics.blocks.BlockProp;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SixWayBlock;
-import net.minecraft.block.material.Material;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.StateContainer;
@@ -167,7 +168,7 @@ public class Wire extends SixWayBlock implements WireConnect {
 	private final int type;
 
 	public Wire(int n) {
-		super(0.25f, Block.Properties.create(Material.EARTH));
+		super(0.25f, BlockProp.WIRE.getProps());
 		type = n;
 	}
 

@@ -8,14 +8,8 @@ import java.util.function.Supplier;
 
 import org.apache.logging.log4j.LogManager;
 
+import com.arthurlcy0x1.quantizedinformatics.blocks.BlockProp;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
-import com.arthurlcy0x1.quantizedinformatics.blocks.Craft3D;
-import com.arthurlcy0x1.quantizedinformatics.blocks.OxiFn;
-import com.arthurlcy0x1.quantizedinformatics.blocks.QuantumOre;
-import com.arthurlcy0x1.quantizedinformatics.blocks.RedFn;
-import com.arthurlcy0x1.quantizedinformatics.blocks.Wire;
-import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect;
-import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftIO;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.AutoCraft;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.PipeCore;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.PipeHead;
@@ -23,6 +17,13 @@ import com.arthurlcy0x1.quantizedinformatics.blocks.auto.RecMaker;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.SPipeHead;
 import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DIOBlock.DIOScr;
 import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DIOBlock.DIOTerm;
+import com.arthurlcy0x1.quantizedinformatics.blocks.other.Craft3D;
+import com.arthurlcy0x1.quantizedinformatics.blocks.other.OxiFn;
+import com.arthurlcy0x1.quantizedinformatics.blocks.other.QuantumOre;
+import com.arthurlcy0x1.quantizedinformatics.blocks.other.RedFn;
+import com.arthurlcy0x1.quantizedinformatics.blocks.other.Wire;
+import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect;
+import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.DraftIO;
 import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftCntr;
 import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftGate;
 import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftIn;
@@ -37,7 +38,6 @@ import com.arthurlcy0x1.quantizedinformatics.recipe.OxiRecipe;
 import com.arthurlcy0x1.quantizedinformatics.recipe.RedRecipe;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
@@ -60,19 +60,19 @@ public class Registrar extends ItemGroup {
 
 	// blocks
 	public static final Block B_FOGORE = addName(new QuantumOre(), "quantum_ore");
-	public static final Block B_FOG = generate("quantum_fog", Material.EARTH);
+	public static final Block B_FOG = generate("quantum_fog", BlockProp.QUANTUM_FOG);
 	public static final Block BC_FRAME = addName(new Wire(WireConnect.CRAFT), "craft_frame");
 	public static final Block B_CRAFT3D = addName(new Craft3D(), "craft_3d");
-	public static final Block B_OXIFN = addName(new CTEBlock(OxiFn.TE::new), "oxidation_furnace");
-	public static final Block B_REDFN = addName(new CTEBlock(RedFn.TE::new), "reduction_furnace");
+	public static final Block B_OXIFN = addName(new CTEBlock(BlockProp.FURNACE, OxiFn.TE::new), "oxidation_furnace");
+	public static final Block B_REDFN = addName(new CTEBlock(BlockProp.FURNACE, RedFn.TE::new), "reduction_furnace");
 	public static final Block BD_WIRE = addName(new Wire(WireConnect.GATE), "draft_wire");
 	public static final Block BD_CNTR = addName(new DIOTerm(DraftCntr.TE::new, DraftIO.OUTPUT), "draft_center");
 	public static final Block BD_GATE = addName(new DraftGate(), "draft_gate");
 	public static final Block BD_IN = addName(new DIOTerm(DraftIn.TE::new, DraftIO.OUTPUT), "draft_in");
 	public static final Block BD_OUT = addName(new DraftOut(), "draft_out");
 	public static final Block BD_LNR = addName(new DraftLnr(), "draft_listener");
-	public static final Block BA_CRAFT = addName(new CTEBlock(AutoCraft.TE::new), "auto_craft");
-	public static final Block BA_REC = addName(new CTEBlock(RecMaker.TE::new), "recipe_maker");
+	public static final Block BA_CRAFT = addName(new CTEBlock(BlockProp.M_CRAFT, AutoCraft.TE::new), "auto_craft");
+	public static final Block BA_REC = addName(new CTEBlock(BlockProp.M_CRAFT, RecMaker.TE::new), "recipe_maker");
 	public static final Block BAP_HEAD = addName(new PipeHead(), "pipe_head");
 	public static final Block BAP_BODY = addName(new Wire(WireConnect.PIPE), "pipe_body");
 	public static final Block BAP_CORE = addName(new PipeCore(), "pipe_core");
@@ -231,6 +231,10 @@ public class Registrar extends ItemGroup {
 		return addName(new DraftGateItem(p, c), str);
 	}
 
+	private static Block generate(String str, BlockProp mat) {
+		return addName(new Block(mat.getProps()), str);
+	}
+
 	private static Item generate(String str, int size) {
 		Item.Properties p = new Item.Properties();
 		p.group(ITEM_GROUP);
@@ -243,11 +247,6 @@ public class Registrar extends ItemGroup {
 		p.group(ITEM_GROUP);
 		p.maxStackSize(size);
 		return addName(f.apply(p), str);
-	}
-
-	private static Block generate(String str, Material mat) {
-		Block.Properties p = Block.Properties.create(mat);
-		return addName(new Block(p), str);
 	}
 
 	private static <T extends Container> ContainerType<T> getCT(ContainerType.IFactory<T> fact, String str) {

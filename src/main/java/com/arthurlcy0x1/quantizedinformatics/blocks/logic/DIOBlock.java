@@ -1,23 +1,23 @@
 package com.arthurlcy0x1.quantizedinformatics.blocks.logic;
 
-import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.CNUM;
-import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.C_MASK;
+import static com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.CNUM;
+import static com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.C_MASK;
 
 import com.arthurlcy0x1.quantizedinformatics.PacketHandler;
 import com.arthurlcy0x1.quantizedinformatics.PacketHandler.IntMsg;
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.blocks.BaseBlock;
-import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect;
-import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftCont;
-import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftIO;
-import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftTE;
-import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.ISignalManager;
-import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.MsgWriter;
-import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.SignalManager;
+import com.arthurlcy0x1.quantizedinformatics.blocks.BlockProp;
+import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect;
+import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.DraftCont;
+import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.DraftIO;
+import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.DraftTE;
+import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.ISignalManager;
+import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.MsgWriter;
+import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.SignalManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -128,7 +128,7 @@ public class DIOBlock {
 		private final int type;
 
 		public DIOTerm(STE sup, int t) {
-			super(construct(Material.ROCK).addImpls(sup, HOR));
+			super(construct(BlockProp.M_DRAFT).addImpls(sup, HOR));
 			type = t;
 		}
 

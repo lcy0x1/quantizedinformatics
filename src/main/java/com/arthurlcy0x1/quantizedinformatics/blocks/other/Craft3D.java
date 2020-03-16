@@ -1,15 +1,16 @@
-package com.arthurlcy0x1.quantizedinformatics.blocks;
+package com.arthurlcy0x1.quantizedinformatics.blocks.other;
 
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
+import com.arthurlcy0x1.quantizedinformatics.blocks.BaseBlock;
+import com.arthurlcy0x1.quantizedinformatics.blocks.BlockProp;
 import com.arthurlcy0x1.quantizedinformatics.recipe.C3DRecipe;
 import com.arthurlcy0x1.quantizedinformatics.recipe.C3DRecipe.Craft3DInv;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -155,7 +156,7 @@ public class Craft3D extends BaseBlock implements WireConnect {
 	}
 
 	public Craft3D() {
-		super(construct(Material.ROCK).addImpl(HOR).addImpl((IClick) (bs, w, pos, pl, h) -> {
+		super(construct(BlockProp.M_CRAFT).addImpl(HOR).addImpl((IClick) (bs, w, pos, pl, h) -> {
 			new Handler(w, pos).react(pl);
 			return ActionResultType.SUCCESS;
 		}));

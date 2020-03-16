@@ -1,12 +1,12 @@
 package com.arthurlcy0x1.quantizedinformatics.blocks.logic;
 
-import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.CNUM;
-import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.C_HIGH;
-import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.C_LOW;
-import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.INPUT;
-import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.OUTPUT;
-import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.S_ERR;
-import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.S_FLOAT;
+import static com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.CNUM;
+import static com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.C_HIGH;
+import static com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.C_LOW;
+import static com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.INPUT;
+import static com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.OUTPUT;
+import static com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.S_ERR;
+import static com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.S_FLOAT;
 import static com.arthurlcy0x1.quantizedinformatics.logic.LogicDiagram.FALSE;
 import static com.arthurlcy0x1.quantizedinformatics.logic.LogicDiagram.TRUE;
 
@@ -20,11 +20,11 @@ import java.util.Queue;
 import java.util.TreeSet;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
-import com.arthurlcy0x1.quantizedinformatics.blocks.Wire;
-import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftIO;
-import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftTE;
-import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.ISignalManager;
 import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftGate.TE;
+import com.arthurlcy0x1.quantizedinformatics.blocks.other.Wire;
+import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.DraftIO;
+import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.DraftTE;
+import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.ISignalManager;
 import com.arthurlcy0x1.quantizedinformatics.logic.LogicDiagram;
 import com.arthurlcy0x1.quantizedinformatics.logic.LogicDiagram.GateContainer;
 import com.arthurlcy0x1.quantizedinformatics.logic.LogicDiagram.ParentDiagram;
