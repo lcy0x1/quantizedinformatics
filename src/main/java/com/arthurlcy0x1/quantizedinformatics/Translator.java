@@ -34,4 +34,8 @@ public class Translator {
 		return get("quantizedinformatics:tooltip." + str);
 	}
 
+	public static String getTooltipText(String str) {
+		return get("quantizedinformatics:tooltip." + str).getFormattedText();
+	}
+
 }

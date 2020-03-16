@@ -1,8 +1,12 @@
 package com.arthurlcy0x1.quantizedinformatics.blocks.logic;
 
+import static net.minecraft.state.properties.BlockStateProperties.POWER_0_15;
+
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
-import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DIOBlock.*;
+import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DIOBlock.DIOCont;
+import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DIOBlock.DIOTerm;
+import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DIOBlock.DTETerm;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -10,7 +14,6 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
 import net.minecraft.util.text.ITextComponent;
-import static net.minecraft.state.properties.BlockStateProperties.POWER_0_15;
 
 public class DraftOut extends DIOTerm {
 

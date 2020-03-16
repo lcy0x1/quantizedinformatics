@@ -3,6 +3,7 @@ package com.arthurlcy0x1.quantizedinformatics.blocks;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.recipe.C3DRecipe;
 import com.arthurlcy0x1.quantizedinformatics.recipe.C3DRecipe.Craft3DInv;

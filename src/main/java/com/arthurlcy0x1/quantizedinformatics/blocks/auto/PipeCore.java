@@ -1,13 +1,18 @@
 package com.arthurlcy0x1.quantizedinformatics.blocks.auto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
 import com.arthurlcy0x1.quantizedinformatics.blocks.BaseBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.Wire;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect;
+import com.arthurlcy0x1.quantizedinformatics.items.ALUItem;
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
@@ -74,9 +79,25 @@ public class PipeCore extends BaseBlock implements WireConnect {
 
 	public static class TE extends CTEBlock.CTETE<TE> implements ITickableTileEntity {
 
+		private static class Triplet {
+
+			private PipeHead.TE te;
+			private IInventory inv;
+			private Direction dire;
+
+			private Triplet(PipeHead.TE phte, Direction dir, IInventory i) {
+				te = phte;
+				dire = dir;
+				inv = i;
+			}
+
+		}
+
 		private static final double DEF_SPEED = 0.04;
 
 		public static boolean isValid(int index, ItemStack is) {
+			if (index < 5)
+				return is.getItem() instanceof ALUItem;
 			return false;// TODO
 		}
 
@@ -114,42 +135,60 @@ public class PipeCore extends BaseBlock implements WireConnect {
 			BlockPos[] ps = Wire.queryPipe(world, pos);
 			if (ps == null)
 				return;
-			PipeHead.TE[] head = new PipeHead.TE[ps.length];
-			IInventory[] inv = new IInventory[ps.length];
-			Direction[] dire = new Direction[ps.length];
-			int count = 0;
+			List<Triplet> list = new ArrayList<>();
 			for (int i = 0; i < ps.length; i++) {
 				TileEntity te = world.getTileEntity(ps[i]);
-				if (te != null && te instanceof PipeHead.TE) {
-					head[i] = (PipeHead.TE) te;
-					BlockState bs = world.getBlockState(ps[i]);
-					if (bs.getBlock() instanceof PipeHead) {
-						dire[i] = bs.get(FACING);
-						TileEntity cont = world.getTileEntity(ps[i].offset(dire[i]));
-						if (cont instanceof IInventory) {
-							inv[i] = (IInventory) cont;
-							count++;
-						}
+				if (te == null || !(te instanceof PipeHead.TE))
+					continue;
+				PipeHead.TE phte = (PipeHead.TE) te;
+				BlockState bs = world.getBlockState(ps[i]);
+				if (bs.getBlock() != Registrar.BAP_HEAD)
+					continue;
+				Direction dir = bs.get(FACING);
+				BlockPos tar = ps[i].offset(dir);
+				TileEntity cont = world.getTileEntity(tar);
+				if (cont != null && cont instanceof IInventory) {
+					IInventory inv = (IInventory) cont;
+					list.add(new Triplet(phte, dir, inv));
+				} else {
+					BlockState tbs = world.getBlockState(tar);
+					Block b = tbs.getBlock();
+					if (!(b instanceof WireConnect))
+						continue;
+					WireConnect wc = (WireConnect) b;
+					if (!wc.canConnectFrom(SPIPE, tbs, dir.getOpposite()))
+						continue;
+					BlockPos[] subs = Wire.querySubPipe(world, ps[i]);
+					if (subs == null)
+						continue;
+					for (BlockPos sp : subs) {
+						BlockState sbs = world.getBlockState(sp);
+						if (sbs.getBlock() != Registrar.BAP_SHEAD)
+							continue;
+						Direction sdir = sbs.get(FACING);
+						BlockPos star = sp.offset(sdir);
+						TileEntity scont = world.getTileEntity(star);
+						if (scont == null || !(scont instanceof IInventory))
+							continue;
+						IInventory inv = (IInventory) scont;
+						list.add(new Triplet(phte, sdir, inv));
+
 					}
 				}
 			}
-			if (count == 0)
+			if (list.size() == 0)
 				return;
-			prog += DEF_SPEED + getSpeed() / count;
+			prog += DEF_SPEED + getSpeed() / list.size();
 			int cap = (int) prog;
 			if (cap == 0)
 				return;
 			prog -= cap;
-			for (int i = 0; i < ps.length; i++) {
-				if (head[i] == null || inv[i] == null)
-					continue;
+			for (Triplet i : list) {
 				int icap = cap;
-				for (int j = 0; j < ps.length; j++) {
+				for (Triplet j : list) {
 					if (icap == 0)
 						break;
-					if (head[j] == null || inv[j] == null)
-						continue;
-					icap = transfer(head, inv, dire, i, j, icap);
+					icap = transfer(i, j, icap);
 				}
 			}
 
@@ -163,16 +202,19 @@ public class PipeCore extends BaseBlock implements WireConnect {
 		}
 
 		private double getSpeed() {
-			return 0;// TODO
+			int ans = 0;
+			for (int i = 0; i < 5; i++)
+				ans += ALUItem.getSpeed(getStackInSlot(i));
+			return ans;
 		}
 
-		private int transfer(PipeHead.TE[] te, IInventory[] inv, Direction[] dir, int src, int dst, int cap) {
-			PipeHead.TE ts = te[src];
-			PipeHead.TE td = te[dst];
-			IInventory is = inv[src];
-			IInventory id = inv[dst];
-			Direction ds = dir[src].getOpposite();
-			Direction dd = dir[dst].getOpposite();
+		private int transfer(Triplet src, Triplet dst, int cap) {
+			PipeHead.TE ts = src.te;
+			PipeHead.TE td = dst.te;
+			IInventory is = src.inv;
+			IInventory id = dst.inv;
+			Direction ds = src.dire.getOpposite();
+			Direction dd = dst.dire.getOpposite();
 			if (is == id && !(is instanceof ISidedInventory))
 				return cap;
 			for (int i = 0; i < is.getSizeInventory(); i++) {
@@ -181,7 +223,7 @@ public class PipeCore extends BaseBlock implements WireConnect {
 				ItemStack i0 = is.getStackInSlot(i).copy();
 				if (i0.isEmpty())
 					continue;
-				if (!ts.canExtract(i0) || !td.canInsert(i0))
+				if (!ts.canExtract(i0) || !td.canInsert(i0, id, dd))
 					continue;
 				if (is instanceof ISidedInventory) {
 					ISidedInventory isi = (ISidedInventory) is;

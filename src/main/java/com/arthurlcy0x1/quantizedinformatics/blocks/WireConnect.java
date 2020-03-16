@@ -1,21 +1,24 @@
 package com.arthurlcy0x1.quantizedinformatics.blocks;
 
-import java.util.function.Supplier;
-
 import com.arthurlcy0x1.quantizedinformatics.PacketHandler;
+import com.arthurlcy0x1.quantizedinformatics.PacketHandler.DataCont;
+import com.arthurlcy0x1.quantizedinformatics.PacketHandler.IntMsg;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IIntArray;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
 
 public interface WireConnect {
 
-	public static interface DraftCont {
+	public static interface DraftCont extends DataCont {
+
+		@Override
+		public default IIntArray getData() {
+			return getSignal();
+		}
 
 		public MsgWriter getSignal();
 
@@ -41,6 +44,8 @@ public interface WireConnect {
 	public static interface DraftTE extends INamedContainerProvider {
 
 		public ISignalManager getSignal();
+
+		public void markDirty();
 
 		public int[] update(int[] vals);
 
@@ -68,43 +73,7 @@ public interface WireConnect {
 
 	}
 
-	public static class Msg {
-
-		public static Msg decode(PacketBuffer packet) {
-			return new Msg(packet.readInt(), packet.readVarInt(), packet.readVarInt());
-		}
-
-		private final int wid, ind, val;
-
-		public Msg(int id, int index, int value) {
-			wid = id;
-			ind = index;
-			val = value;
-		}
-
-		public void encode(PacketBuffer packet) {
-			packet.writeInt(wid);
-			packet.writeVarInt(ind);
-			packet.writeVarInt(val);
-		}
-
-		public void handle(Supplier<Context> sup) {
-			Context ctx = sup.get();
-			ctx.enqueueWork(() -> this.handle(ctx));
-			ctx.setPacketHandled(true);
-		}
-
-		private void handle(Context ctx) {
-			Container c = ctx.getSender().openContainer;
-			if (c != null && c.windowId == wid && c instanceof DraftCont) {
-				DraftCont cont = (DraftCont) c;
-				cont.getSignal().set(ind, val);
-			}
-		}
-
-	}
-
-	public static abstract class MsgWriter {
+	public static abstract class MsgWriter implements IIntArray {
 
 		private final int wid;
 		private final IIntArray data;
@@ -114,6 +83,7 @@ public interface WireConnect {
 			data = arr;
 		}
 
+		@Override
 		public int get(int i) {
 			return data.get(i);
 		}
@@ -122,8 +92,14 @@ public interface WireConnect {
 			return data;
 		}
 
+		@Override
 		public void set(int i, int val) {
 			data.set(i, val);
+		}
+
+		@Override
+		public int size() {
+			return data.size();
 		}
 
 		public int updateSele(int sele, char ch) {
@@ -144,7 +120,7 @@ public interface WireConnect {
 			if (!allowed(sele, bit))
 				sele = -1;
 			else
-				PacketHandler.send(new Msg(wid, sele, bit));
+				PacketHandler.send(new IntMsg(wid, sele, bit));
 			return sele;
 		}
 
@@ -265,6 +241,7 @@ public interface WireConnect {
 
 		protected void setRaw(int i, int v) {
 			channels[i] = v;
+			ent.markDirty();
 		}
 
 	}
@@ -313,7 +290,7 @@ public interface WireConnect {
 	public static final int CNUM = 16;
 
 	/** connection type */
-	public static final int GATE = 0, CRAFT = 1, PIPE = 2;
+	public static final int GATE = 0, CRAFT = 1, PIPE = 2, SPIPE = 3;
 
 	/** face type */
 	public static final int NONE = 0, INPUT = 1, OUTPUT = 2;

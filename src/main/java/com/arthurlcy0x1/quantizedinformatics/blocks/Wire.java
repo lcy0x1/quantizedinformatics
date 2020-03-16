@@ -7,8 +7,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
-import com.arthurlcy0x1.quantizedinformatics.blocks.auto.PipeCore;
-import com.arthurlcy0x1.quantizedinformatics.blocks.auto.PipeHead;
+import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SixWayBlock;
@@ -75,19 +74,20 @@ public class Wire extends SixWayBlock implements WireConnect {
 			for (Direction d : Direction.values())
 				if (cn.canConnectFrom(PIPE, s, d)) {
 					BlockPos p = p0.offset(d);
-					BlockState bs = w.getBlockState(p);
 					if (set.contains(p))
 						continue;
-					if (bs.getBlock() instanceof PipeCore)
+					BlockState bs = w.getBlockState(p);
+					if (bs.getBlock() == Registrar.BAP_CORE)
 						return null;
 					if (bs.getBlock() instanceof WireConnect) {
 						WireConnect wc = (WireConnect) bs.getBlock();
-						if (wc instanceof PipeHead)
+						if (wc == Registrar.BAP_HEAD)
 							if (wc.canConnectFrom(PIPE, bs, d.getOpposite()))
 								head.add(p);
 							else
 								continue;
-						q.add(p);
+						else if (wc.canConnectFrom(PIPE, bs, d.getOpposite()))
+							q.add(p);
 					}
 					set.add(p);
 
@@ -125,6 +125,43 @@ public class Wire extends SixWayBlock implements WireConnect {
 				}
 		}
 		return ans.toArray(new BlockPos[0]);
+	}
+
+	/** get a list of SubPipeHeads */
+	public static BlockPos[] querySubPipe(World w, BlockPos c) {
+		Set<BlockPos> set = new HashSet<>();
+		List<BlockPos> head = new ArrayList<>();
+		Queue<BlockPos> q = new ArrayDeque<>();
+		set.add(c);
+		q.add(c);
+		while (q.size() > 0) {
+			BlockPos p0 = q.poll();
+			BlockState s = w.getBlockState(p0);
+			WireConnect cn = (WireConnect) s.getBlock();
+			for (Direction d : Direction.values())
+				if (cn.canConnectFrom(SPIPE, s, d)) {
+					BlockPos p = p0.offset(d);
+					if (set.contains(p))
+						continue;
+					BlockState bs = w.getBlockState(p);
+					if (bs.getBlock() instanceof WireConnect) {
+						WireConnect wc = (WireConnect) bs.getBlock();
+						if (wc == Registrar.BAP_SHEAD)
+							if (wc.canConnectFrom(SPIPE, bs, d.getOpposite()))
+								head.add(p);
+							else
+								continue;
+						else if (wc.canConnectFrom(SPIPE, bs, d.getOpposite()))
+							if (wc == Registrar.BAP_HEAD)
+								return null;
+							else
+								q.add(p);
+					}
+					set.add(p);
+
+				}
+		}
+		return head.toArray(new BlockPos[0]);
 	}
 
 	private final int type;

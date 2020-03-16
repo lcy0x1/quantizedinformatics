@@ -1,0 +1,12 @@
+{
+    "type": "quantizedinformatics:craft_3d",
+    "pattern": [
+        [
+            "x"
+        ]
+    ],
+    "keys": {
+        "x": "quantizedinformatics:quantum_ore"
+    },
+    "out": "quantizedinformatics:quantum_ore"
+}

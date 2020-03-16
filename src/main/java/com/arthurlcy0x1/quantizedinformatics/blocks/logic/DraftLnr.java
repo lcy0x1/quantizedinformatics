@@ -4,7 +4,8 @@ import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
 import com.arthurlcy0x1.quantizedinformatics.blocks.BaseBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftIO;
-import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DIOBlock.*;
+import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DIOBlock.DIOCont;
+import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DIOBlock.DTETerm;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;

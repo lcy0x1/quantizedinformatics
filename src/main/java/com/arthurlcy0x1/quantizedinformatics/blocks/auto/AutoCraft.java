@@ -1,8 +1,16 @@
 package com.arthurlcy0x1.quantizedinformatics.blocks.auto;
 
+import com.arthurlcy0x1.quantizedinformatics.PacketHandler.DataCont;
+import com.arthurlcy0x1.quantizedinformatics.PacketHandler.IntMsg;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.arthurlcy0x1.quantizedinformatics.PacketHandler;
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
+import com.arthurlcy0x1.quantizedinformatics.items.ALUItem;
 import com.arthurlcy0x1.quantizedinformatics.items.AutoRecipe;
 import com.mojang.blaze3d.systems.RenderSystem;
 
@@ -26,12 +34,12 @@ import net.minecraft.util.text.ITextComponent;
 
 public class AutoCraft {
 
-	public static class Cont extends CTEBlock.CTECont {
+	public static class Cont extends CTEBlock.CTECont implements DataCont {
 
 		private final IIntArray data;
 
 		public Cont(int id, PlayerInventory inv) {
-			this(id, inv, new Inventory(SIZE), new IntArray(1));
+			this(id, inv, new Inventory(SIZE), new IntArray(2));
 		}
 
 		protected Cont(int id, PlayerInventory inv, IInventory ent, IIntArray arr) {
@@ -46,6 +54,11 @@ public class AutoCraft {
 			trackIntArray(data = arr);
 		}
 
+		@Override
+		public IIntArray getData() {
+			return data;
+		}
+
 	}
 
 	public static class Scr extends CTEBlock.CTEScr<Cont> {
@@ -58,6 +71,31 @@ public class AutoCraft {
 		}
 
 		@Override
+		public boolean mouseClicked(double x, double y, int t) {
+			int i = guiLeft + 91;
+			int j = guiTop + 89;
+			if (x >= i && x <= i + 18 && y >= j && y <= j + 18) {
+				PacketHandler.send(new IntMsg(container.windowId, 1, (container.data.get(1) + 1) % 5));
+			} else
+				return super.mouseClicked(x, y, t);
+			return true;
+		}
+
+		@Override
+		public void renderHoveredToolTip(int mx, int my) {
+			super.renderHoveredToolTip(mx, my);
+			int i = guiLeft + 91;
+			int j = guiTop + 89;
+			if (mx >= i && mx <= i + 18 && my >= j && my <= j + 18) {
+				List<String> list = new ArrayList<>();
+				list.add(Translator.getTooltipText("max"));
+				int c = container.data.get(1);
+				list.add(c > 0 ? "" + (1 << 2 * (c - 1)) : Translator.getTooltipText("infinity"));
+				renderTooltip(list, mx, my);
+			}
+		}
+
+		@Override
 		protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 			this.minecraft.getTextureManager().bindTexture(GUI);
@@ -66,6 +104,9 @@ public class AutoCraft {
 			blit(i, j, 0, 0, xSize, ySize);
 			if (container.data.get(0) > 0)
 				blit(i + 88, j + 60, 176, 0, container.data.get(0), 15);
+			int count = container.data.get(1);
+			int loc = count == 0 ? 7 : count - 1;
+			blit(i + 91, j + 89, 176 + loc % 4 * 18, 15 + loc / 4 * 18, 18, 18);
 		}
 
 	}
@@ -89,9 +130,12 @@ public class AutoCraft {
 				return false;
 			if (ind == 30)
 				return is.getItem() instanceof AutoRecipe;
-			return false;// TODO is ALU
+			return is.getItem() instanceof ALUItem;
 		}
+
 		private double prog;
+
+		private int outputCount;
 
 		private NonNullList<ItemStack> list;
 
@@ -101,9 +145,10 @@ public class AutoCraft {
 			super(Registrar.TETA_CRAFT, SIZE);
 		}
 
+		/** it can extract the left slots from the sides */
 		@Override
-		public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
-			return index >= 15 && index < 30;
+		public boolean canExtractItem(int index, ItemStack stack, Direction d) {
+			return (d != Direction.UP || index >= 15) && index < 30;
 		}
 
 		@Override
@@ -118,7 +163,7 @@ public class AutoCraft {
 
 		@Override
 		public int get(int index) {
-			return (int) (prog * 22);
+			return index == 0 ? (int) (prog * 22) : outputCount;
 		}
 
 		@Override
@@ -131,23 +176,23 @@ public class AutoCraft {
 			return SLOTS;
 		}
 
-		public int getSpeed() {
-			return 1;// TODO
-		}
-
 		@Override
 		public void read(CompoundNBT tag) {
 			super.read(tag);
 			prog = tag.getDouble("progress");
+			outputCount = tag.getInt("output");
 		}
 
 		@Override
 		public void set(int index, int value) {
+			if (index == 1)
+				outputCount = value;
+			markDirty();
 		}
 
 		@Override
 		public int size() {
-			return 1;
+			return 2;
 		}
 
 		@Override
@@ -162,6 +207,7 @@ public class AutoCraft {
 				prog = 0;
 				return;
 			}
+			markDirty();
 			prog += DEF_SPEED * getSpeed();
 			int cap = (int) prog;
 			prog -= cap;
@@ -186,6 +232,26 @@ public class AutoCraft {
 						}
 					}
 				}
+				if (is.hasContainerItem()) {
+					ItemStack cont = is.getContainerItem();
+					int ext = cra * is.getCount() * cont.getCount();
+
+					for (int i = 0; i < 15; i++) {
+						ItemStack in = getStackInSlot(i);
+						if (in.isEmpty()) {
+							int c = Math.min(ext, cont.getMaxStackSize());
+							ext -= c;
+							ItemStack toSet = cont.copy();
+							toSet.setCount(c);
+							setInventorySlotContents(i, toSet);
+						} else if (Container.areItemsAndTagsEqual(cont, in)) {
+							int c = Math.min(ext, in.getMaxStackSize() - in.getCount());
+							ext -= c;
+							in.grow(c);
+						}
+
+					}
+				}
 			}
 
 			int has = cra * res.getCount();
@@ -201,7 +267,6 @@ public class AutoCraft {
 					int c = Math.min(has, in.getMaxStackSize() - in.getCount());
 					has -= c;
 					in.grow(c);
-					markDirty();
 				}
 
 			}
@@ -212,6 +277,7 @@ public class AutoCraft {
 		public CompoundNBT write(CompoundNBT tag) {
 			super.write(tag);
 			tag.putDouble("progress", prog);
+			tag.putInt("output", outputCount);
 			return tag;
 		}
 
@@ -255,14 +321,43 @@ public class AutoCraft {
 
 		private int getOutputCap() {
 			int cap = 0;
+			int has = 0;
 			for (int i = 15; i < 30; i++) {
 				ItemStack in = getStackInSlot(i);
 				if (in.isEmpty())
 					cap += res.getMaxStackSize();
-				else if (Container.areItemsAndTagsEqual(in, res))
+				else if (Container.areItemsAndTagsEqual(in, res)) {
+					has += in.getCount();
 					cap += in.getMaxStackSize() - in.getCount();
+				}
 			}
+			if (outputCount != 0) {
+				int max = 1 << 2 * (outputCount - 1);
+				cap = Math.min(cap, Math.max(0, max - has));
+			}
+			if (res.hasContainerItem()) {
+				ItemStack is = res.getContainerItem();
+				if (res.getMaxStackSize() == 1)
+					return cap / res.getCount();
+				int cont = 0;
+				for (int i = 0; i < 15; i++) {
+					ItemStack in = getStackInSlot(i);
+					if (in.isEmpty())
+						cont += is.getMaxStackSize();
+					else if (Container.areItemsAndTagsEqual(in, is))
+						cont += in.getMaxStackSize() - in.getCount();
+				}
+				cap = Math.min(cont / is.getCount(), cap);
+			}
+
 			return cap / res.getCount();
+		}
+
+		private int getSpeed() {
+			int ans = 1;
+			for (int i = 31; i < 36; i++)
+				ans += ALUItem.getSpeed(getStackInSlot(i));
+			return ans;
 		}
 
 	}
