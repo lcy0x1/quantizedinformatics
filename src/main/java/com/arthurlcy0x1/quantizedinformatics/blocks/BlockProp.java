@@ -6,7 +6,7 @@ import net.minecraftforge.common.ToolType;
 
 public class BlockProp {
 
-	public static final BlockProp WIRE = new BlockProp(Material.AIR, 0.5f, 0.5f);
+	public static final BlockProp WIRE = new BlockProp(Material.MISCELLANEOUS, 0.2f, 0.2f);
 	public static final BlockProp FURNACE = new BlockProp(Material.ROCK, 50, 1200).setTool(ToolType.PICKAXE, 3);
 	public static final BlockProp QUANTUM_FOG = new BlockProp(Material.ROCK, 1, 1).setTool(ToolType.PICKAXE, 0);
 	public static final BlockProp QUANTUM_ORE = new BlockProp(Material.ROCK, 2, 2);
