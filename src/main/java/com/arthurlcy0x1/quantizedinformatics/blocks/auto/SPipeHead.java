@@ -1,16 +1,16 @@
 package com.arthurlcy0x1.quantizedinformatics.blocks.auto;
 
 import com.arthurlcy0x1.quantizedinformatics.blocks.BaseBlock;
-import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect;
+import com.arthurlcy0x1.quantizedinformatics.blocks.BlockProp;
+import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
 import net.minecraft.util.Direction;
 
 public class SPipeHead extends BaseBlock implements WireConnect {
 
 	public SPipeHead() {
-		super(construct(Material.ROCK).addImpls(ALD));
+		super(construct(BlockProp.M_PIPE).addImpls(ALD));
 	}
 
 	@Override

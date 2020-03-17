@@ -6,15 +6,15 @@ import java.util.List;
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
 import com.arthurlcy0x1.quantizedinformatics.blocks.BaseBlock;
+import com.arthurlcy0x1.quantizedinformatics.blocks.BlockProp;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
-import com.arthurlcy0x1.quantizedinformatics.blocks.Wire;
-import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect;
+import com.arthurlcy0x1.quantizedinformatics.blocks.other.Wire;
+import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect;
 import com.arthurlcy0x1.quantizedinformatics.items.ALUItem;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -68,11 +68,8 @@ public class PipeCore extends BaseBlock implements WireConnect {
 		@Override
 		protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 			super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-			String s;
-			s = Translator.getContText("pipe_core.cpu");
-			font.drawString(s, xSize / 2 - font.getStringWidth(s) / 2, 19.0F, COLOR);
-			s = Translator.getContText("pipe_core.ram");
-			font.drawString(s, xSize / 2 - font.getStringWidth(s) / 2, 50.0F, COLOR);
+			cstr(Translator.getContText("pipe_core.cpu"), 19);
+			cstr(Translator.getContText("pipe_core.ram"), 50);
 		}
 
 	}
@@ -223,7 +220,8 @@ public class PipeCore extends BaseBlock implements WireConnect {
 				ItemStack i0 = is.getStackInSlot(i).copy();
 				if (i0.isEmpty())
 					continue;
-				if (!ts.canExtract(i0) || !td.canInsert(i0, id, dd))
+				int inst = td.canInsert(i0, id, dd);
+				if (!ts.canExtract(i0) || inst == 0)
 					continue;
 				if (is instanceof ISidedInventory) {
 					ISidedInventory isi = (ISidedInventory) is;
@@ -234,6 +232,8 @@ public class PipeCore extends BaseBlock implements WireConnect {
 				}
 				int c0 = i0.getCount();
 				int c1 = Math.min(c0, cap);
+				if (inst > 0)
+					c1 = Math.min(inst, c1);
 				i0.setCount(c1);
 				ItemStack i1 = HopperTileEntity.putStackInInventoryAllSlots(null, id, i0.copy(), dd);
 				int c2 = i1.getCount();
@@ -250,10 +250,10 @@ public class PipeCore extends BaseBlock implements WireConnect {
 		}
 	}
 
-	private static final int SIZE = 5;
+	private static final int SIZE = 10;
 
 	public PipeCore() {
-		super(construct(Material.ROCK).addImpl((STE) TE::new));
+		super(construct(BlockProp.M_PIPE).addImpl((STE) TE::new));
 	}
 
 	@Override

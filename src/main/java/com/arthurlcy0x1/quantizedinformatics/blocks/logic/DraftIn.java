@@ -1,9 +1,9 @@
 package com.arthurlcy0x1.quantizedinformatics.blocks.logic;
 
-import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.CNUM;
-import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.OUTPUT;
-import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.S_HIGH;
-import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.S_LOW;
+import static com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.CNUM;
+import static com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.OUTPUT;
+import static com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.S_HIGH;
+import static com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.S_LOW;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;

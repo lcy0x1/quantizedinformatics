@@ -1,10 +1,11 @@
-package com.arthurlcy0x1.quantizedinformatics.blocks;
+package com.arthurlcy0x1.quantizedinformatics.blocks.other;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
+import com.arthurlcy0x1.quantizedinformatics.blocks.BaseBlock;
+import com.arthurlcy0x1.quantizedinformatics.blocks.BlockProp;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -12,7 +13,7 @@ import net.minecraft.world.World;
 public class QuantumOre extends BaseBlock {
 
 	public QuantumOre() {
-		super(construct(Material.ROCK));
+		super(construct(BlockProp.QUANTUM_ORE));
 	}
 
 	@Override

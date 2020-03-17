@@ -3,7 +3,9 @@ package com.arthurlcy0x1.quantizedinformatics.blocks;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
-import net.minecraft.block.material.Material;
+import com.arthurlcy0x1.quantizedinformatics.PacketHandler;
+import com.arthurlcy0x1.quantizedinformatics.PacketHandler.DataCont;
+
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -18,12 +20,46 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.AbstractFurnaceTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.IIntArray;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 
 public class CTEBlock extends BaseBlock {
 
-	public static abstract class CTECont extends Container {
+	public static class CommCont extends CTECont implements DataCont {
+
+		private final IIntArray data;
+
+		protected CommCont(ContainerType<? extends CTECont> type, int id, PlayerInventory inv, IInventory ent, int h,
+				IIntArray arr) {
+			super(type, id, inv, ent, h);
+			trackIntArray(data = arr);
+		}
+
+		@Override
+		public IIntArray getData() {
+			return data;
+		}
+
+	}
+
+	public static abstract class CommScr<T extends CommCont> extends CTEScr<T> {
+
+		public CommScr(T cont, PlayerInventory inv, ITextComponent text, int h) {
+			super(cont, inv, text, h);
+		}
+
+		public final int get(int index) {
+			return container.getData().get(index);
+		}
+
+		public final void send(int index, int value) {
+			PacketHandler.send(new PacketHandler.IntMsg(container.windowId, index, value));
+		}
+
+	}
+
+	public static class CTECont extends Container {
 
 		public static class CondSlot extends Slot {
 
@@ -93,7 +129,7 @@ public class CTEBlock extends BaseBlock {
 					|| Container.areItemsAndTagsEqual(s, is) && s.getCount() < s.getMaxStackSize();
 		}
 
-		protected static boolean isFuel(ItemStack is) {
+		public static boolean isFuel(ItemStack is) {
 			return AbstractFurnaceTileEntity.isFuel(is);
 		}
 
@@ -184,10 +220,14 @@ public class CTEBlock extends BaseBlock {
 			renderHoveredToolTip(x, y);
 		}
 
+		protected void cstr(String str, int y) {
+			font.drawString(str, xSize / 2 - font.getStringWidth(str), y, COLOR);
+		}
+
 		@Override
 		protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 			String s = title.getFormattedText();
-			font.drawString(s, xSize / 2 - font.getStringWidth(s) / 2, 6.0F, COLOR);
+			cstr(s, 6);
 			font.drawString(playerInventory.getDisplayName().getFormattedText(), 8.0F, ySize - 96 + 2, COLOR);
 		}
 
@@ -300,8 +340,8 @@ public class CTEBlock extends BaseBlock {
 
 	}
 
-	public CTEBlock(STE sup) {
-		super(construct(Material.ROCK).addImpls(sup, HOR));
+	public CTEBlock(BlockProp bb, STE sup) {
+		super(construct(bb).addImpls(sup, HOR));
 	}
 
 }

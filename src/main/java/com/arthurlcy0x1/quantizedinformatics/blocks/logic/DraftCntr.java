@@ -1,15 +1,15 @@
 package com.arthurlcy0x1.quantizedinformatics.blocks.logic;
 
-import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.CNUM;
-import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.C_FLOAT;
-import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.C_HIGH;
-import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.C_LOW;
-import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.SC_ERR;
-import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.SC_FLOAT;
-import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.S_FLOAT;
-import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.S_HIGH;
-import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.S_LOW;
-import static com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.S_MASK;
+import static com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.CNUM;
+import static com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.C_FLOAT;
+import static com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.C_HIGH;
+import static com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.C_LOW;
+import static com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.SC_ERR;
+import static com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.SC_FLOAT;
+import static com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.S_FLOAT;
+import static com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.S_HIGH;
+import static com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.S_LOW;
+import static com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.S_MASK;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,10 +20,10 @@ import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock.CTEScr;
-import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftCont;
-import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftTE;
-import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.ISignalManager;
-import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.MsgWriter;
+import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.DraftCont;
+import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.DraftTE;
+import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.ISignalManager;
+import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.MsgWriter;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.Minecraft;

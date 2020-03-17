@@ -3,12 +3,12 @@ package com.arthurlcy0x1.quantizedinformatics.blocks.logic;
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
 import com.arthurlcy0x1.quantizedinformatics.blocks.BaseBlock;
-import com.arthurlcy0x1.quantizedinformatics.blocks.WireConnect.DraftIO;
+import com.arthurlcy0x1.quantizedinformatics.blocks.BlockProp;
 import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DIOBlock.DIOCont;
 import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DIOBlock.DTETerm;
+import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.DraftIO;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -82,7 +82,7 @@ public class DraftLnr extends BaseBlock implements DraftIO {
 	private static final EnumProperty<Mode> PROP = EnumProperty.create("mode", Mode.class, Mode.values());
 
 	public DraftLnr() {
-		super(construct(Material.ROCK).addImpls((STE) TE::new, (IState) (b) -> b.add(PROP),
+		super(construct(BlockProp.M_DRAFT).addImpls((STE) TE::new, (IState) (b) -> b.add(PROP),
 				(ILight) b -> b.get(PROP).light));
 	}
 
