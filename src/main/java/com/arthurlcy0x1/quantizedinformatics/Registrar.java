@@ -37,6 +37,7 @@ import com.arthurlcy0x1.quantizedinformatics.items.DraftGateItem;
 import com.arthurlcy0x1.quantizedinformatics.items.LogicDraft;
 import com.arthurlcy0x1.quantizedinformatics.items.MaxwellItem;
 import com.arthurlcy0x1.quantizedinformatics.items.PrepChip;
+import com.arthurlcy0x1.quantizedinformatics.items.SoulItem;
 import com.arthurlcy0x1.quantizedinformatics.recipe.C3DRecipe;
 import com.arthurlcy0x1.quantizedinformatics.recipe.ChipOxiRec;
 import com.arthurlcy0x1.quantizedinformatics.recipe.ChipRedRec;
@@ -125,10 +126,6 @@ public class Registrar extends ItemGroup {
 	public static final Item IE_DARK = generate("elem_dark", 64);
 	public static final Item IE_SOUL = generate("elem_soul", 64);
 	public static final Item IE_SPACE = generate("elem_space", 64);
-	public static final Item ID_N = generate("gate_dope_n", 64);
-	public static final Item ID_P = generate("gate_dope_p", 64);
-	public static final Item ID_CAP = generate("gate_cap", 64);
-	public static final Item ID_WIRE = generate("gate_wire", 64);
 	public static final Item IA_RECIPE = generate("auto_recipe", 1, AutoRecipe::new);
 	public static final Item IC_PREP = generate("prep_chip", 1, PrepChip::new);
 	public static final Item I_ALU = generate("alu", 1, ALUItem::new);
@@ -138,6 +135,13 @@ public class Registrar extends ItemGroup {
 	public static final Item IMW_MAGN = generate("maxwell_wrap_magnetic", 1, MaxwellItem::new);
 	public static final Item IMU_ATK = generate("maxwell_attack", 1, MaxwellItem::new);
 	public static final Item IMU_DEF = generate("maxwell_defense", 1, MaxwellItem::new);
+	public static final Item IS_TRAP = generate("soul_trap", 1, SoulItem.SoulTrap::new);
+	public static final Item IS_COLL = generate("soul_collector", 1, SoulItem.SoulCollector::new);
+
+	public static final Item ID_N = generate("gate_dope_n", 64);
+	public static final Item ID_P = generate("gate_dope_p", 64);
+	public static final Item ID_CAP = generate("gate_cap", 64);
+	public static final Item ID_WIRE = generate("gate_wire", 64);
 
 	// draft related
 	public static final Item IDR_EMPTY = generate("gate_red_empty", 64);

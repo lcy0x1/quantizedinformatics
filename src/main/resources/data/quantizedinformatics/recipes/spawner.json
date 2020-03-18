@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "010",
+        "121",
+        "010"
+    ],
+    "key": {
+        "0": {
+            "item": "quantizedinformatics:elem_soul"
+        },
+        "1": {
+            "item": "iron_bars"
+        },
+        "2": {
+            "item": "spawner"
+        }
+    },
+    "result": {
+        "item": "spawner",
+        "count": 2
+    }
+}
