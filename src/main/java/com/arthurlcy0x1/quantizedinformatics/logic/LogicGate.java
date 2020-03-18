@@ -36,7 +36,7 @@ public abstract class LogicGate {
 
 	public static final class PreALU extends CompoundLogicGate {
 
-		public static final int ADD = 16, MINUS = 17;
+		public static final int ADD = 16, MINUS = 17, SHIFT = 18;
 
 		public static boolean logicTest(PreALU gate) {
 			int pass = 0;
@@ -75,16 +75,23 @@ public abstract class LogicGate {
 			return true;
 		}
 
-		public static boolean passTest(PreALU gate, int f, boolean cin, boolean m, int testID) {
+		public static boolean passTest(PreALU gate, int f, boolean cin, int testID) {
 			int n = gate.Nn;
 			for (int i = 0; i < 1 << n; i++)
 				for (int j = 0; j < 1 << n; j++)
-					if (testCase(i, j, testID) != gate.compute(i, j, f, cin, m))
-						return false;
+					for (int m = 0; m < 1; m++)
+						if ((testCase(testID, i, j, m) & 1 << n - 1) != gate.compute(i, j, f, cin, m == 1))
+							return false;
 			return true;
 		}
 
-		private static int testCase(int testID, int a, int b) {
+		private static int testCase(int testID, int a, int b, int m) {
+			if (testID == ADD)
+				return a + b + m;
+			if (testID == MINUS)
+				return a - b - 1 + m;
+			if (testID == SHIFT)
+				return a * 2 + m;
 			return 0;// TODO add test case for ALU
 		}
 

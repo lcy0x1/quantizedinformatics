@@ -1,4 +1,5 @@
 {
+
     "quantizedinformatics:container.oxidation_furnace": "Oxidation Furnace",
     "quantizedinformatics:container.reduction_furnace": "Reduction Furnace",
     "quantizedinformatics:container.draft_gate": "Chip Design Gate Container",
@@ -30,6 +31,16 @@
     "quantizedinformatics:tooltip.result": "Result:",
     "quantizedinformatics:tooltip.max": "Maximum Target Item Count:",
     "quantizedinformatics:tooltip.infinity": "infinity",
+    "quantizedinformatics:tooltip.level": "Lv.",
+    "quantizedinformatics:tooltip.prep_chip.proc=1": "photoresist applied",
+    "quantizedinformatics:tooltip.prep_chip.proc=2": "masked",
+    "quantizedinformatics:tooltip.prep_chip.proc=3": "photoresist removed",
+    "quantizedinformatics:tooltip.prep_chip.stat=0": "p-body doped",
+    "quantizedinformatics:tooltip.prep_chip.stat=1": "n-body doped",
+    "quantizedinformatics:tooltip.prep_chip.stat=2": "p-well doped",
+    "quantizedinformatics:tooltip.prep_chip.stat=3": "n-well doped",
+    "quantizedinformatics:tooltip.prep_chip.stat=4": "gate metalized",
+    "quantizedinformatics:tooltip.prep_chip.stat=5": "wire metalized",
 
     "block.quantizedinformatics.quantum_ore": "Quantum Ore",
     "block.quantizedinformatics.quantum_fog": "Quantum Fog",
@@ -50,6 +61,8 @@
     "block.quantizedinformatics.pipe_core": "Item Pipe Controller",
     "block.quantizedinformatics.pipe_sub_body": "Item Pipe - Secondary",
     "block.quantizedinformatics.pipe_sub_head": "Item Pipe Head - Secondary",
+    "block.quantizedinformatics.ent_attack": "Entity Machine - Attacker",
+    "block.quantizedinformatics.ent_repel": "Entity Machine - Repeller",
 
     "item.quantizedinformatics.elem_b": "B (Boron) - Chemical",
     "item.quantizedinformatics.elem_p": "P (Phosphorous) - Chemical",
@@ -57,8 +70,18 @@
     "item.quantizedinformatics.elem_po": "P2O5 (Phosphorous Oxide) - Chemical",
     "item.quantizedinformatics.elem_si": "Si (Silicon) - Chemical",
     "item.quantizedinformatics.elem_feo": "Fe2O3 (Iron(II) Oxide) - Chemical",
+    "item.quantizedinformatics.elem_dark": "Dark - Mystical Element",
+    "item.quantizedinformatics.elem_soul": "Soul - Mystical Element",
+    "item.quantizedinformatics.elem_space": "Space - Mystical Element",
     "item.quantizedinformatics.auto_recipe": "Automatic Crafting Recipe",
+    "item.quantizedinformatics.prep_chip": "In-Progress Chip",
     "item.quantizedinformatics.alu": "Arithmtic Logic Unit",
+    "item.quantizedinformatics.maxwell_electric": "Maxwell Oscillation Unit - Electric Core",
+    "item.quantizedinformatics.maxwell_magnetic": "Maxwell Oscillation Unit - Magnetic Core",
+    "item.quantizedinformatics.maxwell_wrap_electric": "Maxwell Oscillation Unit - Electric Unit",
+    "item.quantizedinformatics.maxwell_wrap_magnetic": "Maxwell Oscillation Unit - Magnetic Unit",
+    "item.quantizedinformatics.maxwell_attack": "Maxwell Oscillation Unit - Attack Unit",
+    "item.quantizedinformatics.maxwell_defense": "Maxwell Oscillation Unit - Defense Unit",
 
     "item.quantizedinformatics.gate_wire": "Wire - CMOS Diagram",
     "item.quantizedinformatics.gate_cap": "Metal Cap - CMOS Diagram",
@@ -139,5 +162,7 @@
     "item.quantizedinformatics.gate_imp_or_6": "6-in OR gate - Implemented Diagram",
     "item.quantizedinformatics.gate_red_xor": "XOR gate - Redstone Diagram",
     "item.quantizedinformatics.gate_mos_xor": "XOR gate - CMOS Diagram",
-    "item.quantizedinformatics.gate_imp_xor": "XOR gate - Implemented Diagram"
+    "item.quantizedinformatics.gate_imp_xor": "XOR gate - Implemented Diagram",
+
+    "itemGroup.quantizedinformatics": "Quantized Informatics"
 }

@@ -221,7 +221,7 @@ public class CTEBlock extends BaseBlock {
 		}
 
 		protected void cstr(String str, int y) {
-			font.drawString(str, xSize / 2 - font.getStringWidth(str), y, COLOR);
+			font.drawString(str, xSize / 2 - font.getStringWidth(str) / 2, y, COLOR);
 		}
 
 		@Override

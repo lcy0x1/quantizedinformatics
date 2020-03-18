@@ -41,7 +41,7 @@ public class AutoRecipe extends Item {
 		ItemStack res = ItemStack.read(tag);
 		list.add(Translator.getTooltip("ingredient"));
 		for (ItemStack i : lis)
-			list.add(i.getDisplayName());
+			list.add(i.getDisplayName().shallowCopy().appendText(" x" + i.getCount()));
 		list.add(Translator.getTooltip("result"));
 		list.add(res.getDisplayName());
 	}

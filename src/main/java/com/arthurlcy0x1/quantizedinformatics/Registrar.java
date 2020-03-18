@@ -11,6 +11,8 @@ import org.apache.logging.log4j.LogManager;
 import com.arthurlcy0x1.quantizedinformatics.blocks.BlockProp;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.AutoCraft;
+import com.arthurlcy0x1.quantizedinformatics.blocks.auto.EntAttack;
+import com.arthurlcy0x1.quantizedinformatics.blocks.auto.EntRepel;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.PipeCore;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.PipeHead;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.RecMaker;
@@ -33,7 +35,12 @@ import com.arthurlcy0x1.quantizedinformatics.items.ALUItem;
 import com.arthurlcy0x1.quantizedinformatics.items.AutoRecipe;
 import com.arthurlcy0x1.quantizedinformatics.items.DraftGateItem;
 import com.arthurlcy0x1.quantizedinformatics.items.LogicDraft;
+import com.arthurlcy0x1.quantizedinformatics.items.MaxwellItem;
+import com.arthurlcy0x1.quantizedinformatics.items.PrepChip;
 import com.arthurlcy0x1.quantizedinformatics.recipe.C3DRecipe;
+import com.arthurlcy0x1.quantizedinformatics.recipe.ChipOxiRec;
+import com.arthurlcy0x1.quantizedinformatics.recipe.ChipRedRec;
+import com.arthurlcy0x1.quantizedinformatics.recipe.MaxwellRecipe;
 import com.arthurlcy0x1.quantizedinformatics.recipe.OxiRecipe;
 import com.arthurlcy0x1.quantizedinformatics.recipe.RedRecipe;
 
@@ -78,6 +85,8 @@ public class Registrar extends ItemGroup {
 	public static final Block BAP_CORE = addName(new PipeCore(), "pipe_core");
 	public static final Block BAP_SUB = addName(new Wire(WireConnect.SPIPE), "pipe_sub_body");
 	public static final Block BAP_SHEAD = addName(new SPipeHead(), "pipe_sub_head");
+	public static final Block BAME_ATK = addName(new EntAttack(), "ent_attack");
+	public static final Block BAME_REP = addName(new EntRepel(), "ent_repel");
 
 	public static final List<Block> BDS = Arrays.asList(BD_CNTR, BD_GATE, BD_IN, BD_OUT, BD_LNR);
 
@@ -103,6 +112,8 @@ public class Registrar extends ItemGroup {
 	public static final Item IBAP_CORE = convert(BAP_CORE);
 	public static final Item IBAP_SUB = convert(BAP_SUB);
 	public static final Item IBAP_SHEAD = convert(BAP_SHEAD);
+	public static final Item IBME_ATK = convert(BAME_ATK);
+	public static final Item IBME_REP = convert(BAME_REP);
 
 	// items
 	public static final Item IE_P = generate("elem_p", 64);
@@ -111,12 +122,22 @@ public class Registrar extends ItemGroup {
 	public static final Item IE_BO = generate("elem_bo", 64);
 	public static final Item IE_SI = generate("elem_si", 64);
 	public static final Item IE_FEO = generate("elem_feo", 64);
+	public static final Item IE_DARK = generate("elem_dark", 64);
+	public static final Item IE_SOUL = generate("elem_soul", 64);
+	public static final Item IE_SPACE = generate("elem_space", 64);
 	public static final Item ID_N = generate("gate_dope_n", 64);
 	public static final Item ID_P = generate("gate_dope_p", 64);
 	public static final Item ID_CAP = generate("gate_cap", 64);
 	public static final Item ID_WIRE = generate("gate_wire", 64);
 	public static final Item IA_RECIPE = generate("auto_recipe", 1, AutoRecipe::new);
+	public static final Item IC_PREP = generate("prep_chip", 1, PrepChip::new);
 	public static final Item I_ALU = generate("alu", 1, ALUItem::new);
+	public static final Item IM_ELEC = generate("maxwell_electric", 1, MaxwellItem::new);
+	public static final Item IM_MAGN = generate("maxwell_magnetic", 1, MaxwellItem::new);
+	public static final Item IMW_ELEC = generate("maxwell_wrap_electric", 1, MaxwellItem::new);
+	public static final Item IMW_MAGN = generate("maxwell_wrap_magnetic", 1, MaxwellItem::new);
+	public static final Item IMU_ATK = generate("maxwell_attack", 1, MaxwellItem::new);
+	public static final Item IMU_DEF = generate("maxwell_defense", 1, MaxwellItem::new);
 
 	// draft related
 	public static final Item IDR_EMPTY = generate("gate_red_empty", 64);
@@ -159,6 +180,8 @@ public class Registrar extends ItemGroup {
 	public static final ContainerType<RecMaker.Cont> CTA_REC = getCT(RecMaker.Cont::new, "recipe_maker_c");
 	public static final ContainerType<PipeHead.Cont> CTAP_HEAD = getCT(PipeHead.Cont::new, "pipe_head_c");
 	public static final ContainerType<PipeCore.Cont> CTAP_CORE = getCT(PipeCore.Cont::new, "pipe_core_c");
+	public static final ContainerType<EntAttack.Cont> CTME_ATK = getCT(EntAttack.Cont::new, "ent_attack_c");
+	public static final ContainerType<EntRepel.Cont> CTME_REP = getCT(EntRepel.Cont::new, "ent_repel_c");
 
 	public static final TileEntityType<OxiFn.TE> TET_OXIFN = getTET(OxiFn.TE::new, B_OXIFN, "oxidation_furnace_te");
 	public static final TileEntityType<RedFn.TE> TET_REDFN = getTET(RedFn.TE::new, B_REDFN, "reduction_furnace_te");
@@ -171,6 +194,8 @@ public class Registrar extends ItemGroup {
 	public static final TileEntityType<RecMaker.TE> TETA_REC = getTET(RecMaker.TE::new, BA_REC, "recipe_maker_te");
 	public static final TileEntityType<PipeHead.TE> TETAP_HEAD = getTET(PipeHead.TE::new, BAP_HEAD, "pipe_head_te");
 	public static final TileEntityType<PipeCore.TE> TETAP_CORE = getTET(PipeCore.TE::new, BAP_CORE, "pipe_core_te");
+	public static final TileEntityType<EntAttack.TE> TETME_ATK = getTET(EntAttack.TE::new, BAME_ATK, "ent_attack_te");
+	public static final TileEntityType<EntRepel.TE> TETME_REP = getTET(EntRepel.TE::new, BAME_REP, "ent_repel_te");
 
 	public static final IRecipeType<OxiRecipe> RT_OXI = IRecipeType.register("quantizedinformatics:oxidation");
 	public static final IRecipeType<RedRecipe> RT_RED = IRecipeType.register("quantizedinformatics:reduction");
@@ -178,6 +203,9 @@ public class Registrar extends ItemGroup {
 	public static final IRecipeSerializer<?> RS_OXI = new OxiRecipe.Serializer().setRegistryName(MODID, "oxidation");
 	public static final IRecipeSerializer<?> RS_RED = new RedRecipe.Serializer().setRegistryName(MODID, "reduction");
 	public static final IRecipeSerializer<?> RS_C3D = new C3DRecipe.Serializer().setRegistryName(MODID, "craft_3d");
+	public static final IRecipeSerializer<?> RS_MAX = new MaxwellRecipe.Serializer().setRegistryName(MODID, "maxwell");
+	public static final IRecipeSerializer<?> RSC_OXI = new ChipOxiRec.Serializer().setRegistryName(MODID, "chip_oxi");
+	public static final IRecipeSerializer<?> RSC_RED = new ChipRedRec.Serializer().setRegistryName(MODID, "chip_red");
 
 	static {
 		ScreenManager.registerFactory(CT_OXIFN, OxiFn.Scr::new);
@@ -191,13 +219,15 @@ public class Registrar extends ItemGroup {
 		ScreenManager.registerFactory(CTAP_CORE, PipeCore.Scr::new);
 		ScreenManager.registerFactory(CTA_REC, RecMaker.Scr::new);
 		ScreenManager.registerFactory(CTA_CRAFT, AutoCraft.Scr::new);
+		ScreenManager.registerFactory(CTME_ATK, EntAttack.Scr::new);
+		ScreenManager.registerFactory(CTME_REP, EntRepel.Scr::new);
 	}
 
 	public static final ContainerType<?>[] CTS = { CT_OXIFN, CT_REDFN, CTD_CNTR, CTD_GATE, CTD_IN, CTD_OUT, CTD_LNR,
-			CTA_CRAFT, CTA_REC, CTAP_HEAD, CTAP_CORE };
+			CTA_CRAFT, CTA_REC, CTAP_HEAD, CTAP_CORE, CTME_ATK, CTME_REP };
 	public static final TileEntityType<?>[] TETS = { TET_OXIFN, TET_REDFN, TETD_CNTR, TETD_GATE, TETD_IN, TETD_OUT,
-			TETD_LNR, TETA_CRAFT, TETA_REC, TETAP_HEAD, TETAP_CORE };
-	public static final IRecipeSerializer<?>[] RSS = { RS_OXI, RS_RED, RS_C3D };
+			TETD_LNR, TETA_CRAFT, TETA_REC, TETAP_HEAD, TETAP_CORE, TETME_ATK, TETME_REP };
+	public static final IRecipeSerializer<?>[] RSS = { RS_OXI, RS_RED, RS_C3D, RS_MAX };
 
 	@SuppressWarnings("unchecked")
 	protected static <T extends IForgeRegistryEntry<T>> void getList(RegistryEvent.Register<T> event, Class<T> cls) {
