@@ -12,6 +12,10 @@ import net.minecraft.world.World;
 
 public class MaxwellItem extends Item {
 
+	public static int getLevel(ItemStack is) {
+		return is.getOrCreateTag().getInt("maxwell_level");
+	}
+
 	public MaxwellItem(Properties properties) {
 		super(properties);
 	}
@@ -21,10 +25,6 @@ public class MaxwellItem extends Item {
 		int level = is.getOrCreateTag().getInt("maxwell_level");
 		list.add(Translator.getTooltip("level").shallowCopy().appendText("" + level));
 
-	}
-	
-	public static int getLevel(ItemStack is) {
-		return is.getOrCreateTag().getInt("maxwell_level");
 	}
 
 }

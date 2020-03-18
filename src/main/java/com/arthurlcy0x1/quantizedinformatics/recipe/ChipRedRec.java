@@ -10,6 +10,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 public class ChipRedRec extends RedRecipe {
@@ -56,7 +57,8 @@ public class ChipRedRec extends RedRecipe {
 		return true;
 	}
 
-	public boolean matches(RedRecipe.Inv inv) {
+	@Override
+	public boolean matches(RedRecipe.Inv inv, World worldIn) {
 		ItemStack im = inv.getStackInSlot(inv.getSlots()[RedRecipe.Inv.ING_MAIN]);
 		ItemStack is = inv.getStackInSlot(inv.getSlots()[RedRecipe.Inv.ING_SIDE]);
 		ItemStack me = inv.getStackInSlot(inv.getSlots()[RedRecipe.Inv.MEDIUM]);

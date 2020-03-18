@@ -227,7 +227,7 @@ public class Registrar extends ItemGroup {
 			CTA_CRAFT, CTA_REC, CTAP_HEAD, CTAP_CORE, CTME_ATK, CTME_REP };
 	public static final TileEntityType<?>[] TETS = { TET_OXIFN, TET_REDFN, TETD_CNTR, TETD_GATE, TETD_IN, TETD_OUT,
 			TETD_LNR, TETA_CRAFT, TETA_REC, TETAP_HEAD, TETAP_CORE, TETME_ATK, TETME_REP };
-	public static final IRecipeSerializer<?>[] RSS = { RS_OXI, RS_RED, RS_C3D, RS_MAX };
+	public static final IRecipeSerializer<?>[] RSS = { RS_OXI, RS_RED, RS_C3D, RS_MAX, RSC_OXI, RSC_RED };
 
 	@SuppressWarnings("unchecked")
 	protected static <T extends IForgeRegistryEntry<T>> void getList(RegistryEvent.Register<T> event, Class<T> cls) {
