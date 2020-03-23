@@ -79,6 +79,8 @@
     "item.quantizedinformatics.alu": "Arithmtic Logic Unit",
     "item.quantizedinformatics.soul_trap": "Soul Trap",
     "item.quantizedinformatics.soul_collector": "Soul Collector",
+    "item.quantizedinformatics.weapon_tnt": "TNT Cannon",
+    "item.quantizedinformatics.weapon_potion": "Potion Cannon",
     "item.quantizedinformatics.maxwell_electric": "Maxwell Oscillation Unit - Electric Core",
     "item.quantizedinformatics.maxwell_magnetic": "Maxwell Oscillation Unit - Magnetic Core",
     "item.quantizedinformatics.maxwell_wrap_electric": "Maxwell Oscillation Unit - Electric Unit",

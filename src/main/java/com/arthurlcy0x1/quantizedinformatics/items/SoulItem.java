@@ -26,6 +26,40 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public abstract class SoulItem extends Item {
 
+	public static class SoulCollector extends SoulItem {
+
+		public SoulCollector(Properties p) {
+			super(p);
+		}
+
+		@Override
+		public void addInformation(ItemStack is, World w, List<ITextComponent> list, ITooltipFlag b) {
+			CompoundNBT tag = is.getOrCreateChildTag("souls");
+			int total = is.getOrCreateTag().getInt("total");
+			list.add(Translator.getTooltip("total_soul").shallowCopy().appendText("" + total));
+			for (String key : tag.keySet()) {
+				int count = tag.getInt(key);
+				EntityType<?> et = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(key));
+				list.add(et.getName().shallowCopy().appendText(" x" + count));
+			}
+		}
+
+		@Override
+		public int getTotal(ItemStack is) {
+			return is.getOrCreateTag().getInt("total");
+		}
+
+		@Override
+		public void killEntity(ItemStack is, LivingEntity target) {
+			CompoundNBT tag = is.getOrCreateChildTag("souls");
+			int total = is.getOrCreateTag().getInt("total");
+			String str = target.getType().getRegistryName().toString();
+			is.getOrCreateTag().putInt("total", total + 1);
+			tag.putInt(str, tag.getInt(str) + 1);
+		}
+
+	}
+
 	public static class SoulTrap extends SoulItem {
 
 		public SoulTrap(Properties p) {
@@ -39,13 +73,12 @@ public abstract class SoulItem extends Item {
 				list.add(ForgeRegistries.ENTITIES.getValue(new ResourceLocation(tag.getString("soul"))).getName());
 		}
 
-		private EntityType<?> getType(ItemStack is) {
-			CompoundNBT tag = is.getOrCreateTag();
-			if (tag.contains("soul") && is.getDamage() == 0)
-				return ForgeRegistries.ENTITIES.getValue(new ResourceLocation(tag.getString("soul")));
-			return null;
+		@Override
+		public int getTotal(ItemStack is) {
+			return 64 - is.getDamage();
 		}
 
+		@Override
 		public void killEntity(ItemStack is, LivingEntity target) {
 			CompoundNBT tag = is.getOrCreateTag();
 			String str = target.getType().getRegistryName().toString();
@@ -56,6 +89,7 @@ public abstract class SoulItem extends Item {
 				is.setDamage(is.getDamage() - 1);
 		}
 
+		@Override
 		public ActionResultType onItemUse(ItemUseContext context) {
 			World world = context.getWorld();
 			ItemStack is = context.getItem();
@@ -78,42 +112,11 @@ public abstract class SoulItem extends Item {
 			return ActionResultType.SUCCESS;
 		}
 
-		@Override
-		public int getTotal(ItemStack is) {
-			return 64 - is.getDamage();
-		}
-
-	}
-
-	public static class SoulCollector extends SoulItem {
-
-		public SoulCollector(Properties p) {
-			super(p);
-		}
-
-		@Override
-		public void addInformation(ItemStack is, World w, List<ITextComponent> list, ITooltipFlag b) {
-			CompoundNBT tag = is.getOrCreateChildTag("souls");
-			int total = is.getOrCreateTag().getInt("total");
-			list.add(Translator.getTooltip("total_soul").shallowCopy().appendText("" + total));
-			for (String key : tag.keySet()) {
-				int count = tag.getInt(key);
-				EntityType<?> et = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(key));
-				list.add(et.getName().shallowCopy().appendText(" x" + count));
-			}
-		}
-
-		public void killEntity(ItemStack is, LivingEntity target) {
-			CompoundNBT tag = is.getOrCreateChildTag("souls");
-			int total = is.getOrCreateTag().getInt("total");
-			String str = target.getType().getRegistryName().toString();
-			is.getOrCreateTag().putInt("total", total + 1);
-			tag.putInt(str, tag.getInt(str) + 1);
-		}
-
-		@Override
-		public int getTotal(ItemStack is) {
-			return is.getOrCreateTag().getInt("total");
+		private EntityType<?> getType(ItemStack is) {
+			CompoundNBT tag = is.getOrCreateTag();
+			if (tag.contains("soul") && is.getDamage() == 0)
+				return ForgeRegistries.ENTITIES.getValue(new ResourceLocation(tag.getString("soul")));
+			return null;
 		}
 
 	}
@@ -122,6 +125,9 @@ public abstract class SoulItem extends Item {
 		super(properties);
 	}
 
+	public abstract int getTotal(ItemStack is);
+
+	@Override
 	public boolean hitEntity(ItemStack is, LivingEntity target, LivingEntity attacker) {
 		if (target.getHealth() > 0)
 			return false;
@@ -129,7 +135,5 @@ public abstract class SoulItem extends Item {
 	}
 
 	public abstract void killEntity(ItemStack is, LivingEntity target);
-
-	public abstract int getTotal(ItemStack is);
 
 }

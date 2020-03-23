@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -40,6 +41,11 @@ public class QuantizedInformatics {
 		@SubscribeEvent
 		public static void regContainerType(final RegistryEvent.Register<ContainerType<?>> event) {
 			event.getRegistry().registerAll(Registrar.CTS);
+		}
+
+		@SubscribeEvent
+		public static void regEntityType(final RegistryEvent.Register<EntityType<?>> event) {
+			event.getRegistry().registerAll(Registrar.ETS);
 		}
 
 		@SubscribeEvent

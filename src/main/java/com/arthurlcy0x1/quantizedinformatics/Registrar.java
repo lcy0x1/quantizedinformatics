@@ -34,6 +34,8 @@ import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftOut;
 import com.arthurlcy0x1.quantizedinformatics.items.ALUItem;
 import com.arthurlcy0x1.quantizedinformatics.items.AutoRecipe;
 import com.arthurlcy0x1.quantizedinformatics.items.DraftGateItem;
+import com.arthurlcy0x1.quantizedinformatics.items.EntityCannon;
+import com.arthurlcy0x1.quantizedinformatics.items.EntityCannon.SmartTNTRender;
 import com.arthurlcy0x1.quantizedinformatics.items.LogicDraft;
 import com.arthurlcy0x1.quantizedinformatics.items.MaxwellItem;
 import com.arthurlcy0x1.quantizedinformatics.items.PrepChip;
@@ -47,6 +49,9 @@ import com.arthurlcy0x1.quantizedinformatics.recipe.RedRecipe;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
@@ -58,6 +63,7 @@ import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
@@ -135,8 +141,11 @@ public class Registrar extends ItemGroup {
 	public static final Item IMW_MAGN = generate("maxwell_wrap_magnetic", 1, MaxwellItem::new);
 	public static final Item IMU_ATK = generate("maxwell_attack", 1, MaxwellItem::new);
 	public static final Item IMU_DEF = generate("maxwell_defense", 1, MaxwellItem::new);
+	public static final Item IMU_TNT = generate("maxwell_tnt", 1, MaxwellItem::new);
 	public static final Item IS_TRAP = generate("soul_trap", 1, SoulItem.SoulTrap::new);
 	public static final Item IS_COLL = generate("soul_collector", 1, SoulItem.SoulCollector::new);
+	public static final Item IW_TNT = generate("weapon_tnt", 1, EntityCannon.TNTEC::new);
+	public static final Item IW_POTION = generate("weapon_potion", 1, EntityCannon.PotionEC::new);
 
 	public static final Item ID_N = generate("gate_dope_n", 64);
 	public static final Item ID_P = generate("gate_dope_p", 64);
@@ -201,6 +210,8 @@ public class Registrar extends ItemGroup {
 	public static final TileEntityType<EntAttack.TE> TETME_ATK = getTET(EntAttack.TE::new, BAME_ATK, "ent_attack_te");
 	public static final TileEntityType<EntRepel.TE> TETME_REP = getTET(EntRepel.TE::new, BAME_REP, "ent_repel_te");
 
+	public static final EntityType<EntityCannon.SmartTNT> ET_STNT = getET("smart_tnt");
+
 	public static final IRecipeType<OxiRecipe> RT_OXI = IRecipeType.register("quantizedinformatics:oxidation");
 	public static final IRecipeType<RedRecipe> RT_RED = IRecipeType.register("quantizedinformatics:reduction");
 	public static final IRecipeType<C3DRecipe> RT_C3D = IRecipeType.register("quantizedinformatics:craft_3d");
@@ -225,12 +236,18 @@ public class Registrar extends ItemGroup {
 		ScreenManager.registerFactory(CTA_CRAFT, AutoCraft.Scr::new);
 		ScreenManager.registerFactory(CTME_ATK, EntAttack.Scr::new);
 		ScreenManager.registerFactory(CTME_REP, EntRepel.Scr::new);
+
+		RenderingRegistry.registerEntityRenderingHandler(ET_STNT, SmartTNTRender::new);
 	}
 
 	public static final ContainerType<?>[] CTS = { CT_OXIFN, CT_REDFN, CTD_CNTR, CTD_GATE, CTD_IN, CTD_OUT, CTD_LNR,
 			CTA_CRAFT, CTA_REC, CTAP_HEAD, CTAP_CORE, CTME_ATK, CTME_REP };
+
 	public static final TileEntityType<?>[] TETS = { TET_OXIFN, TET_REDFN, TETD_CNTR, TETD_GATE, TETD_IN, TETD_OUT,
 			TETD_LNR, TETA_CRAFT, TETA_REC, TETAP_HEAD, TETAP_CORE, TETME_ATK, TETME_REP };
+
+	public static final EntityType<?>[] ETS = { ET_STNT };
+
 	public static final IRecipeSerializer<?>[] RSS = { RS_OXI, RS_RED, RS_C3D, RS_MAX, RSC_OXI, RSC_RED };
 
 	@SuppressWarnings("unchecked")
@@ -285,6 +302,12 @@ public class Registrar extends ItemGroup {
 
 	private static <T extends Container> ContainerType<T> getCT(ContainerType.IFactory<T> fact, String str) {
 		ContainerType<T> ans = new ContainerType<>(fact);
+		ans.setRegistryName(MODID, str);
+		return ans;
+	}
+
+	private static <T extends Entity> EntityType<T> getET(String str) {
+		EntityType<T> ans = EntityType.Builder.<T>create(EntityClassification.MISC).build(str);
 		ans.setRegistryName(MODID, str);
 		return ans;
 	}
