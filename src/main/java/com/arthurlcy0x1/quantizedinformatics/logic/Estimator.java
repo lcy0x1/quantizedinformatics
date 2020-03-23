@@ -203,19 +203,22 @@ public class Estimator {
 	}
 
 	public EstiResult getIdeal() {
-		double mint = x / v + ERR;
-		SolResult r0 = solve(this::get_0, 0, mint, max, ERR);
+		double xt0 = Math.abs((Math.sqrt(v * v - 2 * g * dp.y) + v) / g);
+		double xt1 = Math.abs((-Math.sqrt(v * v - 2 * g * dp.y) + v) / g);
+		double mint = Math.max(0, Math.min(xt0, xt1) + ERR);
+		double maxt = Math.min(max, Math.max(xt0, xt1) - ERR);
+		SolResult r0 = solve(this::get_0, 0, mint, maxt, ERR);
 		SolResult r1;
 		if (r0.getType() == SolType.ZERO) {
 			double bp = r0.getVal();
 			SolResult dr0 = solve(this::get_1, 0, mint, bp, ERR);
-			SolResult dr1 = solve(this::get_1, 0, bp, max, ERR);
+			SolResult dr1 = solve(this::get_1, 0, bp, maxt, ERR);
 			if (dr0.getType() == SolType.ZERO)
 				r1 = dr0;
 			else
 				r1 = dr1;
 		} else
-			r1 = solve(this::get_1, 0, mint, max, ERR);
+			r1 = solve(this::get_1, 0, mint, maxt, ERR);
 		if (r1.getType() != SolType.ZERO)
 			return EstiType.FAIL;
 		double t0 = r1.getVal();
@@ -228,10 +231,10 @@ public class Estimator {
 		double t0 = data[1];
 		double x0 = getX0(a0, t0);
 		double y0 = getY0(a0, t0);
-		double len = dis(x0, y0);
+		double len;
 		int count = 0;
 		boolean out = false;
-		while (dis(x0, y0) > ER) {
+		while ((len = dis(x0, y0)) > ER) {
 			count++;
 			double da = x0 * getXA(a0, t0) + y0 * getYA(a0, t0);
 			double dt = x0 * getXT(a0, t0) + y0 * getYT(a0, t0);
@@ -243,13 +246,13 @@ public class Estimator {
 				t0 -= DT;
 			if (dt < 0)
 				t0 += DT;
-			if (out |= a0 < Math.PI / 2 || a0 > Math.PI / 2)
+			if (out |= a0 < -Math.PI / 2 || a0 > Math.PI / 2)
 				break;
 			if (out |= t0 < 0 || t0 > max)
 				break;
 			x0 = getX0(a0, t0);
 			y0 = getY0(a0, t0);
-			if (dis(x0, y0) - len < ERR)
+			if (Math.abs(dis(x0, y0) - len) < ERR)
 				break;
 			if (count > 100)
 				break;
@@ -270,7 +273,7 @@ public class Estimator {
 		return v * t * Math.sqrt(1 - mul * mul) - x;
 	}
 
-	private double getX0(double a, double t) {
+	public double getX0(double a, double t) {
 		double xt = dp.x + ev.x * t;
 		double zt = dp.z + ev.z * t;
 		return vk * Math.cos(a) * (1 - Math.exp(-k * t)) - Math.sqrt(xt * xt + zt * zt);
@@ -287,7 +290,7 @@ public class Estimator {
 		return Math.cos(a) * v * Math.exp(-k * t) - ext;
 	}
 
-	private double getY0(double a, double t) {
+	public double getY0(double a, double t) {
 		return -gk * t + (vk * Math.sin(a) + gk / k) * (1 - Math.exp(-k * t)) - dp.y - ev.y * t;
 	}
 

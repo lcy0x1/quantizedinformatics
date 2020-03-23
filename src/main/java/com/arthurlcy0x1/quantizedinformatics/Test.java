@@ -8,6 +8,7 @@ import javax.imageio.ImageIO;
 
 import com.arthurlcy0x1.quantizedinformatics.logic.Estimator;
 import com.arthurlcy0x1.quantizedinformatics.logic.Estimator.EstiResult;
+import com.arthurlcy0x1.quantizedinformatics.logic.Estimator.EstiType;
 import com.arthurlcy0x1.quantizedinformatics.logic.LogicDiagram;
 import com.arthurlcy0x1.quantizedinformatics.logic.LogicDiagram.GateContainer;
 import com.arthurlcy0x1.quantizedinformatics.logic.LogicDiagram.ParentDiagram;
@@ -99,12 +100,15 @@ public class Test {
 	}
 
 	public static void main(String[] args) throws IOException {
-		new Estimator(0.04, 0.02, Vec3d.ZERO, 3, 80, new Vec3d(20, 10, 0), Vec3d.ZERO).getAnswer();
+		Vec3d target = new Vec3d(63,16,0);
+		new Estimator(0.04, 0.02, Vec3d.ZERO, 3, 80, target, Vec3d.ZERO).getAnswer();
 		long t0 = System.nanoTime();
-		EstiResult er = new Estimator(0.04, 0.02, Vec3d.ZERO, 3, 80, new Vec3d(20, 100, 0), Vec3d.ZERO).getAnswer();
+		Estimator est = new Estimator(0.04, 0.02, Vec3d.ZERO, 3, 80, target, Vec3d.ZERO);
+		EstiResult er = est.getAnswer();
 		long t1 = System.nanoTime();
 		System.out.println("time: " + (t1 - t0) / 1000);
-		System.out.println(er.getVec() + ", " + er.getT());
+		System.out.println((er.getType() == EstiType.ZERO) + ", " + er.getVec() + ", " + er.getT());
+		System.out.println("deviation: "+est.getX0(er.getA(), er.getT())+", "+est.getY0(er.getA(), er.getT()));
 
 	}
 

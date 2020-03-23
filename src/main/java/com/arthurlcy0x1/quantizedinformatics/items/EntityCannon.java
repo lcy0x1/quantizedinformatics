@@ -187,6 +187,20 @@ public abstract class EntityCannon extends ShootableItem {
 			return e;
 		}
 
+		public float getZoom(PlayerEntity entity) {
+			float minf = 0.2f;
+			float maxf = 0.9f;
+			float maxt = 25f;
+			float lof = 0.2f;
+			float hif = 1f;
+
+			int dur = getUseDuration(entity.getActiveItemStack());
+			int cnt = entity.getItemInUseCount();
+			float dy = Math.abs(entity.rotationYawHead - entity.prevRotationYawHead);
+			float mult = dy > hif ? minf : dy < lof ? maxf : minf + (maxf - minf) * (dy - lof) / (hif - lof);
+			return 1f - mult * Math.min(maxt, dur - cnt) / maxt;
+		}
+
 	}
 
 	private static double getPlX(PlayerEntity pl) {
@@ -230,12 +244,12 @@ public abstract class EntityCannon extends ShootableItem {
 		Entity entity = null;
 		Vec3d vec3d = null;
 
-		for (Entity entity1 : world.getEntitiesInAABBexcluding(pl, box, e -> e instanceof LivingEntity)) {
-			AxisAlignedBB axisalignedbb = entity1.getBoundingBox().grow(entity1.getCollisionBorderSize());
-			Optional<Vec3d> optional = axisalignedbb.rayTrace(pos, end);
-			if (axisalignedbb.contains(pos)) {
+		for (Entity e : world.getEntitiesWithinAABBExcludingEntity(pl, box)) {
+			AxisAlignedBB aabb = e.getBoundingBox().grow(e.getCollisionBorderSize());
+			Optional<Vec3d> optional = aabb.rayTrace(pos, end);
+			if (aabb.contains(pos)) {
 				if (d0 >= 0.0D) {
-					entity = entity1;
+					entity = e;
 					vec3d = optional.orElse(pos);
 					d0 = 0.0D;
 				}
@@ -243,13 +257,13 @@ public abstract class EntityCannon extends ShootableItem {
 				Vec3d vec3d1 = optional.get();
 				double d1 = pos.squareDistanceTo(vec3d1);
 				if (d1 < d0 || d0 == 0.0D) {
-					if (entity1.getLowestRidingEntity() == pl.getLowestRidingEntity() && !entity1.canRiderInteract()) {
+					if (e.getLowestRidingEntity() == pl.getLowestRidingEntity() && !e.canRiderInteract()) {
 						if (d0 == 0.0D) {
-							entity = entity1;
+							entity = e;
 							vec3d = vec3d1;
 						}
 					} else {
-						entity = entity1;
+						entity = e;
 						vec3d = vec3d1;
 						d0 = d1;
 					}
@@ -291,7 +305,7 @@ public abstract class EntityCannon extends ShootableItem {
 
 	@Override
 	public int getUseDuration(ItemStack stack) {
-		return 72000;
+		return 250;
 	}
 
 	public abstract float getVelocity(int charge);
@@ -336,5 +350,9 @@ public abstract class EntityCannon extends ShootableItem {
 	}
 
 	protected abstract Entity getEntity(World w, ItemStack ammo, PlayerEntity pl, float velo);
+
+	public float getZoom(PlayerEntity entity) {
+		return 1;
+	}
 
 }
