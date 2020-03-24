@@ -1,19 +1,19 @@
 This MOD is intented to make logic circuits simpler and add flexble item automation to Minecraft. The redstone logic circuits are complicated and vulnerable to chunk load events. The hopper-dispensor item transportation system is extremely resource comsuming and complicated. The logic and item system in Quantized Informatics can help players to organize their production lines and reduce the pressure on the servers.
 
 The main aspects of the MOD includes:
-1. 3D crafting
-2. advances furnaces
-3. Logic Circuit System and Logic Gate Drafts
-4. Item Pipe System
-5. Automatic Crafting System
+- 3D crafting
+- advances furnaces
+- Logic Circuit System and Logic Gate Drafts
+- Item Pipe System
+- Automatic Crafting System
 
 TBD:  
-6. ALU and RAM
-7. Block Machines: Mover & Breaker & Placer
-8. Advanced Material: Maxwell Oscillation Unit
-9. Entity Cannon
-10. Soul Collector
-11. Entity Machines: Detector & Repeller & Puller & Killer & Healer
+- ALU and RAM
+- Block Machines: Mover & Breaker & Placer
+- Advanced Material: Maxwell Oscillation Unit
+- Entity Cannon
+- Soul Collector
+- Entity Machines: Detector & Repeller & Puller & Killer & Healer
 
 How to play this MOD:
 
