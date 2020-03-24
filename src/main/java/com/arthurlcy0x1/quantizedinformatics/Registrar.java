@@ -3,6 +3,7 @@ package com.arthurlcy0x1.quantizedinformatics;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -11,12 +12,19 @@ import org.apache.logging.log4j.LogManager;
 import com.arthurlcy0x1.quantizedinformatics.blocks.BlockProp;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.AutoCraft;
+import com.arthurlcy0x1.quantizedinformatics.blocks.auto.EntAttack;
+import com.arthurlcy0x1.quantizedinformatics.blocks.auto.EntRepel;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.PipeCore;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.PipeHead;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.RecMaker;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.SPipeHead;
 import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DIOBlock.DIOScr;
 import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DIOBlock.DIOTerm;
+import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftCntr;
+import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftGate;
+import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftIn;
+import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftLnr;
+import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftOut;
 import com.arthurlcy0x1.quantizedinformatics.blocks.other.Craft3D;
 import com.arthurlcy0x1.quantizedinformatics.blocks.other.OxiFn;
 import com.arthurlcy0x1.quantizedinformatics.blocks.other.QuantumOre;
@@ -24,32 +32,57 @@ import com.arthurlcy0x1.quantizedinformatics.blocks.other.RedFn;
 import com.arthurlcy0x1.quantizedinformatics.blocks.other.Wire;
 import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect;
 import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.DraftIO;
-import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftCntr;
-import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftGate;
-import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftIn;
-import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftLnr;
-import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftOut;
 import com.arthurlcy0x1.quantizedinformatics.items.ALUItem;
 import com.arthurlcy0x1.quantizedinformatics.items.AutoRecipe;
 import com.arthurlcy0x1.quantizedinformatics.items.DraftGateItem;
+import com.arthurlcy0x1.quantizedinformatics.items.EntityCannon.DefEC;
+import com.arthurlcy0x1.quantizedinformatics.items.EntityCannon.FogBall;
+import com.arthurlcy0x1.quantizedinformatics.items.EntityCannon.ItemPicker;
+import com.arthurlcy0x1.quantizedinformatics.items.EntityCannon.PotionEC;
+import com.arthurlcy0x1.quantizedinformatics.items.EntityCannon.SmartTNT;
+import com.arthurlcy0x1.quantizedinformatics.items.EntityCannon.SmartTNTRender;
+import com.arthurlcy0x1.quantizedinformatics.items.EntityCannon.TNTEC;
 import com.arthurlcy0x1.quantizedinformatics.items.LogicDraft;
+import com.arthurlcy0x1.quantizedinformatics.items.MaxwellItem;
+import com.arthurlcy0x1.quantizedinformatics.items.OreCollect;
+import com.arthurlcy0x1.quantizedinformatics.items.PrepChip;
+import com.arthurlcy0x1.quantizedinformatics.items.SoulItem;
+import com.arthurlcy0x1.quantizedinformatics.items.Telescope;
 import com.arthurlcy0x1.quantizedinformatics.recipe.C3DRecipe;
+import com.arthurlcy0x1.quantizedinformatics.recipe.ChipOxiRec;
+import com.arthurlcy0x1.quantizedinformatics.recipe.ChipRedRec;
+import com.arthurlcy0x1.quantizedinformatics.recipe.MaxwellRecipe;
 import com.arthurlcy0x1.quantizedinformatics.recipe.OxiRecipe;
 import com.arthurlcy0x1.quantizedinformatics.recipe.RedRecipe;
+import com.arthurlcy0x1.quantizedinformatics.recipe.TeleRecipe;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.entity.SpriteRenderer;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.item.EnderPearlEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
@@ -78,6 +111,8 @@ public class Registrar extends ItemGroup {
 	public static final Block BAP_CORE = addName(new PipeCore(), "pipe_core");
 	public static final Block BAP_SUB = addName(new Wire(WireConnect.SPIPE), "pipe_sub_body");
 	public static final Block BAP_SHEAD = addName(new SPipeHead(), "pipe_sub_head");
+	public static final Block BAME_ATK = addName(new EntAttack(), "ent_attack");
+	public static final Block BAME_REP = addName(new EntRepel(), "ent_repel");
 
 	public static final List<Block> BDS = Arrays.asList(BD_CNTR, BD_GATE, BD_IN, BD_OUT, BD_LNR);
 
@@ -103,6 +138,8 @@ public class Registrar extends ItemGroup {
 	public static final Item IBAP_CORE = convert(BAP_CORE);
 	public static final Item IBAP_SUB = convert(BAP_SUB);
 	public static final Item IBAP_SHEAD = convert(BAP_SHEAD);
+	public static final Item IBME_ATK = convert(BAME_ATK);
+	public static final Item IBME_REP = convert(BAME_REP);
 
 	// items
 	public static final Item IE_P = generate("elem_p", 64);
@@ -111,14 +148,36 @@ public class Registrar extends ItemGroup {
 	public static final Item IE_BO = generate("elem_bo", 64);
 	public static final Item IE_SI = generate("elem_si", 64);
 	public static final Item IE_FEO = generate("elem_feo", 64);
+	public static final Item IE_DARK = generate("elem_dark", 64);
+	public static final Item IE_SOUL = generate("elem_soul", 64);
+	public static final Item IE_SPACE = generate("elem_space", 64);
+	public static final Item IA_RECIPE = generate("auto_recipe", 1, AutoRecipe::new);
+	public static final Item IC_PREP = generate("prep_chip", 1, PrepChip::new);
+	public static final Item I_ALU = generate("alu", 1, ALUItem::new);
+	public static final Item I_FOGBALL = generate("fog_ball", 64);
+	public static final Item I_ITEMPICK = generate("item_picker", 64);
+	public static final Item IM_ELEC = genMaxwell("maxwell_electric", 8);
+	public static final Item IM_MAGN = genMaxwell("maxwell_magnetic", 8);
+	public static final Item IMW_ELEC = genMaxwell("maxwell_wrap_electric", 8);
+	public static final Item IMW_MAGN = genMaxwell("maxwell_wrap_magnetic", 8);
+	public static final Item IMU_ATK = genMaxwell("maxwell_attack", 9);
+	public static final Item IMU_DEF = genMaxwell("maxwell_defense", 9);
+	public static final Item IMU_TNT = genMaxwell("maxwell_tnt", 2);
+	public static final Item IS_TRAP = generate("soul_trap", 1, SoulItem.SoulTrap::new);
+	public static final Item IS_COLL = generate("soul_collector", 1, SoulItem.SoulCollector::new);
+	public static final Item I_OREC = generate("ore_collector", 1, OreCollect::new);
+	public static final Item IW_TNT = generate("weapon_tnt", 1, TNTEC::new);
+	public static final Item IW_POTION = generate("weapon_potion", 1, PotionEC::new);
+	public static final Item IW_ENDER = genDefEC("weapon_ender", Items.ENDER_PEARL, EnderPearlEntity::new);
+	public static final Item IW_FOG = genDefEC("weapon_fog", I_FOGBALL, FogBall::new);
+	public static final Item IW_IP = genDefEC("weapon_picker", I_ITEMPICK, ItemPicker::new);
+	public static final Item IW_TELE = generate("telescope", 1, Telescope.TelescopeItem::new);
+
+	// draft related
 	public static final Item ID_N = generate("gate_dope_n", 64);
 	public static final Item ID_P = generate("gate_dope_p", 64);
 	public static final Item ID_CAP = generate("gate_cap", 64);
 	public static final Item ID_WIRE = generate("gate_wire", 64);
-	public static final Item IA_RECIPE = generate("auto_recipe", 1, AutoRecipe::new);
-	public static final Item I_ALU = generate("alu", 1, ALUItem::new);
-
-	// draft related
 	public static final Item IDR_EMPTY = generate("gate_red_empty", 64);
 	public static final Item IDR_DIRTY = generate("gate_red_dirty", 64);
 	public static final Item IDM_EMPTY = generate("gate_mos_empty", 64);
@@ -159,6 +218,8 @@ public class Registrar extends ItemGroup {
 	public static final ContainerType<RecMaker.Cont> CTA_REC = getCT(RecMaker.Cont::new, "recipe_maker_c");
 	public static final ContainerType<PipeHead.Cont> CTAP_HEAD = getCT(PipeHead.Cont::new, "pipe_head_c");
 	public static final ContainerType<PipeCore.Cont> CTAP_CORE = getCT(PipeCore.Cont::new, "pipe_core_c");
+	public static final ContainerType<EntAttack.Cont> CTME_ATK = getCT(EntAttack.Cont::new, "ent_attack_c");
+	public static final ContainerType<EntRepel.Cont> CTME_REP = getCT(EntRepel.Cont::new, "ent_repel_c");
 
 	public static final TileEntityType<OxiFn.TE> TET_OXIFN = getTET(OxiFn.TE::new, B_OXIFN, "oxidation_furnace_te");
 	public static final TileEntityType<RedFn.TE> TET_REDFN = getTET(RedFn.TE::new, B_REDFN, "reduction_furnace_te");
@@ -171,6 +232,12 @@ public class Registrar extends ItemGroup {
 	public static final TileEntityType<RecMaker.TE> TETA_REC = getTET(RecMaker.TE::new, BA_REC, "recipe_maker_te");
 	public static final TileEntityType<PipeHead.TE> TETAP_HEAD = getTET(PipeHead.TE::new, BAP_HEAD, "pipe_head_te");
 	public static final TileEntityType<PipeCore.TE> TETAP_CORE = getTET(PipeCore.TE::new, BAP_CORE, "pipe_core_te");
+	public static final TileEntityType<EntAttack.TE> TETME_ATK = getTET(EntAttack.TE::new, BAME_ATK, "ent_attack_te");
+	public static final TileEntityType<EntRepel.TE> TETME_REP = getTET(EntRepel.TE::new, BAME_REP, "ent_repel_te");
+
+	public static final EntityType<SmartTNT> ET_STNT = getET(SmartTNT::new, "smart_tnt");
+	public static final EntityType<FogBall> ET_FB = getET(FogBall::new, "fog_ball");
+	public static final EntityType<ItemPicker> ET_IP = getET(ItemPicker::new, "item_picker");
 
 	public static final IRecipeType<OxiRecipe> RT_OXI = IRecipeType.register("quantizedinformatics:oxidation");
 	public static final IRecipeType<RedRecipe> RT_RED = IRecipeType.register("quantizedinformatics:reduction");
@@ -178,8 +245,23 @@ public class Registrar extends ItemGroup {
 	public static final IRecipeSerializer<?> RS_OXI = new OxiRecipe.Serializer().setRegistryName(MODID, "oxidation");
 	public static final IRecipeSerializer<?> RS_RED = new RedRecipe.Serializer().setRegistryName(MODID, "reduction");
 	public static final IRecipeSerializer<?> RS_C3D = new C3DRecipe.Serializer().setRegistryName(MODID, "craft_3d");
+	public static final IRecipeSerializer<?> RS_MAX = new MaxwellRecipe.Serializer().setRegistryName(MODID, "maxwell");
+	public static final IRecipeSerializer<?> RSC_OXI = new ChipOxiRec.Serializer().setRegistryName(MODID, "chip_oxi");
+	public static final IRecipeSerializer<?> RSC_RED = new ChipRedRec.Serializer().setRegistryName(MODID, "chip_red");
+	public static final IRecipeSerializer<?> RS_TELE = new TeleRecipe.Serializer().setRegistryName(MODID, "telescope");
 
-	static {
+	public static final ContainerType<?>[] CTS = { CT_OXIFN, CT_REDFN, CTD_CNTR, CTD_GATE, CTD_IN, CTD_OUT, CTD_LNR,
+			CTA_CRAFT, CTA_REC, CTAP_HEAD, CTAP_CORE, CTME_ATK, CTME_REP };
+
+	public static final TileEntityType<?>[] TETS = { TET_OXIFN, TET_REDFN, TETD_CNTR, TETD_GATE, TETD_IN, TETD_OUT,
+			TETD_LNR, TETA_CRAFT, TETA_REC, TETAP_HEAD, TETAP_CORE, TETME_ATK, TETME_REP };
+
+	public static final EntityType<?>[] ETS = { ET_STNT, ET_FB, ET_IP };
+
+	public static final IRecipeSerializer<?>[] RSS = { RS_OXI, RS_RED, RS_C3D, RS_MAX, RSC_OXI, RSC_RED, RS_TELE };
+
+	@OnlyIn(Dist.CLIENT)
+	public static void registerRender() {
 		ScreenManager.registerFactory(CT_OXIFN, OxiFn.Scr::new);
 		ScreenManager.registerFactory(CT_REDFN, RedFn.Scr::new);
 		ScreenManager.registerFactory(CTD_CNTR, DraftCntr.Scr::new);
@@ -191,13 +273,15 @@ public class Registrar extends ItemGroup {
 		ScreenManager.registerFactory(CTAP_CORE, PipeCore.Scr::new);
 		ScreenManager.registerFactory(CTA_REC, RecMaker.Scr::new);
 		ScreenManager.registerFactory(CTA_CRAFT, AutoCraft.Scr::new);
-	}
+		ScreenManager.registerFactory(CTME_ATK, EntAttack.Scr::new);
+		ScreenManager.registerFactory(CTME_REP, EntRepel.Scr::new);
 
-	public static final ContainerType<?>[] CTS = { CT_OXIFN, CT_REDFN, CTD_CNTR, CTD_GATE, CTD_IN, CTD_OUT, CTD_LNR,
-			CTA_CRAFT, CTA_REC, CTAP_HEAD, CTAP_CORE };
-	public static final TileEntityType<?>[] TETS = { TET_OXIFN, TET_REDFN, TETD_CNTR, TETD_GATE, TETD_IN, TETD_OUT,
-			TETD_LNR, TETA_CRAFT, TETA_REC, TETAP_HEAD, TETAP_CORE };
-	public static final IRecipeSerializer<?>[] RSS = { RS_OXI, RS_RED, RS_C3D };
+		ItemRenderer ir = Minecraft.getInstance().getItemRenderer();
+
+		RenderingRegistry.registerEntityRenderingHandler(ET_STNT, SmartTNTRender::new);
+		RenderingRegistry.registerEntityRenderingHandler(ET_FB, m -> new SpriteRenderer<>(m, ir, 1, true));
+		RenderingRegistry.registerEntityRenderingHandler(ET_IP, m -> new SpriteRenderer<>(m, ir, 1, true));
+	}
 
 	@SuppressWarnings("unchecked")
 	protected static <T extends IForgeRegistryEntry<T>> void getList(RegistryEvent.Register<T> event, Class<T> cls) {
@@ -220,6 +304,10 @@ public class Registrar extends ItemGroup {
 		Item.Properties p = new Item.Properties();
 		p.group(ITEM_GROUP);
 		return new BlockItem(block, p).setRegistryName(block.getRegistryName());
+	}
+
+	private static Item genDefEC(String str, Item item, BiFunction<World, PlayerEntity, ThrowableEntity> f) {
+		return generate(str, 1, p -> new DefEC(p, item, f));
 	}
 
 	private static Item genDraftGate(String str, Item c) {
@@ -249,8 +337,22 @@ public class Registrar extends ItemGroup {
 		return addName(f.apply(p), str);
 	}
 
+	private static Item genMaxwell(String str, int max) {
+		Item.Properties p = new Item.Properties();
+		p.group(ITEM_GROUP);
+		p.maxStackSize(1);
+		return addName(new MaxwellItem(p, max), str);
+	}
+
 	private static <T extends Container> ContainerType<T> getCT(ContainerType.IFactory<T> fact, String str) {
 		ContainerType<T> ans = new ContainerType<>(fact);
+		ans.setRegistryName(MODID, str);
+		return ans;
+	}
+
+	private static <T extends Entity> EntityType<T> getET(EntityType.IFactory<T> f, String str) {
+		EntityType<T> ans = EntityType.Builder.<T>create(f, EntityClassification.MISC)
+				.setShouldReceiveVelocityUpdates(true).build(str);
 		ans.setRegistryName(MODID, str);
 		return ans;
 	}

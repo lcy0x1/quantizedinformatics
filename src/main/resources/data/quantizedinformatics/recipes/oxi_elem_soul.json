@@ -1,0 +1,8 @@
+{
+    "type": "quantizedinformatics:oxidation",
+    "time": 200,
+    "in_main": {
+        "item": "ghast_tear"
+    },
+    "out_main": "quantizedinformatics:elem_soul"
+}

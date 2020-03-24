@@ -7,6 +7,7 @@ import java.util.Set;
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.blocks.BaseBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.BlockProp;
+import com.arthurlcy0x1.quantizedinformatics.items.ItemUtil;
 import com.arthurlcy0x1.quantizedinformatics.recipe.C3DRecipe;
 import com.arthurlcy0x1.quantizedinformatics.recipe.C3DRecipe.Craft3DInv;
 
@@ -74,8 +75,7 @@ public class Craft3D extends BaseBlock implements WireConnect {
 				C3DRecipe r = opt.get();
 				r.craft(this, w);
 				ItemStack is = r.getCraftingResult(this);
-				if (!pl.addItemStackToInventory(is))
-					pl.dropItem(is, false);
+				ItemUtil.drop(is, pl);
 			}
 		}
 

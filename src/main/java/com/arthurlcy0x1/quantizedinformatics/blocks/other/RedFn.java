@@ -24,6 +24,8 @@ import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeHooks;
 
 public class RedFn {
@@ -66,6 +68,7 @@ public class RedFn {
 
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	public static class Scr extends CTEScr<Cont> {
 
 		private static final ResourceLocation GUI = new ResourceLocation(Registrar.MODID,
@@ -202,6 +205,8 @@ public class RedFn {
 			}
 			boolean validInput = rec != null && canMerge(rec.output[0], getStackInSlot(RES_MAIN))
 					&& canMerge(rec.output[1], getStackInSlot(RES_SIDE));
+			if (validInput && rec.isDynamic())
+				validInput = getStackInSlot(RES_MAIN).isEmpty();
 			if ((procTime > 0 || validInput) && burnTime == 0 && canBurn) {
 				burnTotal = burnTime = ForgeHooks.getBurnTime(fuel) / FUEL_CONS;
 				decrStackSize(FUEL, 1);
@@ -212,12 +217,13 @@ public class RedFn {
 			if (burnTime > 0 && procTime > 0) {
 				procTime--;
 				if (procTime == 0) {
+					ItemStack out = rec.getCraftingResult(this);
 					decrStackSize(ING_MAIN, rec.inc[0]);
-					if (rec.inc[1] > 0)
+					if (!getStackInSlot(ING_SIDE).isEmpty() && rec.inc[1] > 0)
 						decrStackSize(ING_SIDE, rec.inc[1]);
-					if (rec.inc[2] > 0)
+					if (!getStackInSlot(MEDIUM).isEmpty() && rec.inc[2] > 0)
 						decrStackSize(MEDIUM, rec.inc[2]);
-					incrOrSet(RES_MAIN, rec.output[0].copy());
+					incrOrSet(RES_MAIN, out);
 					if (rec.output[1] != null)
 						incrOrSet(RES_SIDE, rec.output[1].copy());
 					procTotal = 0;

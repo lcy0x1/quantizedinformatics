@@ -30,6 +30,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class PipeCore extends BaseBlock implements WireConnect {
 
@@ -47,6 +49,7 @@ public class PipeCore extends BaseBlock implements WireConnect {
 
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	public static class Scr extends CTEBlock.CTEScr<Cont> {
 
 		private static final ResourceLocation GUI = new ResourceLocation(Registrar.MODID,

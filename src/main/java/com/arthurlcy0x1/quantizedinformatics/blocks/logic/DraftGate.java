@@ -26,6 +26,8 @@ import net.minecraft.util.IntArray;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockReader;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class DraftGate extends BaseBlock implements WireConnect.DraftIO {
 
@@ -55,6 +57,7 @@ public class DraftGate extends BaseBlock implements WireConnect.DraftIO {
 
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	public static class Scr extends CTEScr<Cont> {
 
 		private static final ResourceLocation GUI = new ResourceLocation(Registrar.MODID,

@@ -1,0 +1,6 @@
+{
+    "type": "quantizedinformatics:maxwell",
+    "center": "quantizedinformatics:quantum_ore",
+    "surround": "quantizedinformatics:maxwell_wrap_electric",
+    "output": "quantizedinformatics:maxwell_attack"
+}

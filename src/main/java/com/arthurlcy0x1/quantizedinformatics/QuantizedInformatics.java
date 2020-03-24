@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -43,6 +44,11 @@ public class QuantizedInformatics {
 		}
 
 		@SubscribeEvent
+		public static void regEntityType(final RegistryEvent.Register<EntityType<?>> event) {
+			event.getRegistry().registerAll(Registrar.ETS);
+		}
+
+		@SubscribeEvent
 		public static void regIRecipeSerializer(RegistryEvent.Register<IRecipeSerializer<?>> event) {
 			event.getRegistry().registerAll(Registrar.RSS);
 		}
@@ -66,17 +72,14 @@ public class QuantizedInformatics {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	public QuantizedInformatics() {
-		// Register the setup method for modloading
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-		// Register the enqueueIMC method for modloading
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
-		// Register the processIMC method for modloading
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
-		// Register the doClientStuff method for modloading
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 
 		// Register ourselves for server and other game events we are interested in
 		MinecraftForge.EVENT_BUS.register(this);
+		MinecraftForge.EVENT_BUS.register(new EventHandler());
 		PacketHandler.registerPackets();
 
 	}
@@ -89,7 +92,7 @@ public class QuantizedInformatics {
 	}
 
 	private void doClientStuff(final FMLClientSetupEvent event) {
-		// do something that can only be done on the client
+		Registrar.registerRender();
 		LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().gameSettings);
 	}
 

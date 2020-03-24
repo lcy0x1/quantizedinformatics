@@ -4,63 +4,20 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
-
 import javax.imageio.ImageIO;
 
+import com.arthurlcy0x1.quantizedinformatics.logic.Estimator;
+import com.arthurlcy0x1.quantizedinformatics.logic.Estimator.EstiResult;
+import com.arthurlcy0x1.quantizedinformatics.logic.Estimator.EstiType;
 import com.arthurlcy0x1.quantizedinformatics.logic.LogicDiagram;
 import com.arthurlcy0x1.quantizedinformatics.logic.LogicDiagram.GateContainer;
 import com.arthurlcy0x1.quantizedinformatics.logic.LogicDiagram.ParentDiagram;
+
+import net.minecraft.util.math.Vec3d;
+
 import com.arthurlcy0x1.quantizedinformatics.logic.LogicGate;
 
 public class Test {
-
-	public static class A {
-
-		public List<String> list = new ArrayList<>();
-
-		public A(String str) {
-			list.add(str);
-			add(list);
-			System.out.println(list);
-		}
-
-		public void add(List<String> list) {
-		}
-
-	}
-
-	public static class AA extends A {
-
-		public static Sup TEMP;
-
-		public static String handler(String s, Sup sup) {
-			TEMP = sup;
-			return s;
-		}
-
-		public Sup sup;
-
-		public AA(String str, Sup s) {
-			super(handler(str, s));
-			System.out.println(s instanceof Isup);
-		}
-
-		@Override
-		public void add(List<String> list) {
-			sup = TEMP;
-			list.add(sup.get());
-		}
-
-	}
-
-	public static interface Isup {
-	}
-
-	public static interface Sup extends Isup, Supplier<String> {
-	}
 
 	public static void addBlocks() throws IOException {
 		String[] list = { "quantum_fog", "craft_frame", "craft_3d", "oxidation_furnace", "reduction_furnace",
@@ -143,7 +100,16 @@ public class Test {
 	}
 
 	public static void main(String[] args) throws IOException {
-		new AA("0", () -> "1");
+		Vec3d target = new Vec3d(63, 16, 0);
+		new Estimator(0.04, 0.02, Vec3d.ZERO, 3, 80, target, Vec3d.ZERO).getAnswer();
+		long t0 = System.nanoTime();
+		Estimator est = new Estimator(0.04, 0.02, Vec3d.ZERO, 3, 80, target, Vec3d.ZERO);
+		EstiResult er = est.getAnswer();
+		long t1 = System.nanoTime();
+		System.out.println("time: " + (t1 - t0) / 1000);
+		System.out.println((er.getType() == EstiType.ZERO) + ", " + er.getVec() + ", " + er.getT());
+		System.out.println("deviation: " + est.getX0(er.getA(), er.getT()) + ", " + est.getY0(er.getA(), er.getT()));
+
 	}
 
 	public static void recolor() throws IOException {

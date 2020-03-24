@@ -1,0 +1,6 @@
+{
+    "type": "quantizedinformatics:maxwell",
+    "center": "quantizedinformatics:maxwell_electric",
+    "surround": "quantizedinformatics:maxwell_wrap_magnetic",
+    "output": "quantizedinformatics:maxwell_wrap_electric"
+}

@@ -25,6 +25,8 @@ import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class PipeHead extends BaseBlock implements WireConnect {
 
@@ -42,6 +44,7 @@ public class PipeHead extends BaseBlock implements WireConnect {
 
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	public static class Scr extends CTEBlock.CommScr<Cont> {
 
 		private static final ResourceLocation GUI = new ResourceLocation(Registrar.MODID,

@@ -1,0 +1,19 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "000",
+        "010",
+        "000"
+    ],
+    "key": {
+        "0": {
+            "item": "quantizedinformatics:soul_trap"
+        },
+        "1": {
+            "item": "quantizedinformatics:maxwell_attack"
+        }
+    },
+    "result": {
+        "item": "quantizedinformatics:soul_collector"
+    }
+}

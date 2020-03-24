@@ -30,6 +30,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class DIOBlock {
 
@@ -55,6 +57,7 @@ public class DIOBlock {
 
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	public static class DIOScr<T extends DIOCont> extends ContainerScreen<T> {
 
 		private static final ResourceLocation GUI = new ResourceLocation(Registrar.MODID,
