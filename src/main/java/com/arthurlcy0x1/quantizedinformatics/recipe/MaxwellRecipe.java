@@ -69,9 +69,9 @@ public class MaxwellRecipe extends ShapedRecipe {
 
 	@Override
 	public ItemStack getCraftingResult(CraftingInventory ci) {
-		int lv = ci.getStackInSlot(0).getOrCreateTag().getInt("maxwell_level");
+		int lv = MaxwellItem.getLevel(ci.getStackInSlot(0));
 		ItemStack is = getRecipeOutput().copy();
-		is.getOrCreateTag().putInt("maxwell_level", lv + 1);
+		MaxwellItem.setLevel(is, lv + 1);
 		return is;
 	}
 
@@ -98,7 +98,7 @@ public class MaxwellRecipe extends ShapedRecipe {
 				return false;
 			if (i == 4 && is.getItem() != c)
 				return false;
-			int lv = is.getOrCreateTag().getInt("maxwell_level");
+			int lv = MaxwellItem.getLevel(is);
 			Item cr = r;
 			if (lv == 0 && r == Registrar.IMW_ELEC)
 				cr = Registrar.IM_ELEC;

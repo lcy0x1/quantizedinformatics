@@ -1,0 +1,6 @@
+{
+    "type": "quantizedinformatics:maxwell",
+    "center": "quantizedinformatics:alu",
+    "surround": "quantizedinformatics:maxwell_tnt",
+    "output": "quantizedinformatics:maxwell_tnt"
+}

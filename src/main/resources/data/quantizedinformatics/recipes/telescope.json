@@ -1,0 +1,22 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "010",
+        "020",
+        "010"
+    ],
+    "key": {
+        "0": {
+            "item": "iron_nugget"
+        },
+        "1": {
+            "item": "glass_pane"
+        },
+        "2": {
+            "item": "quantizedinformatics:alu"
+        }
+    },
+    "result": {
+        "item": "quantizedinformatics:telescope"
+    }
+}

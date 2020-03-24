@@ -100,7 +100,7 @@ public class Test {
 	}
 
 	public static void main(String[] args) throws IOException {
-		Vec3d target = new Vec3d(63,16,0);
+		Vec3d target = new Vec3d(63, 16, 0);
 		new Estimator(0.04, 0.02, Vec3d.ZERO, 3, 80, target, Vec3d.ZERO).getAnswer();
 		long t0 = System.nanoTime();
 		Estimator est = new Estimator(0.04, 0.02, Vec3d.ZERO, 3, 80, target, Vec3d.ZERO);
@@ -108,7 +108,7 @@ public class Test {
 		long t1 = System.nanoTime();
 		System.out.println("time: " + (t1 - t0) / 1000);
 		System.out.println((er.getType() == EstiType.ZERO) + ", " + er.getVec() + ", " + er.getT());
-		System.out.println("deviation: "+est.getX0(er.getA(), er.getT())+", "+est.getY0(er.getA(), er.getT()));
+		System.out.println("deviation: " + est.getX0(er.getA(), er.getT()) + ", " + est.getY0(er.getA(), er.getT()));
 
 	}
 

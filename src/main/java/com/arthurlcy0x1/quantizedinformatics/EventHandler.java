@@ -1,6 +1,6 @@
 package com.arthurlcy0x1.quantizedinformatics;
 
-import com.arthurlcy0x1.quantizedinformatics.items.EntityCannon;
+import com.arthurlcy0x1.quantizedinformatics.items.Telescope;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -14,8 +14,8 @@ public class EventHandler {
 		ItemStack is = event.getEntity().getActiveItemStack();
 		if (is != null) {
 			Item i = is.getItem();
-			if (i instanceof EntityCannon)
-				event.setNewfov(event.getFov() * (((EntityCannon) i).getZoom(event.getEntity())));
+			if (i instanceof Telescope)
+				event.setNewfov(event.getFov() * Telescope.getItemZoom(is));
 
 		}
 	}

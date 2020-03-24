@@ -15,6 +15,8 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class EntRepel extends BaseBlock {
 
@@ -31,6 +33,7 @@ public class EntRepel extends BaseBlock {
 
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	public static class Scr extends CTEBlock.CTEScr<Cont> {
 
 		public Scr(Cont cont, PlayerInventory inv, ITextComponent text) {

@@ -1,70 +1,231 @@
 package com.arthurlcy0x1.quantizedinformatics.items;
 
+import static com.arthurlcy0x1.quantizedinformatics.items.Telescope.addInfo;
+
+import java.util.List;
 import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
 import org.apache.logging.log4j.LogManager;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.logic.Estimator;
+import com.arthurlcy0x1.quantizedinformatics.logic.Estimator.EstiResult;
 import com.arthurlcy0x1.quantizedinformatics.logic.Estimator.EstiType;
+import com.mojang.blaze3d.matrix.MatrixStack;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.entity.TNTRenderer;
+import net.minecraft.client.renderer.entity.TNTMinecartRenderer;
+import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.TNTEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PotionEntity;
+import net.minecraft.entity.projectile.ProjectileItemEntity;
+import net.minecraft.entity.projectile.ThrowableEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.ShootableItem;
 import net.minecraft.item.ThrowablePotionItem;
 import net.minecraft.item.UseAction;
+import net.minecraft.network.IPacket;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceContext.FluidMode;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.Explosion;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.network.NetworkHooks;
 
-public abstract class EntityCannon extends ShootableItem {
+public abstract class EntityCannon extends ShootableItem implements Telescope {
 
-	public static class PotionEC extends EntityCannon {
+	public static class DefEC extends AbEC {
 
-		private static boolean isValid(ItemStack is) {
-			return is.getItem() instanceof ThrowablePotionItem;
+		private final Item item;
+		private final BiFunction<World, PlayerEntity, ThrowableEntity> gen;
 
-		}
-
-		public PotionEC(Properties p) {
-			super(p, 256);
+		public DefEC(Properties p, Item i, BiFunction<World, PlayerEntity, ThrowableEntity> bf) {
+			super(p, 0.03, 0.01, 128, 240);
+			item = i;
+			gen = bf;
 		}
 
 		@Override
 		public Predicate<ItemStack> getInventoryAmmoPredicate() {
-			return PotionEC::isValid;
-		}
-
-		/** gravity: 0.05, resistance: 0.01 */
-		@Override
-		public float getVelocity(int charge) {
-			return MathHelper.clamp(charge / 20f, 0f, 1f) * 3;
+			return is -> is.getItem() == item;
 		}
 
 		@Override
-		protected Entity getEntity(World w, ItemStack ammo, PlayerEntity pl, float velo) {
-			PotionEntity e = new PotionEntity(w, pl);
-			e.setItem(ammo);
-			e.shoot(pl, pl.rotationPitch, pl.rotationYaw, 0, velo, 0);
-			return null;
+		protected ThrowableEntity getEntity(World w, PlayerEntity pl, ItemStack ammo) {
+			return gen.apply(w, pl);
+		}
+
+	}
+
+	public static class FogBall extends ProjectileItemEntity {
+
+		public FogBall(EntityType<FogBall> e, World w) {
+			super(e, w);
+		}
+
+		public FogBall(World w, double x, double y, double z) {
+			super(Registrar.ET_FB, w);
+			this.setPosition(x, y, z);
+			this.prevPosX = x;
+			this.prevPosY = y;
+			this.prevPosZ = z;
+		}
+
+		public FogBall(World w, PlayerEntity pl) {
+			this(w, getPlX(pl), getPlY(pl), getPlZ(pl));
+		}
+
+		@Override
+		public IPacket<?> createSpawnPacket() {
+			return NetworkHooks.getEntitySpawningPacket(this);
+		}
+
+		@Override
+		protected Item func_213885_i() {
+			return Registrar.I_FOGBALL;
+		}
+
+		@Override
+		protected void onImpact(RayTraceResult result) {
+			final BlockPos pos;
+			if (result.getType() == Type.BLOCK) {
+				BlockRayTraceResult b = (BlockRayTraceResult) result;
+				pos = b.getPos().offset(b.getFace(), 3);
+			} else if (result.getType() == Type.ENTITY) {
+				EntityRayTraceResult b = (EntityRayTraceResult) result;
+				pos = new BlockPos(b.getHitVec());
+			} else
+				pos = null;
+			if (pos != null && !world.isRemote) {
+				int max = 3, rad = 4;
+				Direction[] ds = Direction.values();
+				for (int i = 0; i < 6; i++) {
+					for (int j = 1; j <= max; j++)
+						set(pos.offset(ds[i], j));
+					for (int j = i + 1; j < 6; j++)
+						if (ds[j] != ds[i].getOpposite())
+							for (int k = 1; k <= max; k++)
+								for (int s = 1; s <= max; s++)
+									if (k + s <= rad)
+										set(pos.offset(ds[i], k).offset(ds[j], s));
+				}
+
+				world.setBlockState(pos, Registrar.B_FOGORE.getDefaultState());
+			}
+			remove();
+		}
+
+		private void set(BlockPos p) {
+			if (world.getBlockState(p).getBlock() == Blocks.AIR)
+				world.setBlockState(p, Registrar.B_FOG.getDefaultState());
+		}
+
+	}
+
+	public static class ItemPicker extends ProjectileItemEntity {
+
+		private static boolean isValid(Entity e) {
+			EntityType<?> type = e.getType();
+			return type == EntityType.EXPERIENCE_ORB || type == EntityType.ITEM;
+		}
+
+		public ItemPicker(EntityType<ItemPicker> e, World w) {
+			super(e, w);
+		}
+
+		public ItemPicker(World w, double x, double y, double z, PlayerEntity pe) {
+			super(Registrar.ET_IP, w);
+			this.setPosition(x, y, z);
+			this.prevPosX = x;
+			this.prevPosY = y;
+			this.prevPosZ = z;
+			owner = pe;
+		}
+
+		public ItemPicker(World w, PlayerEntity pl) {
+			this(w, getPlX(pl), getPlY(pl), getPlZ(pl), pl);
+		}
+
+		@Override
+		public IPacket<?> createSpawnPacket() {
+			return NetworkHooks.getEntitySpawningPacket(this);
+		}
+
+		@Override
+		protected Item func_213885_i() {
+			return Registrar.I_ITEMPICK;
+		}
+
+		@Override
+		protected void onImpact(RayTraceResult result) {
+			Vec3d hit = result.getHitVec();
+			double r = getRadius();
+			if (!world.isRemote && getThrower() != null && (getThrower() instanceof PlayerEntity)) {
+				PlayerEntity pl = (PlayerEntity) getThrower();
+				AxisAlignedBB aabb = new AxisAlignedBB(hit.add(-r, -r, -r), hit.add(r, r, r));
+				List<Entity> list = world.getEntitiesInAABBexcluding(this, aabb, ItemPicker::isValid);
+				for (Entity e : list)
+					if (e.getPositionVec().squareDistanceTo(hit) < r * r)
+						e.setPosition(getPlX(pl), getPlY(pl), getPlZ(pl));
+
+			}
+			remove();
+		}
+
+		private double getRadius() {
+			return 8;// TODO
+		}
+
+	}
+
+	public static class PotionEC extends AbEC {
+
+		public PotionEC(Properties p) {
+			super(p, 0.05, 0.01, 128, 120);
+		}
+
+		@Override
+		public Predicate<ItemStack> getInventoryAmmoPredicate() {
+			return is -> is.getItem() instanceof ThrowablePotionItem;
+		}
+
+		@Override
+		protected ThrowableEntity getEntity(World w, PlayerEntity pl, ItemStack ammo) {
+			if (ammo.isEmpty())
+				return null;
+			PotionEntity pe = new PotionEntity(w, pl);
+			pe.setItem(ammo);
+			return pe;
 		}
 
 	}
@@ -74,6 +235,12 @@ public abstract class EntityCannon extends ShootableItem {
 		private final PlayerEntity tntPlacedBy;
 		private final float radius;
 
+		public SmartTNT(EntityType<SmartTNT> e, World w) {
+			super(e, w);
+			tntPlacedBy = null;
+			radius = 0;
+		}
+
 		public SmartTNT(World w, double x, double y, double z, PlayerEntity pl, ItemStack is) {
 			super(Registrar.ET_STNT, w);
 			this.setPosition(x, y, z);
@@ -82,7 +249,17 @@ public abstract class EntityCannon extends ShootableItem {
 			this.prevPosY = y;
 			this.prevPosZ = z;
 			this.tntPlacedBy = pl;
-			radius = 1 << MaxwellItem.getLevel(is);
+			radius = 4 << MaxwellItem.getLevel(is);
+		}
+
+		@Override
+		public boolean canExplosionDestroyBlock(Explosion e, IBlockReader w, BlockPos p, BlockState s, float f) {
+			return false;
+		}
+
+		@Override
+		public IPacket<?> createSpawnPacket() {
+			return NetworkHooks.getEntitySpawningPacket(this);
 		}
 
 		@Override
@@ -112,38 +289,55 @@ public abstract class EntityCannon extends ShootableItem {
 			return tntPlacedBy;
 		}
 
-		@Override
-		public void tick() {
-			if (!hasNoGravity())
-				setMotion(getMotion().add(0, 0.04 - getGravity(), 0));
-			super.tick();
-			if (!onGround)
-				setMotion(getMotion().scale(1 / 0.98));
-		}
-
 	}
 
-	public static class SmartTNTRender extends TNTRenderer {
+	@OnlyIn(Dist.CLIENT)
+	public static class SmartTNTRender extends EntityRenderer<SmartTNT> {
 
-		public SmartTNTRender(EntityRendererManager erm) {
-			super(erm);
+		public SmartTNTRender(EntityRendererManager renderManagerIn) {
+			super(renderManagerIn);
+			this.shadowSize = 0.5F;
 		}
 
+		@Override
+		public void func_225623_a_(SmartTNT p_225623_1_, float p_225623_2_, float p_225623_3_, MatrixStack p_225623_4_,
+				IRenderTypeBuffer p_225623_5_, int p_225623_6_) {
+			p_225623_4_.func_227860_a_();
+			p_225623_4_.func_227861_a_(0.0D, 0.5D, 0.0D);
+			if (p_225623_1_.getFuse() - p_225623_3_ + 1.0F < 10.0F) {
+				float f = 1.0F - (p_225623_1_.getFuse() - p_225623_3_ + 1.0F) / 10.0F;
+				f = MathHelper.clamp(f, 0.0F, 1.0F);
+				f = f * f;
+				f = f * f;
+				float f1 = 1.0F + f * 0.3F;
+				p_225623_4_.func_227862_a_(f1, f1, f1);
+			}
+
+			p_225623_4_.func_227863_a_(Vector3f.field_229181_d_.func_229187_a_(-90.0F));
+			p_225623_4_.func_227861_a_(-0.5D, -0.5D, 0.5D);
+			p_225623_4_.func_227863_a_(Vector3f.field_229181_d_.func_229187_a_(90.0F));
+			TNTMinecartRenderer.func_229127_a_(Blocks.TNT.getDefaultState(), p_225623_4_, p_225623_5_, p_225623_6_,
+					p_225623_1_.getFuse() / 5 % 2 == 0);
+			p_225623_4_.func_227865_b_();
+			super.func_225623_a_(p_225623_1_, p_225623_2_, p_225623_3_, p_225623_4_, p_225623_5_, p_225623_6_);
+		}
+
+		@Override
+		@SuppressWarnings("deprecation")
+		public ResourceLocation getEntityTexture(SmartTNT entity) {
+			return AtlasTexture.LOCATION_BLOCKS_TEXTURE;
+		}
 	}
 
 	public static class TNTEC extends EntityCannon {
 
-		private static boolean isValid(ItemStack is) {
-			return is.getItem() == Items.TNT || is.getItem() == Registrar.IMU_TNT;
-		}
-
 		public TNTEC(Properties p) {
-			super(p, 256);
+			super(p);
 		}
 
 		@Override
 		public Predicate<ItemStack> getInventoryAmmoPredicate() {
-			return TNTEC::isValid;
+			return is -> is.getItem() == Items.TNT || is.getItem() == Registrar.IMU_TNT;
 		}
 
 		/** gravity: 0.04, resistance: 0.02 */
@@ -154,54 +348,62 @@ public abstract class EntityCannon extends ShootableItem {
 
 		@Override
 		protected Entity getEntity(World w, ItemStack ammo, PlayerEntity pl, float velo) {
-			TNTEntity e = new TNTEntity(w, getPlX(pl), getPlY(pl), getPlZ(pl), pl);
-			EntityRayTraceResult ertr = rayTraceEntity(pl, velo * 40);
-			if (ertr != null && ertr.getType() == Type.ENTITY) {
-				LogManager.getLogger().warn("targeting entity: " + ertr.getEntity().getEntityString());
-				Vec3d mot = ertr.getEntity().getMotion();
-				Vec3d tar = ertr.getHitVec();
-				Vec3d pos = e.getPositionVec();
-				Estimator.EstiResult er = new Estimator(0.04, 0.02, pos, velo, 80, tar, mot).getAnswer();
-				LogManager.getLogger().warn("aim status success: " + (er.getType() == EstiType.ZERO));
-				if (er.getType() == EstiType.ZERO) {
-					e.setMotion(er.getVec());
-					e.setFuse((int) Math.round(er.getT()));
-					return e;
-				}
-
-			}
-			BlockRayTraceResult brtr = rayTraceBlock(pl.world, pl, velo * 40);
-			if (brtr != null && brtr.getType() == Type.BLOCK) {
-				LogManager.getLogger().warn("targeting block: " + brtr.getPos());
-				Vec3d tar = brtr.getHitVec();
-				Vec3d pos = e.getPositionVec();
-				Estimator.EstiResult er = new Estimator(0.04, 0.02, pos, velo, 80, tar, Vec3d.ZERO).getAnswer();
-				LogManager.getLogger().warn("aim status success: " + (er.getType() == EstiType.ZERO));
-				if (er.getType() == EstiType.ZERO) {
-					e.setMotion(er.getVec());
-					e.setFuse((int) Math.round(er.getT()));
-					return e;
-				}
-			}
-			setDire(pl, velo, e);
+			final TNTEntity e;
+			if (ammo.getItem() == Registrar.IMU_TNT)
+				e = new SmartTNT(w, getPlX(pl), getPlY(pl), getPlZ(pl), pl, ammo);
+			else
+				e = new TNTEntity(w, getPlX(pl), getPlY(pl), getPlZ(pl), pl);
+			EstiResult er = setAim(pl, velo, 128, e, 0.04, 0.02, 80);
+			if (er.getType() == EstiType.ZERO) {
+				e.setMotion(er.getVec());
+				e.setFuse((int) Math.round(er.getT()));
+			} else if (er.getType() == EstiType.FAIL)
+				setDire(pl, velo, e);
+			else
+				return null;
 			return e;
 		}
 
-		public float getZoom(PlayerEntity entity) {
-			float minf = 0.2f;
-			float maxf = 0.9f;
-			float maxt = 25f;
-			float lof = 0.2f;
-			float hif = 1f;
+	}
 
-			int dur = getUseDuration(entity.getActiveItemStack());
-			int cnt = entity.getItemInUseCount();
-			float dy = Math.abs(entity.rotationYawHead - entity.prevRotationYawHead);
-			float mult = dy > hif ? minf : dy < lof ? maxf : minf + (maxf - minf) * (dy - lof) / (hif - lof);
-			return 1f - mult * Math.min(maxt, dur - cnt) / maxt;
+	private static abstract class AbEC extends EntityCannon {
+
+		private final double g, k;
+		private final int r, t;
+
+		public AbEC(Properties p, double G, double K, int R, int T) {
+			super(p);
+			g = G;
+			k = K;
+			r = R;
+			t = T;
 		}
 
+		@Override
+		public float getVelocity(int charge) {
+			return MathHelper.clamp(charge / 20f, 0f, 1f) * 3;
+		}
+
+		@Override
+		protected Entity getEntity(World w, ItemStack ammo, PlayerEntity pl, float velo) {
+			ThrowableEntity e = getEntity(w, pl, ammo);
+			if (e == null)
+				return null;
+			EstiResult er = setAim(pl, velo, r, e, g, k, t);
+			if (er.getType() == EstiType.ZERO)
+				e.setMotion(er.getVec());
+			else if (er.getType() == EstiType.FAIL)
+				e.shoot(pl, pl.rotationPitch, pl.rotationYaw, 0, velo, 0);
+			else
+				return null;
+			return e;
+		}
+
+		protected abstract ThrowableEntity getEntity(World w, PlayerEntity pl, ItemStack ammo);
+
 	}
+
+	public static final int DAMAGE = 256;
 
 	private static double getPlX(PlayerEntity pl) {
 		return pl.func_226277_ct_();
@@ -274,6 +476,35 @@ public abstract class EntityCannon extends ShootableItem {
 		return entity == null ? null : new EntityRayTraceResult(entity, vec3d);
 	}
 
+	private static EstiResult setAim(PlayerEntity pl, double velo, int reach, Entity e, double g, double k, int maxt) {
+		EntityRayTraceResult ertr = rayTraceEntity(pl, reach);
+		if (ertr != null && ertr.getType() == Type.ENTITY) {
+			if (ertr.getHitVec().distanceTo(pl.getPositionVec()) < velo)
+				return EstiType.CLOSE;
+			LogManager.getLogger().info("targeting entity: " + ertr.getEntity().getEntityString());
+			Vec3d mot = ertr.getEntity().getMotion();
+			Vec3d tar = ertr.getHitVec();
+			Vec3d pos = e.getPositionVec();
+			Estimator.EstiResult er = new Estimator(g, k, pos, velo, maxt, tar, mot).getAnswer();
+			LogManager.getLogger().info("aim status success: " + (er.getType() == EstiType.ZERO));
+			if (er.getType() == EstiType.ZERO)
+				return er;
+		}
+		BlockRayTraceResult brtr = rayTraceBlock(pl.world, pl, reach);
+		if (brtr != null && brtr.getType() == Type.BLOCK) {
+			if (brtr.getHitVec().distanceTo(pl.getPositionVec()) < velo)
+				return EstiType.CLOSE;
+			LogManager.getLogger().info("targeting block: " + brtr.getPos());
+			Vec3d tar = brtr.getHitVec();
+			Vec3d pos = e.getPositionVec();
+			Estimator.EstiResult er = new Estimator(g, k, pos, velo, maxt, tar, Vec3d.ZERO).getAnswer();
+			LogManager.getLogger().info("aim status success: " + (er.getType() == EstiType.ZERO));
+			if (er.getType() == EstiType.ZERO)
+				return er;
+		}
+		return EstiType.FAIL;
+	}
+
 	private static void setDire(PlayerEntity pl, float velo, Entity ent) {
 		float yaw = pl.rotationYaw;
 		float pitch = pl.rotationPitch;
@@ -289,8 +520,13 @@ public abstract class EntityCannon extends ShootableItem {
 		ent.prevRotationPitch = ent.rotationPitch;
 	}
 
-	public EntityCannon(Properties p, int damage) {
-		super(p.maxDamage(damage));
+	public EntityCannon(Properties p) {
+		super(p.maxDamage(DAMAGE));
+	}
+
+	@Override
+	public void addInformation(ItemStack is, World w, List<ITextComponent> list, ITooltipFlag b) {
+		addInfo(is, w, list, b);
 	}
 
 	@Override
@@ -305,7 +541,7 @@ public abstract class EntityCannon extends ShootableItem {
 
 	@Override
 	public int getUseDuration(ItemStack stack) {
-		return 250;
+		return 72000;
 	}
 
 	public abstract float getVelocity(int charge);
@@ -331,18 +567,13 @@ public abstract class EntityCannon extends ShootableItem {
 			if (!ammo.isEmpty() || flag) {
 				float f = getVelocity(i);
 				if (f > 0.1) {
-					if (!w.isRemote) {
-						Entity e = getEntity(w, ammo, pl, f);
-						if (e != null)
-							w.addEntity(e);
-						self.damageItem(1, pl, (player) -> player.sendBreakAnimation(pl.getActiveHand()));
+					Entity e = getEntity(w, ammo, pl, f);
+					if (!w.isRemote && e != null) {
+						w.addEntity(e);
+						ItemUtil.damageItem(self, pl);
 					}
-				}
-
-				if (!pl.abilities.isCreativeMode) {
-					ammo.shrink(1);
-					if (ammo.isEmpty())
-						pl.inventory.deleteStack(ammo);
+					if (!flag && e != null)
+						ItemUtil.consume(self, ammo, 1, pl);
 				}
 
 			}
@@ -350,9 +581,5 @@ public abstract class EntityCannon extends ShootableItem {
 	}
 
 	protected abstract Entity getEntity(World w, ItemStack ammo, PlayerEntity pl, float velo);
-
-	public float getZoom(PlayerEntity entity) {
-		return 1;
-	}
 
 }

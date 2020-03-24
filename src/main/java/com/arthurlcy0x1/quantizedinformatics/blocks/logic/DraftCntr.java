@@ -41,6 +41,8 @@ import net.minecraft.util.IntArray;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
 public class DraftCntr {
@@ -132,6 +134,7 @@ public class DraftCntr {
 
 	}
 
+	@OnlyIn(Dist.CLIENT)
 	public static class Scr extends CTEScr<Cont> {
 
 		private static final ResourceLocation GUI = new ResourceLocation(Registrar.MODID,

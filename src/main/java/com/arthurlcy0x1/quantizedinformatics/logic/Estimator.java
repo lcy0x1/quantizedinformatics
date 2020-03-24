@@ -20,7 +20,7 @@ public class Estimator {
 	}
 
 	public static enum EstiType implements EstiResult {
-		ZERO, FAIL;
+		ZERO, FAIL, CLOSE;
 
 		@Override
 		public double getA() {
@@ -226,6 +226,16 @@ public class Estimator {
 		return new SucEstiRes(a0, t0, this);
 	}
 
+	public double getX0(double a, double t) {
+		double xt = dp.x + ev.x * t;
+		double zt = dp.z + ev.z * t;
+		return vk * Math.cos(a) * (1 - Math.exp(-k * t)) - Math.sqrt(xt * xt + zt * zt);
+	}
+
+	public double getY0(double a, double t) {
+		return -gk * t + (vk * Math.sin(a) + gk / k) * (1 - Math.exp(-k * t)) - dp.y - ev.y * t;
+	}
+
 	private boolean estimate(double[] data, double DA, double DT, double ER) {
 		double a0 = data[0];
 		double t0 = data[1];
@@ -273,12 +283,6 @@ public class Estimator {
 		return v * t * Math.sqrt(1 - mul * mul) - x;
 	}
 
-	public double getX0(double a, double t) {
-		double xt = dp.x + ev.x * t;
-		double zt = dp.z + ev.z * t;
-		return vk * Math.cos(a) * (1 - Math.exp(-k * t)) - Math.sqrt(xt * xt + zt * zt);
-	}
-
 	private double getXA(double a, double t) {
 		return -vk * Math.sin(a) * (1 - Math.exp(-k * t));
 	}
@@ -288,10 +292,6 @@ public class Estimator {
 		double zt = dp.z + ev.z * t;
 		double ext = ((ev.x * ev.x + ev.z * ev.z) * t + dp.x * ev.x + dp.z * ev.z) / Math.sqrt(xt * xt + zt * zt);
 		return Math.cos(a) * v * Math.exp(-k * t) - ext;
-	}
-
-	public double getY0(double a, double t) {
-		return -gk * t + (vk * Math.sin(a) + gk / k) * (1 - Math.exp(-k * t)) - dp.y - ev.y * t;
 	}
 
 	private double getYA(double a, double t) {
