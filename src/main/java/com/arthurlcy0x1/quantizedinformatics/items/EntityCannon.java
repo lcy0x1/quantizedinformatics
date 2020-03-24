@@ -221,7 +221,7 @@ public abstract class EntityCannon extends ShootableItem implements Telescope {
 
 		@Override
 		protected ThrowableEntity getEntity(World w, PlayerEntity pl, ItemStack ammo) {
-			if (ammo.isEmpty())
+			if (ammo.isEmpty() || !(ammo.getItem() instanceof ThrowablePotionItem))
 				return null;
 			PotionEntity pe = new PotionEntity(w, pl);
 			pe.setItem(ammo);
