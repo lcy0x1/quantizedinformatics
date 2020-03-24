@@ -7,19 +7,25 @@ The main aspects of the MOD includes:
 4. Item Pipe System
 5. Automatic Crafting System
 
-TBD:
+TBD:  
 6. ALU and RAM
 7. Block Machines: Mover & Breaker & Placer
-8. Entity Machines: Detector & Repeller & Puller & Killer & Healer
-9. Advanced Material: Quantized Gem
+8. Advanced Material: Maxwell Oscillation Unit
+9. Entity Cannon
+10. Soul Collector
+11. Entity Machines: Detector & Repeller & Puller & Killer & Healer
 
 How to play this MOD:
+
+## Basics
 
 First, you need to find Quantum Ore: It is generated like coal, but will only appear singularly and won't be exposed. It will fill the surounding air with Quantum Fog. It is not possible to replace the surrounding with other blocks. Quantum Fog is the most important basic material in this MOD.
 
 Then, you can craft Crafting Frames and 3D Crafting Terminal with Quantum Fog. If and only if the frames form the edges of a cube, with no extra connections, the 3d-crafting workspace is ready to use. You can take down the Quantum Ore by this, and you can make Oxidation Furnace and Reduction Furnace.
 
-With the furnaces, you can get Silicon from sand and quartz, Boron from glowstone, and Phosphorous from Bone meal. They are used in logic circuit production. 
+With the furnaces, you can get Silicon from sand and quartz, Boron from glowstone, and Phosphorous from Bone meal. They are used in logic circuit production.  
+
+## Logic Diagrams
 
 There are 3 types of logic gate diagrams: Redstone, CMOS, and implemented. Redstone drafts are made with quantum fogs and redstones. It follows the redstone logic. CMOS diagram are made with quantum fogs. It follows real-world CMOS logic. It takes some other starter material, but it only consumes quantum fog for mass production. One redstone diagram and one CMOS diagram can make an implemented diagram, which is ready to use in circuits.
 
@@ -27,7 +33,11 @@ The logic circuit system has 6 main component: wires, Gate Container, Terminal, 
 
 There are 4 modes for each channel: high, low, floating, and error. For logic gates, if one of the input is floating or error, all outputs will be floating or error. If two different output exists in the same channel, it will be conflicting. Potential error is shown as red in channel ID. Definite Floating is shown as yellow in channel ID. For gates, invalid input and output channel are shown as red. To switch channel for Input/Output/Monitor, just click the corresponding channel ID. Terminal can set output for all channels at the same time. Click and type 'h' for high, 'l' for low, and ' ' for floating. The channel IDs are shown from left to right, top to bottom. In terminal, if a slot shows the ID number then it is floating. Otherwise it is either high or low as it shows. For gates, the display is a little bit different. The gates are listed from top to bottom, and then from left to right for outputs and right to left for inputs, in the order of the inserted diagram's input and output. Click and type '0'-'9','a'-'f' for  channels, 'h' for high, 'l' for low (high and low are only available for inputs), and ' ' for floating (only availablee for output). Each Gate has 1 tick delay. Thus, if the circuit has loops, it can behave differently based on the initial condition. The input accepts redstone signal and the output produces redstone signal.
 
+## Auto Crafting
+
 The Recipe Maker allow you to record a recipe. Recipes are used in Automatic Crafting Table. It takes the inputs in the left and produces outputs to the right. You can insert ALU to speed it up (TBD)
+
+## Item Pipe
 
 There are 5 components in Item System: primary pipe, secondary pipe, system center, primary head, and secondary head. The system center detects and powers the entire system. If there are more than 1 center in a pipe network, both will stop working. Primary pipe network connects the center and all primary heads. Primary heads decides what item to insert or extract. It can connect one container or multiple secondary headers through secondary pipe network, which each connects one container. If there are more than one primary header connected in the same secondary pipe network, both primary heads will stop working.
 
