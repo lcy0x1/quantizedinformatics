@@ -195,6 +195,11 @@ public class C3DRecipe implements IRecipe<C3DRecipe.Craft3DInv> {
 	}
 
 	@Override
+	public boolean isDynamic() {
+		return true;
+	}
+
+	@Override
 	public boolean matches(Craft3DInv inv, World w) {
 		int[] dim = inv.getDim();
 		if (!matchSize(dim))

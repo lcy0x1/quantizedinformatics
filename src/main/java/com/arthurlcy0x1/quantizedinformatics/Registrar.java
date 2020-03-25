@@ -51,6 +51,8 @@ import com.arthurlcy0x1.quantizedinformatics.items.Telescope;
 import com.arthurlcy0x1.quantizedinformatics.recipe.C3DRecipe;
 import com.arthurlcy0x1.quantizedinformatics.recipe.ChipOxiRec;
 import com.arthurlcy0x1.quantizedinformatics.recipe.ChipRedRec;
+import com.arthurlcy0x1.quantizedinformatics.recipe.FixCollector;
+import com.arthurlcy0x1.quantizedinformatics.recipe.FixWeapon;
 import com.arthurlcy0x1.quantizedinformatics.recipe.MaxwellRecipe;
 import com.arthurlcy0x1.quantizedinformatics.recipe.OxiRecipe;
 import com.arthurlcy0x1.quantizedinformatics.recipe.RedRecipe;
@@ -239,16 +241,19 @@ public class Registrar extends ItemGroup {
 	public static final EntityType<FogBall> ET_FB = getET(FogBall::new, "fog_ball");
 	public static final EntityType<ItemPicker> ET_IP = getET(ItemPicker::new, "item_picker");
 
-	public static final IRecipeType<OxiRecipe> RT_OXI = IRecipeType.register("quantizedinformatics:oxidation");
-	public static final IRecipeType<RedRecipe> RT_RED = IRecipeType.register("quantizedinformatics:reduction");
-	public static final IRecipeType<C3DRecipe> RT_C3D = IRecipeType.register("quantizedinformatics:craft_3d");
-	public static final IRecipeSerializer<?> RS_OXI = new OxiRecipe.Serializer().setRegistryName(MODID, "oxidation");
-	public static final IRecipeSerializer<?> RS_RED = new RedRecipe.Serializer().setRegistryName(MODID, "reduction");
-	public static final IRecipeSerializer<?> RS_C3D = new C3DRecipe.Serializer().setRegistryName(MODID, "craft_3d");
-	public static final IRecipeSerializer<?> RS_MAX = new MaxwellRecipe.Serializer().setRegistryName(MODID, "maxwell");
-	public static final IRecipeSerializer<?> RSC_OXI = new ChipOxiRec.Serializer().setRegistryName(MODID, "chip_oxi");
-	public static final IRecipeSerializer<?> RSC_RED = new ChipRedRec.Serializer().setRegistryName(MODID, "chip_red");
-	public static final IRecipeSerializer<?> RS_TELE = new TeleRecipe.Serializer().setRegistryName(MODID, "telescope");
+	public static final IRecipeType<OxiRecipe> RT_OXI = IRecipeType.register(MODID + ":oxidation");
+	public static final IRecipeType<RedRecipe> RT_RED = IRecipeType.register(MODID + ":reduction");
+	public static final IRecipeType<C3DRecipe> RT_C3D = IRecipeType.register(MODID + ":craft_3d");
+
+	public static final IRecipeSerializer<?> RS_OXI = getRS(new OxiRecipe.Serializer(), "oxidation");
+	public static final IRecipeSerializer<?> RS_RED = getRS(new RedRecipe.Serializer(), "reduction");
+	public static final IRecipeSerializer<?> RS_C3D = getRS(new C3DRecipe.Serializer(), "craft_3d");
+	public static final IRecipeSerializer<?> RS_MAX = getRS(new MaxwellRecipe.Serializer(), "maxwell");
+	public static final IRecipeSerializer<?> RSC_OXI = getRS(new ChipOxiRec.Serializer(), "chip_oxi");
+	public static final IRecipeSerializer<?> RSC_RED = getRS(new ChipRedRec.Serializer(), "chip_red");
+	public static final IRecipeSerializer<?> RS_TELE = getRS(new TeleRecipe.Serializer(), "telescope");
+	public static final IRecipeSerializer<?> RSF_OC = getRS(new FixCollector.Serializer(), "fix_collector");
+	public static final IRecipeSerializer<?> RSF_WP = getRS(new FixWeapon.Serializer(), "fix_weapon");
 
 	public static final ContainerType<?>[] CTS = { CT_OXIFN, CT_REDFN, CTD_CNTR, CTD_GATE, CTD_IN, CTD_OUT, CTD_LNR,
 			CTA_CRAFT, CTA_REC, CTAP_HEAD, CTAP_CORE, CTME_ATK, CTME_REP };
@@ -258,7 +263,8 @@ public class Registrar extends ItemGroup {
 
 	public static final EntityType<?>[] ETS = { ET_STNT, ET_FB, ET_IP };
 
-	public static final IRecipeSerializer<?>[] RSS = { RS_OXI, RS_RED, RS_C3D, RS_MAX, RSC_OXI, RSC_RED, RS_TELE };
+	public static final IRecipeSerializer<?>[] RSS = { RS_OXI, RS_RED, RS_C3D, RS_MAX, RSC_OXI, RSC_RED, RS_TELE,
+			RSF_OC, RSF_WP };
 
 	@OnlyIn(Dist.CLIENT)
 	public static void registerRender() {
@@ -355,6 +361,11 @@ public class Registrar extends ItemGroup {
 				.setShouldReceiveVelocityUpdates(true).build(str);
 		ans.setRegistryName(MODID, str);
 		return ans;
+	}
+
+	private static <T extends ForgeRegistryEntry<IRecipeSerializer<?>>> T getRS(T rs, String str) {
+		rs.setRegistryName(MODID, str);
+		return rs;
 	}
 
 	private static <T extends TileEntity> TileEntityType<T> getTET(Supplier<T> fact, Block b, String str) {

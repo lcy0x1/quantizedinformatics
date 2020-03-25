@@ -1,7 +1,7 @@
 package com.arthurlcy0x1.quantizedinformatics.recipe;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
-import com.arthurlcy0x1.quantizedinformatics.items.Telescope;
+import com.arthurlcy0x1.quantizedinformatics.items.EntityCannon;
 import com.google.gson.JsonObject;
 
 import net.minecraft.inventory.CraftingInventory;
@@ -13,29 +13,29 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
-public class TeleRecipe implements ICraftingRecipe {
+public class FixWeapon implements ICraftingRecipe {
 
 	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>>
-			implements IRecipeSerializer<TeleRecipe> {
+			implements IRecipeSerializer<FixWeapon> {
 
 		@Override
-		public TeleRecipe read(ResourceLocation id, JsonObject json) {
-			return new TeleRecipe(id);
+		public FixWeapon read(ResourceLocation id, JsonObject json) {
+			return new FixWeapon(id);
 		}
 
 		@Override
-		public TeleRecipe read(ResourceLocation id, PacketBuffer buffer) {
-			return new TeleRecipe(id);
+		public FixWeapon read(ResourceLocation id, PacketBuffer buffer) {
+			return new FixWeapon(id);
 		}
 
 		@Override
-		public void write(PacketBuffer buffer, TeleRecipe recipe) {
+		public void write(PacketBuffer buffer, FixWeapon recipe) {
 		}
 	}
 
 	private final ResourceLocation id;
 
-	public TeleRecipe(ResourceLocation ID) {
+	public FixWeapon(ResourceLocation ID) {
 		id = ID;
 	}
 
@@ -46,18 +46,19 @@ public class TeleRecipe implements ICraftingRecipe {
 
 	@Override
 	public ItemStack getCraftingResult(CraftingInventory ci) {
-		int lv = 0;
 		ItemStack tool = null;
+		int count = 0;
 		for (int i = 0; i < ci.getSizeInventory(); i++) {
 			ItemStack is = ci.getStackInSlot(i);
-			if (!is.isEmpty() && is.getItem() instanceof Telescope) {
-				if (is.getItem() != Registrar.IW_TELE)
+			if (!is.isEmpty())
+				if (is.getItem() instanceof EntityCannon)
 					tool = is;
-				lv += Telescope.getLv(is);
-			}
-
+				else if (is.getItem() == Registrar.IMU_ATK || is.getItem() == Registrar.IMU_DEF)
+					count++;
 		}
-		return Telescope.setLv(tool == null ? getRecipeOutput() : tool.copy(), lv);
+		ItemStack ans = tool.copy();
+		ans.setDamage(Math.max(0, tool.getDamage() - count * 128));
+		return ans;
 	}
 
 	@Override
@@ -67,12 +68,12 @@ public class TeleRecipe implements ICraftingRecipe {
 
 	@Override
 	public ItemStack getRecipeOutput() {
-		return new ItemStack(Registrar.IW_TELE);
+		return null;
 	}
 
 	@Override
 	public IRecipeSerializer<?> getSerializer() {
-		return Registrar.RS_TELE;
+		return Registrar.RSF_WP;
 	}
 
 	@Override
@@ -82,22 +83,22 @@ public class TeleRecipe implements ICraftingRecipe {
 
 	@Override
 	public boolean matches(CraftingInventory ci, World w) {
-		int count = 0;
 		ItemStack tool = null;
+		int count = 0;
 		for (int i = 0; i < ci.getSizeInventory(); i++) {
 			ItemStack is = ci.getStackInSlot(i);
 			if (!is.isEmpty())
-				if (is.getItem() instanceof Telescope) {
-					if (is.getItem() != Registrar.IW_TELE)
-						if (tool != null)
-							return false;
-						else
-							tool = is;
+				if (is.getItem() instanceof EntityCannon)
+					if (tool != null)
+						return false;
+					else
+						tool = is;
+				else if (is.getItem() == Registrar.IMU_ATK || is.getItem() == Registrar.IMU_DEF)
 					count++;
-				} else
+				else
 					return false;
 		}
-		return count > 1;
+		return tool != null && count > 0;
 	}
 
 }

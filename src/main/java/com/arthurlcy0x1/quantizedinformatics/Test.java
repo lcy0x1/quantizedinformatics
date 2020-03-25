@@ -4,6 +4,11 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.Files;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import javax.imageio.ImageIO;
 
 import com.arthurlcy0x1.quantizedinformatics.logic.Estimator;
@@ -35,6 +40,52 @@ public class Test {
 			ps.println(pre + b + post);
 			ps.close();
 		}
+	}
+
+	public static void addGroup() throws IOException {
+		File f = new File("./src/main/resources/data/quantizedinformatics/recipes/");
+		Set<String> set = new HashSet<>();
+		for (File fi : f.listFiles())
+			if (fi.getName().endsWith(".json")) {
+				String name = fi.getName();
+				List<String> bs = Files.readAllLines(fi.toPath());
+				String type = bs.get(2).trim().substring(9);
+				set.add(type);
+				String group;
+				if (type.startsWith("m"))
+					if (name.startsWith("gate_red_empty"))
+						group = "gate_red_empty";
+					else if (name.startsWith("gate_mos_empty"))
+						group = "gate_mos_empty";
+					else if (name.startsWith("gate_red"))
+						group = "gate_red";
+					else if (name.startsWith("gate_mos"))
+						group = "gate_mos";
+					else if (name.startsWith("gate_imp"))
+						group = "gate_imp";
+					else if (name.startsWith("gate"))
+						group = "gate_other";
+					else if (name.startsWith("weapon"))
+						group = "weapon";
+					else if (name.startsWith("draft"))
+						group = "draft";
+					else if (name.startsWith("pipe"))
+						group = "pipe";
+					else
+						group = "";
+				else
+					group = "none";
+
+				PrintStream ps = new PrintStream(fi);
+				ps.println(bs.get(0));
+
+				ps.println("\t\"group\": \"" + Registrar.MODID + ":" + group + "\",");
+				for (int i = 2; i < bs.size(); i++)
+					ps.println(bs.get(i));
+				ps.close();
+			}
+		for (String s : set)
+			System.out.println(s);
 	}
 
 	public static void addRecipe() throws IOException {
@@ -100,16 +151,7 @@ public class Test {
 	}
 
 	public static void main(String[] args) throws IOException {
-		Vec3d target = new Vec3d(63, 16, 0);
-		new Estimator(0.04, 0.02, Vec3d.ZERO, 3, 80, target, Vec3d.ZERO).getAnswer();
-		long t0 = System.nanoTime();
-		Estimator est = new Estimator(0.04, 0.02, Vec3d.ZERO, 3, 80, target, Vec3d.ZERO);
-		EstiResult er = est.getAnswer();
-		long t1 = System.nanoTime();
-		System.out.println("time: " + (t1 - t0) / 1000);
-		System.out.println((er.getType() == EstiType.ZERO) + ", " + er.getVec() + ", " + er.getT());
-		System.out.println("deviation: " + est.getX0(er.getA(), er.getT()) + ", " + est.getY0(er.getA(), er.getT()));
-
+		addGroup();
 	}
 
 	public static void recolor() throws IOException {
@@ -145,6 +187,19 @@ public class Test {
 				f.renameTo(new File(path + n1 + ".png"));
 
 			}
+	}
+
+	public static void testEsti() {
+		Vec3d target = new Vec3d(63, 16, 0);
+		new Estimator(0.04, 0.02, Vec3d.ZERO, 3, 80, target, Vec3d.ZERO).getAnswer();
+		long t0 = System.nanoTime();
+		Estimator est = new Estimator(0.04, 0.02, Vec3d.ZERO, 3, 80, target, Vec3d.ZERO);
+		EstiResult er = est.getAnswer();
+		long t1 = System.nanoTime();
+		System.out.println("time: " + (t1 - t0) / 1000);
+		System.out.println((er.getType() == EstiType.ZERO) + ", " + er.getVec() + ", " + er.getT());
+		System.out.println("deviation: " + est.getX0(er.getA(), er.getT()) + ", " + est.getY0(er.getA(), er.getT()));
+
 	}
 
 	public static void xor_0() {

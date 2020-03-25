@@ -1,4 +1,5 @@
 {
+	"group": "quantizedinformatics:gate_mos",
     "type": "minecraft:crafting_shaped",
     "pattern": [
         "~pp",

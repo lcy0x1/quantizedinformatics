@@ -1,4 +1,5 @@
 {
+	"group": "quantizedinformatics:gate_imp",
     "type": "minecraft:crafting_shapeless",
     "ingredients": [
         {

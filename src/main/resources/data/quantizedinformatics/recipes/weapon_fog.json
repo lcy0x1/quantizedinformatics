@@ -1,4 +1,5 @@
 {
+	"group": "quantizedinformatics:weapon",
     "type": "minecraft:crafting_shapeless",
     "ingredients": [
         {
