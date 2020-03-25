@@ -1,0 +1,36 @@
+{
+    "group": "quantizedinformatics:enchanted_metal",
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "quantizedinformatics:enchanted_gold_nugget"
+        },
+        {
+            "item": "quantizedinformatics:enchanted_gold_nugget"
+        },
+        {
+            "item": "quantizedinformatics:enchanted_gold_nugget"
+        },
+        {
+            "item": "quantizedinformatics:enchanted_gold_nugget"
+        },
+        {
+            "item": "quantizedinformatics:enchanted_gold_nugget"
+        },
+        {
+            "item": "quantizedinformatics:enchanted_gold_nugget"
+        },
+        {
+            "item": "quantizedinformatics:enchanted_gold_nugget"
+        },
+        {
+            "item": "quantizedinformatics:enchanted_gold_nugget"
+        },
+        {
+            "item": "quantizedinformatics:enchanted_gold_nugget"
+        }
+    ],
+    "result": {
+        "item": "quantizedinformatics:enchanted_gold_ingot"
+    }
+}

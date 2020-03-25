@@ -10,6 +10,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
@@ -17,6 +18,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.MobSpawnerTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -56,6 +58,37 @@ public abstract class SoulItem extends Item {
 			String str = target.getType().getRegistryName().toString();
 			is.getOrCreateTag().putInt("total", total + 1);
 			tag.putInt(str, tag.getInt(str) + 1);
+		}
+
+	}
+
+	public static class SoulMarker extends Item {
+
+		public SoulMarker(Properties p) {
+			super(p);
+		}
+
+		@Override
+		public void addInformation(ItemStack is, World w, List<ITextComponent> list, ITooltipFlag b) {
+			CompoundNBT tag = is.getOrCreateChildTag("souls");
+			for (String key : tag.keySet()) {
+				int val = tag.getInt(key);
+				if (val > 0) {
+					EntityType<?> et = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(key));
+					list.add(et.getName());
+				}
+			}
+		}
+
+		@Override
+		public boolean itemInteractionForEntity(ItemStack is, PlayerEntity pl, LivingEntity target, Hand hand) {
+			CompoundNBT tag = is.getOrCreateChildTag("souls");
+			String str = target.getType().getRegistryName().toString();
+			if (tag.contains(str))
+				tag.remove(str);
+			else
+				tag.putInt(str, 1);
+			return true;
 		}
 
 	}

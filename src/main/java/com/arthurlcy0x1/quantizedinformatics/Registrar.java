@@ -46,11 +46,14 @@ import com.arthurlcy0x1.quantizedinformatics.items.LogicDraft;
 import com.arthurlcy0x1.quantizedinformatics.items.MaxwellItem;
 import com.arthurlcy0x1.quantizedinformatics.items.OreCollect;
 import com.arthurlcy0x1.quantizedinformatics.items.PrepChip;
-import com.arthurlcy0x1.quantizedinformatics.items.SoulItem;
+import com.arthurlcy0x1.quantizedinformatics.items.SoulItem.SoulCollector;
+import com.arthurlcy0x1.quantizedinformatics.items.SoulItem.SoulMarker;
+import com.arthurlcy0x1.quantizedinformatics.items.SoulItem.SoulTrap;
 import com.arthurlcy0x1.quantizedinformatics.items.Telescope;
 import com.arthurlcy0x1.quantizedinformatics.recipe.C3DRecipe;
 import com.arthurlcy0x1.quantizedinformatics.recipe.ChipOxiRec;
 import com.arthurlcy0x1.quantizedinformatics.recipe.ChipRedRec;
+import com.arthurlcy0x1.quantizedinformatics.recipe.EnchantOxiRec;
 import com.arthurlcy0x1.quantizedinformatics.recipe.FixCollector;
 import com.arthurlcy0x1.quantizedinformatics.recipe.FixWeapon;
 import com.arthurlcy0x1.quantizedinformatics.recipe.MaxwellRecipe;
@@ -153,6 +156,10 @@ public class Registrar extends ItemGroup {
 	public static final Item IE_DARK = generate("elem_dark", 64);
 	public static final Item IE_SOUL = generate("elem_soul", 64);
 	public static final Item IE_SPACE = generate("elem_space", 64);
+	public static final Item IEI_STEEL = generate("enchanted_steel_ingot", 64);
+	public static final Item IEI_GOLD = generate("enchanted_gold_ingot", 64);
+	public static final Item IEN_STEEL = generate("enchanted_steel_nugget", 64);
+	public static final Item IEN_GOLD = generate("enchanted_gold_nugget", 64);
 	public static final Item IA_RECIPE = generate("auto_recipe", 1, AutoRecipe::new);
 	public static final Item IC_PREP = generate("prep_chip", 1, PrepChip::new);
 	public static final Item I_ALU = generate("alu", 1, ALUItem::new);
@@ -165,8 +172,9 @@ public class Registrar extends ItemGroup {
 	public static final Item IMU_ATK = genMaxwell("maxwell_attack", 9);
 	public static final Item IMU_DEF = genMaxwell("maxwell_defense", 9);
 	public static final Item IMU_TNT = genMaxwell("maxwell_tnt", 2);
-	public static final Item IS_TRAP = generate("soul_trap", 1, SoulItem.SoulTrap::new);
-	public static final Item IS_COLL = generate("soul_collector", 1, SoulItem.SoulCollector::new);
+	public static final Item IS_MARKER = generate("soul_marker", 1, SoulMarker::new);
+	public static final Item IS_TRAP = generate("soul_trap", 1, SoulTrap::new);
+	public static final Item IS_COLL = generate("soul_collector", 1, SoulCollector::new);
 	public static final Item I_OREC = generate("ore_collector", 1, OreCollect::new);
 	public static final Item IW_TNT = generate("weapon_tnt", 1, TNTEC::new);
 	public static final Item IW_POTION = generate("weapon_potion", 1, PotionEC::new);
@@ -254,6 +262,7 @@ public class Registrar extends ItemGroup {
 	public static final IRecipeSerializer<?> RS_TELE = getRS(new TeleRecipe.Serializer(), "telescope");
 	public static final IRecipeSerializer<?> RSF_OC = getRS(new FixCollector.Serializer(), "fix_collector");
 	public static final IRecipeSerializer<?> RSF_WP = getRS(new FixWeapon.Serializer(), "fix_weapon");
+	public static final IRecipeSerializer<?> RS_EOXI = getRS(new EnchantOxiRec.Serializer(), "enchant_oxi");
 
 	public static final ContainerType<?>[] CTS = { CT_OXIFN, CT_REDFN, CTD_CNTR, CTD_GATE, CTD_IN, CTD_OUT, CTD_LNR,
 			CTA_CRAFT, CTA_REC, CTAP_HEAD, CTAP_CORE, CTME_ATK, CTME_REP };
@@ -264,7 +273,7 @@ public class Registrar extends ItemGroup {
 	public static final EntityType<?>[] ETS = { ET_STNT, ET_FB, ET_IP };
 
 	public static final IRecipeSerializer<?>[] RSS = { RS_OXI, RS_RED, RS_C3D, RS_MAX, RSC_OXI, RSC_RED, RS_TELE,
-			RSF_OC, RSF_WP };
+			RSF_OC, RSF_WP, RS_EOXI };
 
 	@OnlyIn(Dist.CLIENT)
 	public static void registerRender() {

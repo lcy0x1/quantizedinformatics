@@ -1,0 +1,10 @@
+{
+    "group": "quantizedinformatics:none",
+    "type": "quantizedinformatics:oxidation",
+    "time": 20,
+    "in_main": {
+        "item": "glowstone_dust"
+    },
+    "out_main": "quantizedinformatics:elem_po",
+    "out_main_count": 4
+}

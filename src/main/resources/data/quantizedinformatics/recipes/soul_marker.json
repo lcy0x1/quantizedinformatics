@@ -1,23 +1,26 @@
 {
-	"group": "",
+	"group": "quantizedinformatics:soul",
     "type": "minecraft:crafting_shaped",
     "pattern": [
         "010",
         "020",
-        "010"
+        "030"
     ],
     "key": {
         "0": {
-            "item": "iron_nugget"
+            "item": "quantizedinformatics:elem_space"
         },
         "1": {
-            "item": "glass_pane"
+            "item": "quantizedinformatics:elem_soul"
         },
         "2": {
+            "item": "paper"
+        },
+        "3": {
             "item": "quantizedinformatics:alu"
         }
     },
     "result": {
-        "item": "quantizedinformatics:telescope"
+        "item": "quantizedinformatics:soul_marker"
     }
 }

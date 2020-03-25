@@ -71,15 +71,20 @@ public class Test {
 						group = "draft";
 					else if (name.startsWith("pipe"))
 						group = "pipe";
+					else if (name.startsWith("soul"))
+						group = "soul";
 					else
-						group = "";
+						group = null;
 				else
 					group = "none";
-
+				if (group == null)
+					group = "";
+				else
+					group = Registrar.MODID + ":" + group;
 				PrintStream ps = new PrintStream(fi);
 				ps.println(bs.get(0));
 
-				ps.println("\t\"group\": \"" + Registrar.MODID + ":" + group + "\",");
+				ps.println("\t\"group\": \"" + group + "\",");
 				for (int i = 2; i < bs.size(); i++)
 					ps.println(bs.get(i));
 				ps.close();

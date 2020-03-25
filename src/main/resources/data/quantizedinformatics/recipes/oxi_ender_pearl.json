@@ -6,5 +6,7 @@
         "item": "ender_pearl"
     },
     "out_main": "quantizedinformatics:elem_space",
-    "out_main_count": 16
+    "out_main_count": 16,
+    "out_side": "quantizedinformatics:elem_bo",
+    "out_side_count": 4
 }
