@@ -11,6 +11,8 @@
     "quantizedinformatics:container.recipe_maker": "Recipe Maker",
     "quantizedinformatics:container.pipe_head": "Item Pipe Head",
     "quantizedinformatics:container.pipe_core": "Item Pipe Core",
+    "quantizedinformatics:container.ent_attack": "Entity Attacker",
+    "quantizedinformatics:container.ent_repel": "Entity Repeller",
 
     "quantizedinformatics:container.draft_center.in": "Input Wire ID = ",
     "quantizedinformatics:container.draft_center.out": "Output Wire ID = ",
@@ -26,6 +28,9 @@
     "quantizedinformatics:container.pipe_head.extract": "Items to Extract",
     "quantizedinformatics:container.pipe_core.cpu": "CPU",
     "quantizedinformatics:container.pipe_core.ram": "RAM",
+    "quantizedinformatics:container.ent_machine.radius": "Radius: ",
+    "quantizedinformatics:container.ent_machine.damage": "Damage: ",
+    "quantizedinformatics:container.ent_machine.repel": "Power: ",
 
     "quantizedinformatics:tooltip.ingredient": "Ingredients:",
     "quantizedinformatics:tooltip.result": "Result:",

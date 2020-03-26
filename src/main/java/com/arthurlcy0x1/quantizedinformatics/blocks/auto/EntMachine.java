@@ -1,9 +1,9 @@
 package com.arthurlcy0x1.quantizedinformatics.blocks.auto;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
 import com.arthurlcy0x1.quantizedinformatics.items.MaxwellItem;
 
@@ -11,9 +11,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.IIntArray;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
@@ -21,13 +22,14 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class EntMachine {
 
-	protected static abstract class EMTE<T extends EMTE<T>> extends CTEBlock.CTETE<T> implements ITickableTileEntity {
+	protected static abstract class EMTE<T extends EMTE<T>> extends CTEBlock.CTETE<T>
+			implements IIntArray, ITickableTileEntity {
 
 		private final int type;
 
 		private boolean dirty = true;
 
-		private List<EntityType<?>> list;
+		private final Set<EntityType<?>> list = new HashSet<>();
 
 		public EMTE(TileEntityType<T> tet, int size, int t) {
 			super(tet, size);
@@ -45,17 +47,8 @@ public class EntMachine {
 			return Math.max(0, getLevel(type) - getLevel(1 - type));
 		}
 
-		public double getRadius() {
+		public int getRadius() {
 			return 1 << Math.min(MAX_RADIUS, Math.min(getLevel(0), getLevel(1)));
-		}
-
-		@Override
-		public boolean isItemValidForSlot(int slot, ItemStack is) {
-			if (slot == 0)
-				return is.getItem() == Registrar.IMU_ATK;
-			if (slot == 1)
-				return is.getItem() == Registrar.IMU_DEF;
-			return false;
 		}
 
 		@Override
@@ -94,14 +87,23 @@ public class EntMachine {
 
 		private void updateEntityList() {
 			ItemStack is = getStackInSlot(2);
-			if (is.isEmpty() || !is.getOrCreateTag().contains("entities"))
-				list = null;
-			else {
-				list = new ArrayList<>();
-				ListNBT lnbt = is.getOrCreateTag().getList("entities", 8);
-				for (int i = 0; i < lnbt.size(); i++)
-					list.add(ForgeRegistries.ENTITIES.getValue(new ResourceLocation(lnbt.getString(i))));
-			}
+			list.clear();
+			if (is.isEmpty())
+				return;
+			CompoundNBT tag = is.getChildTag("souls");
+			for (String str : tag.keySet())
+				list.add(ForgeRegistries.ENTITIES.getValue(new ResourceLocation(str)));
+		}
+
+		public int get(int i) {
+			return i == 0 ? getRadius() : getPower();
+		}
+
+		public void set(int i, int v) {
+		}
+
+		public int size() {
+			return 2;
 		}
 
 	}

@@ -187,7 +187,8 @@ public class Estimator {
 		v = V;
 		max = maxt;
 		ev = eV;
-		dp = ep.subtract(pos);
+		Vec3d vdp = ep.subtract(pos);
+		dp = vdp.add(Math.abs(vdp.x) < ERR ? ERR : 0, 0, Math.abs(vdp.z) < ERR ? ERR : 0);
 		x = dis(dp.x, dp.z);
 	}
 

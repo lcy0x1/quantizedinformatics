@@ -73,6 +73,8 @@ public class Test {
 						group = "pipe";
 					else if (name.startsWith("soul"))
 						group = "soul";
+					else if (name.startsWith("maxwell_electric") || name.startsWith("maxwell_magnetic"))
+						group = "maxwell";
 					else
 						group = null;
 				else
@@ -156,7 +158,7 @@ public class Test {
 	}
 
 	public static void main(String[] args) throws IOException {
-		addGroup();
+		testEsti();
 	}
 
 	public static void recolor() throws IOException {
@@ -195,7 +197,7 @@ public class Test {
 	}
 
 	public static void testEsti() {
-		Vec3d target = new Vec3d(63, 16, 0);
+		Vec3d target = new Vec3d(0, 10, 0);
 		new Estimator(0.04, 0.02, Vec3d.ZERO, 3, 80, target, Vec3d.ZERO).getAnswer();
 		long t0 = System.nanoTime();
 		Estimator est = new Estimator(0.04, 0.02, Vec3d.ZERO, 3, 80, target, Vec3d.ZERO);

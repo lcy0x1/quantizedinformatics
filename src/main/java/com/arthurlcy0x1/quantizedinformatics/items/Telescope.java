@@ -50,7 +50,7 @@ public interface Telescope {
 	public static final int MAX = 14;
 
 	public static void addInfo(ItemStack is, World w, List<ITextComponent> list, ITooltipFlag b) {
-		float zoom = Math.round(100 / getItemZoom(is)) * 0.01f;
+		double zoom = Math.round(100 / getItemZoom(is)) * 0.01;
 		list.add(Translator.getTooltip("magnification").shallowCopy().appendText("x" + zoom));
 
 	}

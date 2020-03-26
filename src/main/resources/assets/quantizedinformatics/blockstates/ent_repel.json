@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "quantizedinformatics:block/ent_attack"
+      "model": "quantizedinformatics:block/ent_repel"
     }
   }
 }

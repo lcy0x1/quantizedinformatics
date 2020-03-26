@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -18,7 +19,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.MobSpawnerTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -80,8 +80,7 @@ public abstract class SoulItem extends Item {
 			}
 		}
 
-		@Override
-		public boolean itemInteractionForEntity(ItemStack is, PlayerEntity pl, LivingEntity target, Hand hand) {
+		public boolean interact(ItemStack is, PlayerEntity pl, Entity target) {
 			CompoundNBT tag = is.getOrCreateChildTag("souls");
 			String str = target.getType().getRegistryName().toString();
 			if (tag.contains(str))
