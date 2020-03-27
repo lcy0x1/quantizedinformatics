@@ -2,8 +2,6 @@ package com.arthurlcy0x1.quantizedinformatics.blocks.auto;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
-import com.arthurlcy0x1.quantizedinformatics.blocks.BaseBlock;
-import com.arthurlcy0x1.quantizedinformatics.blocks.BlockProp;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
 import com.mojang.blaze3d.systems.RenderSystem;
 
@@ -22,17 +20,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class EntRepel extends BaseBlock {
-
-	private static boolean isValid(int ind, ItemStack is) {
-		if (ind == 0)
-			return is.getItem() == Registrar.IMU_ATK;
-		if (ind == 1)
-			return is.getItem() == Registrar.IMU_DEF;
-		if (ind == 2)
-			return is.getItem() == Registrar.IS_MARKER;
-		return false;
-	}
+public class EntRepel extends EntMachine {
 
 	public static class Cont extends CTEBlock.CTECont {
 
@@ -74,6 +62,8 @@ public class EntRepel extends BaseBlock {
 		@Override
 		protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 			super.drawGuiContainerForegroundLayer(mouseX, mouseY);
+			if (!container.getSlot(36).getHasStack() || !container.getSlot(37).getHasStack())
+				return;
 			String s0 = Translator.getContText("ent_machine.radius") + container.data.get(0);
 			String s1 = Translator.getContText("ent_machine.repel") + (1 << 3 * container.data.get(1));
 			font.drawString(s0, 8, 36, COLOR);
@@ -98,17 +88,7 @@ public class EntRepel extends BaseBlock {
 		}
 
 		public double getMaxVec() {
-			return SPEED_FAC * (1 << 3 * getPower());
-		}
-
-		@Override
-		protected void handle(Entity e, Vec3d dir) {
-			double r = getRadius();
-			double dis = dir.length();
-			if (dis > 0.5) {
-				dir = dir.scale(getMaxVec() * (r - dis) / dis / r);
-				e.addVelocity(dir.x, dir.y, dir.z);
-			}
+			return SPEED_FAC * (1 << 3 * Math.min(MAX_SPEED, getPower()));
 		}
 
 		@Override
@@ -116,13 +96,34 @@ public class EntRepel extends BaseBlock {
 			return isValid(slot, is);
 		}
 
+		@Override
+		protected void handle(Entity e, Vec3d dir) {
+			double r = getRadius();
+			double dis = dir.length();
+			if (dis > 0.4) {
+				dir = dir.scale(getMaxVec() * (r - dis) / dis / r);
+				e.addVelocity(dir.x, dir.y, dir.z);
+			}
+		}
+
 	}
 
-	private static final int SIZE = 3;
-	private static final double SPEED_FAC = 0.01;
+	private static final int SIZE = 3, MAX_SPEED = 3;
+
+	private static final double SPEED_FAC = 0.1;
+
+	private static boolean isValid(int ind, ItemStack is) {
+		if (ind == 0)
+			return is.getItem() == Registrar.IMU_ATK;
+		if (ind == 1)
+			return is.getItem() == Registrar.IMU_DEF;
+		if (ind == 2)
+			return is.getItem() == Registrar.IS_MARKER;
+		return false;
+	}
 
 	public EntRepel() {
-		super(construct(BlockProp.M_ENT).addImpl((STE) TE::new));
+		super(TE::new);
 	}
 
 }

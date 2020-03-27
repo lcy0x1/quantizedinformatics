@@ -166,6 +166,7 @@ public class Registrar extends ItemGroup {
 	public static final Item I_ALU = generate("alu", 1, ALUItem::new);
 	public static final Item I_FOGBALL = generate("fog_ball", 64);
 	public static final Item I_ITEMPICK = generate("item_picker", 64);
+	public static final Item IM_FOG = genMaxwell("maxwell_fog", 64);
 	public static final Item IM_ELEC = genMaxwell("maxwell_electric", 7);
 	public static final Item IM_MAGN = genMaxwell("maxwell_magnetic", 7);
 	public static final Item IMW_ELEC = genMaxwell("maxwell_wrap_electric", 7);

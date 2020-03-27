@@ -14,17 +14,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class EventHandler {
 
 	@SubscribeEvent
-	public void zoom(FOVUpdateEvent event) {
-		ItemStack is = event.getEntity().getActiveItemStack();
-		if (!is.isEmpty()) {
-			Item i = is.getItem();
-			if (i instanceof Telescope)
-				event.setNewfov(event.getFov() * Telescope.getItemZoom(is));
-
-		}
-	}
-
-	@SubscribeEvent
 	public void interact(EntityInteract ei) {
 		ItemStack is = ei.getItemStack();
 		if (!is.isEmpty()) {
@@ -37,6 +26,17 @@ public class EventHandler {
 					ei.setCancellationResult(ActionResultType.SUCCESS);
 				}
 			}
+		}
+	}
+
+	@SubscribeEvent
+	public void zoom(FOVUpdateEvent event) {
+		ItemStack is = event.getEntity().getActiveItemStack();
+		if (!is.isEmpty()) {
+			Item i = is.getItem();
+			if (i instanceof Telescope)
+				event.setNewfov(event.getFov() * Telescope.getItemZoom(is));
+
 		}
 	}
 

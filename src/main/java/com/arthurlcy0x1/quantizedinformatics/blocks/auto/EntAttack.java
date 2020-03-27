@@ -2,9 +2,8 @@ package com.arthurlcy0x1.quantizedinformatics.blocks.auto;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
-import com.arthurlcy0x1.quantizedinformatics.blocks.BaseBlock;
-import com.arthurlcy0x1.quantizedinformatics.blocks.BlockProp;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
+import com.arthurlcy0x1.quantizedinformatics.items.SoulItem.SoulCollector;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.entity.Entity;
@@ -24,19 +23,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class EntAttack extends BaseBlock {
-
-	private static boolean isValid(int ind, ItemStack is) {
-		if (ind == 0)
-			return is.getItem() == Registrar.IMU_ATK;
-		if (ind == 1)
-			return is.getItem() == Registrar.IMU_DEF;
-		if (ind == 2)
-			return is.getItem() == Registrar.IS_MARKER;
-		if (ind == 3)
-			return is.getItem() == Registrar.IS_COLL;
-		return false;
-	}
+public class EntAttack extends EntMachine {
 
 	public static class Cont extends CTEBlock.CTECont {
 
@@ -79,6 +66,8 @@ public class EntAttack extends BaseBlock {
 		@Override
 		protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 			super.drawGuiContainerForegroundLayer(mouseX, mouseY);
+			if (!container.getSlot(36).getHasStack() || !container.getSlot(37).getHasStack())
+				return;
 			String s0 = Translator.getContText("ent_machine.radius") + container.data.get(0);
 			String s1 = Translator.getContText("ent_machine.damage") + (1 << 3 * container.data.get(1));
 			font.drawString(s0, 8, 36, COLOR);
@@ -93,11 +82,6 @@ public class EntAttack extends BaseBlock {
 
 		public TE() {
 			super(Registrar.TETME_ATK, SIZE, EntMachine.TYPE_ATK);
-		}
-
-		@Override
-		public boolean isItemValidForSlot(int slot, ItemStack is) {
-			return isValid(slot, is);
 		}
 
 		@Override
@@ -120,9 +104,20 @@ public class EntAttack extends BaseBlock {
 		}
 
 		@Override
+		public boolean isItemValidForSlot(int slot, ItemStack is) {
+			return isValid(slot, is);
+		}
+
+		@Override
 		protected void handle(Entity e, Vec3d dir) {
 			if (e instanceof LivingEntity)
-				e.attackEntityFrom(getDamageSource(), getDamage());
+				if (e.attackEntityFrom(getDamageSource(), getDamage())) {
+					ItemStack is = getStackInSlot(3);
+					if (!is.isEmpty()) {
+						SoulCollector s = (SoulCollector) is.getItem();
+						s.hitEntity(is, (LivingEntity) e, ent);
+					}
+				}
 		}
 
 		private DamageSource getDamageSource() {
@@ -149,8 +144,20 @@ public class EntAttack extends BaseBlock {
 
 	private static final int SIZE = 4;
 
+	private static boolean isValid(int ind, ItemStack is) {
+		if (ind == 0)
+			return is.getItem() == Registrar.IMU_ATK;
+		if (ind == 1)
+			return is.getItem() == Registrar.IMU_DEF;
+		if (ind == 2)
+			return is.getItem() == Registrar.IS_MARKER;
+		if (ind == 3)
+			return is.getItem() == Registrar.IS_COLL;
+		return false;
+	}
+
 	public EntAttack() {
-		super(construct(BlockProp.M_ENT).addImpl((STE) TE::new));
+		super(TE::new);
 	}
 
 }

@@ -114,6 +114,16 @@ public class AutoCraft {
 				SLOTS[i] = i;
 		}
 
+		private static boolean eq(ItemStack i0, ItemStack i1) {
+			if (Container.areItemsAndTagsEqual(i0, i1))
+				return true;
+			if (i0.getItem() == Registrar.IA_RECIPE && i1.getItem() == Registrar.IA_RECIPE)
+				return true;
+			if (i0.getItem() == Registrar.I_ALU && i1.getItem() == Registrar.I_ALU)
+				return true;
+			return false;
+		}
+
 		private static final boolean isValid(int ind, ItemStack is) {
 			if (ind < 15)
 				return true;
@@ -212,7 +222,7 @@ public class AutoCraft {
 					if (needs == 0)
 						break;
 					ItemStack in = getStackInSlot(i);
-					if (Container.areItemsAndTagsEqual(is, in)) {
+					if (eq(is, in)) {
 						int c = in.getCount();
 						if (c <= needs) {
 							this.setInventorySlotContents(i, ItemStack.EMPTY);
@@ -235,7 +245,7 @@ public class AutoCraft {
 							ItemStack toSet = cont.copy();
 							toSet.setCount(c);
 							setInventorySlotContents(i, toSet);
-						} else if (Container.areItemsAndTagsEqual(cont, in)) {
+						} else if (eq(cont, in)) {
 							int c = Math.min(ext, in.getMaxStackSize() - in.getCount());
 							ext -= c;
 							in.grow(c);
@@ -254,7 +264,7 @@ public class AutoCraft {
 					ItemStack toSet = res.copy();
 					toSet.setCount(c);
 					setInventorySlotContents(i, toSet);
-				} else if (Container.areItemsAndTagsEqual(res, in)) {
+				} else if (eq(res, in)) {
 					int c = Math.min(has, in.getMaxStackSize() - in.getCount());
 					has -= c;
 					in.grow(c);
@@ -302,7 +312,7 @@ public class AutoCraft {
 				int has = 0;
 				for (int i = 0; i < 15; i++) {
 					ItemStack in = getStackInSlot(i);
-					if (Container.areItemsAndTagsEqual(is, in))
+					if (eq(is, in))
 						has += in.getCount();
 				}
 				avi = Math.min(avi, has / is.getCount());
@@ -317,7 +327,7 @@ public class AutoCraft {
 				ItemStack in = getStackInSlot(i);
 				if (in.isEmpty())
 					cap += res.getMaxStackSize();
-				else if (Container.areItemsAndTagsEqual(in, res)) {
+				else if (eq(in, res)) {
 					has += in.getCount();
 					cap += in.getMaxStackSize() - in.getCount();
 				}
@@ -335,7 +345,7 @@ public class AutoCraft {
 					ItemStack in = getStackInSlot(i);
 					if (in.isEmpty())
 						cont += is.getMaxStackSize();
-					else if (Container.areItemsAndTagsEqual(in, is))
+					else if (eq(in, is))
 						cont += in.getMaxStackSize() - in.getCount();
 				}
 				cap = Math.min(cont / is.getCount(), cap);

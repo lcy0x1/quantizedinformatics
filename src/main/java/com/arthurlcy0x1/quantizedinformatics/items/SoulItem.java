@@ -38,11 +38,11 @@ public abstract class SoulItem extends Item {
 		public void addInformation(ItemStack is, World w, List<ITextComponent> list, ITooltipFlag b) {
 			CompoundNBT tag = is.getOrCreateChildTag("souls");
 			int total = is.getOrCreateTag().getInt("total");
-			list.add(Translator.getTooltip("total_soul").shallowCopy().appendText("" + total));
+			list.add(Translator.getTooltip("total_soul").deepCopy().appendText("" + total));
 			for (String key : tag.keySet()) {
 				int count = tag.getInt(key);
 				EntityType<?> et = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(key));
-				list.add(et.getName().shallowCopy().appendText(" x" + count));
+				list.add(et.getName().deepCopy().appendText(" x" + count));
 			}
 		}
 

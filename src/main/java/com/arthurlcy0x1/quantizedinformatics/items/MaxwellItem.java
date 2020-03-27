@@ -1,15 +1,11 @@
 package com.arthurlcy0x1.quantizedinformatics.items;
 
-import java.util.List;
-
 import com.arthurlcy0x1.quantizedinformatics.Translator;
 
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
 
 public class MaxwellItem extends Item {
 
@@ -35,9 +31,10 @@ public class MaxwellItem extends Item {
 	}
 
 	@Override
-	public void addInformation(ItemStack is, World w, List<ITextComponent> list, ITooltipFlag b) {
-		list.add(Translator.getTooltip("level").shallowCopy().appendText("" + getLevel(is)));
-
+	public ITextComponent getDisplayName(ItemStack stack) {
+		ITextComponent c = Translator.getTooltip("level").deepCopy().appendText("" + getLevel(stack));
+		ITextComponent d = super.getDisplayName(stack).deepCopy().appendText(", ").appendSibling(c);
+		return d;
 	}
 
 }
