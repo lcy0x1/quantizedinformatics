@@ -55,6 +55,7 @@ public class TeleRecipe implements ICraftingRecipe {
 					tool = is;
 				lv += Telescope.getLv(is);
 			}
+
 		}
 		return Telescope.setLv(tool == null ? getRecipeOutput() : tool.copy(), lv);
 	}
@@ -85,14 +86,16 @@ public class TeleRecipe implements ICraftingRecipe {
 		ItemStack tool = null;
 		for (int i = 0; i < ci.getSizeInventory(); i++) {
 			ItemStack is = ci.getStackInSlot(i);
-			if (!is.isEmpty() && is.getItem() instanceof Telescope) {
-				if (is.getItem() != Registrar.IW_TELE)
-					if (tool != null)
-						return false;
-					else
-						tool = is;
-				count++;
-			}
+			if (!is.isEmpty())
+				if (is.getItem() instanceof Telescope) {
+					if (is.getItem() != Registrar.IW_TELE)
+						if (tool != null)
+							return false;
+						else
+							tool = is;
+					count++;
+				} else
+					return false;
 		}
 		return count > 1;
 	}

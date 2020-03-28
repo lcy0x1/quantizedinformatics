@@ -2,17 +2,21 @@ package com.arthurlcy0x1.quantizedinformatics.items;
 
 import java.util.List;
 
+import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.MobSpawnerTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -26,6 +30,36 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public abstract class SoulItem extends Item {
 
+	public static class SoulBottle extends EncItem {
+
+		public static ItemStack addExp(ItemStack is, int exp) {
+			if (is.isEmpty() || is.getItem() != Registrar.IS_EXP) {
+				ItemStack ans = new ItemStack(Registrar.IS_EXP);
+				ans.getOrCreateTag().putInt("exp", exp);
+				return ans;
+			}
+			is.getOrCreateTag().putInt("exp", is.getOrCreateTag().getInt("exp") + exp);
+			return is;
+		}
+
+		public static int getExp(ItemStack is) {
+			if (is.isEmpty() || is.getItem() != Registrar.IS_EXP)
+				return 0;
+			return is.getOrCreateTag().getInt("exp");
+		}
+
+		public SoulBottle(Properties p) {
+			super(p.containerItem(Items.GLASS_BOTTLE));
+		}
+
+		@Override
+		public void addInformation(ItemStack is, World w, List<ITextComponent> list, ITooltipFlag b) {
+			int exp = is.getOrCreateTag().getInt("exp");
+			list.add(Translator.getTooltip("exp").deepCopy().appendText("" + exp));
+		}
+
+	}
+
 	public static class SoulCollector extends SoulItem {
 
 		public SoulCollector(Properties p) {
@@ -36,11 +70,11 @@ public abstract class SoulItem extends Item {
 		public void addInformation(ItemStack is, World w, List<ITextComponent> list, ITooltipFlag b) {
 			CompoundNBT tag = is.getOrCreateChildTag("souls");
 			int total = is.getOrCreateTag().getInt("total");
-			list.add(Translator.getTooltip("total_soul").shallowCopy().appendText("" + total));
+			list.add(Translator.getTooltip("total_soul").deepCopy().appendText("" + total));
 			for (String key : tag.keySet()) {
 				int count = tag.getInt(key);
 				EntityType<?> et = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(key));
-				list.add(et.getName().shallowCopy().appendText(" x" + count));
+				list.add(et.getName().deepCopy().appendText(" x" + count));
 			}
 		}
 
@@ -56,6 +90,36 @@ public abstract class SoulItem extends Item {
 			String str = target.getType().getRegistryName().toString();
 			is.getOrCreateTag().putInt("total", total + 1);
 			tag.putInt(str, tag.getInt(str) + 1);
+		}
+
+	}
+
+	public static class SoulMarker extends Item {
+
+		public SoulMarker(Properties p) {
+			super(p);
+		}
+
+		@Override
+		public void addInformation(ItemStack is, World w, List<ITextComponent> list, ITooltipFlag b) {
+			CompoundNBT tag = is.getOrCreateChildTag("souls");
+			for (String key : tag.keySet()) {
+				int val = tag.getInt(key);
+				if (val > 0) {
+					EntityType<?> et = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(key));
+					list.add(et.getName());
+				}
+			}
+		}
+
+		public boolean interact(ItemStack is, PlayerEntity pl, Entity target) {
+			CompoundNBT tag = is.getOrCreateChildTag("souls");
+			String str = target.getType().getRegistryName().toString();
+			if (tag.contains(str))
+				tag.remove(str);
+			else
+				tag.putInt(str, 1);
+			return true;
 		}
 
 	}
@@ -131,6 +195,7 @@ public abstract class SoulItem extends Item {
 	public boolean hitEntity(ItemStack is, LivingEntity target, LivingEntity attacker) {
 		if (target.getHealth() > 0)
 			return false;
+		killEntity(is, target);
 		return true;
 	}
 

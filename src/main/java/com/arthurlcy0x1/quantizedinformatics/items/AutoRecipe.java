@@ -26,6 +26,16 @@ public class AutoRecipe extends Item {
 		return ans;
 	}
 
+	public static NonNullList<ItemStack> loadList(ItemStack is) {
+		CompoundNBT tag = is.getChildTag("recipe");
+		if (tag == null)
+			return null;
+		int len = tag.getInt("length");
+		NonNullList<ItemStack> nnl = NonNullList.withSize(len, ItemStack.EMPTY);
+		ItemStackHelper.loadAllItems(tag, nnl);
+		return nnl;
+	}
+
 	public AutoRecipe(Properties properties) {
 		super(properties);
 	}
@@ -41,9 +51,9 @@ public class AutoRecipe extends Item {
 		ItemStack res = ItemStack.read(tag);
 		list.add(Translator.getTooltip("ingredient"));
 		for (ItemStack i : lis)
-			list.add(i.getDisplayName().shallowCopy().appendText(" x" + i.getCount()));
+			list.add(i.getDisplayName().deepCopy().appendText(" x" + i.getCount()));
 		list.add(Translator.getTooltip("result"));
-		list.add(res.getDisplayName());
+		list.add(res.getDisplayName().deepCopy().appendText(" x" + res.getCount()));
 	}
 
 }

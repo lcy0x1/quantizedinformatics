@@ -82,7 +82,7 @@ public class Wire extends SixWayBlock implements WireConnect {
 						return null;
 					if (bs.getBlock() instanceof WireConnect) {
 						WireConnect wc = (WireConnect) bs.getBlock();
-						if (wc == Registrar.BAP_HEAD)
+						if (wc == Registrar.BAP_HEAD && !w.isBlockPowered(p))
 							if (wc.canConnectFrom(PIPE, bs, d.getOpposite()))
 								head.add(p);
 							else
@@ -147,7 +147,7 @@ public class Wire extends SixWayBlock implements WireConnect {
 					BlockState bs = w.getBlockState(p);
 					if (bs.getBlock() instanceof WireConnect) {
 						WireConnect wc = (WireConnect) bs.getBlock();
-						if (wc == Registrar.BAP_SHEAD)
+						if (wc == Registrar.BAP_SHEAD && !w.isBlockPowered(p))
 							if (wc.canConnectFrom(SPIPE, bs, d.getOpposite()))
 								head.add(p);
 							else

@@ -1,11 +1,12 @@
 {
+	"group": "quantizedinformatics:none",
     "type": "quantizedinformatics:reduction",
     "time": 200,
     "in_main": {
         "item": "quartz"
     },
     "medium": {
-        "item": "coal"
+        "tag": "coals"
     },
     "out_main": "quantizedinformatics:elem_si"
 }

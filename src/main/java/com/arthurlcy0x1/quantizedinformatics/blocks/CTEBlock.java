@@ -17,6 +17,8 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.AbstractFurnaceTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -210,7 +212,8 @@ public class CTEBlock extends BaseBlock {
 	@OnlyIn(Dist.CLIENT)
 	public static abstract class CTEScr<T extends CTECont> extends ContainerScreen<T> {
 
-		public static final int COLOR = 4210752;
+		public static final int RED = 0xff6060;
+		public static final int COLOR = 0x404040;
 
 		public CTEScr(T cont, PlayerInventory inv, ITextComponent text, int h) {
 			super(cont, inv, text);
@@ -278,6 +281,11 @@ public class CTEBlock extends BaseBlock {
 			return index >= 0 && index < inv.size() ? inv.get(index) : ItemStack.EMPTY;
 		}
 
+		@Override
+		public SUpdateTileEntityPacket getUpdatePacket() {
+			return new SUpdateTileEntityPacket(this.getPos(), 0, write(new CompoundNBT()));
+		}
+
 		public void incrOrSet(int index, ItemStack is) {
 			if (is.isEmpty())
 				return;
@@ -302,6 +310,12 @@ public class CTEBlock extends BaseBlock {
 		@Override
 		public boolean isUsableByPlayer(PlayerEntity player) {
 			return true;
+		}
+
+		@Override
+		public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+			setPos(pkt.getPos());
+			read(pkt.getNbtCompound());
 		}
 
 		@Override
@@ -340,6 +354,10 @@ public class CTEBlock extends BaseBlock {
 		}
 
 		protected void onChange(int ind) {
+		}
+
+		protected void sendUpdates() {
+			world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 3);
 		}
 
 	}

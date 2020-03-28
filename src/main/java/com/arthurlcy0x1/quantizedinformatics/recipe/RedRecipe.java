@@ -159,6 +159,11 @@ public class RedRecipe implements IRecipe<RedRecipe.Inv> {
 	}
 
 	@Override
+	public boolean isDynamic() {
+		return true;
+	}
+
+	@Override
 	public boolean matches(Inv inv, World worldIn) {
 		int ing0 = inv.getSlots()[Inv.ING_MAIN];
 		int ing1 = inv.getSlots()[Inv.ING_SIDE];

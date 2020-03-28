@@ -1,4 +1,5 @@
 {
+	"group": "quantizedinformatics:none",
 	"type": "quantizedinformatics:oxidation",
 	"time": 800,
 	"in_main": {

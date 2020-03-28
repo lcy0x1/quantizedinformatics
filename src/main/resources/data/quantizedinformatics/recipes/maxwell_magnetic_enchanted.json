@@ -1,0 +1,23 @@
+{
+	"group": "quantizedinformatics:maxwell",
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "010",
+        "121",
+        "010"
+    ],
+    "key": {
+        "0": {
+            "item": "quantizedinformatics:quantum_fog"
+        },
+        "1": {
+            "item": "quantizedinformatics:enchanted_gold_nugget"
+        },
+        "2": {
+            "item": "quantizedinformatics:alu"
+        }
+    },
+    "result": {
+        "item": "quantizedinformatics:maxwell_magnetic"
+    }
+}

@@ -1,10 +1,7 @@
 package com.arthurlcy0x1.quantizedinformatics.items;
 
-import java.util.List;
-
 import com.arthurlcy0x1.quantizedinformatics.Translator;
 
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -24,8 +21,8 @@ public interface Telescope {
 		}
 
 		@Override
-		public void addInformation(ItemStack is, World w, List<ITextComponent> list, ITooltipFlag b) {
-			addInfo(is, w, list, b);
+		public ITextComponent getDisplayName(ItemStack stack) {
+			return super.getDisplayName(stack).deepCopy().appendText(", ").appendSibling(addInfo(stack));
 		}
 
 		@Override
@@ -49,9 +46,9 @@ public interface Telescope {
 
 	public static final int MAX = 14;
 
-	public static void addInfo(ItemStack is, World w, List<ITextComponent> list, ITooltipFlag b) {
-		float zoom = Math.round(100 / getItemZoom(is)) * 0.01f;
-		list.add(Translator.getTooltip("magnification").shallowCopy().appendText("x" + zoom));
+	public static ITextComponent addInfo(ItemStack is) {
+		double zoom = Math.round(100 / getItemZoom(is)) * 0.01;
+		return Translator.getTooltip("magnification").deepCopy().appendText("x" + zoom);
 
 	}
 

@@ -23,7 +23,6 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.TNTMinecartRenderer;
 import net.minecraft.client.renderer.texture.AtlasTexture;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -525,8 +524,8 @@ public abstract class EntityCannon extends ShootableItem implements Telescope {
 	}
 
 	@Override
-	public void addInformation(ItemStack is, World w, List<ITextComponent> list, ITooltipFlag b) {
-		addInfo(is, w, list, b);
+	public ITextComponent getDisplayName(ItemStack stack) {
+		return super.getDisplayName(stack).deepCopy().appendText(", ").appendSibling(addInfo(stack));
 	}
 
 	@Override

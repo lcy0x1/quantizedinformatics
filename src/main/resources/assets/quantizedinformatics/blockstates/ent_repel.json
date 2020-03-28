@@ -1,7 +1,10 @@
 {
   "variants": {
-    "": {
-      "model": "quantizedinformatics:block/ent_attack"
+    "lit=true": {
+      "model": "quantizedinformatics:block/ent_repel_a"
+    },
+    "lit=false": {
+      "model": "quantizedinformatics:block/ent_repel"
     }
   }
 }

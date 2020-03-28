@@ -1,4 +1,5 @@
 {
+	"group": "quantizedinformatics:pipe",
     "type": "minecraft:crafting_shaped",
     "pattern": [
         "001",

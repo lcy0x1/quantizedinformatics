@@ -1,14 +1,9 @@
 {
+	"group": "",
     "type": "minecraft:crafting_shapeless",
     "ingredients": [
         {
-            "item": "gunpowder"
-        },
-        {
-            "item": "quantizedinformatics:maxwell_attack"
-        },
-        {
-            "item": "quantizedinformatics:maxwell_defense"
+            "item": "tnt"
         },
         {
             "item": "quantizedinformatics:alu"

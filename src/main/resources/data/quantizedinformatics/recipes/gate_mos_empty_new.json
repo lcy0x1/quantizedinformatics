@@ -1,4 +1,5 @@
 {
+	"group": "quantizedinformatics:gate_mos_empty",
     "type": "minecraft:crafting_shaped",
     "pattern": [
         "020",

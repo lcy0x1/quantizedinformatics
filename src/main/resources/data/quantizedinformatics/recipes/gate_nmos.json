@@ -1,4 +1,5 @@
 {
+	"group": "quantizedinformatics:gate_other",
     "type": "minecraft:crafting_shaped",
     "pattern": [
         "IMI",

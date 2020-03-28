@@ -1,4 +1,5 @@
 {
+	"group": "quantizedinformatics:none",
     "type": "quantizedinformatics:maxwell",
     "center": "quantizedinformatics:maxwell_magnetic",
     "surround": "quantizedinformatics:maxwell_wrap_electric",
