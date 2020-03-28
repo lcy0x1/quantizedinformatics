@@ -13,6 +13,8 @@ import com.arthurlcy0x1.quantizedinformatics.blocks.BlockProp;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.AutoCraft;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.EntAttack;
+import com.arthurlcy0x1.quantizedinformatics.blocks.auto.EntSpawn;
+import com.arthurlcy0x1.quantizedinformatics.blocks.auto.EntAttr;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.EntRepel;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.PipeCore;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.PipeHead;
@@ -119,6 +121,8 @@ public class Registrar extends ItemGroup {
 	public static final Block BAP_SHEAD = addName(new SPipeHead(), "pipe_sub_head");
 	public static final Block BAME_ATK = addName(new EntAttack(), "ent_attack");
 	public static final Block BAME_REP = addName(new EntRepel(), "ent_repel");
+	public static final Block BAME_ATR = addName(new EntAttr(), "ent_attract");
+	public static final Block BAME_SPA = addName(new EntSpawn(), "ent_spawn");
 
 	public static final List<Block> BDS = Arrays.asList(BD_CNTR, BD_GATE, BD_IN, BD_OUT, BD_LNR);
 
@@ -146,6 +150,8 @@ public class Registrar extends ItemGroup {
 	public static final Item IBAP_SHEAD = convert(BAP_SHEAD);
 	public static final Item IBME_ATK = convert(BAME_ATK);
 	public static final Item IBME_REP = convert(BAME_REP);
+	public static final Item IBME_ATR = convert(BAME_ATR);
+	public static final Item IBME_SPA = convert(BAME_SPA);
 
 	// items
 	public static final Item IE_P = generate("elem_p", 64);
@@ -232,6 +238,8 @@ public class Registrar extends ItemGroup {
 	public static final ContainerType<PipeCore.Cont> CTAP_CORE = getCT(PipeCore.Cont::new, "pipe_core_c");
 	public static final ContainerType<EntAttack.Cont> CTME_ATK = getCT(EntAttack.Cont::new, "ent_attack_c");
 	public static final ContainerType<EntRepel.Cont> CTME_REP = getCT(EntRepel.Cont::new, "ent_repel_c");
+	public static final ContainerType<EntAttr.Cont> CTME_ATR = getCT(EntAttr.Cont::new, "ent_attract_c");
+	public static final ContainerType<EntSpawn.Cont> CTME_SPA = getCT(EntSpawn.Cont::new, "ent_spawn_c");
 
 	public static final TileEntityType<OxiFn.TE> TET_OXIFN = getTET(OxiFn.TE::new, B_OXIFN, "oxidation_furnace_te");
 	public static final TileEntityType<RedFn.TE> TET_REDFN = getTET(RedFn.TE::new, B_REDFN, "reduction_furnace_te");
@@ -246,6 +254,8 @@ public class Registrar extends ItemGroup {
 	public static final TileEntityType<PipeCore.TE> TETAP_CORE = getTET(PipeCore.TE::new, BAP_CORE, "pipe_core_te");
 	public static final TileEntityType<EntAttack.TE> TETME_ATK = getTET(EntAttack.TE::new, BAME_ATK, "ent_attack_te");
 	public static final TileEntityType<EntRepel.TE> TETME_REP = getTET(EntRepel.TE::new, BAME_REP, "ent_repel_te");
+	public static final TileEntityType<EntAttr.TE> TETME_ATR = getTET(EntAttr.TE::new, BAME_ATR, "ent_attract_te");
+	public static final TileEntityType<EntSpawn.TE> TETME_SPA = getTET(EntSpawn.TE::new, BAME_SPA, "ent_spawn_te");
 
 	public static final EntityType<SmartTNT> ET_STNT = getET(SmartTNT::new, "smart_tnt");
 	public static final EntityType<FogBall> ET_FB = getET(FogBall::new, "fog_ball");
@@ -267,10 +277,10 @@ public class Registrar extends ItemGroup {
 	public static final IRecipeSerializer<?> RS_EOXI = getRS(new EnchantOxiRec.Serializer(), "enchant_oxi");
 
 	public static final ContainerType<?>[] CTS = { CT_OXIFN, CT_REDFN, CTD_CNTR, CTD_GATE, CTD_IN, CTD_OUT, CTD_LNR,
-			CTA_CRAFT, CTA_REC, CTAP_HEAD, CTAP_CORE, CTME_ATK, CTME_REP };
+			CTA_CRAFT, CTA_REC, CTAP_HEAD, CTAP_CORE, CTME_ATK, CTME_REP, CTME_ATR, CTME_SPA };
 
 	public static final TileEntityType<?>[] TETS = { TET_OXIFN, TET_REDFN, TETD_CNTR, TETD_GATE, TETD_IN, TETD_OUT,
-			TETD_LNR, TETA_CRAFT, TETA_REC, TETAP_HEAD, TETAP_CORE, TETME_ATK, TETME_REP };
+			TETD_LNR, TETA_CRAFT, TETA_REC, TETAP_HEAD, TETAP_CORE, TETME_ATK, TETME_REP, TETME_ATR, TETME_SPA };
 
 	public static final EntityType<?>[] ETS = { ET_STNT, ET_FB, ET_IP };
 
@@ -292,6 +302,8 @@ public class Registrar extends ItemGroup {
 		ScreenManager.registerFactory(CTA_CRAFT, AutoCraft.Scr::new);
 		ScreenManager.registerFactory(CTME_ATK, EntAttack.Scr::new);
 		ScreenManager.registerFactory(CTME_REP, EntRepel.Scr::new);
+		ScreenManager.registerFactory(CTME_ATR, EntAttr.Scr::new);
+		ScreenManager.registerFactory(CTME_SPA, EntSpawn.Scr::new);
 
 		ItemRenderer ir = Minecraft.getInstance().getItemRenderer();
 

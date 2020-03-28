@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=true": {
+      "model": "quantizedinformatics:block/ent_attract_a"
+    },
+    "lit=false": {
+      "model": "quantizedinformatics:block/ent_attract"
+    }
+  }
+}

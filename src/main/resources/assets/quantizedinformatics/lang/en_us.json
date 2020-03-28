@@ -13,6 +13,8 @@
     "quantizedinformatics:container.pipe_core": "Item Pipe Core",
     "quantizedinformatics:container.ent_attack": "Entity Attacker",
     "quantizedinformatics:container.ent_repel": "Entity Repeller",
+    "quantizedinformatics:container.ent_attract": "Entity Attracter",
+    "quantizedinformatics:container.ent_spawn": "Entity Spawner",
 
     "quantizedinformatics:container.draft_center.in": "Input Wire ID = ",
     "quantizedinformatics:container.draft_center.out": "Output Wire ID = ",
@@ -38,7 +40,11 @@
     "quantizedinformatics:container.recipe_maker.nonexi": "Error: sub-recipe contains output not in the input list",
     "quantizedinformatics:container.ent_machine.radius": "Radius: ",
     "quantizedinformatics:container.ent_machine.damage": "Damage: ",
-    "quantizedinformatics:container.ent_machine.repel": "Power: ",
+    "quantizedinformatics:container.ent_machine.power": "Power: ",
+    "quantizedinformatics:container.ent_machine.progress": "Time: ",
+    "quantizedinformatics:container.ent_machine.limit": "Limit: ",
+    "quantizedinformatics:container.ent_machine.excess": "Excess Powwer: ",
+    "quantizedinformatics:container.ent_machine.success": "Success: ",
 
     "quantizedinformatics:tooltip.ingredient": "Ingredients:",
     "quantizedinformatics:tooltip.result": "Result:",
@@ -78,6 +84,8 @@
     "block.quantizedinformatics.pipe_sub_head": "Item Pipe Head - Secondary",
     "block.quantizedinformatics.ent_attack": "Entity Machine - Attacker",
     "block.quantizedinformatics.ent_repel": "Entity Machine - Repeller",
+    "block.quantizedinformatics.ent_attract": "Entity Machine - Attracter",
+    "block.quantizedinformatics.ent_spawn": "Entity Machine - Spawner",
 
     "item.quantizedinformatics.elem_b": "B (Boron) - Chemical",
     "item.quantizedinformatics.elem_p": "P (Phosphorous) - Chemical",

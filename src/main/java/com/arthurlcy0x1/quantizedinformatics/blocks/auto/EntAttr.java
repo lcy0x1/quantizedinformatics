@@ -20,7 +20,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class EntRepel extends EntMachine {
+public class EntAttr extends EntMachine {
 
 	public static class Cont extends CTEBlock.CTECont {
 
@@ -31,10 +31,10 @@ public class EntRepel extends EntMachine {
 		}
 
 		protected Cont(int id, PlayerInventory inv, IInventory ent, IIntArray arr) {
-			super(Registrar.CTME_REP, id, inv, ent, 61);
-			addSlot(new CondsSlot(ent, 0, 62, 17, EntRepel::isValid, 1));
-			addSlot(new CondsSlot(ent, 1, 80, 17, EntRepel::isValid, 1));
-			addSlot(new CondsSlot(ent, 2, 98, 17, EntRepel::isValid, 1));
+			super(Registrar.CTME_ATR, id, inv, ent, 61);
+			addSlot(new CondsSlot(ent, 0, 62, 17, EntAttr::isValid, 1));
+			addSlot(new CondsSlot(ent, 1, 80, 17, EntAttr::isValid, 1));
+			addSlot(new CondsSlot(ent, 2, 98, 17, EntAttr::isValid, 1));
 			trackIntArray(data = arr);
 		}
 
@@ -44,7 +44,7 @@ public class EntRepel extends EntMachine {
 	public static class Scr extends CTEBlock.CTEScr<Cont> {
 
 		private static final ResourceLocation GUI = new ResourceLocation(Registrar.MODID,
-				"textures/gui/container/ent_repel.png");
+				"textures/gui/container/ent_attract.png");
 
 		public Scr(Cont cont, PlayerInventory inv, ITextComponent text) {
 			super(cont, inv, text, 143);
@@ -68,7 +68,7 @@ public class EntRepel extends EntMachine {
 			int spe = container.data.get(1);
 			boolean col = spe > MAX_SPEED;
 			spe = Math.min(spe, MAX_SPEED);
-			String s1 = Translator.getContText("ent_machine.poweer") + (1 << 3 * spe);
+			String s1 = Translator.getContText("ent_machine.power") + (1 << 3 * spe);
 			font.drawString(s0, 8, 36, COLOR);
 			font.drawString(s1, ySize / 2, 36, col ? RED : COLOR);
 		}
@@ -77,7 +77,7 @@ public class EntRepel extends EntMachine {
 	public static class TE extends EntMachine.EMTE<TE> {
 
 		public TE() {
-			super(Registrar.TETME_REP, SIZE, EntMachine.TYPE_DEF);
+			super(Registrar.TETME_ATR, SIZE, EntMachine.TYPE_DEF);
 		}
 
 		@Override
@@ -87,7 +87,7 @@ public class EntRepel extends EntMachine {
 
 		@Override
 		public ITextComponent getDisplayName() {
-			return Translator.getCont("ent_repel");
+			return Translator.getCont("ent_attract");
 		}
 
 		public double getMaxVec() {
@@ -104,7 +104,7 @@ public class EntRepel extends EntMachine {
 			double r = getRadius();
 			double dis = dir.length();
 			if (dis > 0.4) {
-				dir = dir.scale(getMaxVec() * (r - dis) / dis / r);
+				dir = dir.scale(getMaxVec() * (dis - r) / dis / r);
 				e.addVelocity(dir.x, dir.y, dir.z);
 			}
 		}
@@ -125,7 +125,7 @@ public class EntRepel extends EntMachine {
 		return false;
 	}
 
-	public EntRepel() {
+	public EntAttr() {
 		super(TE::new);
 	}
 

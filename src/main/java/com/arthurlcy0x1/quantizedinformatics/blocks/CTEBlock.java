@@ -212,7 +212,8 @@ public class CTEBlock extends BaseBlock {
 	@OnlyIn(Dist.CLIENT)
 	public static abstract class CTEScr<T extends CTECont> extends ContainerScreen<T> {
 
-		public static final int COLOR = 4210752;
+		public static final int RED = 0xff6060;
+		public static final int COLOR = 0x404040;
 
 		public CTEScr(T cont, PlayerInventory inv, ITextComponent text, int h) {
 			super(cont, inv, text);
