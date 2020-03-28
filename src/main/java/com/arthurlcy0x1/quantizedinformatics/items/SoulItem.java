@@ -38,7 +38,7 @@ public abstract class SoulItem extends Item {
 				ans.getOrCreateTag().putInt("exp", exp);
 				return ans;
 			}
-			is.getOrCreateTag().putInt("exp", is.getOrCreateTag().getInt("exp"));
+			is.getOrCreateTag().putInt("exp", is.getOrCreateTag().getInt("exp") + exp);
 			return is;
 		}
 
@@ -50,6 +50,12 @@ public abstract class SoulItem extends Item {
 
 		public SoulBottle(Properties p) {
 			super(p.containerItem(Items.GLASS_BOTTLE));
+		}
+
+		@Override
+		public void addInformation(ItemStack is, World w, List<ITextComponent> list, ITooltipFlag b) {
+			int exp = is.getOrCreateTag().getInt("exp");
+			list.add(Translator.getTooltip("exp").deepCopy().appendText("" + exp));
 		}
 
 	}
@@ -187,8 +193,10 @@ public abstract class SoulItem extends Item {
 
 	@Override
 	public boolean hitEntity(ItemStack is, LivingEntity target, LivingEntity attacker) {
+		System.out.println("health: " + target.getHealth());
 		if (target.getHealth() > 0)
 			return false;
+		killEntity(is, target);
 		return true;
 	}
 

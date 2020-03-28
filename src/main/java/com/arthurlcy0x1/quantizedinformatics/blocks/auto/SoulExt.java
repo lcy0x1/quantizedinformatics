@@ -35,8 +35,8 @@ public class SoulExt {
 		protected Cont(int id, PlayerInventory inv, IInventory ent, IIntArray arr) {
 			super(Registrar.CTA_SOUL, id, inv, ent, 92, arr);
 			addSlot(new CondsSlot(ent, 0, 58, 17, TE::isValid, 1));
-			addSlot(new CondsSlot(ent, 1, 102, 17, TE::isValid, 1));
-			addSlot(new ResultSlot(ent, 2, 58, 61));
+			addSlot(new CondsSlot(ent, 1, 58, 61, TE::isValid, 1));
+			addSlot(new CondsSlot(ent, 2, 102, 17, TE::isValid, 64));
 			addSlot(new CondsSlot(ent, 3, 102, 61, TE::isValid, 1));
 		}
 
@@ -76,7 +76,7 @@ public class SoulExt {
 			int power = container.getData().get(0);
 			for (int i = 0; i < 4; i++)
 				if ((power & 1 << i) > 0)
-					blit(x + 56 + i % 2 * 44, y + 15 + i / 2 * 44, 176, 68, 20, 20);
+					blit(x + 56 + i / 2 * 44, y + 15 + i % 2 * 44, 176, 68, 20, 20);
 			int avail = container.getData().get(2);
 			int red = 0;
 			if (power == 0b0011)
@@ -94,7 +94,7 @@ public class SoulExt {
 			for (int i = 0; i < 6; i++) {
 				int col = red == i + 1 ? 3 : (avail & 1 << i) > 0 ? hov == i + 1 ? 2 : 1 : 0;
 				int spr = SPR[i];
-				blit(x + ARR[i][0], x + ARR[i][1], 176 + SPS[spr][1] * col, SPS[spr][0], SPS[spr][1], SPS[spr][2]);
+				blit(x + ARR[i][0], y + ARR[i][1], 176 + SPS[spr][1] * col, SPS[spr][0], SPS[spr][1], SPS[spr][2]);
 			}
 		}
 
@@ -135,6 +135,8 @@ public class SoulExt {
 				return stack.getItem() == Registrar.IS_COLL;
 			if (index == 1)
 				return stack.getItem() == Registrar.IS_TRAP;
+			if (index == 2)
+				return stack.getItem() == Registrar.IE_SOUL;
 			if (index == 3)
 				return stack.getItem() == Registrar.IS_EXP || stack.getItem() == Items.GLASS_BOTTLE;
 			return false;
@@ -191,10 +193,10 @@ public class SoulExt {
 			Direction d1 = d0.rotateYCCW();
 			Direction d2 = d1.rotateYCCW();
 			Direction d3 = d2.rotateYCCW();
-			boolean p0 = world.isSidePowered(pos, d0);
-			boolean p1 = world.isSidePowered(pos, d1);
-			boolean p2 = world.isSidePowered(pos, d2);
-			boolean p3 = world.isSidePowered(pos, d3);
+			boolean p0 = world.isSidePowered(pos.offset(d0), d0.getOpposite());
+			boolean p1 = world.isSidePowered(pos.offset(d1), d1.getOpposite());
+			boolean p2 = world.isSidePowered(pos.offset(d2), d2.getOpposite());
+			boolean p3 = world.isSidePowered(pos.offset(d3), d3.getOpposite());
 			power = (p0 ? 1 : 0) + (p1 ? 2 : 0) + (p2 ? 4 : 0) + (p3 ? 8 : 0);
 			int count = (p0 ? 1 : 0) + (p1 ? 1 : 0) + (p2 ? 1 : 0) + (p3 ? 1 : 0);
 			ItemStack i0 = getStackInSlot(0);

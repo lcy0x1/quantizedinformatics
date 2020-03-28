@@ -15,6 +15,7 @@
     "quantizedinformatics:container.ent_repel": "Entity Repeller",
     "quantizedinformatics:container.ent_attract": "Entity Attracter",
     "quantizedinformatics:container.ent_spawn": "Entity Spawner",
+    "quantizedinformatics:container.soul_extracter": "Soul Extracter",
 
     "quantizedinformatics:container.draft_center.in": "Input Wire ID = ",
     "quantizedinformatics:container.draft_center.out": "Output Wire ID = ",
@@ -57,6 +58,7 @@
     "quantizedinformatics:tooltip.level": "Lv.",
     "quantizedinformatics:tooltip.magnification": "Magnification: ",
     "quantizedinformatics:tooltip.total_soul": "Total Souls: ",
+    "quantizedinformatics:tooltip.exp": "Exp: ",
     "quantizedinformatics:tooltip.prep_chip.proc=1": "photoresist applied",
     "quantizedinformatics:tooltip.prep_chip.proc=2": "masked",
     "quantizedinformatics:tooltip.prep_chip.proc=3": "photoresist removed",

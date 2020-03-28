@@ -10,6 +10,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
@@ -158,6 +159,7 @@ public class EntSpawn extends EntMachine {
 			ItemStack is0 = getStackInSlot(0);
 			ItemStack is1 = getStackInSlot(1);
 			if (dirty) {
+				count = success = 0;
 				max_prog = range = max = -1;
 				exc = 0;
 				if (!is0.isEmpty() && !is1.isEmpty()) {
@@ -168,8 +170,9 @@ public class EntSpawn extends EntMachine {
 						min = Math.min(min, MAX_TPOW) - 2;
 						max_prog = 1 << MAX_TIME - 3 * min;
 					}
-					int nax = Math.max(0, atk - def) + Math.max(0, MAX_TPOW - min);
-					int rng = Math.max(0, def - atk) + Math.max(0, MAX_TPOW - min);
+					int nax = Math.max(0, atk - def) + Math.max(0, min + 2 - MAX_TPOW);
+					int rng = Math.max(0, def - atk) + Math.max(0, min + 2 - MAX_TPOW);
+					System.out.println("min = " + min + ", nax = " + nax + ", pre-rng = " + rng);
 					max = 1 << Math.min(nax, MAX_MPOW);
 					if (nax > MAX_MPOW)
 						rng += nax - MAX_MPOW;
@@ -196,7 +199,7 @@ public class EntSpawn extends EntMachine {
 			}
 			prog -= prog / 8;
 			count++;
-			in_range = world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(pos).grow(range)).size();
+			in_range = world.getEntitiesInAABBexcluding(null, new AxisAlignedBB(pos).grow(range), this::detect).size();
 			if (in_range >= max)
 				return;
 			Random r = world.getRandom();
@@ -218,6 +221,10 @@ public class EntSpawn extends EntMachine {
 			world.playEvent(2004, pos, 0);
 			prog = 0;
 			success++;
+		}
+
+		private boolean detect(Entity e) {
+			return e instanceof LivingEntity && !(e instanceof PlayerEntity);
 		}
 
 		@Override

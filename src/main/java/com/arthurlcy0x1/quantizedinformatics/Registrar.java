@@ -187,7 +187,7 @@ public class Registrar extends ItemGroup {
 	public static final Item IS_MARKER = generate("soul_marker", 1, SoulMarker::new);
 	public static final Item IS_TRAP = generate("soul_trap", 1, SoulTrap::new);
 	public static final Item IS_COLL = generate("soul_collector", 1, SoulCollector::new);
-	public static final Item IS_EXP = generate("exp_bottle", 1, SoulBottle::new);
+	public static final Item IS_EXP = generate("soul_bottle", 1, SoulBottle::new);
 	public static final Item I_OREC = generate("ore_collector", 1, OreCollect::new);
 	public static final Item IW_TNT = generate("weapon_tnt", 1, TNTEC::new);
 	public static final Item IW_POTION = generate("weapon_potion", 1, PotionEC::new);
