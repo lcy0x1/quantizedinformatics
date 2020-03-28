@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube",
+	"textures": {
+		"north": "quantizedinformatics:blocks/soul_extractor_0",
+		"up": "quantizedinformatics:blocks/soul_extractor_top",
+		"down": "quantizedinformatics:blocks/soul_extractor_top",
+		"south": "quantizedinformatics:blocks/soul_extractor_2",
+		"west": "quantizedinformatics:blocks/soul_extractor_1",
+		"east": "quantizedinformatics:blocks/soul_extractor_3",
+		"particle": "quantizedinformatics:blocks/quantum_fog"
+	}
+}

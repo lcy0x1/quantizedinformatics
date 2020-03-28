@@ -101,6 +101,7 @@ public class RecMaker {
 				return stack.getItem() == Items.PAPER;
 			return false;
 		}
+
 		private ICraftingRecipe rec;
 
 		private Merge merge;
@@ -343,6 +344,7 @@ public class RecMaker {
 		private static Merge getById(int id) {
 			return Merge.values()[id];
 		}
+
 		private final int ind;
 
 		private final String str;

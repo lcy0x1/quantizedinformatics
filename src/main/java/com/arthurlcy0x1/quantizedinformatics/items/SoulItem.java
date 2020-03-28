@@ -2,6 +2,7 @@ package com.arthurlcy0x1.quantizedinformatics.items;
 
 import java.util.List;
 
+import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
 
 import net.minecraft.block.Block;
@@ -15,6 +16,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.MobSpawnerTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -27,6 +29,30 @@ import net.minecraft.world.spawner.AbstractSpawner;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public abstract class SoulItem extends Item {
+
+	public static class SoulBottle extends EncItem {
+
+		public static ItemStack addExp(ItemStack is, int exp) {
+			if (is.isEmpty() || is.getItem() != Registrar.IS_EXP) {
+				ItemStack ans = new ItemStack(Registrar.IS_EXP);
+				ans.getOrCreateTag().putInt("exp", exp);
+				return ans;
+			}
+			is.getOrCreateTag().putInt("exp", is.getOrCreateTag().getInt("exp"));
+			return is;
+		}
+
+		public static int getExp(ItemStack is) {
+			if (is.isEmpty() || is.getItem() != Registrar.IS_EXP)
+				return 0;
+			return is.getOrCreateTag().getInt("exp");
+		}
+
+		public SoulBottle(Properties p) {
+			super(p.containerItem(Items.GLASS_BOTTLE));
+		}
+
+	}
 
 	public static class SoulCollector extends SoulItem {
 

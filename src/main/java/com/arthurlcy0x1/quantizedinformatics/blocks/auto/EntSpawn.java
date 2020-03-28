@@ -99,24 +99,28 @@ public class EntSpawn extends EntMachine {
 			super(Registrar.TETME_SPA, SIZE);
 		}
 
-		public void read(CompoundNBT tag) {
-			super.read(tag);
-			prog = tag.getInt("te.progress");
-			success = tag.getInt("te.success");
-			count = tag.getInt("te.count");
-		}
-
-		public CompoundNBT write(CompoundNBT tag) {
-			super.write(tag);
-			tag.putInt("te.progress", prog);
-			tag.putInt("te.count", count);
-			tag.putInt("te.success", success);
-			return tag;
-		}
-
 		@Override
 		public Container createMenu(int id, PlayerInventory inv, PlayerEntity pe) {
 			return new Cont(id, inv, this, this);
+		}
+
+		@Override
+		public int get(int index) {
+			if (index == 0)
+				return prog;
+			if (index == 1)
+				return max_prog;
+			if (index == 2)
+				return range;
+			if (index == 3)
+				return max;
+			if (index == 4)
+				return exc;
+			if (index == 5)
+				return count;
+			if (index == 6)
+				return success;
+			return 0;
 		}
 
 		@Override
@@ -127,6 +131,23 @@ public class EntSpawn extends EntMachine {
 		@Override
 		public boolean isItemValidForSlot(int slot, ItemStack is) {
 			return isValid(slot, is);
+		}
+
+		@Override
+		public void read(CompoundNBT tag) {
+			super.read(tag);
+			prog = tag.getInt("te.progress");
+			success = tag.getInt("te.success");
+			count = tag.getInt("te.count");
+		}
+
+		@Override
+		public void set(int index, int value) {
+		}
+
+		@Override
+		public int size() {
+			return 7;
 		}
 
 		@Override
@@ -200,33 +221,15 @@ public class EntSpawn extends EntMachine {
 		}
 
 		@Override
-		public int get(int index) {
-			if (index == 0)
-				return prog;
-			if (index == 1)
-				return max_prog;
-			if (index == 2)
-				return range;
-			if (index == 3)
-				return max;
-			if (index == 4)
-				return exc;
-			if (index == 5)
-				return count;
-			if (index == 6)
-				return success;
-			return 0;
+		public CompoundNBT write(CompoundNBT tag) {
+			super.write(tag);
+			tag.putInt("te.progress", prog);
+			tag.putInt("te.count", count);
+			tag.putInt("te.success", success);
+			return tag;
 		}
 
 		@Override
-		public void set(int index, int value) {
-		}
-
-		@Override
-		public int size() {
-			return 7;
-		}
-
 		protected void onChange(int ind) {
 			dirty = true;
 		}

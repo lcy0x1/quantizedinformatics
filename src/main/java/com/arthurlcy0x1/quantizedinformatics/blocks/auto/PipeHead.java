@@ -39,7 +39,7 @@ public class PipeHead extends BaseBlock implements WireConnect {
 		protected Cont(int id, PlayerInventory inv, IInventory ent, IIntArray arr) {
 			super(Registrar.CTAP_HEAD, id, inv, ent, 92, arr);
 			for (int i = 0; i < SIZE; i++)
-				this.addSlot(new SizeSlot(ent, i, 44 + i % 5 * 18, 30 + i / 5 * 31, 1));
+				addSlot(new SizeSlot(ent, i, 44 + i % 5 * 18, 30 + i / 5 * 31, 1));
 		}
 
 	}
@@ -60,6 +60,8 @@ public class PipeHead extends BaseBlock implements WireConnect {
 			int j = guiTop + 61;
 			if (x >= i && x <= i + 18 && y >= j && y <= j + 18)
 				send(0, (get(0) + 1) % 5);
+			else if (x >= i && x <= i + 18 && y >= j + 36 && y <= j + 54)
+				send(1, (get(1) + 1) % 3);
 			else
 				return super.mouseClicked(x, y, t);
 			return true;
@@ -72,9 +74,16 @@ public class PipeHead extends BaseBlock implements WireConnect {
 			int j = guiTop + 61;
 			if (mx >= i && mx <= i + 18 && my >= j && my <= j + 18) {
 				List<String> list = new ArrayList<>();
-				list.add(Translator.getTooltipText("max"));
+				list.add(parse("max"));
 				int c = get(0);
-				list.add(c > 0 ? "" + (1 << 2 * (c - 1)) : Translator.getTooltipText("infinity"));
+				list.add(c > 0 ? "" + (1 << 2 * (c - 1)) : parse("infinity"));
+				renderTooltip(list, mx, my);
+			}
+			if (mx >= i && mx <= i + 18 && my >= j + 36 && my <= j + 54) {
+				List<String> list = new ArrayList<>();
+				list.add(parse("filter"));
+				int c = get(1);
+				list.add(parse(c == 0 ? "item" : c == 1 ? "all" : "tag"));
 				renderTooltip(list, mx, my);
 			}
 		}
@@ -82,27 +91,29 @@ public class PipeHead extends BaseBlock implements WireConnect {
 		@Override
 		protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-			this.minecraft.getTextureManager().bindTexture(GUI);
+			minecraft.getTextureManager().bindTexture(GUI);
 			int i = guiLeft;
 			int j = guiTop;
 			blit(i, j, 0, 0, xSize, ySize);
 			int count = get(0);
 			int loc = count == 0 ? 7 : count - 1;
 			blit(i + 8, j + 61, 176 + loc % 4 * 18, loc / 4 * 18, 18, 18);
+			loc = 4 + (get(1) + 1) % 3;
+			blit(i + 8, j + 97, 176 + loc % 4 * 18, loc / 4 * 18, 18, 18);
 		}
 
 		@Override
 		protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 			super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-			cstr(Translator.getContText("pipe_head.extract"), 19);
-			cstr(Translator.getContText("pipe_head.insert"), 50);
+			cstr(parse("extract"), 19);
+			cstr(parse("insert"), 50);
 		}
 
 	}
 
 	public static class TE extends CTEBlock.CTETE<TE> implements IIntArray {
 
-		public static final int INSERT_ALL = 1, INSERT_TAG = 2, EXTRACT_ALL = 4, EXTRACT_TAG = 8;
+		public static final int PASS_ALL = 1, CHECK_TAG = 2;
 
 		private int insertCount = 0;
 		private int flags = 0;
@@ -158,15 +169,12 @@ public class PipeHead extends BaseBlock implements WireConnect {
 		protected boolean canExtract(ItemStack is) {
 			if (is.isEmpty())
 				return false;
-			if ((flags & EXTRACT_ALL) != 0)
+			if ((flags & PASS_ALL) != 0)
 				return true;
 			for (int i = 0; i < 5; i++) {
 				ItemStack in = getStackInSlot(i);
-				if (!in.isEmpty())
-					if ((flags & EXTRACT_TAG) == 0 && is.getItem() == in.getItem())
-						return true;
-					else if (Container.areItemsAndTagsEqual(is, in))
-						return true;
+				if (!in.isEmpty() && checkEqual(is, in))
+					return true;
 			}
 			return false;
 		}
@@ -174,7 +182,7 @@ public class PipeHead extends BaseBlock implements WireConnect {
 		protected int canInsert(ItemStack is, IInventory id, Direction dir) {
 			if (is.isEmpty())
 				return 0;
-			if ((flags & INSERT_ALL) != 0)
+			if ((flags & PASS_ALL) != 0)
 				return -1;
 			for (int i = 5; i < 10; i++) {
 				ItemStack in = getStackInSlot(i);
@@ -208,12 +216,18 @@ public class PipeHead extends BaseBlock implements WireConnect {
 		}
 
 		private boolean checkEqual(ItemStack i0, ItemStack i1) {
-			return (flags & INSERT_TAG) == 0 ? i0.getItem() == i1.getItem() : Container.areItemsAndTagsEqual(i0, i1);
+			if ((flags & CHECK_TAG) == 0)
+				return i0.getItem() == i1.getItem() && i0.isEnchanted() == i1.isEnchanted();
+			return Container.areItemsAndTagsEqual(i0, i1);
 		}
 
 	}
 
 	private static final int SIZE = 10;
+
+	private static String parse(String str) {
+		return Translator.getContText("pipe_head." + str);
+	}
 
 	public PipeHead() {
 		super(construct(BlockProp.M_PIPE).addImpls((STE) TE::new, ALD));

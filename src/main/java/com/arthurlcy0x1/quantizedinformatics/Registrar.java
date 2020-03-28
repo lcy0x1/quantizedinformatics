@@ -20,6 +20,7 @@ import com.arthurlcy0x1.quantizedinformatics.blocks.auto.PipeCore;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.PipeHead;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.RecMaker;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.SPipeHead;
+import com.arthurlcy0x1.quantizedinformatics.blocks.auto.SoulExt;
 import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DIOBlock.DIOScr;
 import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DIOBlock.DIOTerm;
 import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftCntr;
@@ -49,6 +50,7 @@ import com.arthurlcy0x1.quantizedinformatics.items.LogicDraft;
 import com.arthurlcy0x1.quantizedinformatics.items.MaxwellItem;
 import com.arthurlcy0x1.quantizedinformatics.items.OreCollect;
 import com.arthurlcy0x1.quantizedinformatics.items.PrepChip;
+import com.arthurlcy0x1.quantizedinformatics.items.SoulItem.SoulBottle;
 import com.arthurlcy0x1.quantizedinformatics.items.SoulItem.SoulCollector;
 import com.arthurlcy0x1.quantizedinformatics.items.SoulItem.SoulMarker;
 import com.arthurlcy0x1.quantizedinformatics.items.SoulItem.SoulTrap;
@@ -114,6 +116,7 @@ public class Registrar extends ItemGroup {
 	public static final Block BD_LNR = addName(new DraftLnr(), "draft_listener");
 	public static final Block BA_CRAFT = addName(new CTEBlock(BlockProp.M_CRAFT, AutoCraft.TE::new), "auto_craft");
 	public static final Block BA_REC = addName(new CTEBlock(BlockProp.M_CRAFT, RecMaker.TE::new), "recipe_maker");
+	public static final Block BA_SOUL = addName(new CTEBlock(BlockProp.M_CRAFT, SoulExt.TE::new), "soul_extracter");
 	public static final Block BAP_HEAD = addName(new PipeHead(), "pipe_head");
 	public static final Block BAP_BODY = addName(new Wire(WireConnect.PIPE), "pipe_body");
 	public static final Block BAP_CORE = addName(new PipeCore(), "pipe_core");
@@ -143,6 +146,7 @@ public class Registrar extends ItemGroup {
 	public static final Item IBD_LNR = convert(BD_LNR);
 	public static final Item IBA_CRAFT = convert(BA_CRAFT);
 	public static final Item IBA_REC = convert(BA_REC);
+	public static final Item IBA_SOUL = convert(BA_SOUL);
 	public static final Item IBAP_HEAD = convert(BAP_HEAD);
 	public static final Item IBAP_BODY = convert(BAP_BODY);
 	public static final Item IBAP_CORE = convert(BAP_CORE);
@@ -183,6 +187,7 @@ public class Registrar extends ItemGroup {
 	public static final Item IS_MARKER = generate("soul_marker", 1, SoulMarker::new);
 	public static final Item IS_TRAP = generate("soul_trap", 1, SoulTrap::new);
 	public static final Item IS_COLL = generate("soul_collector", 1, SoulCollector::new);
+	public static final Item IS_EXP = generate("exp_bottle", 1, SoulBottle::new);
 	public static final Item I_OREC = generate("ore_collector", 1, OreCollect::new);
 	public static final Item IW_TNT = generate("weapon_tnt", 1, TNTEC::new);
 	public static final Item IW_POTION = generate("weapon_potion", 1, PotionEC::new);
@@ -234,6 +239,7 @@ public class Registrar extends ItemGroup {
 	public static final ContainerType<DraftLnr.Cont> CTD_LNR = getCT(DraftLnr.Cont::new, "draft_listener_c");
 	public static final ContainerType<AutoCraft.Cont> CTA_CRAFT = getCT(AutoCraft.Cont::new, "auto_craft_c");
 	public static final ContainerType<RecMaker.Cont> CTA_REC = getCT(RecMaker.Cont::new, "recipe_maker_c");
+	public static final ContainerType<SoulExt.Cont> CTA_SOUL = getCT(SoulExt.Cont::new, "soul_extracter_c");
 	public static final ContainerType<PipeHead.Cont> CTAP_HEAD = getCT(PipeHead.Cont::new, "pipe_head_c");
 	public static final ContainerType<PipeCore.Cont> CTAP_CORE = getCT(PipeCore.Cont::new, "pipe_core_c");
 	public static final ContainerType<EntAttack.Cont> CTME_ATK = getCT(EntAttack.Cont::new, "ent_attack_c");
@@ -250,6 +256,7 @@ public class Registrar extends ItemGroup {
 	public static final TileEntityType<DraftLnr.TE> TETD_LNR = getTET(DraftLnr.TE::new, BD_LNR, "draft_listener_te");
 	public static final TileEntityType<AutoCraft.TE> TETA_CRAFT = getTET(AutoCraft.TE::new, BA_CRAFT, "auto_craft_te");
 	public static final TileEntityType<RecMaker.TE> TETA_REC = getTET(RecMaker.TE::new, BA_REC, "recipe_maker_te");
+	public static final TileEntityType<SoulExt.TE> TETA_SOUL = getTET(SoulExt.TE::new, BA_SOUL, "soul_extracter_te");
 	public static final TileEntityType<PipeHead.TE> TETAP_HEAD = getTET(PipeHead.TE::new, BAP_HEAD, "pipe_head_te");
 	public static final TileEntityType<PipeCore.TE> TETAP_CORE = getTET(PipeCore.TE::new, BAP_CORE, "pipe_core_te");
 	public static final TileEntityType<EntAttack.TE> TETME_ATK = getTET(EntAttack.TE::new, BAME_ATK, "ent_attack_te");
@@ -277,10 +284,11 @@ public class Registrar extends ItemGroup {
 	public static final IRecipeSerializer<?> RS_EOXI = getRS(new EnchantOxiRec.Serializer(), "enchant_oxi");
 
 	public static final ContainerType<?>[] CTS = { CT_OXIFN, CT_REDFN, CTD_CNTR, CTD_GATE, CTD_IN, CTD_OUT, CTD_LNR,
-			CTA_CRAFT, CTA_REC, CTAP_HEAD, CTAP_CORE, CTME_ATK, CTME_REP, CTME_ATR, CTME_SPA };
+			CTA_CRAFT, CTA_REC, CTA_SOUL, CTAP_HEAD, CTAP_CORE, CTME_ATK, CTME_REP, CTME_ATR, CTME_SPA };
 
 	public static final TileEntityType<?>[] TETS = { TET_OXIFN, TET_REDFN, TETD_CNTR, TETD_GATE, TETD_IN, TETD_OUT,
-			TETD_LNR, TETA_CRAFT, TETA_REC, TETAP_HEAD, TETAP_CORE, TETME_ATK, TETME_REP, TETME_ATR, TETME_SPA };
+			TETD_LNR, TETA_CRAFT, TETA_REC, TETA_SOUL, TETAP_HEAD, TETAP_CORE, TETME_ATK, TETME_REP, TETME_ATR,
+			TETME_SPA };
 
 	public static final EntityType<?>[] ETS = { ET_STNT, ET_FB, ET_IP };
 
@@ -300,6 +308,7 @@ public class Registrar extends ItemGroup {
 		ScreenManager.registerFactory(CTAP_CORE, PipeCore.Scr::new);
 		ScreenManager.registerFactory(CTA_REC, RecMaker.Scr::new);
 		ScreenManager.registerFactory(CTA_CRAFT, AutoCraft.Scr::new);
+		ScreenManager.registerFactory(CTA_SOUL, SoulExt.Scr::new);
 		ScreenManager.registerFactory(CTME_ATK, EntAttack.Scr::new);
 		ScreenManager.registerFactory(CTME_REP, EntRepel.Scr::new);
 		ScreenManager.registerFactory(CTME_ATR, EntAttr.Scr::new);
