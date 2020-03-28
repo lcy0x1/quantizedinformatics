@@ -112,7 +112,6 @@ public class EntAttack extends EntMachine {
 		protected void handle(Entity e, Vec3d dir) {
 			if (e instanceof LivingEntity)
 				if (e.attackEntityFrom(getDamageSource(), getDamage())) {
-					System.out.println("attack: " + e.getEntityString());
 					ItemStack is = getStackInSlot(3);
 					if (!is.isEmpty()) {
 						SoulCollector s = (SoulCollector) is.getItem();

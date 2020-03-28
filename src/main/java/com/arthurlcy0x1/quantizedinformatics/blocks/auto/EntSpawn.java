@@ -1,6 +1,9 @@
 package com.arthurlcy0x1.quantizedinformatics.blocks.auto;
 
 import java.util.Random;
+
+import org.apache.logging.log4j.LogManager;
+
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
@@ -172,7 +175,6 @@ public class EntSpawn extends EntMachine {
 					}
 					int nax = Math.max(0, atk - def) + Math.max(0, min + 2 - MAX_TPOW);
 					int rng = Math.max(0, def - atk) + Math.max(0, min + 2 - MAX_TPOW);
-					System.out.println("min = " + min + ", nax = " + nax + ", pre-rng = " + rng);
 					max = 1 << Math.min(nax, MAX_MPOW);
 					if (nax > MAX_MPOW)
 						rng += nax - MAX_MPOW;
@@ -200,17 +202,23 @@ public class EntSpawn extends EntMachine {
 			prog -= prog / 8;
 			count++;
 			in_range = world.getEntitiesInAABBexcluding(null, new AxisAlignedBB(pos).grow(range), this::detect).size();
-			if (in_range >= max)
+			if (in_range >= max) {
+				LogManager.getLogger().info("failed: too many entities");
 				return;
+			}
 			Random r = world.getRandom();
 			SpawnReason reason = SpawnReason.SPAWNER;
 			double d0 = pos.getX() + 0.5 + (r.nextDouble() * 2 - 1) * range;
 			double d1 = pos.getY() + 0.5 + (r.nextDouble() * 2 - 1) * range;
 			double d2 = pos.getZ() + 0.5 + (r.nextDouble() * 2 - 1) * range;
-			if (!world.func_226664_a_(et.func_220328_a(d0, d1, d2)))
+			if (!world.func_226664_a_(et.func_220328_a(d0, d1, d2))) {
+				LogManager.getLogger().info("failed: collision");
 				return;
-			if (!EntitySpawnPlacementRegistry.func_223515_a(et, world, reason, new BlockPos(d0, d1, d2), r))
+			}
+			if (!EntitySpawnPlacementRegistry.func_223515_a(et, world, reason, new BlockPos(d0, d1, d2), r)) {
+				LogManager.getLogger().info("failed: environment");
 				return;
+			}
 			Entity ent = et.create(world);
 			ent.setLocationAndAngles(d0, d1, d2, world.rand.nextFloat() * 360, 0);
 			if (ent instanceof MobEntity) {
@@ -243,7 +251,7 @@ public class EntSpawn extends EntMachine {
 
 	}
 
-	private static final int SIZE = 4, MAX_TIME = 10, MAX_RANGE = 4, MAX_TPOW = 5, MAX_MPOW = 4, MAX_RPOW = 2;
+	private static final int SIZE = 4, MAX_TIME = 10, MAX_RANGE = 4, MAX_TPOW = 4, MAX_MPOW = 4, MAX_RPOW = 2;
 
 	private static boolean isValid(int ind, ItemStack is) {
 		if (ind == 0)

@@ -225,8 +225,11 @@ public class SoulExt {
 						}
 					c01 = found;
 				} else {
-					int cont = i0.getOrCreateChildTag("souls").getInt(str);
-					c01 = cont >= i1.getDamage();
+					if (i1.getDamage() > 0) {
+						int cont = i0.getOrCreateChildTag("souls").getInt(str);
+						c01 = cont >= i1.getDamage();
+					} else
+						c01 = false;
 				}
 			}
 			avail = (c01 ? 1 : 0) + (c02 ? 2 : 0) + (c03 ? 4 : 0) + (c12 ? 8 : 0) + (c13 ? 16 : 0) + (c23 ? 32 : 0);
@@ -241,14 +244,20 @@ public class SoulExt {
 							break;
 						}
 					i1.getOrCreateTag().putString("soul", found);
+					int cont = tag.getInt(found);
+					if (cont == i1.getDamage())
+						tag.remove(found);
+					else
+						tag.putInt(found, cont - 64);
+					i0.getOrCreateTag().putInt("total", i0.getOrCreateTag().getInt("total") - 64);
 				} else {
 					int cont = tag.getInt(str);
 					if (cont == i1.getDamage())
 						tag.remove(str);
 					else
 						tag.putInt(str, cont - i1.getDamage());
+					i0.getOrCreateTag().putInt("total", i0.getOrCreateTag().getInt("total") - i1.getDamage());
 					i1.setDamage(0);
-
 				}
 			} else if (c02 && (action == 2 || count == 2 && p0 && p2)) {
 				int tot = i0.getOrCreateTag().getInt("total");
