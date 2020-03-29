@@ -9,6 +9,8 @@ import net.minecraft.util.text.ITextComponent;
 
 public class MaxwellItem extends Item implements IMaxwell {
 
+	public static final int VALUE = 1280;
+
 	public static int getLevel(ItemStack is) {
 		if (!(is.getItem() instanceof IMaxwell))
 			return 0;
@@ -37,6 +39,7 @@ public class MaxwellItem extends Item implements IMaxwell {
 		return d;
 	}
 
+	@Override
 	public int getMax() {
 		return max;
 	}

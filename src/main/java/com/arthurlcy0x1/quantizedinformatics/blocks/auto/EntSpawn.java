@@ -231,10 +231,6 @@ public class EntSpawn extends EntMachine {
 			success++;
 		}
 
-		private boolean detect(Entity e) {
-			return e instanceof LivingEntity && !(e instanceof PlayerEntity);
-		}
-
 		@Override
 		public CompoundNBT write(CompoundNBT tag) {
 			super.write(tag);
@@ -247,6 +243,10 @@ public class EntSpawn extends EntMachine {
 		@Override
 		protected void onChange(int ind) {
 			dirty = true;
+		}
+
+		private boolean detect(Entity e) {
+			return e instanceof LivingEntity && !(e instanceof PlayerEntity);
 		}
 
 	}

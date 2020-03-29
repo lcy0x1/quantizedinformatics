@@ -10,6 +10,7 @@ import java.util.function.Predicate;
 import org.apache.logging.log4j.LogManager;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
+import com.arthurlcy0x1.quantizedinformatics.items.IMaxwell.IMaxRepairable;
 import com.arthurlcy0x1.quantizedinformatics.logic.Estimator;
 import com.arthurlcy0x1.quantizedinformatics.logic.Estimator.EstiResult;
 import com.arthurlcy0x1.quantizedinformatics.logic.Estimator.EstiType;
@@ -61,7 +62,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-public abstract class EntityCannon extends ShootableItem implements Telescope {
+public abstract class EntityCannon extends ShootableItem implements Telescope, IMaxRepairable {
 
 	public static class DefEC extends AbEC {
 
@@ -402,7 +403,7 @@ public abstract class EntityCannon extends ShootableItem implements Telescope {
 
 	}
 
-	public static final int DAMAGE = 2560;
+	public static final int DAMAGE = MaxwellItem.VALUE * 2;
 
 	private static double getPlX(PlayerEntity pl) {
 		return pl.func_226277_ct_();
@@ -524,6 +525,11 @@ public abstract class EntityCannon extends ShootableItem implements Telescope {
 	}
 
 	@Override
+	public boolean canUse(ItemStack is) {
+		return is.getItem() == Registrar.IMU_FIX || is.getItem() == Registrar.IMU_ATK && MaxwellItem.getLevel(is) == 2;
+	}
+
+	@Override
 	public ITextComponent getDisplayName(ItemStack stack) {
 		return super.getDisplayName(stack).deepCopy().appendText(", ").appendSibling(addInfo(stack));
 	}
@@ -577,6 +583,11 @@ public abstract class EntityCannon extends ShootableItem implements Telescope {
 
 			}
 		}
+	}
+
+	@Override
+	public int repair(ItemStack is) {
+		return canUse(is) ? MaxwellItem.VALUE : 0;
 	}
 
 	protected abstract Entity getEntity(World w, ItemStack ammo, PlayerEntity pl, float velo);

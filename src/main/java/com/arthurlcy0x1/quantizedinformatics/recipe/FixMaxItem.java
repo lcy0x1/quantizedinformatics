@@ -1,8 +1,7 @@
 package com.arthurlcy0x1.quantizedinformatics.recipe;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
-import com.arthurlcy0x1.quantizedinformatics.items.EntityCannon;
-import com.arthurlcy0x1.quantizedinformatics.items.MaxArmor;
+import com.arthurlcy0x1.quantizedinformatics.items.IMaxwell.IMaxRepairable;
 import com.google.gson.JsonObject;
 
 import net.minecraft.inventory.CraftingInventory;
@@ -14,29 +13,29 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
-public class FixWeapon implements ICraftingRecipe {
+public class FixMaxItem implements ICraftingRecipe {
 
 	public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>>
-			implements IRecipeSerializer<FixWeapon> {
+			implements IRecipeSerializer<FixMaxItem> {
 
 		@Override
-		public FixWeapon read(ResourceLocation id, JsonObject json) {
-			return new FixWeapon(id);
+		public FixMaxItem read(ResourceLocation id, JsonObject json) {
+			return new FixMaxItem(id);
 		}
 
 		@Override
-		public FixWeapon read(ResourceLocation id, PacketBuffer buffer) {
-			return new FixWeapon(id);
+		public FixMaxItem read(ResourceLocation id, PacketBuffer buffer) {
+			return new FixMaxItem(id);
 		}
 
 		@Override
-		public void write(PacketBuffer buffer, FixWeapon recipe) {
+		public void write(PacketBuffer buffer, FixMaxItem recipe) {
 		}
 	}
 
 	private final ResourceLocation id;
 
-	public FixWeapon(ResourceLocation ID) {
+	public FixMaxItem(ResourceLocation ID) {
 		id = ID;
 	}
 
@@ -47,18 +46,18 @@ public class FixWeapon implements ICraftingRecipe {
 
 	@Override
 	public ItemStack getCraftingResult(CraftingInventory ci) {
-		ItemStack tool = null;
-		int count = 0;
+		ItemStack w = null, r = null;
 		for (int i = 0; i < ci.getSizeInventory(); i++) {
 			ItemStack is = ci.getStackInSlot(i);
 			if (!is.isEmpty())
-				if (is.getItem() instanceof EntityCannon || is.getItem() instanceof MaxArmor)
-					tool = is;
-				else if (is.getItem() == Registrar.IMU_ATK || is.getItem() == Registrar.IMU_DEF)
-					count++;
+				if (is.getItem() instanceof IMaxRepairable)
+					w = is;
+				else
+					r = is;
 		}
-		ItemStack ans = tool.copy();
-		ans.setDamage(Math.max(0, tool.getDamage() - count * 1280));
+		IMaxRepairable item = (IMaxRepairable) w.getItem();
+		ItemStack ans = w.copy();
+		ans.setDamage(Math.max(0, w.getDamage() - item.repair(r)));
 		return ans;
 	}
 
@@ -84,32 +83,27 @@ public class FixWeapon implements ICraftingRecipe {
 
 	@Override
 	public boolean matches(CraftingInventory ci, World world) {
-		ItemStack w = null, a = null;
-		int atk = 0, def = 0;
+		ItemStack w = null;
+		int count = 0;
 		for (int i = 0; i < ci.getSizeInventory(); i++) {
 			ItemStack is = ci.getStackInSlot(i);
-			if (!is.isEmpty())
-				if (is.getItem() instanceof EntityCannon)
+			if (!is.isEmpty()) {
+				if (is.getItem() instanceof IMaxRepairable)
 					if (w != null)
 						return false;
 					else
 						w = is;
-				else if (is.getItem() instanceof MaxArmor)
-					if (a != null)
-						return false;
-					else
-						a = is;
-				else if (is.getItem() == Registrar.IMU_ATK)
-					atk++;
-				else if (is.getItem() == Registrar.IMU_DEF)
-					def++;
-				else
-					return false;
+				count++;
+			}
 		}
-		if (a == null && def == 0)
-			return w != null && atk > 0;
-		if (w == null && atk == 0)
-			return a != null && def > 0;
+		if (w == null || count != 2)
+			return false;
+		IMaxRepairable item = (IMaxRepairable) w.getItem();
+		for (int i = 0; i < ci.getSizeInventory(); i++) {
+			ItemStack is = ci.getStackInSlot(i);
+			if (!is.isEmpty() && item.canUse(is))
+				return true;
+		}
 		return false;
 	}
 

@@ -62,7 +62,7 @@ import com.arthurlcy0x1.quantizedinformatics.recipe.ChipOxiRec;
 import com.arthurlcy0x1.quantizedinformatics.recipe.ChipRedRec;
 import com.arthurlcy0x1.quantizedinformatics.recipe.EnchantOxiRec;
 import com.arthurlcy0x1.quantizedinformatics.recipe.FixCollector;
-import com.arthurlcy0x1.quantizedinformatics.recipe.FixWeapon;
+import com.arthurlcy0x1.quantizedinformatics.recipe.FixMaxItem;
 import com.arthurlcy0x1.quantizedinformatics.recipe.MaxwellRecipe;
 import com.arthurlcy0x1.quantizedinformatics.recipe.OxiRecipe;
 import com.arthurlcy0x1.quantizedinformatics.recipe.RedRecipe;
@@ -186,6 +186,7 @@ public class Registrar extends ItemGroup {
 	public static final Item IMW_MAGN = genMaxwell("maxwell_wrap_magnetic", 7);
 	public static final Item IMU_ATK = genMaxwell("maxwell_attack", 8);
 	public static final Item IMU_DEF = genMaxwell("maxwell_defense", 8);
+	public static final Item IMU_FIX = generate("maxwell_fix", 64);
 	public static final Item IMU_TNT = genMaxwell("maxwell_tnt", 2);
 	public static final Item IS_MARKER = generate("soul_marker", 1, SoulMarker::new);
 	public static final Item IS_TRAP = generate("soul_trap", 1, SoulTrap::new);
@@ -288,7 +289,7 @@ public class Registrar extends ItemGroup {
 	public static final IRecipeSerializer<?> RSC_RED = getRS(new ChipRedRec.Serializer(), "chip_red");
 	public static final IRecipeSerializer<?> RS_TELE = getRS(new TeleRecipe.Serializer(), "telescope");
 	public static final IRecipeSerializer<?> RSF_OC = getRS(new FixCollector.Serializer(), "fix_collector");
-	public static final IRecipeSerializer<?> RSF_WP = getRS(new FixWeapon.Serializer(), "fix_weapon");
+	public static final IRecipeSerializer<?> RSF_WP = getRS(new FixMaxItem.Serializer(), "fix_weapon");
 	public static final IRecipeSerializer<?> RS_EOXI = getRS(new EnchantOxiRec.Serializer(), "enchant_oxi");
 
 	public static final ContainerType<?>[] CTS = { CT_OXIFN, CT_REDFN, CTD_CNTR, CTD_GATE, CTD_IN, CTD_OUT, CTD_LNR,
@@ -352,6 +353,14 @@ public class Registrar extends ItemGroup {
 		return new BlockItem(block, p).setRegistryName(block.getRegistryName());
 	}
 
+	private static Item genArmor(String str, MaxMat mat, int i) {
+		Item.Properties p = new Item.Properties();
+		p.group(ITEM_GROUP);
+		p.maxStackSize(1);
+		EquipmentSlotType type = EquipmentSlotType.func_220318_a(EquipmentSlotType.Group.ARMOR, i);
+		return addName(new MaxArmor(p, type, mat), str);
+	}
+
 	private static Item genDefEC(String str, Item item, BiFunction<World, PlayerEntity, ThrowableEntity> f) {
 		return generate(str, 1, p -> new DefEC(p, item, f));
 	}
@@ -388,14 +397,6 @@ public class Registrar extends ItemGroup {
 		p.group(ITEM_GROUP);
 		p.maxStackSize(1);
 		return addName(new MaxwellItem(p, max), str);
-	}
-
-	private static Item genArmor(String str, MaxMat mat, int i) {
-		Item.Properties p = new Item.Properties();
-		p.group(ITEM_GROUP);
-		p.maxStackSize(1);
-		EquipmentSlotType type = EquipmentSlotType.func_220318_a(EquipmentSlotType.Group.ARMOR, i);
-		return addName(new MaxArmor(p, type, mat), str);
 	}
 
 	private static <T extends Container> ContainerType<T> getCT(ContainerType.IFactory<T> fact, String str) {

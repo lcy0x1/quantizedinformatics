@@ -129,7 +129,12 @@
     "item.quantizedinformatics.maxwell_wrap_magnetic": "Maxwell Oscillation Unit - Magnetic Unit",
     "item.quantizedinformatics.maxwell_attack": "Maxwell Oscillation Unit - Attack Unit",
     "item.quantizedinformatics.maxwell_defense": "Maxwell Oscillation Unit - Defense Unit",
+    "item.quantizedinformatics.maxwell_fix": "Maxwell Repair Unit",
     "item.quantizedinformatics.maxwell_tnt": "Condensed TNT",
+    "item.quantizedinformatics.maxwell_helmet": "Maxwell Helmet",
+    "item.quantizedinformatics.maxwell_chestplate": "Maxwell Chestplate",
+    "item.quantizedinformatics.maxwell_leggings": "Maxwell Leggings",
+    "item.quantizedinformatics.maxwell_boots": "Maxwell Boots",
 
     "item.quantizedinformatics.gate_wire": "Wire - CMOS Diagram",
     "item.quantizedinformatics.gate_cap": "Metal Cap - CMOS Diagram",

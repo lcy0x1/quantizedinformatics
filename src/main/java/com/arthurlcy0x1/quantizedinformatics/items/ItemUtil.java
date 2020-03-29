@@ -2,6 +2,7 @@ package com.arthurlcy0x1.quantizedinformatics.items;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 
 public class ItemUtil {
 
@@ -13,12 +14,17 @@ public class ItemUtil {
 		}
 	}
 
+	public static void damageItem(ItemStack is, PlayerEntity pl) {
+		damageItem(is, pl, 1);
+	}
+
 	public static void damageItem(ItemStack is, PlayerEntity pl, int a) {
 		is.damageItem(a, pl, (player) -> player.sendBreakAnimation(pl.getActiveHand()));
 	}
 
-	public static void damageItem(ItemStack is, PlayerEntity pl) {
-		damageItem(is, pl, 1);
+	public static void damageItem(ItemStack is, PlayerEntity pl, World w, double ch) {
+		if (w.getRandom().nextDouble() < ch)
+			damageItem(is, pl);
 	}
 
 	public static void drop(ItemStack is, PlayerEntity pl) {
