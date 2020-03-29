@@ -202,7 +202,7 @@ public abstract class EntityCannon extends ShootableItem implements Telescope {
 		}
 
 		private double getRadius() {
-			return 8;// TODO
+			return 8;
 		}
 
 	}
@@ -402,7 +402,7 @@ public abstract class EntityCannon extends ShootableItem implements Telescope {
 
 	}
 
-	public static final int DAMAGE = 256;
+	public static final int DAMAGE = 2560;
 
 	private static double getPlX(PlayerEntity pl) {
 		return pl.func_226277_ct_();

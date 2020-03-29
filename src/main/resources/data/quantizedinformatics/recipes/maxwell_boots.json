@@ -1,0 +1,25 @@
+{
+    "group": "quantizedinformatics:armor",
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "010",
+        "232"
+    ],
+    "key": {
+        "0": {
+            "item": "quantizedinformatics:quantum_ore"
+        },
+        "1": {
+            "item": "leather_boots"
+        },
+        "2": {
+            "item": "quantizedinformatics:maxwell_defense"
+        },
+        "3": {
+            "item": "quantizedinformatics:fog_ball"
+        }
+    },
+    "result": {
+        "item": "quantizedinformatics:maxwell_boots"
+    }
+}

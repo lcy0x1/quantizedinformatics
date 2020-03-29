@@ -7,20 +7,20 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 
-public class MaxwellItem extends Item {
+public class MaxwellItem extends Item implements IMaxwell {
 
 	public static int getLevel(ItemStack is) {
-		if (!(is.getItem() instanceof MaxwellItem))
+		if (!(is.getItem() instanceof IMaxwell))
 			return 0;
-		MaxwellItem i = (MaxwellItem) is.getItem();
-		return MathHelper.clamp(is.getOrCreateTag().getInt("maxwell_level"), 0, i.max);
+		IMaxwell i = (IMaxwell) is.getItem();
+		return MathHelper.clamp(is.getOrCreateTag().getInt("maxwell_level"), 0, i.getMax());
 	}
 
 	public static void setLevel(ItemStack is, int lv) {
-		if (!(is.getItem() instanceof MaxwellItem))
+		if (!(is.getItem() instanceof IMaxwell))
 			return;
-		MaxwellItem i = (MaxwellItem) is.getItem();
-		is.getOrCreateTag().putInt("maxwell_level", MathHelper.clamp(lv, 0, i.max));
+		IMaxwell i = (IMaxwell) is.getItem();
+		is.getOrCreateTag().putInt("maxwell_level", MathHelper.clamp(lv, 0, i.getMax()));
 	}
 
 	private final int max;
@@ -35,6 +35,10 @@ public class MaxwellItem extends Item {
 		ITextComponent c = Translator.getTooltip("level").deepCopy().appendText("" + getLevel(stack));
 		ITextComponent d = super.getDisplayName(stack).deepCopy().appendText(", ").appendSibling(c);
 		return d;
+	}
+
+	public int getMax() {
+		return max;
 	}
 
 }

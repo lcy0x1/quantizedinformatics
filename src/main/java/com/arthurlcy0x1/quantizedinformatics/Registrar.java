@@ -47,6 +47,8 @@ import com.arthurlcy0x1.quantizedinformatics.items.EntityCannon.SmartTNT;
 import com.arthurlcy0x1.quantizedinformatics.items.EntityCannon.SmartTNTRender;
 import com.arthurlcy0x1.quantizedinformatics.items.EntityCannon.TNTEC;
 import com.arthurlcy0x1.quantizedinformatics.items.LogicDraft;
+import com.arthurlcy0x1.quantizedinformatics.items.MaxArmor;
+import com.arthurlcy0x1.quantizedinformatics.items.MaxArmor.MaxMat;
 import com.arthurlcy0x1.quantizedinformatics.items.MaxwellItem;
 import com.arthurlcy0x1.quantizedinformatics.items.OreCollect;
 import com.arthurlcy0x1.quantizedinformatics.items.PrepChip;
@@ -77,6 +79,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.EnderPearlEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ThrowableEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
@@ -195,6 +198,11 @@ public class Registrar extends ItemGroup {
 	public static final Item IW_FOG = genDefEC("weapon_fog", I_FOGBALL, FogBall::new);
 	public static final Item IW_IP = genDefEC("weapon_picker", I_ITEMPICK, ItemPicker::new);
 	public static final Item IW_TELE = generate("telescope", 1, Telescope.TelescopeItem::new);
+
+	public static final Item IM_H2 = genArmor("maxwell_helmet", MaxArmor.LV2, 3);
+	public static final Item IM_C2 = genArmor("maxwell_chestplate", MaxArmor.LV2, 2);
+	public static final Item IM_L2 = genArmor("maxwell_leggings", MaxArmor.LV2, 1);
+	public static final Item IM_B2 = genArmor("maxwell_boots", MaxArmor.LV2, 0);
 
 	// draft related
 	public static final Item ID_N = generate("gate_dope_n", 64);
@@ -380,6 +388,14 @@ public class Registrar extends ItemGroup {
 		p.group(ITEM_GROUP);
 		p.maxStackSize(1);
 		return addName(new MaxwellItem(p, max), str);
+	}
+
+	private static Item genArmor(String str, MaxMat mat, int i) {
+		Item.Properties p = new Item.Properties();
+		p.group(ITEM_GROUP);
+		p.maxStackSize(1);
+		EquipmentSlotType type = EquipmentSlotType.func_220318_a(EquipmentSlotType.Group.ARMOR, i);
+		return addName(new MaxArmor(p, type, mat), str);
 	}
 
 	private static <T extends Container> ContainerType<T> getCT(ContainerType.IFactory<T> fact, String str) {

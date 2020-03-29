@@ -13,8 +13,12 @@ public class ItemUtil {
 		}
 	}
 
+	public static void damageItem(ItemStack is, PlayerEntity pl, int a) {
+		is.damageItem(a, pl, (player) -> player.sendBreakAnimation(pl.getActiveHand()));
+	}
+
 	public static void damageItem(ItemStack is, PlayerEntity pl) {
-		is.damageItem(1, pl, (player) -> player.sendBreakAnimation(pl.getActiveHand()));
+		damageItem(is, pl, 1);
 	}
 
 	public static void drop(ItemStack is, PlayerEntity pl) {

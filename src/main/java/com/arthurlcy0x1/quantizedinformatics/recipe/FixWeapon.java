@@ -2,6 +2,7 @@ package com.arthurlcy0x1.quantizedinformatics.recipe;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.items.EntityCannon;
+import com.arthurlcy0x1.quantizedinformatics.items.MaxArmor;
 import com.google.gson.JsonObject;
 
 import net.minecraft.inventory.CraftingInventory;
@@ -51,13 +52,13 @@ public class FixWeapon implements ICraftingRecipe {
 		for (int i = 0; i < ci.getSizeInventory(); i++) {
 			ItemStack is = ci.getStackInSlot(i);
 			if (!is.isEmpty())
-				if (is.getItem() instanceof EntityCannon)
+				if (is.getItem() instanceof EntityCannon || is.getItem() instanceof MaxArmor)
 					tool = is;
 				else if (is.getItem() == Registrar.IMU_ATK || is.getItem() == Registrar.IMU_DEF)
 					count++;
 		}
 		ItemStack ans = tool.copy();
-		ans.setDamage(Math.max(0, tool.getDamage() - count * 128));
+		ans.setDamage(Math.max(0, tool.getDamage() - count * 1280));
 		return ans;
 	}
 
@@ -82,23 +83,34 @@ public class FixWeapon implements ICraftingRecipe {
 	}
 
 	@Override
-	public boolean matches(CraftingInventory ci, World w) {
-		ItemStack tool = null;
-		int count = 0;
+	public boolean matches(CraftingInventory ci, World world) {
+		ItemStack w = null, a = null;
+		int atk = 0, def = 0;
 		for (int i = 0; i < ci.getSizeInventory(); i++) {
 			ItemStack is = ci.getStackInSlot(i);
 			if (!is.isEmpty())
 				if (is.getItem() instanceof EntityCannon)
-					if (tool != null)
+					if (w != null)
 						return false;
 					else
-						tool = is;
-				else if (is.getItem() == Registrar.IMU_ATK || is.getItem() == Registrar.IMU_DEF)
-					count++;
+						w = is;
+				else if (is.getItem() instanceof MaxArmor)
+					if (a != null)
+						return false;
+					else
+						a = is;
+				else if (is.getItem() == Registrar.IMU_ATK)
+					atk++;
+				else if (is.getItem() == Registrar.IMU_DEF)
+					def++;
 				else
 					return false;
 		}
-		return tool != null && count > 0;
+		if (a == null && def == 0)
+			return w != null && atk > 0;
+		if (w == null && atk == 0)
+			return a != null && def > 0;
+		return false;
 	}
 
 }
