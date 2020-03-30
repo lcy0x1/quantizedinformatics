@@ -50,7 +50,7 @@ public class FixCollector implements ICraftingRecipe {
 		for (int i = 0; i < ci.getSizeInventory(); i++) {
 			ItemStack is = ci.getStackInSlot(i);
 			if (!is.isEmpty())
-				if (is.getItem() == Registrar.I_OREC)
+				if (is.getItem() == Registrar.IW_OREC)
 					tool = is;
 				else if (is.getItem() == Registrar.IBC_FRAME)
 					count++;
@@ -67,7 +67,7 @@ public class FixCollector implements ICraftingRecipe {
 
 	@Override
 	public ItemStack getRecipeOutput() {
-		return new ItemStack(Registrar.I_OREC);
+		return new ItemStack(Registrar.IW_OREC);
 	}
 
 	@Override
@@ -87,7 +87,7 @@ public class FixCollector implements ICraftingRecipe {
 		for (int i = 0; i < ci.getSizeInventory(); i++) {
 			ItemStack is = ci.getStackInSlot(i);
 			if (!is.isEmpty())
-				if (is.getItem() == Registrar.I_OREC)
+				if (is.getItem() == Registrar.IW_OREC)
 					if (tool != null)
 						return false;
 					else

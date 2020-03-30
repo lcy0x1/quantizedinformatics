@@ -4,7 +4,7 @@ import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
 import com.arthurlcy0x1.quantizedinformatics.blocks.BaseBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
-import com.arthurlcy0x1.quantizedinformatics.items.SoulItem;
+import com.arthurlcy0x1.quantizedinformatics.items.battle.SoulItem;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.entity.player.PlayerEntity;

@@ -3,7 +3,7 @@ package com.arthurlcy0x1.quantizedinformatics.blocks.auto;
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
-import com.arthurlcy0x1.quantizedinformatics.items.SoulItem.SoulCollector;
+import com.arthurlcy0x1.quantizedinformatics.items.battle.SoulItem.SoulCollector;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.entity.Entity;

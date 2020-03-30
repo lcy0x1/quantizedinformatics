@@ -1,7 +1,7 @@
 package com.arthurlcy0x1.quantizedinformatics.recipe;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
-import com.arthurlcy0x1.quantizedinformatics.items.MaxwellItem;
+import com.arthurlcy0x1.quantizedinformatics.items.battle.MaxwellItem;
 import com.google.gson.JsonObject;
 
 import net.minecraft.inventory.CraftingInventory;

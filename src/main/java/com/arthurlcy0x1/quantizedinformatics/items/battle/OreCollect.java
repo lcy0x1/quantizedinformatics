@@ -1,6 +1,7 @@
-package com.arthurlcy0x1.quantizedinformatics.items;
+package com.arthurlcy0x1.quantizedinformatics.items.battle;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
+import com.arthurlcy0x1.quantizedinformatics.items.ItemUtil;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;

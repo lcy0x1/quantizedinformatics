@@ -8,7 +8,7 @@ import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock.CTECont;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock.CTEScr;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock.CTETE;
 import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect;
-import com.arthurlcy0x1.quantizedinformatics.items.LogicDraft;
+import com.arthurlcy0x1.quantizedinformatics.items.logic.LogicDraft;
 import com.arthurlcy0x1.quantizedinformatics.logic.LogicGate;
 import com.mojang.blaze3d.systems.RenderSystem;
 

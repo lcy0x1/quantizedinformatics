@@ -1,26 +1,29 @@
 {
-	"group": "quantizedinformatics:armor",
+    "group": "quantizedinformatics:armor",
     "type": "minecraft:crafting_shaped",
     "pattern": [
-        "030",
-        "212",
-        "000"
+        "242",
+        "010",
+        "030"
     ],
     "key": {
         "0": {
             "item": "quantizedinformatics:quantum_ore"
         },
         "1": {
-            "item": "leather_chestplate"
+            "item": "leather_leggings"
         },
         "2": {
             "item": "quantizedinformatics:maxwell_defense"
         },
         "3": {
-            "item": "quantizedinformatics:elem_soul"
+            "item": "quantizedinformatics:fog_ball"
+        },
+        "4": {
+            "item": "quantizedinformatics:maxwell_attack"
         }
     },
     "result": {
-        "item": "quantizedinformatics:maxwell_chestplate"
+        "item": "quantizedinformatics:maxwell_2_leggings"
     }
 }

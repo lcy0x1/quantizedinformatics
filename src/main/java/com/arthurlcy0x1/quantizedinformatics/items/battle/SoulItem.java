@@ -1,9 +1,10 @@
-package com.arthurlcy0x1.quantizedinformatics.items;
+package com.arthurlcy0x1.quantizedinformatics.items.battle;
 
 import java.util.List;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
+import com.arthurlcy0x1.quantizedinformatics.items.EncItem;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

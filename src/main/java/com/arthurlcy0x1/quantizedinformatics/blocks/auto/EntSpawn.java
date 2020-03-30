@@ -7,7 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
-import com.arthurlcy0x1.quantizedinformatics.items.MaxwellItem;
+import com.arthurlcy0x1.quantizedinformatics.items.battle.MaxwellItem;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.entity.Entity;

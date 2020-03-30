@@ -1,6 +1,6 @@
-package com.arthurlcy0x1.quantizedinformatics.items;
+package com.arthurlcy0x1.quantizedinformatics.items.battle;
 
-import static com.arthurlcy0x1.quantizedinformatics.items.Telescope.addInfo;
+import static com.arthurlcy0x1.quantizedinformatics.items.battle.Telescope.addInfo;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,7 +10,8 @@ import java.util.function.Predicate;
 import org.apache.logging.log4j.LogManager;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
-import com.arthurlcy0x1.quantizedinformatics.items.IMaxwell.IMaxRepairable;
+import com.arthurlcy0x1.quantizedinformatics.items.ItemUtil;
+import com.arthurlcy0x1.quantizedinformatics.items.battle.IMaxwell.IMaxRepairable;
 import com.arthurlcy0x1.quantizedinformatics.logic.Estimator;
 import com.arthurlcy0x1.quantizedinformatics.logic.Estimator.EstiResult;
 import com.arthurlcy0x1.quantizedinformatics.logic.Estimator.EstiType;
@@ -29,9 +30,12 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.TNTEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.entity.projectile.PotionEntity;
 import net.minecraft.entity.projectile.ProjectileItemEntity;
 import net.minecraft.entity.projectile.ThrowableEntity;
+import net.minecraft.entity.projectile.TridentEntity;
+import net.minecraft.item.ArrowItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -64,7 +68,26 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 public abstract class EntityCannon extends ShootableItem implements Telescope, IMaxRepairable {
 
-	public static class DefEC extends AbEC {
+	public static class ArrowEC extends AbArrowEC {
+
+		public ArrowEC(Properties p) {
+			super(p);
+		}
+
+		@Override
+		public Predicate<ItemStack> getInventoryAmmoPredicate() {
+			return e -> e.getItem() instanceof ArrowItem;
+		}
+
+		@Override
+		protected AbstractArrowEntity getEntity(World w, PlayerEntity pl, ItemStack ammo) {
+			ammo = ammo == null ? new ItemStack(Items.ARROW) : ammo;
+			return ((ArrowItem) ammo.getItem()).createArrow(w, ammo, pl);
+		}
+
+	}
+
+	public static class DefEC extends AbThrowableEC {
 
 		private final Item item;
 		private final BiFunction<World, PlayerEntity, ThrowableEntity> gen;
@@ -208,7 +231,7 @@ public abstract class EntityCannon extends ShootableItem implements Telescope, I
 
 	}
 
-	public static class PotionEC extends AbEC {
+	public static class PotionEC extends AbThrowableEC {
 
 		public PotionEC(Properties p) {
 			super(p, 0.05, 0.01, 128, 120);
@@ -366,12 +389,60 @@ public abstract class EntityCannon extends ShootableItem implements Telescope, I
 
 	}
 
-	private static abstract class AbEC extends EntityCannon {
+	public static class TridentEC extends AbArrowEC {
+
+		public TridentEC(Properties p) {
+			super(p);
+		}
+
+		@Override
+		public Predicate<ItemStack> getInventoryAmmoPredicate() {
+			return e -> e.getItem() == Items.TRIDENT;
+		}
+
+		@Override
+		protected AbstractArrowEntity getEntity(World w, PlayerEntity pl, ItemStack ammo) {
+			return new TridentEntity(w, pl, ammo == null ? new ItemStack(Items.TRIDENT) : ammo);
+		}
+
+	}
+
+	private static abstract class AbArrowEC extends EntityCannon {
+
+		public AbArrowEC(Properties p) {
+			super(p);
+		}
+
+		@Override
+		public float getVelocity(int charge) {
+			return MathHelper.clamp(charge / 20f, 0f, 1f) * 3;
+		}
+
+		@Override
+		protected Entity getEntity(World w, ItemStack ammo, PlayerEntity pl, float velo) {
+			AbstractArrowEntity e = getEntity(w, pl, ammo);
+			if (e == null)
+				return null;
+			EstiResult er = setAim(pl, velo, 128, e, 0.05, 0.01, 120);
+			if (er.getType() == EstiType.ZERO)
+				e.setMotion(er.getVec());
+			else if (er.getType() == EstiType.FAIL)
+				e.shoot(pl, pl.rotationPitch, pl.rotationYaw, 0, velo, 0);
+			else
+				return null;
+			return e;
+		}
+
+		protected abstract AbstractArrowEntity getEntity(World w, PlayerEntity pl, ItemStack ammo);
+
+	}
+
+	private static abstract class AbThrowableEC extends EntityCannon {
 
 		private final double g, k;
 		private final int r, t;
 
-		public AbEC(Properties p, double G, double K, int R, int T) {
+		public AbThrowableEC(Properties p, double G, double K, int R, int T) {
 			super(p);
 			g = G;
 			k = K;

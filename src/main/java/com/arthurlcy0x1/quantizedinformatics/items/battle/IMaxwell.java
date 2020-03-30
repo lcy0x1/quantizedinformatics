@@ -1,4 +1,4 @@
-package com.arthurlcy0x1.quantizedinformatics.items;
+package com.arthurlcy0x1.quantizedinformatics.items.battle;
 
 import net.minecraft.item.ItemStack;
 

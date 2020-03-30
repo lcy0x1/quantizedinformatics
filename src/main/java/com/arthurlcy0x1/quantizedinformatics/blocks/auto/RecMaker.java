@@ -5,8 +5,8 @@ import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
 import com.arthurlcy0x1.quantizedinformatics.blocks.BaseBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
-import com.arthurlcy0x1.quantizedinformatics.items.AutoRecipe;
-import com.arthurlcy0x1.quantizedinformatics.items.MaxwellItem;
+import com.arthurlcy0x1.quantizedinformatics.items.battle.MaxwellItem;
+import com.arthurlcy0x1.quantizedinformatics.items.logic.AutoRecipe;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.entity.player.PlayerEntity;

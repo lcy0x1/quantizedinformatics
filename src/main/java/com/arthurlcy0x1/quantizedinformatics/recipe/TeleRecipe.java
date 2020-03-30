@@ -1,7 +1,7 @@
 package com.arthurlcy0x1.quantizedinformatics.recipe;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
-import com.arthurlcy0x1.quantizedinformatics.items.Telescope;
+import com.arthurlcy0x1.quantizedinformatics.items.battle.Telescope;
 import com.google.gson.JsonObject;
 
 import net.minecraft.inventory.CraftingInventory;

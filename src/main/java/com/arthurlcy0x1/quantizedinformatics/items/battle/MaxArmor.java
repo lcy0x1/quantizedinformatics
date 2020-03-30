@@ -1,6 +1,7 @@
-package com.arthurlcy0x1.quantizedinformatics.items;
+package com.arthurlcy0x1.quantizedinformatics.items.battle;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
+import com.arthurlcy0x1.quantizedinformatics.items.ItemUtil;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -31,7 +32,7 @@ public class MaxArmor extends ArmorItem {
 
 	public static class MaxMat implements IArmorMaterial {
 
-		private static final int[] REDUCTION = { 3, 6, 8, 3 };
+		private static final int[] REDUCTION = { 1, 2, 3, 1 };
 
 		private int lv;
 
@@ -41,12 +42,12 @@ public class MaxArmor extends ArmorItem {
 
 		@Override
 		public int getDamageReductionAmount(EquipmentSlotType slotIn) {
-			return REDUCTION[slotIn.getIndex()];
+			return REDUCTION[slotIn.getIndex()] * (lv - 1);
 		}
 
 		@Override
 		public int getDurability(EquipmentSlotType slotIn) {
-			return DURABILITY * 2 * (1 << 2 * (lv - 2));
+			return DURABILITY * 2 * (1 << lv - 2);
 		}
 
 		@Override
@@ -79,10 +80,12 @@ public class MaxArmor extends ArmorItem {
 	public static final int DURABILITY = MaxwellItem.VALUE / 10;
 
 	public static final MaxMat LV2 = new MaxMat(2);
+	public static final MaxMat LV3 = new MaxMat(3);
+	public static final MaxMat LV4 = new MaxMat(4);
 
-	private static final int HEAL_FACTOR = 4, ROAD_LEN = 4, DIR_FAC = 20, ENT_RAD = 8;
+	private static final int HEAL_FACTOR = 4, ROAD_LEN = 5, DIR_FAC = 20, ENT_RAD = 8;
 	private static final int EFF_RE = 201, EFF_MAX = 219;
-	private static final double MAX_SPEED = 0.5, DUR_CHANCE = 0.1;
+	private static final double MAX_SPEED = 0.5, DUR_CHANCE = 0.01;
 
 	private static void breakBlock(ItemStack is, World w, PlayerEntity pl, BlockPos pos, Block held) {
 		if (held == Blocks.AIR)
@@ -98,7 +101,15 @@ public class MaxArmor extends ArmorItem {
 	}
 
 	private static boolean canFunction(ItemStack is) {
-		return is.getDamage() < is.getMaxDamage() / 4;
+		return is.getDamage() < is.getMaxDamage() * 3 / 4;
+	}
+
+	private static boolean canHavePotion(PlayerEntity pl) {
+		for (ItemStack is : pl.getArmorInventoryList())
+			if (is.getItem() instanceof MaxArmor
+					&& ((MaxArmor) is.getItem()).getEquipmentSlot() == EquipmentSlotType.HEAD)
+				return true;
+		return false;
 	}
 
 	private static void setFog(ItemStack is, World w, PlayerEntity pl, BlockPos pos) {
@@ -117,12 +128,17 @@ public class MaxArmor extends ArmorItem {
 	}
 
 	@Override
+	public MaxMat getArmorMaterial() {
+		return (MaxMat) super.getArmorMaterial();
+	}
+
+	@Override
 	public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
 		return false;
 	}
 
 	public int getLv() {
-		return 4;
+		return getArmorMaterial().lv;
 	}
 
 	@Override
@@ -142,6 +158,8 @@ public class MaxArmor extends ArmorItem {
 	}
 
 	private boolean addEffect(int lv, PlayerEntity pl, Effect eff, int amp) {
+		if (!canHavePotion(pl))
+			return false;
 		EffectInstance ei = pl.getActivePotionEffect(eff);
 		int re = EFF_RE;
 		int max = EFF_MAX;
@@ -230,4 +248,5 @@ public class MaxArmor extends ArmorItem {
 			}
 		}
 	}
+
 }
