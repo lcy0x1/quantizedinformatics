@@ -83,7 +83,7 @@ public class MaxArmor extends ArmorItem {
 	public static final MaxMat LV3 = new MaxMat(3);
 	public static final MaxMat LV4 = new MaxMat(4);
 
-	private static final int HEAL_FACTOR = 4, ROAD_LEN = 5, DIR_FAC = 20, ENT_RAD = 8;
+	private static final int HEAL_FACTOR = 4, ROAD_LEN = 5, DIR_FAC = 20, ENT_RAD = 8, MIN_LEN = 3;
 	private static final int EFF_RE = 201, EFF_MAX = 219;
 	private static final double MAX_SPEED = 0.5, DUR_CHANCE = 0.01;
 
@@ -214,8 +214,12 @@ public class MaxArmor extends ArmorItem {
 		for (Entity ie : w.getEntitiesInAABBexcluding(null, aabb,
 				a -> a instanceof ItemEntity || a instanceof ExperienceOrbEntity)) {
 			Vec3d ipos = ie.getPositionVec();
-			Vec3d dif = ipos.subtract(vec).scale(-MAX_SPEED / ENT_RAD);
-			ie.addVelocity(dif.x, dif.y, dif.z);
+			if (ipos.length() < MIN_LEN)
+				ie.setPosition(vec.getX(), vec.getY(), vec.getZ());
+			else {
+				Vec3d dif = ipos.subtract(vec).scale(-MAX_SPEED / ENT_RAD);
+				ie.addVelocity(dif.getX(), dif.getY(), dif.getZ());
+			}
 		}
 	}
 

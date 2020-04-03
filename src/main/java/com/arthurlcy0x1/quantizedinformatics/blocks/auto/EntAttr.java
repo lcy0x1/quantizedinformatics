@@ -3,18 +3,25 @@ package com.arthurlcy0x1.quantizedinformatics.blocks.auto;
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
+import com.arthurlcy0x1.quantizedinformatics.items.battle.SoulItem;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.ExperienceOrbEntity;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.util.Direction;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -32,9 +39,10 @@ public class EntAttr extends EntMachine {
 
 		protected Cont(int id, PlayerInventory inv, IInventory ent, IIntArray arr) {
 			super(Registrar.CTME_ATR, id, inv, ent, 61);
-			addSlot(new CondsSlot(ent, 0, 62, 17, EntAttr::isValid, 1));
-			addSlot(new CondsSlot(ent, 1, 80, 17, EntAttr::isValid, 1));
-			addSlot(new CondsSlot(ent, 2, 98, 17, EntAttr::isValid, 1));
+			for (int i = 0; i < 4; i++)
+				addSlot(new CondsSlot(ent, i, 8 + i * 18, 17, EntAttr::isValid, 1));
+			for (int i = 4; i < SIZE; i++)
+				addSlot(new ResultSlot(ent, i, 8 + i * 18, 17));
 			trackIntArray(data = arr);
 		}
 
@@ -74,10 +82,22 @@ public class EntAttr extends EntMachine {
 		}
 	}
 
-	public static class TE extends EntMachine.EMTE<TE> {
+	public static class TE extends EntMachine.EMTE<TE> implements ISidedInventory {
+
+		private static final int[] UP = { 3 }, OTHER = { 4, 5, 6, 7, 8 };
 
 		public TE() {
 			super(Registrar.TETME_ATR, SIZE, EntMachine.TYPE_DEF);
+		}
+
+		@Override
+		public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
+			return index >= 4;
+		}
+
+		@Override
+		public boolean canInsertItem(int index, ItemStack itemStackIn, Direction direction) {
+			return index == 3 && direction == Direction.UP && isValid(3, itemStackIn);
 		}
 
 		@Override
@@ -95,8 +115,59 @@ public class EntAttr extends EntMachine {
 		}
 
 		@Override
+		public int[] getSlotsForFace(Direction side) {
+			return side == Direction.UP ? UP : OTHER;
+		}
+
+		@Override
 		public boolean isItemValidForSlot(int slot, ItemStack is) {
 			return isValid(slot, is);
+		}
+
+		@Override
+		public void tick() {
+			super.tick();
+			if (world.isRemote)
+				return;
+			AxisAlignedBB aabb = new AxisAlignedBB(pos).grow(2);
+			for (Entity e : world.getEntitiesInAABBexcluding(null, aabb,
+					a -> a instanceof ItemEntity || a instanceof ExperienceOrbEntity)) {
+				if (e instanceof ItemEntity) {
+					ItemEntity ie = (ItemEntity) e;
+					ItemStack is = ie.getItem();
+					for (int i = 4; i < SIZE; i++) {
+						ItemStack in = getStackInSlot(i);
+						if (in.isEmpty()) {
+							setInventorySlotContents(i, is);
+							is = null;
+							break;
+						} else if (Container.areItemsAndTagsEqual(is, in)) {
+							int diff = in.getMaxStackSize() - in.getCount();
+							if (diff >= is.getCount()) {
+								in.grow(is.getCount());
+								markDirty();
+								is = null;
+								break;
+							} else {
+								is.shrink(diff);
+								in.grow(diff);
+								markDirty();
+							}
+						}
+					}
+					if (is == null)
+						ie.remove();
+					else
+						ie.setItem(is);
+				} else if (e instanceof ExperienceOrbEntity) {
+					ItemStack is = getStackInSlot(3);
+					if (!is.isEmpty()) {
+						e.remove();
+						int exp = ((ExperienceOrbEntity) e).getXpValue();
+						setInventorySlotContents(3, SoulItem.SoulBottle.addExp(is, exp));
+					}
+				}
+			}
 		}
 
 		@Override
@@ -111,7 +182,7 @@ public class EntAttr extends EntMachine {
 
 	}
 
-	private static final int SIZE = 3, MAX_SPEED = 2;
+	private static final int SIZE = 9, MAX_SPEED = 2;
 
 	private static final double SPEED_FAC = 0.1;
 
@@ -122,7 +193,9 @@ public class EntAttr extends EntMachine {
 			return is.getItem() == Registrar.IMU_DEF;
 		if (ind == 2)
 			return is.getItem() == Registrar.IS_MARKER;
-		return false;
+		if (ind == 3)
+			return is.getItem() == Registrar.IS_EXP || is.getItem() == Items.GLASS_BOTTLE;
+		return true;
 	}
 
 	public EntAttr() {

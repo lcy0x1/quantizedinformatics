@@ -57,7 +57,7 @@ public class PipeHead extends BaseBlock implements WireConnect {
 		@Override
 		public boolean mouseClicked(double x, double y, int t) {
 			int i = guiLeft + 8;
-			int j = guiTop + 61;
+			int j = guiTop + 25;
 			if (x >= i && x <= i + 18 && y >= j && y <= j + 18)
 				send(0, (get(0) + 1) % 5);
 			else if (x >= i && x <= i + 18 && y >= j + 36 && y <= j + 54)
@@ -71,7 +71,7 @@ public class PipeHead extends BaseBlock implements WireConnect {
 		public void renderHoveredToolTip(int mx, int my) {
 			super.renderHoveredToolTip(mx, my);
 			int i = guiLeft + 8;
-			int j = guiTop + 61;
+			int j = guiTop + 25;
 			if (mx >= i && mx <= i + 18 && my >= j && my <= j + 18) {
 				List<String> list = new ArrayList<>();
 				list.add(parse("max"));
@@ -97,9 +97,9 @@ public class PipeHead extends BaseBlock implements WireConnect {
 			blit(i, j, 0, 0, xSize, ySize);
 			int count = get(0);
 			int loc = count == 0 ? 7 : count - 1;
-			blit(i + 8, j + 61, 176 + loc % 4 * 18, loc / 4 * 18, 18, 18);
+			blit(i + 8, j + 25, 176 + loc % 4 * 18, loc / 4 * 18, 18, 18);
 			loc = 4 + (get(1) + 1) % 3;
-			blit(i + 8, j + 97, 176 + loc % 4 * 18, loc / 4 * 18, 18, 18);
+			blit(i + 8, j + 61, 176 + loc % 4 * 18, loc / 4 * 18, 18, 18);
 		}
 
 		@Override
