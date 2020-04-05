@@ -161,15 +161,21 @@ public class Test {
 
 	public static void main(String[] args) throws IOException {
 		SimplexNoiseGenerator rand = new SimplexNoiseGenerator(new Random());
-		double min = Double.MAX_VALUE, max = Double.MIN_VALUE;
+		double min = 0, dv = 1.0 / 32;
 		int n0 = -1000, n1 = 1000;
 		for (int i = n0; i < n1; i++)
 			for (int j = n0; j < n1; j++) {
 				double val = rand.getValue(i, j);
-				min = Math.min(min, val);
-				max = Math.max(max, val);
+				double v0 = rand.getValue(i + dv, j);
+				double v1 = rand.getValue(i - dv, j);
+				double v2 = rand.getValue(i, j + dv);
+				double v3 = rand.getValue(i, j - dv);
+				min = Math.max(min, Math.abs(val - v0));
+				min = Math.max(min, Math.abs(val - v1));
+				min = Math.max(min, Math.abs(val - v2));
+				min = Math.max(min, Math.abs(val - v3));
 			}
-		System.out.println(min + "," + max);
+		System.out.println(min);
 	}
 
 	public static void recolor() throws IOException {

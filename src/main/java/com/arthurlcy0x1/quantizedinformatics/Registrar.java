@@ -33,6 +33,7 @@ import com.arthurlcy0x1.quantizedinformatics.blocks.other.Wire;
 import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect;
 import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.DraftIO;
 import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.QTeleBlock;
+import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.QuanAir;
 import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.QuanBlock;
 import com.arthurlcy0x1.quantizedinformatics.items.EncItem;
 import com.arthurlcy0x1.quantizedinformatics.items.battle.MaxArmor;
@@ -127,6 +128,7 @@ public class Registrar extends ItemGroup {
 	public static final Block BAME_ATR = addName(new EntAttr(), "ent_attract");
 	public static final Block BAME_SPA = addName(new EntSpawn(), "ent_spawn");
 
+	public static final Block BQ_AIR = generate("quantum_world_air", QuanAir::new);
 	public static final Block BQ_PORTAL = generate("quantum_world_portal", QTeleBlock::new);
 	public static final Block BQ_STONE = generate("quantum_world_stone", QuanBlock::new);
 	public static final Block BQ_CORE = generate("quantum_world_core", QuanBlock::new);
@@ -322,6 +324,10 @@ public class Registrar extends ItemGroup {
 	public static final IRecipeSerializer<?>[] RSS = { RS_OXI, RS_RED, RS_C3D, RS_MAX, RSC_OXI, RSC_RED, RS_TELE,
 			RSF_OC, RSF_WP, RS_EOXI };
 
+	public static <T extends ForgeRegistryEntry<T>> T addName(T t, String name) {
+		return t.setRegistryName(MODID, name);
+	}
+
 	@OnlyIn(Dist.CLIENT)
 	public static void registerRender() {
 		ScreenManager.registerFactory(CT_OXIFN, OxiFn.Scr::new);
@@ -346,10 +352,6 @@ public class Registrar extends ItemGroup {
 		RenderingRegistry.registerEntityRenderingHandler(ET_STNT, SmartTNTRender::new);
 		RenderingRegistry.registerEntityRenderingHandler(ET_FB, m -> new SpriteRenderer<>(m, ir, 1, true));
 		RenderingRegistry.registerEntityRenderingHandler(ET_IP, m -> new SpriteRenderer<>(m, ir, 1, true));
-	}
-
-	public static <T extends ForgeRegistryEntry<T>> T addName(T t, String name) {
-		return t.setRegistryName(MODID, name);
 	}
 
 	private static Item convert(Block block) {
@@ -383,10 +385,6 @@ public class Registrar extends ItemGroup {
 		return addName(new Block(mat.getProps()), str);
 	}
 
-	private static Block generate(String str, Supplier<Block> b) {
-		return addName(b.get(), str);
-	}
-
 	private static Item generate(String str, int size) {
 		Item.Properties p = new Item.Properties();
 		p.group(ITEM_GROUP);
@@ -399,6 +397,10 @@ public class Registrar extends ItemGroup {
 		p.group(ITEM_GROUP);
 		p.maxStackSize(size);
 		return addName(f.apply(p), str);
+	}
+
+	private static Block generate(String str, Supplier<Block> b) {
+		return addName(b.get(), str);
 	}
 
 	private static Item genMaxwell(String str, int max) {

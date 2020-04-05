@@ -9,6 +9,7 @@ import com.mojang.datafixers.Dynamic;
 import com.mojang.datafixers.types.DynamicOps;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.math.BlockPos;
@@ -30,68 +31,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class QIBiome extends Biome {
 
-	private static final double fac = Math.sqrt(2 * Math.PI);
-	private static final int DEF_STDEV = 64, CENTER = 128, MIN_CORE = 5;
-
-	private static double normal(double x, double mean, double stdev) {
-		double n = (x - mean) / stdev;
-		return Math.exp(-0.5 * n * n) / stdev / fac;
-	}
-
-	private static class QIPC implements IPlacementConfig {
-
-		private final double chance;
-		private final int stdev;
-
-		private QIPC(double ch, int std) {
-			chance = ch;
-			stdev = std;
-		}
-
-		@Override
-		public <T> Dynamic<T> serialize(DynamicOps<T> ops) {
-			return new Dynamic<>(ops, (T) (ops.createMap(ImmutableMap.of(ops.createString("chance"),
-					ops.createDouble(chance), ops.createString("stdev"), ops.createInt(stdev)))));
-		}
-
-		private static QIPC deserialize(Dynamic<?> data) {
-			return new QIPC(data.get("chance").asDouble(0), data.get("stdev").asInt(DEF_STDEV));
-
-		}
-
-		private boolean addGen(Random r, BlockPos p, int h) {
-			return r.nextDouble() > normal(h, CENTER, stdev);
-
-		}
-
-	}
-
-	private static class QuantumIslandPlacement extends SimplePlacement<QIPC> {
-
-		public QuantumIslandPlacement() {
-			super(QIPC::deserialize);
-		}
-
-		@Override
-		protected Stream<BlockPos> getPositions(Random r, QIPC config, BlockPos pos) {
-			Stream.Builder<BlockPos> s = Stream.builder();
-			for (int i = 0; i < 16; i++)
-				while (config.addGen(r, pos, i * 16))
-					s.add(getRand(r, pos, i * 16));
-			return s.build();
-		}
-
-		private BlockPos getRand(Random r, BlockPos pos, int h) {
-			return pos.add(r.nextInt(16), h + r.nextInt(16), r.nextInt(16));
-		}
-
-		private ConfiguredPlacement<QIPC> configure(QIPC qipc) {
-			return new ConfiguredPlacement<QIPC>(this, qipc);
-		}
-
-	}
-
 	private static class QIFC implements IFeatureConfig {
+
+		private static QIFC deserialize(Dynamic<?> data) {
+			return new QIFC(data.get("min_rad").asInt(0), data.get("max_rad").asInt(0), data.get("type").asInt(0));
+		}
 
 		private final int r0, r1, type;
 
@@ -107,17 +51,47 @@ public class QIBiome extends Biome {
 					ops.createString("max_rad"), ops.createInt(r1), ops.createString("type"), ops.createInt(type))));
 		}
 
-		private static QIFC deserialize(Dynamic<?> data) {
-			return new QIFC(data.get("min_rad").asInt(0), data.get("max_rad").asInt(0), data.get("type").asInt(0));
+		private boolean fill(Random r, int rad, double dis) {
+			return r.nextDouble() < Math.pow(1 - dis / rad, type);
 		}
 
 		private int getSize(Random r) {
 			return (int) (r0 + (r1 - r0) * r.nextDouble());
 		}
+	}
+	private static class QIPC implements IPlacementConfig {
 
-		private boolean fill(Random r, int rad, double dis) {
-			return r.nextDouble() < Math.pow(1 - dis / rad, type);
+		private static QIPC deserialize(Dynamic<?> data) {
+			return new QIPC(data.get("chance").asDouble(0), data.get("stdev").asInt(DEF_STDEV));
+
 		}
+		private final double chance;
+
+		private final int stdev;
+
+		private QIPC(double ch, int std) {
+			chance = ch;
+			stdev = std;
+		}
+
+		@Override
+		public <T> Dynamic<T> serialize(DynamicOps<T> ops) {
+			return new Dynamic<>(ops, (ops.createMap(ImmutableMap.of(ops.createString("chance"),
+					ops.createDouble(chance), ops.createString("stdev"), ops.createInt(stdev)))));
+		}
+
+		private boolean addGen(Random r, BlockPos p, int h) {
+			return r.nextDouble() < (chance % 1) * normal(h, CENTER, stdev);
+
+		}
+
+		private int[] getGen(Random r) {
+			int[] arr = new int[(int) chance];
+			for (int i = 0; i < arr.length; i++)
+				arr[i] = (int) ((r.nextGaussian() + 1) * CENTER);
+			return arr;
+		}
+
 	}
 
 	private static class QuantumIslandFeature extends Feature<QIFC> {
@@ -134,8 +108,9 @@ public class QIBiome extends Biome {
 			for (int i = -size; i <= size; i++)
 				for (int j = -size; j <= size; j++)
 					for (int k = -size; k <= size; k++) {
-						BlockPos pi = pos.add(i, j, k);
-						if (!w.getBlockState(pi).isAir(w, pi))
+						BlockPos po = pos.add(i, j, k);
+						BlockState pi = w.getBlockState(po);
+						if (pi.getBlock() == Blocks.VOID_AIR || !pi.isAir(w, po))
 							return false;
 					}
 			size--;
@@ -143,13 +118,13 @@ public class QIBiome extends Biome {
 				for (int j = -size; j <= size; j++)
 					for (int k = -size; k <= size; k++) {
 						BlockPos pi = pos.add(i, j, k);
-						double dis2 = Math.sqrt(pi.distanceSq(pos));
-						if (dis2 > size)
+						double dis2 = Math.sqrt(i * i + j * j + k * k);
+						if (dis2 > size + 0.5)
 							continue;
 						int dis = Math.abs(i) + Math.abs(j) + Math.abs(k);
-						if (dis == 0)
+						if (dis < 0.5)
 							setBlockState(w, pi, size < MIN_CORE ? BQ_STONE : BQ_CORE);
-						else if (dis == 1 || config.fill(rand, size, dis2))
+						else if (dis < 1.2 || config.fill(rand, size, dis2))
 							setBlockState(w, pi, BQ_STONE);
 					}
 			return true;
@@ -161,21 +136,54 @@ public class QIBiome extends Biome {
 
 	}
 
+	private static class QuantumIslandPlacement extends SimplePlacement<QIPC> {
+
+		public QuantumIslandPlacement() {
+			super(QIPC::deserialize);
+		}
+
+		@Override
+		protected Stream<BlockPos> getPositions(Random r, QIPC config, BlockPos pos) {
+			Stream.Builder<BlockPos> s = Stream.builder();
+			for (int h : config.getGen(r))
+				s.add(getRand(r, pos, h));
+			for (int i = 0; i < 16; i++)
+				if (config.addGen(r, pos, i * 16))
+					s.add(getRand(r, pos, i * 16));
+			return s.build();
+		}
+
+		private ConfiguredPlacement<QIPC> configure(QIPC qipc) {
+			return new ConfiguredPlacement<QIPC>(this, qipc);
+		}
+
+		private BlockPos getRand(Random r, BlockPos pos, int h) {
+			return pos.add(r.nextInt(16), h + r.nextInt(16), r.nextInt(16));
+		}
+
+	}
+
+	private static final double fac = Math.sqrt(2 * Math.PI);
+
+	private static final int DEF_STDEV = 64, CENTER = 128, MIN_CORE = 5;
+
 	private static final int COL_WATER = 4159204;
+
 	private static final int COL_WATER_FOG = 4159204;
 	private static final int SP_WEIGHT = 10;
 	private static final int SP_GROUP = 4;
-
 	private static final BlockState BQ_STONE = Registrar.BQ_STONE.getDefaultState();
-	private static final BlockState BQ_CORE = Registrar.BQ_CORE.getDefaultState();
 
+	private static final BlockState BQ_CORE = Registrar.BQ_CORE.getDefaultState();
 	public static final SurfaceBuilderConfig SBC_Q = new SurfaceBuilderConfig(BQ_STONE, BQ_STONE, BQ_STONE);
 
 	private static final EntityType<?> MONSTER = EntityType.ENDERMAN;
 
 	private static final QuantumIslandFeature FQI = new QuantumIslandFeature();
-	private static final QuantumIslandPlacement PQI = new QuantumIslandPlacement();
 
+	private static final QuantumIslandPlacement PQI = new QuantumIslandPlacement();
+	private static final QIFC FC_DEF = new QIFC(10, 0, 0);
+	private static final QIPC PC_DEF = new QIPC(10.6, DEF_STDEV);
 	private static Builder getBuilder() {
 		Builder b = new Builder();
 		b.precipitation(Biome.RainType.NONE);
@@ -190,14 +198,22 @@ public class QIBiome extends Biome {
 		return b;
 	}
 
+	private static double normal(double x, double mean, double stdev) {
+		double n = (x - mean) / stdev;
+		return Math.exp(-0.5 * n * n) / stdev / fac;
+	}
+
 	protected QIBiome(double ch, int r0, int r1, int type) {
 		super(getBuilder().surfaceBuilder(SurfaceBuilder.DEFAULT, SBC_Q));
 		QIFC qifc = new QIFC(r0, r1, type);
 		QIPC qipc = new QIPC(ch, DEF_STDEV);
 		addFeature(GenerationStage.Decoration.RAW_GENERATION, FQI.configure(qifc, qipc));
+		if (r0 + r1 > 0)
+			addFeature(GenerationStage.Decoration.LOCAL_MODIFICATIONS, FQI.configure(FC_DEF, PC_DEF));
 		addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(MONSTER, SP_WEIGHT, SP_GROUP, SP_GROUP));
 	}
 
+	@Override
 	@OnlyIn(Dist.CLIENT)
 	public int func_225529_c_() {
 		return 0;

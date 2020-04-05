@@ -24,6 +24,10 @@ public class QuantumBP extends BiomeProvider {
 
 	private static final int OFF = 1024;
 
+	private static int parse(double d) {
+		return d > 0 ? 0 : d > -0.3 ? 1 : 2;
+	}
+
 	private final SimplexNoiseGenerator generator;
 
 	protected QuantumBP(QuantumBPS settings) {
@@ -31,14 +35,14 @@ public class QuantumBP extends BiomeProvider {
 		this.generator = new SimplexNoiseGenerator(settings.getRand());
 	}
 
+	@Override
 	public Biome func_225526_b_(int x, int y, int z) {
 		double dx = x / 16.0;
 		double dz = z / 16.0;
 		double f0 = this.generator.getValue(dx, dz);
 		double f1 = this.generator.getValue(dx + OFF, dz + OFF);
 		double f2 = this.generator.getValue(dx - OFF, dz - OFF);
-		Biome[][] b0 = RegWorld.BSQS[(int) ((f0 + 1) / 2 * 3)];
-		Biome[] b1 = b0[(int) ((f1 + 1) / 2 * 3)];
+		Biome[] b1 = RegWorld.BSQS[parse(f0)][parse(f1)];
 		if (b1.length == 1)
 			return b1[0];
 		else

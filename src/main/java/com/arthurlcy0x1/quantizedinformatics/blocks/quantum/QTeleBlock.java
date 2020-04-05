@@ -1,6 +1,5 @@
 package com.arthurlcy0x1.quantizedinformatics.blocks.quantum;
 
-import com.arthurlcy0x1.quantizedinformatics.blocks.BaseBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.BlockProp;
 import com.arthurlcy0x1.quantizedinformatics.world.RegWorld;
 
@@ -11,12 +10,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
 
-public class QTeleBlock extends BaseBlock implements QuantumBlock {
+public class QTeleBlock extends QuanBlock {
 
 	public QTeleBlock() {
 		super(construct(BlockProp.PORTAL));
 	}
 
+	@Override
 	public void onEntityCollision(BlockState state, World w, BlockPos pos, Entity ent) {
 		if (!w.isRemote && ent instanceof PlayerEntity) {
 			if (ent.dimension == DimensionType.OVERWORLD) {

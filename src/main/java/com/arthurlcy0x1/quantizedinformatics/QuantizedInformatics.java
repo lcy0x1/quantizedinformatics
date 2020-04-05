@@ -44,8 +44,24 @@ public class QuantizedInformatics {
 	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 	public static class RegistryEvents {
 		@SubscribeEvent
+		public static void onModDimensionRegister(final RegisterDimensionsEvent event) {
+			LOGGER.warn("dimension type registered");
+			RegWorld.regDimType();
+		}
+
+		@SubscribeEvent
+		public static void regBiome(final RegistryEvent.Register<Biome> event) {
+			getList(RegWorld.class, event, Biome.class);
+		}
+
+		@SubscribeEvent
 		public static void regBlock(final RegistryEvent.Register<Block> event) {
 			getList(Registrar.class, event, Block.class);
+		}
+
+		@SubscribeEvent
+		public static void regChunkGeneratorType(final RegistryEvent.Register<ChunkGeneratorType<?, ?>> event) {
+			event.getRegistry().registerAll(RegWorld.CGTS);
 		}
 
 		@SubscribeEvent
@@ -71,32 +87,21 @@ public class QuantizedInformatics {
 		}
 
 		@SubscribeEvent
-		public static void regTileEntityType(final RegistryEvent.Register<TileEntityType<?>> event) {
-			event.getRegistry().registerAll(Registrar.TETS);
-		}
-
-		@SubscribeEvent
 		public static void regModDimension(final RegistryEvent.Register<ModDimension> event) {
 			getList(RegWorld.class, event, ModDimension.class);
 		}
 
 		@SubscribeEvent
-		public static void onModDimensionRegister(final RegisterDimensionsEvent event) {
-			LOGGER.warn("dimension type registered");
-			RegWorld.regDimType();
-		}
-
-		@SubscribeEvent
-		public static void regChunkGeneratorType(final RegistryEvent.Register<ChunkGeneratorType<?, ?>> event) {
-			event.getRegistry().registerAll(RegWorld.CGTS);
-		}
-
-		@SubscribeEvent
-		public static void regBiome(final RegistryEvent.Register<Biome> event) {
-			getList(RegWorld.class, event, Biome.class);
+		public static void regTileEntityType(final RegistryEvent.Register<TileEntityType<?>> event) {
+			event.getRegistry().registerAll(Registrar.TETS);
 		}
 
 	}
+
+	public static final String MODID = "quantizedinformatics";
+
+	// Directly reference a log4j logger.
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	@SuppressWarnings("unchecked")
 	private static <T extends IForgeRegistryEntry<T>> void getList(Class<?> holder, RegistryEvent.Register<T> event,
@@ -111,11 +116,6 @@ public class QuantizedInformatics {
 			LogManager.getLogger().error(e);
 		}
 	}
-
-	public static final String MODID = "quantizedinformatics";
-
-	// Directly reference a log4j logger.
-	private static final Logger LOGGER = LogManager.getLogger();
 
 	public QuantizedInformatics() {
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);

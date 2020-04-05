@@ -44,6 +44,7 @@ public abstract class BaseBlock extends Block {
 		private IClick click;
 		private ILight light;
 		private IPower power;
+		private IRep irep;
 
 		public BlockImplementor(Properties p) {
 			props = p;
@@ -87,6 +88,12 @@ public abstract class BaseBlock extends Block {
 	public static interface ILight extends IImpl {
 
 		public int getLightValue(BlockState bs);
+
+	}
+
+	public static interface IRep extends IImpl {
+
+		public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving);
 
 	}
 
@@ -310,7 +317,8 @@ public abstract class BaseBlock extends Block {
 				}
 				worldIn.removeTileEntity(pos);
 			}
-		}
+		} else if (impl.irep != null)
+			impl.irep.onReplaced(state, worldIn, pos, newState, isMoving);
 	}
 
 	@Override

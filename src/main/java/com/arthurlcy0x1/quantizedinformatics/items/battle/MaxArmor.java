@@ -227,7 +227,7 @@ public class MaxArmor extends ArmorItem {
 		ItemStack off = pl.getHeldItemOffhand();
 		addEffect(4, pl, Effects.SPEED, 2);
 		if (pl.isSprinting()) {
-			if (w.isRemote && pl.onGround && !pl.isAirBorne) {
+			if (w.isRemote && pl.onGround) {
 				pl.setMotionMultiplier(Registrar.B_FOG.getDefaultState(), new Vec3d(4, 1, 4));
 			} else {
 				BlockPos pos = pl.getPosition().offset(Direction.DOWN);
