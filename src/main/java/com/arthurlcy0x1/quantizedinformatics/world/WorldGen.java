@@ -1,6 +1,8 @@
-package com.arthurlcy0x1.quantizedinformatics;
+package com.arthurlcy0x1.quantizedinformatics.world;
 
 import java.util.Random;
+
+import com.arthurlcy0x1.quantizedinformatics.Registrar;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;

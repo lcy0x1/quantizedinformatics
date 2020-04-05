@@ -70,7 +70,7 @@
     "quantizedinformatics:tooltip.prep_chip.stat=5": "布线完成",
 
     "block.quantizedinformatics.quantum_ore": "量子矿石",
-    "block.quantizedinformatics.quantum_fog": "量子雾",
+    "block.quantizedinformatics.quantum_fog": "量子云",
     "block.quantizedinformatics.craft_3d": "3D合成台",
     "block.quantizedinformatics.oxidation_furnace": "氧化炉",
     "block.quantizedinformatics.reduction_furnace": "还原炉",
@@ -93,6 +93,11 @@
     "block.quantizedinformatics.ent_repel": "斥力场 - 生物交互装置",
     "block.quantizedinformatics.ent_attract": "引力场 - 生物交互装置",
     "block.quantizedinformatics.ent_spawn": "生物生成器 - 生物交互装置",
+
+    "block.quantizedinformatics.quantum_world_portal": "传送门 - 量子世界",
+    "block.quantizedinformatics.quantum_world_stone": "量子石 - 量子世界",
+    "block.quantizedinformatics.quantum_world_core": "量子核心 - 量子世界",
+    "block.quantizedinformatics.quantum_world_barrier": "量子屏障 - 量子世界",
 
     "item.quantizedinformatics.elem_b": "B (硼) - 化学元素",
     "item.quantizedinformatics.elem_p": "P (磷) - 化学元素",
@@ -125,7 +130,7 @@
     "item.quantizedinformatics.weapon_fog": "量子球 - 手持发射器",
     "item.quantizedinformatics.weapon_picker": "物品拾取球 - 手持发射器",
     "item.quantizedinformatics.telescope": "望远镜",
-    "item.quantizedinformatics.maxwell_fog": "压缩量子雾",
+    "item.quantizedinformatics.maxwell_fog": "压缩量子云",
     "item.quantizedinformatics.maxwell_electric": "电场谐振核",
     "item.quantizedinformatics.maxwell_magnetic": "磁场谐振核",
     "item.quantizedinformatics.maxwell_wrap_electric": "电场谐振单元",

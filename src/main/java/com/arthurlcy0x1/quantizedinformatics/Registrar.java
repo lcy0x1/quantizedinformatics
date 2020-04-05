@@ -1,13 +1,10 @@
 package com.arthurlcy0x1.quantizedinformatics;
 
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
-
-import org.apache.logging.log4j.LogManager;
 
 import com.arthurlcy0x1.quantizedinformatics.blocks.BlockProp;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
@@ -35,6 +32,8 @@ import com.arthurlcy0x1.quantizedinformatics.blocks.other.RedFn;
 import com.arthurlcy0x1.quantizedinformatics.blocks.other.Wire;
 import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect;
 import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.DraftIO;
+import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.QTeleBlock;
+import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.QuanBlock;
 import com.arthurlcy0x1.quantizedinformatics.items.EncItem;
 import com.arthurlcy0x1.quantizedinformatics.items.battle.MaxArmor;
 import com.arthurlcy0x1.quantizedinformatics.items.battle.MaxwellItem;
@@ -69,7 +68,6 @@ import com.arthurlcy0x1.quantizedinformatics.recipe.MaxwellRecipe;
 import com.arthurlcy0x1.quantizedinformatics.recipe.OxiRecipe;
 import com.arthurlcy0x1.quantizedinformatics.recipe.RedRecipe;
 import com.arthurlcy0x1.quantizedinformatics.recipe.TeleRecipe;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
@@ -96,11 +94,8 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.registries.ForgeRegistryEntry;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 
 public class Registrar extends ItemGroup {
 
@@ -132,6 +127,11 @@ public class Registrar extends ItemGroup {
 	public static final Block BAME_ATR = addName(new EntAttr(), "ent_attract");
 	public static final Block BAME_SPA = addName(new EntSpawn(), "ent_spawn");
 
+	public static final Block BQ_PORTAL = generate("quantum_world_portal", QTeleBlock::new);
+	public static final Block BQ_STONE = generate("quantum_world_stone", QuanBlock::new);
+	public static final Block BQ_CORE = generate("quantum_world_core", QuanBlock::new);
+	public static final Block BQ_BARRIER = generate("quantum_world_barrier", QuanBlock::new);
+
 	public static final List<Block> BDS = Arrays.asList(BD_CNTR, BD_GATE, BD_IN, BD_OUT, BD_LNR);
 
 	public static final ItemGroup ITEM_GROUP = new Registrar();
@@ -161,6 +161,11 @@ public class Registrar extends ItemGroup {
 	public static final Item IBME_REP = convert(BAME_REP);
 	public static final Item IBME_ATR = convert(BAME_ATR);
 	public static final Item IBME_SPA = convert(BAME_SPA);
+
+	public static final Item IBQ_PORTAL = convert(BQ_PORTAL);
+	public static final Item IBQ_STONE = convert(BQ_STONE);
+	public static final Item IBQ_CORE = convert(BQ_CORE);
+	public static final Item IBQ_BARRIER = convert(BQ_BARRIER);
 
 	// items
 	public static final Item IE_P = generate("elem_p", 64);
@@ -343,20 +348,7 @@ public class Registrar extends ItemGroup {
 		RenderingRegistry.registerEntityRenderingHandler(ET_IP, m -> new SpriteRenderer<>(m, ir, 1, true));
 	}
 
-	@SuppressWarnings("unchecked")
-	protected static <T extends IForgeRegistryEntry<T>> void getList(RegistryEvent.Register<T> event, Class<T> cls) {
-		try {
-			IForgeRegistry<T> reg = event.getRegistry();
-			Field[] fs = Registrar.class.getDeclaredFields();
-			for (Field f : fs)
-				if (cls.isAssignableFrom(f.getType()))
-					reg.register((T) f.get(null));
-		} catch (Exception e) {
-			LogManager.getLogger().error(e);
-		}
-	}
-
-	private static <T extends ForgeRegistryEntry<T>> T addName(T t, String name) {
+	public static <T extends ForgeRegistryEntry<T>> T addName(T t, String name) {
 		return t.setRegistryName(MODID, name);
 	}
 
@@ -389,6 +381,10 @@ public class Registrar extends ItemGroup {
 
 	private static Block generate(String str, BlockProp mat) {
 		return addName(new Block(mat.getProps()), str);
+	}
+
+	private static Block generate(String str, Supplier<Block> b) {
+		return addName(b.get(), str);
 	}
 
 	private static Item generate(String str, int size) {

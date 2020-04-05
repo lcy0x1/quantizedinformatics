@@ -7,6 +7,7 @@ import java.io.PrintStream;
 import java.nio.file.Files;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
@@ -19,6 +20,7 @@ import com.arthurlcy0x1.quantizedinformatics.logic.LogicDiagram.GateContainer;
 import com.arthurlcy0x1.quantizedinformatics.logic.LogicDiagram.ParentDiagram;
 
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.gen.SimplexNoiseGenerator;
 
 import com.arthurlcy0x1.quantizedinformatics.logic.LogicGate;
 
@@ -158,7 +160,16 @@ public class Test {
 	}
 
 	public static void main(String[] args) throws IOException {
-		testEsti();
+		SimplexNoiseGenerator rand = new SimplexNoiseGenerator(new Random());
+		double min = Double.MAX_VALUE, max = Double.MIN_VALUE;
+		int n0 = -1000, n1 = 1000;
+		for (int i = n0; i < n1; i++)
+			for (int j = n0; j < n1; j++) {
+				double val = rand.getValue(i, j);
+				min = Math.min(min, val);
+				max = Math.max(max, val);
+			}
+		System.out.println(min + "," + max);
 	}
 
 	public static void recolor() throws IOException {

@@ -70,7 +70,7 @@
     "quantizedinformatics:tooltip.prep_chip.stat=5": "wire metalized",
 
     "block.quantizedinformatics.quantum_ore": "Quantum Ore",
-    "block.quantizedinformatics.quantum_fog": "Quantum Fog",
+    "block.quantizedinformatics.quantum_fog": "Quantum Cloud",
     "block.quantizedinformatics.craft_3d": "3D Crafting System Terminal",
     "block.quantizedinformatics.oxidation_furnace": "Oxidation Furnace",
     "block.quantizedinformatics.reduction_furnace": "Reduction Furnace",
@@ -93,6 +93,11 @@
     "block.quantizedinformatics.ent_repel": "Entity Machine - Repeller",
     "block.quantizedinformatics.ent_attract": "Entity Machine - Attracter",
     "block.quantizedinformatics.ent_spawn": "Entity Machine - Spawner",
+
+    "block.quantizedinformatics.quantum_world_portal": "Portal - Quantum World",
+    "block.quantizedinformatics.quantum_world_stone": "Stone - Quantum World",
+    "block.quantizedinformatics.quantum_world_core": "Core - Quantum World",
+    "block.quantizedinformatics.quantum_world_barrier": "Barrier - Quantum World",
 
     "item.quantizedinformatics.elem_b": "B (Boron) - Chemical",
     "item.quantizedinformatics.elem_p": "P (Phosphorous) - Chemical",
@@ -125,7 +130,7 @@
     "item.quantizedinformatics.weapon_fog": "Quantum Ball Cannon",
     "item.quantizedinformatics.weapon_picker": "Item Picker Cannon",
     "item.quantizedinformatics.telescope": "Telescope",
-    "item.quantizedinformatics.maxwell_fog": "Condensed Quantum Fog",
+    "item.quantizedinformatics.maxwell_fog": "Condensed Quantum Cloud",
     "item.quantizedinformatics.maxwell_electric": "Maxwell Oscillation Unit - Electric Core",
     "item.quantizedinformatics.maxwell_magnetic": "Maxwell Oscillation Unit - Magnetic Core",
     "item.quantizedinformatics.maxwell_wrap_electric": "Maxwell Oscillation Unit - Electric Unit",
