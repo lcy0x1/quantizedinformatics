@@ -18,6 +18,8 @@ import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.ChunkGeneratorType;
+import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.placement.Placement;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.ModDimension;
 import net.minecraftforge.event.RegistryEvent;
@@ -45,7 +47,7 @@ public class QuantizedInformatics {
 	public static class RegistryEvents {
 		@SubscribeEvent
 		public static void onModDimensionRegister(final RegisterDimensionsEvent event) {
-			LOGGER.warn("dimension type registered");
+			LOGGER.warn("dimension type registered");// TODO
 			RegWorld.regDimType();
 		}
 
@@ -75,6 +77,12 @@ public class QuantizedInformatics {
 		}
 
 		@SubscribeEvent
+		public static void regFeature(final RegistryEvent.Register<Feature<?>> event) {
+			LOGGER.warn("features registered");// TODO
+			event.getRegistry().registerAll(RegWorld.FS);
+		}
+
+		@SubscribeEvent
 		public static void regIRecipeSerializer(RegistryEvent.Register<IRecipeSerializer<?>> event) {
 			event.getRegistry().registerAll(Registrar.RSS);
 		}
@@ -89,6 +97,12 @@ public class QuantizedInformatics {
 		@SubscribeEvent
 		public static void regModDimension(final RegistryEvent.Register<ModDimension> event) {
 			getList(RegWorld.class, event, ModDimension.class);
+		}
+
+		@SubscribeEvent
+		public static void regPlacement(final RegistryEvent.Register<Placement<?>> event) {
+			LOGGER.warn("placements registered");// TODO
+			event.getRegistry().registerAll(RegWorld.PS);
 		}
 
 		@SubscribeEvent

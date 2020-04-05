@@ -1,6 +1,7 @@
 package com.arthurlcy0x1.quantizedinformatics.world;
 
 import java.util.Random;
+
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.provider.BiomeProvider;
 import net.minecraft.world.biome.provider.IBiomeProviderSettings;
@@ -39,6 +40,8 @@ public class QuantumBP extends BiomeProvider {
 	public Biome func_225526_b_(int x, int y, int z) {
 		double dx = x / 16.0;
 		double dz = z / 16.0;
+		if (Math.abs(dx) <= 2 && Math.abs(dz) <= 2)
+			return RegWorld.QIB_MAZE;
 		double f0 = this.generator.getValue(dx, dz);
 		double f1 = this.generator.getValue(dx + OFF, dz + OFF);
 		double f2 = this.generator.getValue(dx - OFF, dz - OFF);

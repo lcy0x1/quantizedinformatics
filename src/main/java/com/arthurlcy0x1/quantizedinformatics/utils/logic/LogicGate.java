@@ -1,6 +1,6 @@
-package com.arthurlcy0x1.quantizedinformatics.logic;
+package com.arthurlcy0x1.quantizedinformatics.utils.logic;
 
-import com.arthurlcy0x1.quantizedinformatics.logic.LogicDiagram.ParentDiagram;
+import com.arthurlcy0x1.quantizedinformatics.utils.logic.LogicDiagram.ParentDiagram;
 
 import net.minecraft.nbt.CompoundNBT;
 

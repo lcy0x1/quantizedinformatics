@@ -59,12 +59,13 @@ public class QIBiome extends Biome {
 			return (int) (r0 + (r1 - r0) * r.nextDouble());
 		}
 	}
+
 	private static class QIPC implements IPlacementConfig {
 
 		private static QIPC deserialize(Dynamic<?> data) {
 			return new QIPC(data.get("chance").asDouble(0), data.get("stdev").asInt(DEF_STDEV));
-
 		}
+
 		private final double chance;
 
 		private final int stdev;
@@ -81,7 +82,13 @@ public class QIBiome extends Biome {
 		}
 
 		private boolean addGen(Random r, BlockPos p, int h) {
-			return r.nextDouble() < (chance % 1) * normal(h, CENTER, stdev);
+			double rand = r.nextDouble();
+			double nor = normal(h, CENTER, stdev);
+			double ch = chance % 1;
+			// if (rand < ch * nor)
+			// System.out.println("r = " + rand + ", ch = " + ch + ", nor = " + nor + ", suc
+			// = " + (rand < ch * nor));
+			return rand < ch * nor;
 
 		}
 
@@ -173,18 +180,18 @@ public class QIBiome extends Biome {
 	private static final int SP_WEIGHT = 10;
 	private static final int SP_GROUP = 4;
 	private static final BlockState BQ_STONE = Registrar.BQ_STONE.getDefaultState();
-
 	private static final BlockState BQ_CORE = Registrar.BQ_CORE.getDefaultState();
 	public static final SurfaceBuilderConfig SBC_Q = new SurfaceBuilderConfig(BQ_STONE, BQ_STONE, BQ_STONE);
 
 	private static final EntityType<?> MONSTER = EntityType.ENDERMAN;
 
-	private static final QuantumIslandFeature FQI = new QuantumIslandFeature();
+	public static final QuantumIslandFeature FQI = new QuantumIslandFeature();
+	public static final QuantumIslandPlacement PQI = new QuantumIslandPlacement();
 
-	private static final QuantumIslandPlacement PQI = new QuantumIslandPlacement();
 	private static final QIFC FC_DEF = new QIFC(10, 0, 0);
 	private static final QIPC PC_DEF = new QIPC(10.6, DEF_STDEV);
-	private static Builder getBuilder() {
+
+	public static Builder getBuilder() {
 		Builder b = new Builder();
 		b.precipitation(Biome.RainType.NONE);
 		b.category(Biome.Category.NONE);
@@ -198,19 +205,31 @@ public class QIBiome extends Biome {
 		return b;
 	}
 
-	private static double normal(double x, double mean, double stdev) {
+	public static double normal(double x, double mean, double stdev) {
 		double n = (x - mean) / stdev;
 		return Math.exp(-0.5 * n * n) / stdev / fac;
 	}
 
-	protected QIBiome(double ch, int r0, int r1, int type) {
+	private QIBiome() {
 		super(getBuilder().surfaceBuilder(SurfaceBuilder.DEFAULT, SBC_Q));
+		addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(MONSTER, SP_WEIGHT, SP_GROUP, SP_GROUP));
+	}
+
+	protected QIBiome(boolean gen) {
+		this();
+		func_226711_a_(RegWorld.S_MAZE.configure());
+		if (gen)
+			addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, RegWorld.S_MAZE.reconfigure());
+	}
+
+	protected QIBiome(double ch, int r0, int r1, int type) {
+		this();
 		QIFC qifc = new QIFC(r0, r1, type);
 		QIPC qipc = new QIPC(ch, DEF_STDEV);
 		addFeature(GenerationStage.Decoration.RAW_GENERATION, FQI.configure(qifc, qipc));
 		if (r0 + r1 > 0)
 			addFeature(GenerationStage.Decoration.LOCAL_MODIFICATIONS, FQI.configure(FC_DEF, PC_DEF));
-		addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(MONSTER, SP_WEIGHT, SP_GROUP, SP_GROUP));
+
 	}
 
 	@Override

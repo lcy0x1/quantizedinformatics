@@ -133,6 +133,7 @@ public class Registrar extends ItemGroup {
 	public static final Block BQ_STONE = generate("quantum_world_stone", QuanBlock::new);
 	public static final Block BQ_CORE = generate("quantum_world_core", QuanBlock::new);
 	public static final Block BQ_BARRIER = generate("quantum_world_barrier", QuanBlock::new);
+	public static final Block BQ_MAZEWALL = generate("quantum_world_maze_wall", QuanBlock::new);
 
 	public static final List<Block> BDS = Arrays.asList(BD_CNTR, BD_GATE, BD_IN, BD_OUT, BD_LNR);
 
@@ -168,6 +169,7 @@ public class Registrar extends ItemGroup {
 	public static final Item IBQ_STONE = convert(BQ_STONE);
 	public static final Item IBQ_CORE = convert(BQ_CORE);
 	public static final Item IBQ_BARRIER = convert(BQ_BARRIER);
+	public static final Item IBQ_MAZEWALL = convert(BQ_MAZEWALL);
 
 	// items
 	public static final Item IE_P = generate("elem_p", 64);

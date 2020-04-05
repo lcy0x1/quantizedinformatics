@@ -1,6 +1,3 @@
 {
-    "parent": "block/cube_all",
-    "textures": {
-        "all": "quantizedinformatics:blocks/quantum_world_core"
-    }
+    "parent": "quantizedinformatics:block/quantum_world_barrier"
 }

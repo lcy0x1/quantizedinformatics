@@ -1,4 +1,4 @@
-package com.arthurlcy0x1.quantizedinformatics.logic;
+package com.arthurlcy0x1.quantizedinformatics.utils.logic;
 
 import java.util.Arrays;
 

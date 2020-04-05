@@ -12,17 +12,16 @@ import java.util.Set;
 
 import javax.imageio.ImageIO;
 
-import com.arthurlcy0x1.quantizedinformatics.logic.Estimator;
-import com.arthurlcy0x1.quantizedinformatics.logic.Estimator.EstiResult;
-import com.arthurlcy0x1.quantizedinformatics.logic.Estimator.EstiType;
-import com.arthurlcy0x1.quantizedinformatics.logic.LogicDiagram;
-import com.arthurlcy0x1.quantizedinformatics.logic.LogicDiagram.GateContainer;
-import com.arthurlcy0x1.quantizedinformatics.logic.LogicDiagram.ParentDiagram;
+import com.arthurlcy0x1.quantizedinformatics.utils.logic.Estimator;
+import com.arthurlcy0x1.quantizedinformatics.utils.logic.LogicDiagram;
+import com.arthurlcy0x1.quantizedinformatics.utils.logic.LogicGate;
+import com.arthurlcy0x1.quantizedinformatics.utils.logic.Estimator.EstiResult;
+import com.arthurlcy0x1.quantizedinformatics.utils.logic.Estimator.EstiType;
+import com.arthurlcy0x1.quantizedinformatics.utils.logic.LogicDiagram.GateContainer;
+import com.arthurlcy0x1.quantizedinformatics.utils.logic.LogicDiagram.ParentDiagram;
 
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.gen.SimplexNoiseGenerator;
-
-import com.arthurlcy0x1.quantizedinformatics.logic.LogicGate;
 
 public class Test {
 
@@ -160,22 +159,12 @@ public class Test {
 	}
 
 	public static void main(String[] args) throws IOException {
-		SimplexNoiseGenerator rand = new SimplexNoiseGenerator(new Random());
-		double min = 0, dv = 1.0 / 32;
-		int n0 = -1000, n1 = 1000;
-		for (int i = n0; i < n1; i++)
-			for (int j = n0; j < n1; j++) {
-				double val = rand.getValue(i, j);
-				double v0 = rand.getValue(i + dv, j);
-				double v1 = rand.getValue(i - dv, j);
-				double v2 = rand.getValue(i, j + dv);
-				double v3 = rand.getValue(i, j - dv);
-				min = Math.max(min, Math.abs(val - v0));
-				min = Math.max(min, Math.abs(val - v1));
-				min = Math.max(min, Math.abs(val - v2));
-				min = Math.max(min, Math.abs(val - v3));
-			}
-		System.out.println(min);
+		System.out.println(2 - Math.abs(2 - Math.abs(4) % 4));
+	}
+
+	public static double normal(double x, double mean, double stdev) {
+		double n = (x - mean) / stdev;
+		return Math.exp(-0.5 * n * n) / stdev / Math.sqrt(2 * Math.PI);
 	}
 
 	public static void recolor() throws IOException {
@@ -224,6 +213,25 @@ public class Test {
 		System.out.println((er.getType() == EstiType.ZERO) + ", " + er.getVec() + ", " + er.getT());
 		System.out.println("deviation: " + est.getX0(er.getA(), er.getT()) + ", " + est.getY0(er.getA(), er.getT()));
 
+	}
+
+	public static void testSimplex() {
+		SimplexNoiseGenerator rand = new SimplexNoiseGenerator(new Random());
+		double min = 0, dv = 1.0 / 32;
+		int n0 = -1000, n1 = 1000;
+		for (int i = n0; i < n1; i++)
+			for (int j = n0; j < n1; j++) {
+				double val = rand.getValue(i, j);
+				double v0 = rand.getValue(i + dv, j);
+				double v1 = rand.getValue(i - dv, j);
+				double v2 = rand.getValue(i, j + dv);
+				double v3 = rand.getValue(i, j - dv);
+				min = Math.max(min, Math.abs(val - v0));
+				min = Math.max(min, Math.abs(val - v1));
+				min = Math.max(min, Math.abs(val - v2));
+				min = Math.max(min, Math.abs(val - v3));
+			}
+		System.out.println(min);
 	}
 
 	public static void xor_0() {

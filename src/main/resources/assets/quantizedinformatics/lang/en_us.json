@@ -98,6 +98,7 @@
     "block.quantizedinformatics.quantum_world_stone": "Stone - Quantum World",
     "block.quantizedinformatics.quantum_world_core": "Core - Quantum World",
     "block.quantizedinformatics.quantum_world_barrier": "Barrier - Quantum World",
+    "block.quantizedinformatics.quantum_world_maze_wall": "Maze Wall - Quantum World",
 
     "item.quantizedinformatics.elem_b": "B (Boron) - Chemical",
     "item.quantizedinformatics.elem_p": "P (Phosphorous) - Chemical",

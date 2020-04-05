@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-import com.arthurlcy0x1.quantizedinformatics.logic.LogicRE;
+import com.arthurlcy0x1.quantizedinformatics.utils.logic.LogicRE;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

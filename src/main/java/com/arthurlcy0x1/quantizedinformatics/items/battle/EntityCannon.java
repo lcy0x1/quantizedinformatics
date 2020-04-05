@@ -12,9 +12,9 @@ import org.apache.logging.log4j.LogManager;
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.items.ItemUtil;
 import com.arthurlcy0x1.quantizedinformatics.items.battle.IMaxwell.IMaxRepairable;
-import com.arthurlcy0x1.quantizedinformatics.logic.Estimator;
-import com.arthurlcy0x1.quantizedinformatics.logic.Estimator.EstiResult;
-import com.arthurlcy0x1.quantizedinformatics.logic.Estimator.EstiType;
+import com.arthurlcy0x1.quantizedinformatics.utils.logic.Estimator;
+import com.arthurlcy0x1.quantizedinformatics.utils.logic.Estimator.EstiResult;
+import com.arthurlcy0x1.quantizedinformatics.utils.logic.Estimator.EstiType;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.block.BlockState;

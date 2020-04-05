@@ -1,6 +1,6 @@
 package com.arthurlcy0x1.quantizedinformatics.items.logic;
 
-import com.arthurlcy0x1.quantizedinformatics.logic.LogicGate;
+import com.arthurlcy0x1.quantizedinformatics.utils.logic.LogicGate;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
