@@ -2,6 +2,7 @@ package com.arthurlcy0x1.quantizedinformatics.items.battle;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.items.ItemUtil;
+import com.arthurlcy0x1.quantizedinformatics.world.RegWorld;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -15,6 +16,7 @@ import net.minecraft.item.ArmorItem;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.IArmorMaterial;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
@@ -113,6 +115,9 @@ public class MaxArmor extends ArmorItem {
 	}
 
 	private static void setFog(ItemStack is, World w, PlayerEntity pl, BlockPos pos) {
+		Items.CHORUS_FRUIT.asItem();
+		if (RegWorld.isQuantumWorld(w))
+			return;
 		if (w.getBlockState(pos).isAir(w, pos)) {
 			w.setBlockState(pos, Registrar.B_FOG.getDefaultState());
 			ItemUtil.damageItem(is, pl, w, DUR_CHANCE);
@@ -227,8 +232,9 @@ public class MaxArmor extends ArmorItem {
 		ItemStack off = pl.getHeldItemOffhand();
 		addEffect(4, pl, Effects.SPEED, 2);
 		if (pl.isSprinting()) {
-			if (w.isRemote && pl.onGround) {
-				pl.setMotionMultiplier(Registrar.B_FOG.getDefaultState(), new Vec3d(4, 1, 4));
+			if (w.isRemote) {
+				if (pl.onGround)
+					pl.setMotionMultiplier(Registrar.B_FOG.getDefaultState(), new Vec3d(4, 1, 4));
 			} else {
 				BlockPos pos = pl.getPosition().offset(Direction.DOWN);
 				Vec3d vec = pl.getPositionVec();

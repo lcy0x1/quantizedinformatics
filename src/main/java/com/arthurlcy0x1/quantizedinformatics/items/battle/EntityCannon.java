@@ -15,6 +15,7 @@ import com.arthurlcy0x1.quantizedinformatics.items.battle.IMaxwell.IMaxRepairabl
 import com.arthurlcy0x1.quantizedinformatics.utils.logic.Estimator;
 import com.arthurlcy0x1.quantizedinformatics.utils.logic.Estimator.EstiResult;
 import com.arthurlcy0x1.quantizedinformatics.utils.logic.Estimator.EstiType;
+import com.arthurlcy0x1.quantizedinformatics.world.RegWorld;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.block.BlockState;
@@ -149,23 +150,28 @@ public abstract class EntityCannon extends ShootableItem implements Telescope, I
 				pos = new BlockPos(b.getHitVec());
 			} else
 				pos = null;
-			if (pos != null && !world.isRemote) {
-				int max = 3, rad = 4;
-				Direction[] ds = Direction.values();
-				for (int i = 0; i < 6; i++) {
-					for (int j = 1; j <= max; j++)
-						set(pos.offset(ds[i], j));
-					for (int j = i + 1; j < 6; j++)
-						if (ds[j] != ds[i].getOpposite())
-							for (int k = 1; k <= max; k++)
-								for (int s = 1; s <= max; s++)
-									if (k + s <= rad)
-										set(pos.offset(ds[i], k).offset(ds[j], s));
-				}
-
-				world.setBlockState(pos, Registrar.B_FOGORE.getDefaultState());
-			}
+			if (pos != null && !world.isRemote)
+				addThings(pos);
 			remove();
+		}
+
+		private void addThings(BlockPos pos) {
+			if (RegWorld.isQuantumWorld(world))
+				return;
+			int max = 3, rad = 4;
+			Direction[] ds = Direction.values();
+			for (int i = 0; i < 6; i++) {
+				for (int j = 1; j <= max; j++)
+					set(pos.offset(ds[i], j));
+				for (int j = i + 1; j < 6; j++)
+					if (ds[j] != ds[i].getOpposite())
+						for (int k = 1; k <= max; k++)
+							for (int s = 1; s <= max; s++)
+								if (k + s <= rad)
+									set(pos.offset(ds[i], k).offset(ds[j], s));
+			}
+
+			world.setBlockState(pos, Registrar.B_FOGORE.getDefaultState());
 		}
 
 		private void set(BlockPos p) {

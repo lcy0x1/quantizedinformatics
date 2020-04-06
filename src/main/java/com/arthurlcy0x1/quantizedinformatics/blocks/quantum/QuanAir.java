@@ -18,4 +18,8 @@ public class QuanAir extends AirBlock implements QuantumBlock {
 		QuanBlock.REP.onReplaced(cur, w, pos, tar, isMoving);
 	}
 
+	public boolean isAir(BlockState state) {
+		return false;
+	}
+	
 }

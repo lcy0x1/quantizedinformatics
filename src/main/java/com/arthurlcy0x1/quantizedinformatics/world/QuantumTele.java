@@ -7,7 +7,6 @@ import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.ITeleporter;
 
@@ -16,8 +15,7 @@ public class QuantumTele implements ITeleporter {
 	@Override
 	public Entity placeEntity(Entity ent, ServerWorld cur, ServerWorld dst, float yaw, Function<Boolean, Entity> pos) {
 		BlockPos p = ent.getPosition();
-		DimensionType dt = dst.getDimension().getType();
-		if (!dt.isVanilla() && dt.getModType() == RegWorld.MD_Q) {
+		if (RegWorld.isQuantumWorld(dst)) {
 			if (Math.abs(p.getX()) <= 128 || Math.abs(p.getZ()) <= 128) {
 				ent.setPosition(0, 1, 0);
 				for (int i = -1; i <= 1; i++)

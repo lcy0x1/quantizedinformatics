@@ -10,6 +10,7 @@ import io.netty.buffer.Unpooled;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.ChunkGenerator;
@@ -102,4 +103,8 @@ public class RegWorld {
 		return type;
 	}
 
+	public static boolean isQuantumWorld(World w) {
+		return w.getDimension().getType().getModType() == MD_Q;
+	}
+	
 }

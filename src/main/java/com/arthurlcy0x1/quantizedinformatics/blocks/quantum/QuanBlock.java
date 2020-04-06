@@ -15,7 +15,7 @@ public class QuanBlock extends BaseBlock implements QuantumBlock {
 
 		@Override
 		public void onReplaced(BlockState cur, World w, BlockPos pos, BlockState tar, boolean isMoving) {
-			if (w.getDimension().getType().getModType() != RegWorld.MD_Q)
+			if (!RegWorld.isQuantumWorld(w))
 				return;
 			if (tar.getBlock() instanceof QuantumBlock)
 				return;
