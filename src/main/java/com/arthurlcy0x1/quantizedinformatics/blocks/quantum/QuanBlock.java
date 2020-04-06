@@ -17,9 +17,7 @@ public class QuanBlock extends BaseBlock implements QuantumBlock {
 		public void onReplaced(BlockState cur, World w, BlockPos pos, BlockState tar, boolean isMoving) {
 			if (!RegWorld.isQuantumWorld(w))
 				return;
-			if (tar.getBlock() instanceof QuantumBlock)
-				return;
-			w.setBlockState(pos, Registrar.BQ_AIR.getDefaultState(), 48);
+			((QuantumBlock) cur.getBlock()).onRep(w, cur, tar, pos);
 		}
 
 	}
@@ -32,6 +30,13 @@ public class QuanBlock extends BaseBlock implements QuantumBlock {
 
 	public QuanBlock(BlockImplementor bi) {
 		super(bi.addImpl(REP));
+	}
+
+	@Override
+	public void onRep(World w, BlockState cur, BlockState tar, BlockPos pos) {
+		if (tar.getBlock() instanceof QuantumBlock)
+			return;
+		w.setBlockState(pos, Registrar.BQ_AIR.getDefaultState(), 50);
 	}
 
 }

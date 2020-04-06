@@ -75,6 +75,10 @@ public class RegWorld {
 		return DimensionType.byName(key);
 	}
 
+	public static boolean isQuantumWorld(World w) {
+		return w.getDimension().getType().getModType() == MD_Q;
+	}
+
 	public static void regDimType() {
 		getDT("quantum_world", MD_Q);
 	}
@@ -103,8 +107,4 @@ public class RegWorld {
 		return type;
 	}
 
-	public static boolean isQuantumWorld(World w) {
-		return w.getDimension().getType().getModType() == MD_Q;
-	}
-	
 }

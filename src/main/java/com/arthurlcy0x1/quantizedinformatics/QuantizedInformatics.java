@@ -78,7 +78,6 @@ public class QuantizedInformatics {
 
 		@SubscribeEvent
 		public static void regFeature(final RegistryEvent.Register<Feature<?>> event) {
-			LOGGER.warn("features registered");// TODO
 			event.getRegistry().registerAll(RegWorld.FS);
 		}
 
@@ -101,7 +100,6 @@ public class QuantizedInformatics {
 
 		@SubscribeEvent
 		public static void regPlacement(final RegistryEvent.Register<Placement<?>> event) {
-			LOGGER.warn("placements registered");// TODO
 			event.getRegistry().registerAll(RegWorld.PS);
 		}
 

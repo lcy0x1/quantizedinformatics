@@ -261,7 +261,7 @@ public abstract class EntityCannon extends ShootableItem implements Telescope, I
 
 	public static class SmartTNT extends TNTEntity {
 
-		private final PlayerEntity tntPlacedBy;
+		private final LivingEntity tntPlacedBy;
 		private final float radius;
 
 		public SmartTNT(EntityType<SmartTNT> e, World w) {
@@ -270,7 +270,7 @@ public abstract class EntityCannon extends ShootableItem implements Telescope, I
 			radius = 0;
 		}
 
-		public SmartTNT(World w, double x, double y, double z, PlayerEntity pl, ItemStack is) {
+		public SmartTNT(World w, double x, double y, double z, LivingEntity pl, ItemStack is) {
 			super(Registrar.ET_STNT, w);
 			this.setPosition(x, y, z);
 			this.setFuse(80);
@@ -314,7 +314,7 @@ public abstract class EntityCannon extends ShootableItem implements Telescope, I
 		}
 
 		@Override
-		public PlayerEntity getTntPlacedBy() {
+		public LivingEntity getTntPlacedBy() {
 			return tntPlacedBy;
 		}
 

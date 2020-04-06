@@ -65,17 +65,17 @@ public class QMaze extends Structure<NoFeatureConfig> {
 			return true;
 		}
 
-		private void setBlockState(IWorld w, Random r, int x, int y, int z) {
-			if (r.nextDouble() < CHANCE)
-				setBlockState(w, WALL, x, y, z);
+		@Override
+		protected void readAdditional(CompoundNBT tag) {
 		}
 
 		private void setBlockState(IWorld w, BlockState b, int x, int y, int z) {
 			this.setBlockState(w, b, x, y, z, boundingBox);
 		}
 
-		@Override
-		protected void readAdditional(CompoundNBT tag) {
+		private void setBlockState(IWorld w, Random r, int x, int y, int z) {
+			if (r.nextDouble() < CHANCE)
+				setBlockState(w, WALL, x, y, z);
 		}
 
 	}
@@ -102,6 +102,10 @@ public class QMaze extends Structure<NoFeatureConfig> {
 		super(NoFeatureConfig::deserialize);
 	}
 
+	public ConfiguredFeature<NoFeatureConfig, QMaze> configure() {
+		return new ConfiguredFeature<>(this, IFeatureConfig.NO_FEATURE_CONFIG);
+	}
+
 	@Override
 	public boolean func_225558_a_(BiomeManager bm, ChunkGenerator<?> cg, Random r, int cx, int cz, Biome b) {
 		return cx == 0 && cz == 0 && b.hasStructure(RegWorld.S_MAZE);
@@ -120,10 +124,6 @@ public class QMaze extends Structure<NoFeatureConfig> {
 	@Override
 	public String getStructureName() {
 		return Registrar.MODID + ":maze";
-	}
-
-	public ConfiguredFeature<NoFeatureConfig, QMaze> configure() {
-		return new ConfiguredFeature<>(this, IFeatureConfig.NO_FEATURE_CONFIG);
 	}
 
 	public ConfiguredFeature<?, ?> reconfigure() {

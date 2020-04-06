@@ -210,11 +210,6 @@ public class QIBiome extends Biome {
 		return Math.exp(-0.5 * n * n) / stdev / fac;
 	}
 
-	private QIBiome() {
-		super(getBuilder().surfaceBuilder(SurfaceBuilder.DEFAULT, SBC_Q));
-		addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(MONSTER, SP_WEIGHT, SP_GROUP, SP_GROUP));
-	}
-
 	protected QIBiome(boolean gen) {
 		this();
 		func_226711_a_(RegWorld.S_MAZE.configure());
@@ -230,6 +225,11 @@ public class QIBiome extends Biome {
 		if (r0 + r1 > 0)
 			addFeature(GenerationStage.Decoration.LOCAL_MODIFICATIONS, FQI.configure(FC_DEF, PC_DEF));
 
+	}
+
+	private QIBiome() {
+		super(getBuilder().surfaceBuilder(SurfaceBuilder.DEFAULT, SBC_Q));
+		addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(MONSTER, SP_WEIGHT, SP_GROUP, SP_GROUP));
 	}
 
 	@Override

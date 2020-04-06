@@ -34,7 +34,10 @@ import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect;
 import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.DraftIO;
 import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.QTeleBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.QuanAir;
+import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.QuanAirBarrier;
+import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.QuanBarrier;
 import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.QuanBlock;
+import com.arthurlcy0x1.quantizedinformatics.entities.QuanFly;
 import com.arthurlcy0x1.quantizedinformatics.items.EncItem;
 import com.arthurlcy0x1.quantizedinformatics.items.battle.MaxArmor;
 import com.arthurlcy0x1.quantizedinformatics.items.battle.MaxwellItem;
@@ -132,7 +135,8 @@ public class Registrar extends ItemGroup {
 	public static final Block BQ_PORTAL = generate("quantum_world_portal", QTeleBlock::new);
 	public static final Block BQ_STONE = generate("quantum_world_stone", QuanBlock::new);
 	public static final Block BQ_CORE = generate("quantum_world_core", QuanBlock::new);
-	public static final Block BQ_BARRIER = generate("quantum_world_barrier", QuanBlock::new);
+	public static final Block BQ_BARRIER = generate("quantum_world_barrier", QuanBarrier::new);
+	public static final Block BQ_BARAIR = generate("quantum_world_barrier_air", QuanAirBarrier::new);
 	public static final Block BQ_MAZEWALL = generate("quantum_world_maze_wall", QuanBlock::new);
 
 	public static final List<Block> BDS = Arrays.asList(BD_CNTR, BD_GATE, BD_IN, BD_OUT, BD_LNR);
@@ -298,6 +302,7 @@ public class Registrar extends ItemGroup {
 	public static final EntityType<SmartTNT> ET_STNT = getET(SmartTNT::new, "smart_tnt");
 	public static final EntityType<FogBall> ET_FB = getET(FogBall::new, "fog_ball");
 	public static final EntityType<ItemPicker> ET_IP = getET(ItemPicker::new, "item_picker");
+	public static final EntityType<QuanFly> ETM_QF = getQET(QuanFly::new, "quantum_fly", 1.9f, 0.9f);
 
 	public static final IRecipeType<OxiRecipe> RT_OXI = IRecipeType.register(MODID + ":oxidation");
 	public static final IRecipeType<RedRecipe> RT_RED = IRecipeType.register(MODID + ":reduction");
@@ -321,7 +326,7 @@ public class Registrar extends ItemGroup {
 			TETD_LNR, TETA_CRAFT, TETA_REC, TETA_SOUL, TETAP_HEAD, TETAP_CORE, TETME_ATK, TETME_REP, TETME_ATR,
 			TETME_SPA };
 
-	public static final EntityType<?>[] ETS = { ET_STNT, ET_FB, ET_IP };
+	public static final EntityType<?>[] ETS = { ET_STNT, ET_FB, ET_IP, ETM_QF };
 
 	public static final IRecipeSerializer<?>[] RSS = { RS_OXI, RS_RED, RS_C3D, RS_MAX, RSC_OXI, RSC_RED, RS_TELE,
 			RSF_OC, RSF_WP, RS_EOXI };
@@ -354,6 +359,7 @@ public class Registrar extends ItemGroup {
 		RenderingRegistry.registerEntityRenderingHandler(ET_STNT, SmartTNTRender::new);
 		RenderingRegistry.registerEntityRenderingHandler(ET_FB, m -> new SpriteRenderer<>(m, ir, 1, true));
 		RenderingRegistry.registerEntityRenderingHandler(ET_IP, m -> new SpriteRenderer<>(m, ir, 1, true));
+		RenderingRegistry.registerEntityRenderingHandler(ETM_QF, QuanFly.Renderer::new);
 	}
 
 	private static Item convert(Block block) {
@@ -421,6 +427,13 @@ public class Registrar extends ItemGroup {
 	private static <T extends Entity> EntityType<T> getET(EntityType.IFactory<T> f, String str) {
 		EntityType<T> ans = EntityType.Builder.<T>create(f, EntityClassification.MISC)
 				.setShouldReceiveVelocityUpdates(true).build(str);
+		ans.setRegistryName(MODID, str);
+		return ans;
+	}
+
+	private static <T extends Entity> EntityType<T> getQET(EntityType.IFactory<T> f, String str, float w, float h) {
+		EntityType<T> ans = EntityType.Builder.<T>create(f, EntityClassification.MONSTER).immuneToFire().size(w, h)
+				.build(str);
 		ans.setRegistryName(MODID, str);
 		return ans;
 	}
