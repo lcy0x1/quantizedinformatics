@@ -32,12 +32,16 @@ import com.arthurlcy0x1.quantizedinformatics.blocks.other.RedFn;
 import com.arthurlcy0x1.quantizedinformatics.blocks.other.Wire;
 import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect;
 import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.DraftIO;
+import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.MazeWall;
 import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.QTeleBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.QuanAir;
 import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.QuanAirBarrier;
 import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.QuanBarrier;
 import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.QuanBlock;
+import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.StandHead;
+import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.StoneStand;
 import com.arthurlcy0x1.quantizedinformatics.entities.QuanFly;
+import com.arthurlcy0x1.quantizedinformatics.entities.QuanStand;
 import com.arthurlcy0x1.quantizedinformatics.items.EncItem;
 import com.arthurlcy0x1.quantizedinformatics.items.battle.MaxArmor;
 import com.arthurlcy0x1.quantizedinformatics.items.battle.MaxwellItem;
@@ -131,13 +135,16 @@ public class Registrar extends ItemGroup {
 	public static final Block BAME_ATR = addName(new EntAttr(), "ent_attract");
 	public static final Block BAME_SPA = addName(new EntSpawn(), "ent_spawn");
 
+	public static final Block B_STAND = addName(new StoneStand(), "stone_stand");
+	public static final Block B_STANDHEAD = addName(new StandHead(), "stone_stand_head");
+
 	public static final Block BQ_AIR = generate("quantum_world_air", QuanAir::new);
 	public static final Block BQ_PORTAL = generate("quantum_world_portal", QTeleBlock::new);
 	public static final Block BQ_STONE = generate("quantum_world_stone", QuanBlock::new);
 	public static final Block BQ_CORE = generate("quantum_world_core", QuanBlock::new);
 	public static final Block BQ_BARRIER = generate("quantum_world_barrier", QuanBarrier::new);
 	public static final Block BQ_BARAIR = generate("quantum_world_barrier_air", QuanAirBarrier::new);
-	public static final Block BQ_MAZEWALL = generate("quantum_world_maze_wall", QuanBlock::new);
+	public static final Block BQ_MAZEWALL = generate("quantum_world_maze_wall", MazeWall::new);
 
 	public static final List<Block> BDS = Arrays.asList(BD_CNTR, BD_GATE, BD_IN, BD_OUT, BD_LNR);
 
@@ -168,6 +175,8 @@ public class Registrar extends ItemGroup {
 	public static final Item IBME_REP = convert(BAME_REP);
 	public static final Item IBME_ATR = convert(BAME_ATR);
 	public static final Item IBME_SPA = convert(BAME_SPA);
+
+	public static final Item IB_STAND = convert(B_STAND);
 
 	public static final Item IBQ_PORTAL = convert(BQ_PORTAL);
 	public static final Item IBQ_STONE = convert(BQ_STONE);
@@ -303,6 +312,7 @@ public class Registrar extends ItemGroup {
 	public static final EntityType<FogBall> ET_FB = getET(FogBall::new, "fog_ball");
 	public static final EntityType<ItemPicker> ET_IP = getET(ItemPicker::new, "item_picker");
 	public static final EntityType<QuanFly> ETM_QF = getQET(QuanFly::new, "quantum_fly", 1.9f, 0.9f);
+	public static final EntityType<QuanStand> ETM_QS = getQET(QuanStand::new, "quantum_stand", 0.6f, 1.9f);
 
 	public static final IRecipeType<OxiRecipe> RT_OXI = IRecipeType.register(MODID + ":oxidation");
 	public static final IRecipeType<RedRecipe> RT_RED = IRecipeType.register(MODID + ":reduction");
@@ -326,7 +336,7 @@ public class Registrar extends ItemGroup {
 			TETD_LNR, TETA_CRAFT, TETA_REC, TETA_SOUL, TETAP_HEAD, TETAP_CORE, TETME_ATK, TETME_REP, TETME_ATR,
 			TETME_SPA };
 
-	public static final EntityType<?>[] ETS = { ET_STNT, ET_FB, ET_IP, ETM_QF };
+	public static final EntityType<?>[] ETS = { ET_STNT, ET_FB, ET_IP, ETM_QF, ETM_QS };
 
 	public static final IRecipeSerializer<?>[] RSS = { RS_OXI, RS_RED, RS_C3D, RS_MAX, RSC_OXI, RSC_RED, RS_TELE,
 			RSF_OC, RSF_WP, RS_EOXI };
@@ -360,6 +370,7 @@ public class Registrar extends ItemGroup {
 		RenderingRegistry.registerEntityRenderingHandler(ET_FB, m -> new SpriteRenderer<>(m, ir, 1, true));
 		RenderingRegistry.registerEntityRenderingHandler(ET_IP, m -> new SpriteRenderer<>(m, ir, 1, true));
 		RenderingRegistry.registerEntityRenderingHandler(ETM_QF, QuanFly.Renderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(ETM_QS, QuanStand.Renderer::new);
 	}
 
 	private static Item convert(Block block) {

@@ -99,6 +99,9 @@
     "block.quantizedinformatics.quantum_world_core": "量子核心 - 量子世界",
     "block.quantizedinformatics.quantum_world_barrier": "量子屏障 - 量子世界",
     "block.quantizedinformatics.quantum_world_maze_wall": "迷宫墙 - 量子世界",
+    "block.quantizedinformatics.quantum_world_key": "迷宫钥匙 - 量子世界",
+    "block.quantizedinformatics.quantum_world_chest": "量子箱 - 量子世界",
+    "block.quantizedinformatics.stone_stand": "鬼石像",
 
     "item.quantizedinformatics.elem_b": "B (硼) - 化学元素",
     "item.quantizedinformatics.elem_p": "P (磷) - 化学元素",

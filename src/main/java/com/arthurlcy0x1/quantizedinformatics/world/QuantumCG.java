@@ -2,10 +2,16 @@ package com.arthurlcy0x1.quantizedinformatics.world;
 
 import java.util.Random;
 
+import org.apache.logging.log4j.LogManager;
+
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
+import com.arthurlcy0x1.quantizedinformatics.blocks.BaseBlock;
+import com.arthurlcy0x1.quantizedinformatics.utils.maze.MazeGen;
+import com.arthurlcy0x1.quantizedinformatics.utils.maze.MazeGen.MazeConfig;
+import com.arthurlcy0x1.quantizedinformatics.utils.maze.MazeUtil;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.IWorld;
@@ -22,14 +28,16 @@ public class QuantumCG extends ChunkGenerator<QuantumGS> {
 
 	private final SimplexNoiseGenerator gen;
 	private final Random mazeRan;
-	private final int[][][] state = new int[63][63][63];
+	private final int[][][] state = new int[63][][];
 
 	public QuantumCG(IWorld w, BiomeProvider bp, QuantumGS gs) {
 		super(w, bp, gs);
+		LogManager.getLogger().warn("Chunk Generator Created");
 		gen = new SimplexNoiseGenerator(new Random(w.getSeed()));
 		mazeRan = new Random(w.getSeed());
 		for (int i = 0; i < 63; i++) {
-			state[31][i][31] = 1;
+			state[i] = MazeUtil.generate(31, 64, mazeRan);
+			state[i][31][31] |= 256;
 		}
 	}
 
@@ -63,16 +71,16 @@ public class QuantumCG extends ChunkGenerator<QuantumGS> {
 	private void buildMaze(IWorld w, IChunk c) {
 		ChunkPos cpos = c.getPos();
 		BlockPos.Mutable pos = new BlockPos.Mutable();
-		BlockState air = Blocks.CAVE_AIR.getDefaultState();
 		BlockState qair = Registrar.BQ_AIR.getDefaultState();
 		BlockState wall = Registrar.BQ_MAZEWALL.getDefaultState();
+		BlockState stand = Registrar.B_STAND.getDefaultState();
 		int maxhor = 4 * 31 + 2;
 		for (int i = 0; i < 16; i++)
 			for (int j = 0; j < 256; j++)
 				for (int k = 0; k < 16; k++) {
 					int x = cpos.x * 16 + i;
 					int z = cpos.z * 16 + k;
-					if (x < -maxhor || x > maxhor || z < -maxhor || z > maxhor || j > 252) {
+					if (x < -maxhor || x > maxhor || z < -maxhor || z > maxhor || j >= 252) {
 						c.setBlockState(pos.setPos(i, j, k), qair, false);
 						continue;
 					}
@@ -80,15 +88,38 @@ public class QuantumCG extends ChunkGenerator<QuantumGS> {
 						c.setBlockState(pos.setPos(i, j, k), wall, false);
 						continue;
 					}
-					int cell = state[(x + maxhor) / 4][(j - 1) / 4][(z + maxhor) / 4];
+					int cell = state[(j - 1) / 4][(x + maxhor) / 4][(z + maxhor) / 4];
+					int ix = (x + maxhor) % 4;
+					int iz = (z + maxhor) % 4;
 					int dx = 2 - Math.abs(2 - Math.abs(x) % 4);
 					int dy = Math.abs(j % 4 - 2);
 					int dz = 2 - Math.abs(2 - Math.abs(z) % 4);
 					boolean sw = false;
-					sw |= dx + dz == 4;
-					sw |= dy == 2 && (cell == 0 || dx == 2 || dz == 2);
-					c.setBlockState(pos.setPos(i, j, k), sw ? wall : air, false);
+					sw |= dx * dz == 4;
+					sw |= (cell & 1) == 0 && ix == 0;
+					sw |= (cell & 4) == 0 && iz == 0;
+					sw |= (cell & 16) > 0 && ix == 0 && (j % 4 == 3 || dz != 0);
+					sw |= (cell & 64) > 0 && iz == 0 && (j % 4 == 3 || dx != 0);
+					sw |= dy == 2 && ((cell & 256) == 0 || dx == 2 || dz == 2);
+					BlockState bs = sw ? wall : qair;
+					if ((cell & 16) > 0 && ix == 0 && j % 4 == 1 && dz == 0)
+						bs = stand.with(BaseBlock.HORIZONTAL_FACING, face(cell));
+					if ((cell & 64) > 0 && iz == 0 && j % 4 == 1 && dx == 0)
+						bs = stand.with(BaseBlock.HORIZONTAL_FACING, face(cell));
+					c.setBlockState(pos.setPos(i, j, k), bs, false);
 				}
+	}
+
+	private static Direction face(int cell) {
+		int c = 0;
+		for (int i = 0; i < 4; i++)
+			if ((cell & 1 << i) > 0)
+				c++;
+		if ((cell & 16) > 0)
+			return c == 1 ? Direction.WEST : Direction.EAST;
+		if ((cell & 64) > 0)
+			return c == 1 ? Direction.NORTH : Direction.SOUTH;
+		return null;
 	}
 
 	private void buildWall(IWorld w, IChunk c) {

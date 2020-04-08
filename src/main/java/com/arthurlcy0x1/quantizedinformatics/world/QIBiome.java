@@ -11,7 +11,6 @@ import com.mojang.datafixers.types.DynamicOps;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.biome.Biome;
@@ -177,13 +176,9 @@ public class QIBiome extends Biome {
 	private static final int COL_WATER = 4159204;
 
 	private static final int COL_WATER_FOG = 4159204;
-	private static final int SP_WEIGHT = 10;
-	private static final int SP_GROUP = 4;
 	private static final BlockState BQ_STONE = Registrar.BQ_STONE.getDefaultState();
 	private static final BlockState BQ_CORE = Registrar.BQ_CORE.getDefaultState();
 	public static final SurfaceBuilderConfig SBC_Q = new SurfaceBuilderConfig(BQ_STONE, BQ_STONE, BQ_STONE);
-
-	private static final EntityType<?> MONSTER = EntityType.ENDERMAN;
 
 	public static final QuantumIslandFeature FQI = new QuantumIslandFeature();
 	public static final QuantumIslandPlacement PQI = new QuantumIslandPlacement();
@@ -213,6 +208,8 @@ public class QIBiome extends Biome {
 	protected QIBiome(boolean gen) {
 		this();
 		func_226711_a_(RegWorld.S_MAZE.configure());
+		addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(Registrar.ETM_QS, 100, 4, 4));
+
 		if (gen)
 			addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, RegWorld.S_MAZE.reconfigure());
 	}
@@ -222,6 +219,8 @@ public class QIBiome extends Biome {
 		QIFC qifc = new QIFC(r0, r1, type);
 		QIPC qipc = new QIPC(ch, DEF_STDEV);
 		addFeature(GenerationStage.Decoration.RAW_GENERATION, FQI.configure(qifc, qipc));
+		addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(Registrar.ETM_QF, 1, 1, 1));
+
 		if (r0 + r1 > 0)
 			addFeature(GenerationStage.Decoration.LOCAL_MODIFICATIONS, FQI.configure(FC_DEF, PC_DEF));
 
@@ -229,7 +228,6 @@ public class QIBiome extends Biome {
 
 	private QIBiome() {
 		super(getBuilder().surfaceBuilder(SurfaceBuilder.DEFAULT, SBC_Q));
-		addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(MONSTER, SP_WEIGHT, SP_GROUP, SP_GROUP));
 	}
 
 	@Override

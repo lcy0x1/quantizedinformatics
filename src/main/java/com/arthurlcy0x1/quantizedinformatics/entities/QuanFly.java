@@ -10,8 +10,9 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.controller.MovementController;
 import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.item.TNTEntity;
+import net.minecraft.entity.monster.IMob;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.IPacket;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
@@ -25,6 +26,8 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import java.util.EnumSet;
 import java.util.Random;
+import java.util.function.Predicate;
+
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.utils.logic.Estimator;
 import com.arthurlcy0x1.quantizedinformatics.utils.logic.Estimator.EstiResult;
@@ -32,7 +35,7 @@ import com.arthurlcy0x1.quantizedinformatics.utils.logic.Estimator.EstiType;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
-public class QuanFly extends FlyingEntity {
+public class QuanFly extends FlyingEntity implements IMob, QuanMob {
 
 	public static class Model extends EntityModel<QuanFly> {
 		private final ModelRenderer bone;
@@ -144,6 +147,38 @@ public class QuanFly extends FlyingEntity {
 
 	}
 
+	private static class LookAroundGoal extends Goal {
+		private final QuanFly parent;
+
+		public LookAroundGoal(QuanFly mob) {
+			this.parent = mob;
+			this.setMutexFlags(EnumSet.of(Goal.Flag.LOOK));
+		}
+
+		@Override
+		public boolean shouldExecute() {
+			return true;
+		}
+
+		@Override
+		public void tick() {
+			if (parent.getAttackTarget() == null) {
+				Vec3d vec3d = parent.getMotion();
+				parent.rotationYaw = (float) (-MathHelper.atan2(vec3d.x, vec3d.z) * 180 / Math.PI);
+				parent.renderYawOffset = parent.rotationYaw;
+			} else {
+				LivingEntity livingentity = parent.getAttackTarget();
+				if (livingentity.getDistanceSq(parent) < 4096.0D) {
+					double d1 = livingentity.func_226277_ct_() - parent.func_226277_ct_();
+					double d2 = livingentity.func_226281_cx_() - parent.func_226281_cx_();
+					parent.rotationYaw = (float) (-MathHelper.atan2(d1, d2) * 180 / Math.PI);
+					parent.renderYawOffset = parent.rotationYaw;
+				}
+			}
+
+		}
+	}
+
 	private static class MoveCtrl extends MovementController {
 
 		private QuanFly parent;
@@ -184,16 +219,21 @@ public class QuanFly extends FlyingEntity {
 
 	}
 
-	private static class NearestGoal extends NearestAttackableTargetGoal<LivingEntity> {
+	private static class NearGoal<T extends LivingEntity> extends NearestGoal<T> {
 
-		public NearestGoal(QuanFly mob) {
-			super(mob, LivingEntity.class, true);
+		public NearGoal(QuanFly mob, Class<T> cls) {
+			super(mob, cls);
+		}
+
+		public NearGoal(QuanFly mob, Class<T> cls, Predicate<LivingEntity> pred) {
+			super(mob, cls, pred);
 		}
 
 		@Override
 		protected AxisAlignedBB getTargetableArea(double tar) {
 			return goalOwner.getBoundingBox().grow(tar, tar, tar);
 		}
+
 	}
 
 	private static class RandomFlyGoal extends Goal {
@@ -320,8 +360,15 @@ public class QuanFly extends FlyingEntity {
 	}
 
 	@Override
+	public int getMaxSpawnedInChunk() {
+		return 1;
+	}
+
+	@Override
 	public boolean isInvulnerableTo(DamageSource ds) {
 		if (ds.isExplosion())
+			return true;
+		if (ds.getTrueSource() instanceof QuanMob)
 			return true;
 		return super.isInvulnerableTo(ds);
 	}
@@ -336,8 +383,11 @@ public class QuanFly extends FlyingEntity {
 	@Override
 	protected void registerGoals() {
 		goalSelector.addGoal(5, new RandomFlyGoal(this));
+		goalSelector.addGoal(7, new LookAroundGoal(this));
 		goalSelector.addGoal(7, new TNTAttackGoal(this));
-		targetSelector.addGoal(1, new NearestGoal(this));
+		targetSelector.addGoal(1, new NearGoal<>(this, PlayerEntity.class));
+		targetSelector.addGoal(2, new NearGoal<>(this, LivingEntity.class, e -> e instanceof IMob));
+		targetSelector.addGoal(3, new NearGoal<>(this, LivingEntity.class));
 	}
 
 }
