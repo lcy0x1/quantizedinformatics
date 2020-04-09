@@ -38,6 +38,8 @@ import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.QuanAir;
 import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.QuanAirBarrier;
 import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.QuanBarrier;
 import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.QuanBlock;
+import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.QuanChest;
+import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.QuanKey;
 import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.StandHead;
 import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.StoneStand;
 import com.arthurlcy0x1.quantizedinformatics.entities.QuanFly;
@@ -145,6 +147,8 @@ public class Registrar extends ItemGroup {
 	public static final Block BQ_BARRIER = generate("quantum_world_barrier", QuanBarrier::new);
 	public static final Block BQ_BARAIR = generate("quantum_world_barrier_air", QuanAirBarrier::new);
 	public static final Block BQ_MAZEWALL = generate("quantum_world_maze_wall", MazeWall::new);
+	public static final Block BQ_KEY = generate("quantum_world_key", QuanKey::new);
+	public static final Block BQ_CHEST = generate("quantum_world_chest", QuanChest::new);
 
 	public static final List<Block> BDS = Arrays.asList(BD_CNTR, BD_GATE, BD_IN, BD_OUT, BD_LNR);
 
@@ -183,6 +187,8 @@ public class Registrar extends ItemGroup {
 	public static final Item IBQ_CORE = convert(BQ_CORE);
 	public static final Item IBQ_BARRIER = convert(BQ_BARRIER);
 	public static final Item IBQ_MAZEWALL = convert(BQ_MAZEWALL);
+	public static final Item IBQ_KEY = convert(BQ_KEY);
+	public static final Item IBQ_CHEST = convert(BQ_CHEST);
 
 	// items
 	public static final Item IE_P = generate("elem_p", 64);
@@ -290,6 +296,7 @@ public class Registrar extends ItemGroup {
 	public static final ContainerType<EntRepel.Cont> CTME_REP = getCT(EntRepel.Cont::new, "ent_repel_c");
 	public static final ContainerType<EntAttr.Cont> CTME_ATR = getCT(EntAttr.Cont::new, "ent_attract_c");
 	public static final ContainerType<EntSpawn.Cont> CTME_SPA = getCT(EntSpawn.Cont::new, "ent_spawn_c");
+	public static final ContainerType<QuanChest.Cont> CTQ_CHEST = getCT(QuanChest.Cont::new, "qw_chest_c");
 
 	public static final TileEntityType<OxiFn.TE> TET_OXIFN = getTET(OxiFn.TE::new, B_OXIFN, "oxidation_furnace_te");
 	public static final TileEntityType<RedFn.TE> TET_REDFN = getTET(RedFn.TE::new, B_REDFN, "reduction_furnace_te");
@@ -307,6 +314,7 @@ public class Registrar extends ItemGroup {
 	public static final TileEntityType<EntRepel.TE> TETME_REP = getTET(EntRepel.TE::new, BAME_REP, "ent_repel_te");
 	public static final TileEntityType<EntAttr.TE> TETME_ATR = getTET(EntAttr.TE::new, BAME_ATR, "ent_attract_te");
 	public static final TileEntityType<EntSpawn.TE> TETME_SPA = getTET(EntSpawn.TE::new, BAME_SPA, "ent_spawn_te");
+	public static final TileEntityType<QuanChest.TE> TETQ_CHEST = getTET(QuanChest.TE::new, BQ_CHEST, "wq_chest_te");
 
 	public static final EntityType<SmartTNT> ET_STNT = getET(SmartTNT::new, "smart_tnt");
 	public static final EntityType<FogBall> ET_FB = getET(FogBall::new, "fog_ball");
@@ -330,11 +338,11 @@ public class Registrar extends ItemGroup {
 	public static final IRecipeSerializer<?> RS_EOXI = getRS(new EnchantOxiRec.Serializer(), "enchant_oxi");
 
 	public static final ContainerType<?>[] CTS = { CT_OXIFN, CT_REDFN, CTD_CNTR, CTD_GATE, CTD_IN, CTD_OUT, CTD_LNR,
-			CTA_CRAFT, CTA_REC, CTA_SOUL, CTAP_HEAD, CTAP_CORE, CTME_ATK, CTME_REP, CTME_ATR, CTME_SPA };
+			CTA_CRAFT, CTA_REC, CTA_SOUL, CTAP_HEAD, CTAP_CORE, CTME_ATK, CTME_REP, CTME_ATR, CTME_SPA, CTQ_CHEST };
 
 	public static final TileEntityType<?>[] TETS = { TET_OXIFN, TET_REDFN, TETD_CNTR, TETD_GATE, TETD_IN, TETD_OUT,
 			TETD_LNR, TETA_CRAFT, TETA_REC, TETA_SOUL, TETAP_HEAD, TETAP_CORE, TETME_ATK, TETME_REP, TETME_ATR,
-			TETME_SPA };
+			TETME_SPA, TETQ_CHEST };
 
 	public static final EntityType<?>[] ETS = { ET_STNT, ET_FB, ET_IP, ETM_QF, ETM_QS };
 
@@ -363,7 +371,7 @@ public class Registrar extends ItemGroup {
 		ScreenManager.registerFactory(CTME_REP, EntRepel.Scr::new);
 		ScreenManager.registerFactory(CTME_ATR, EntAttr.Scr::new);
 		ScreenManager.registerFactory(CTME_SPA, EntSpawn.Scr::new);
-
+		ScreenManager.registerFactory(CTQ_CHEST, QuanChest.Scr::new);
 		ItemRenderer ir = Minecraft.getInstance().getItemRenderer();
 
 		RenderingRegistry.registerEntityRenderingHandler(ET_STNT, SmartTNTRender::new);

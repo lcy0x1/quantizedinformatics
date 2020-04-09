@@ -29,24 +29,19 @@ public class StoneStand extends QuanBlock {
 
 	}
 
-	private static class Spawn implements IRep {
-
-		@Override
-		public void onReplaced(BlockState state, World w, BlockPos pos, BlockState newState, boolean isMoving) {
-			if (!w.isRemote) {
-				QuanStand qs = Registrar.ETM_QS.create(w);
-				Direction d = state.get(BaseBlock.HORIZONTAL_FACING);
-				d.getHorizontalAngle();
-				qs.setLocationAndAngles(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, d.getHorizontalAngle(), 0);
-				qs.rotationYawHead = d.getHorizontalAngle();
-				w.addEntity(qs);
-			}
+	private static void spawn(BlockState state, World w, BlockPos pos, BlockState newState, boolean isMoving) {
+		if (!w.isRemote && newState.getBlock() != Registrar.BQ_AIR) {
+			QuanStand qs = Registrar.ETM_QS.create(w);
+			Direction d = state.get(BaseBlock.HORIZONTAL_FACING);
+			d.getHorizontalAngle();
+			qs.setLocationAndAngles(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, d.getHorizontalAngle(), 0);
+			qs.rotationYawHead = d.getHorizontalAngle();
+			w.addEntity(qs);
 		}
-
 	}
 
 	public StoneStand() {
-		super(construct(BlockProp.STONE_STAND).addImpls(HOR, new SRep(1), new Spawn()));
+		super(construct(BlockProp.STONE_STAND).addImpls(HOR, new SRep(1), (IRep) StoneStand::spawn));
 	}
 
 	@Override

@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Files;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -16,10 +15,6 @@ import javax.imageio.ImageIO;
 import com.arthurlcy0x1.quantizedinformatics.utils.logic.Estimator;
 import com.arthurlcy0x1.quantizedinformatics.utils.logic.LogicDiagram;
 import com.arthurlcy0x1.quantizedinformatics.utils.logic.LogicGate;
-import com.arthurlcy0x1.quantizedinformatics.utils.maze.MazeDeco;
-import com.arthurlcy0x1.quantizedinformatics.utils.maze.MazeDeco.DecoConfig;
-import com.arthurlcy0x1.quantizedinformatics.utils.maze.MazeGen;
-import com.arthurlcy0x1.quantizedinformatics.utils.maze.MazeGen.MazeConfig;
 import com.arthurlcy0x1.quantizedinformatics.utils.logic.Estimator.EstiResult;
 import com.arthurlcy0x1.quantizedinformatics.utils.logic.Estimator.EstiType;
 import com.arthurlcy0x1.quantizedinformatics.utils.logic.LogicDiagram.GateContainer;
@@ -166,50 +161,6 @@ public class Test {
 	public static void main(String[] args) throws IOException {
 		System.out.println(1 << (2 ^ 1));
 
-	}
-
-	public static void testGen() {
-		long t0 = System.nanoTime();
-		for (int i = 0; i < 63; i++) {
-			int[][] map = MazeGen.generate(31, new Random(), new MazeConfig());
-			int[][] ans = MazeDeco.generate(map, 64, new Random(), new DecoConfig());
-		}
-		long t1 = System.nanoTime();
-		System.out.println((t1 - t0) / 1000000);
-	}
-
-	private static char[] parse(int n) {
-		return ("" + n / 10).toCharArray();
-	}
-
-	private static void fillAns(char[][] chs, int[][] map, int[][] dec, int i, int j) {
-		for (int a = 0; a < 5; a++)
-			for (int b = 0; b < 5; b++)
-				if (chs[i * 5 + a][j * 5 + b] == '?')
-					if (a == 0 || b == 0 || a == 4 || b == 4)
-						chs[i * 5 + a][j * 5 + b] = 'x';
-					else
-						chs[i * 5 + a][j * 5 + b] = ' ';
-
-		boolean has = false;
-		for (int[] arr : dec)
-			if (arr[0] == i && arr[1] == j)
-				has = true;
-		if (has)
-			chs[i * 5 + 2][j * 5 + 2] = 'o';
-
-		// char[] chr = parse(dec[i][j]);
-		// for (int s = 0; s < Math.min(3, chr.length); s++)
-		// chs[i * 5 + 2][j * 5 + 1 + s] = chr[s];
-		int ans = map[i][j];
-		if ((ans & 1) > 0)
-			chs[i * 5 + 2 - 2][j * 5 + 1] = chs[i * 5 + 2 - 2][j * 5 + 2] = chs[i * 5 + 2 - 2][j * 5 + 3] = ' ';
-		if ((ans & 2) > 0)
-			chs[i * 5 + 2 + 2][j * 5 + 1] = chs[i * 5 + 2 + 2][j * 5 + 2] = chs[i * 5 + 2 + 2][j * 5 + 3] = ' ';
-		if ((ans & 4) > 0)
-			chs[i * 5 + 1][j * 5 + 2 - 2] = chs[i * 5 + 2][j * 5 + 2 - 2] = chs[i * 5 + 3][j * 5 + 2 - 2] = ' ';
-		if ((ans & 8) > 0)
-			chs[i * 5 + 1][j * 5 + 2 + 2] = chs[i * 5 + 2][j * 5 + 2 + 2] = chs[i * 5 + 3][j * 5 + 2 + 2] = ' ';
 	}
 
 	public static double normal(double x, double mean, double stdev) {

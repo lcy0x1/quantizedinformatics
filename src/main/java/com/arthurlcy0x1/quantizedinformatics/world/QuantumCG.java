@@ -6,8 +6,6 @@ import org.apache.logging.log4j.LogManager;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.blocks.BaseBlock;
-import com.arthurlcy0x1.quantizedinformatics.utils.maze.MazeGen;
-import com.arthurlcy0x1.quantizedinformatics.utils.maze.MazeGen.MazeConfig;
 import com.arthurlcy0x1.quantizedinformatics.utils.maze.MazeUtil;
 
 import net.minecraft.block.BlockState;
@@ -26,8 +24,26 @@ public class QuantumCG extends ChunkGenerator<QuantumGS> {
 
 	private static final double NOISE_FAC = 0.003;
 
+	private static int countBit(int cell) {
+		int c = 0;
+		for (int i = 0; i < 4; i++)
+			if ((cell & 1 << i) > 0)
+				c++;
+		return c;
+	}
+
+	private static Direction face(int cell) {
+		int c = countBit(cell);
+		if ((cell & 16) > 0)
+			return c == 1 ? Direction.WEST : Direction.EAST;
+		if ((cell & 64) > 0)
+			return c == 1 ? Direction.NORTH : Direction.SOUTH;
+		return null;
+	}
+
 	private final SimplexNoiseGenerator gen;
 	private final Random mazeRan;
+
 	private final int[][][] state = new int[63][][];
 
 	public QuantumCG(IWorld w, BiomeProvider bp, QuantumGS gs) {
@@ -35,10 +51,8 @@ public class QuantumCG extends ChunkGenerator<QuantumGS> {
 		LogManager.getLogger().warn("Chunk Generator Created");
 		gen = new SimplexNoiseGenerator(new Random(w.getSeed()));
 		mazeRan = new Random(w.getSeed());
-		for (int i = 0; i < 63; i++) {
-			state[i] = MazeUtil.generate(31, 64, mazeRan);
-			state[i][31][31] |= 256;
-		}
+		for (int i = 0; i < 63; i++)
+			state[i] = MazeUtil.generate(31, 64, 16, mazeRan);
 	}
 
 	@Override
@@ -100,26 +114,20 @@ public class QuantumCG extends ChunkGenerator<QuantumGS> {
 					sw |= (cell & 4) == 0 && iz == 0;
 					sw |= (cell & 16) > 0 && ix == 0 && (j % 4 == 3 || dz != 0);
 					sw |= (cell & 64) > 0 && iz == 0 && (j % 4 == 3 || dx != 0);
-					sw |= dy == 2 && ((cell & 256) == 0 || dx == 2 || dz == 2);
+					sw |= dy == 2;
 					BlockState bs = sw ? wall : qair;
+					if (dx + dz == 0 && j % 4 == 1 && countBit(cell) == 1 && (cell & 0xf0) > 0) {
+						if ((cell & 256) > 0)
+							bs = Registrar.BQ_KEY.getDefaultState();
+						else
+							bs = Registrar.BQ_CHEST.getDefaultState();
+					}
 					if ((cell & 16) > 0 && ix == 0 && j % 4 == 1 && dz == 0)
 						bs = stand.with(BaseBlock.HORIZONTAL_FACING, face(cell));
 					if ((cell & 64) > 0 && iz == 0 && j % 4 == 1 && dx == 0)
 						bs = stand.with(BaseBlock.HORIZONTAL_FACING, face(cell));
 					c.setBlockState(pos.setPos(i, j, k), bs, false);
 				}
-	}
-
-	private static Direction face(int cell) {
-		int c = 0;
-		for (int i = 0; i < 4; i++)
-			if ((cell & 1 << i) > 0)
-				c++;
-		if ((cell & 16) > 0)
-			return c == 1 ? Direction.WEST : Direction.EAST;
-		if ((cell & 64) > 0)
-			return c == 1 ? Direction.NORTH : Direction.SOUTH;
-		return null;
 	}
 
 	private void buildWall(IWorld w, IChunk c) {

@@ -49,8 +49,6 @@ public class MazeGen {
 			return MazeUtil.randSel(r, path, c == 1 || !rim.state.isRoot(), len);
 		}
 
-		
-
 	}
 
 	private class PostRim {
@@ -336,7 +334,7 @@ public class MazeGen {
 						State s0 = post[j].state;
 						State s1 = post[(j + 1) % post.length].state;
 						if (!s0.equals(s1)) {
-							//System.out.println("connect " + s0.getInd() + " to " + s1.getInd());
+							// System.out.println("connect " + s0.getInd() + " to " + s1.getInd());
 							int t0 = rim(i, post[j].x1);
 							int t1 = rim(i, post[(j + 1) % post.length].x0);
 							set(conn, t0, get(conn, t0) | 2);

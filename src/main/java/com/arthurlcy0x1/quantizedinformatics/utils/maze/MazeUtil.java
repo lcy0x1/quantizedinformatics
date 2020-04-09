@@ -7,7 +7,9 @@ import com.arthurlcy0x1.quantizedinformatics.utils.maze.MazeGen.MazeConfig;
 
 public class MazeUtil {
 
-	public static int[][] generate(int r, int count, Random rand) {
+	public static final int[][] DIRE = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
+
+	public static int[][] generate(int r, int count, int mark, Random rand) {
 		int[][] map = MazeGen.generate(r, rand, new MazeConfig());
 		int[][] ans = MazeDeco.generate(map, count, rand, new DecoConfig());
 		for (int[] arr : ans) {
@@ -19,24 +21,10 @@ public class MazeUtil {
 			map[x][y] |= 1 << v + 4;
 			map[tx][ty] |= 1 << (v ^ 1) + 4;
 		}
+		int[] ran = randArray(ans.length, rand);
+		for (int i = 0; i < Math.min(ran.length, mark); i++)
+			map[ans[ran[i]][0]][ans[ran[i]][1]] |= 256;
 		return map;
-	}
-
-	public static int randSel(Random r, int[] arr, boolean beg, int len) {
-		int a = 0, b = 0;
-		for (int i = 0; i < arr.length; i++)
-			b += arr[i];
-		if (beg)
-			a += arr[0];
-		for (int i = len + 1; i < arr.length; i++)
-			b -= arr[i];
-		int v = a + r.nextInt(b - a);
-		for (int i = 0; i < arr.length; i++) {
-			if (v < arr[i])
-				return i;
-			v -= arr[i];
-		}
-		return arr.length - 1;
 	}
 
 	public static int[] randArray(int n, Random r) {
@@ -56,6 +44,21 @@ public class MazeUtil {
 		return ans;
 	}
 
-	public static final int[][] DIRE = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
+	public static int randSel(Random r, int[] arr, boolean beg, int len) {
+		int a = 0, b = 0;
+		for (int i = 0; i < arr.length; i++)
+			b += arr[i];
+		if (beg)
+			a += arr[0];
+		for (int i = len + 1; i < arr.length; i++)
+			b -= arr[i];
+		int v = a + r.nextInt(b - a);
+		for (int i = 0; i < arr.length; i++) {
+			if (v < arr[i])
+				return i;
+			v -= arr[i];
+		}
+		return arr.length - 1;
+	}
 
 }

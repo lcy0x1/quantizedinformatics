@@ -16,6 +16,7 @@
     "quantizedinformatics:container.ent_attract": "引力场 - 生物交互装置",
     "quantizedinformatics:container.ent_spawn": "生物生成器 - 生物交互装置",
     "quantizedinformatics:container.soul_extracter": "灵魂提取装置",
+    "quantizedinformatics:container.quantum_world_chest": "量子箱 - 量子世界",
 
     "quantizedinformatics:container.draft_center.in": "输入端口 ID = ",
     "quantizedinformatics:container.draft_center.out": "输出端口 ID = ",

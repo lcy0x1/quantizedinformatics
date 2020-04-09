@@ -16,6 +16,7 @@
     "quantizedinformatics:container.ent_attract": "Entity Attracter",
     "quantizedinformatics:container.ent_spawn": "Entity Spawner",
     "quantizedinformatics:container.soul_extracter": "Soul Extracter",
+    "quantizedinformatics:container.quantum_world_chest": "Chest - Quantum World",
 
     "quantizedinformatics:container.draft_center.in": "Input Wire ID = ",
     "quantizedinformatics:container.draft_center.out": "Output Wire ID = ",

@@ -207,11 +207,8 @@ public class QIBiome extends Biome {
 
 	protected QIBiome(boolean gen) {
 		this();
-		func_226711_a_(RegWorld.S_MAZE.configure());
-		addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(Registrar.ETM_QS, 100, 4, 4));
-
-		if (gen)
-			addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, RegWorld.S_MAZE.reconfigure());
+		// addSpawn(EntityClassification.MONSTER, new
+		// Biome.SpawnListEntry(Registrar.ETM_QS, 100, 4, 4));
 	}
 
 	protected QIBiome(double ch, int r0, int r1, int type) {
@@ -219,7 +216,7 @@ public class QIBiome extends Biome {
 		QIFC qifc = new QIFC(r0, r1, type);
 		QIPC qipc = new QIPC(ch, DEF_STDEV);
 		addFeature(GenerationStage.Decoration.RAW_GENERATION, FQI.configure(qifc, qipc));
-		addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(Registrar.ETM_QF, 1, 1, 1));
+		addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(Registrar.ETM_QF, 50, 4, 4));
 
 		if (r0 + r1 > 0)
 			addFeature(GenerationStage.Decoration.LOCAL_MODIFICATIONS, FQI.configure(FC_DEF, PC_DEF));

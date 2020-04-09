@@ -10,6 +10,8 @@ public class MazeWall extends QuanBlock {
 
 	@Override
 	public void onRep(World w, BlockState cur, BlockState tar, BlockPos pos) {
+		if (tar.getBlock() == Registrar.BQ_AIR)
+			return;
 		w.setBlockState(pos, Registrar.BQ_MAZEWALL.getDefaultState(), 50);
 	}
 
