@@ -7,8 +7,8 @@ import static com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.INP
 import static com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.OUTPUT;
 import static com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.S_ERR;
 import static com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.S_FLOAT;
-import static com.arthurlcy0x1.quantizedinformatics.logic.LogicDiagram.FALSE;
-import static com.arthurlcy0x1.quantizedinformatics.logic.LogicDiagram.TRUE;
+import static com.arthurlcy0x1.quantizedinformatics.utils.logic.LogicDiagram.FALSE;
+import static com.arthurlcy0x1.quantizedinformatics.utils.logic.LogicDiagram.TRUE;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -25,9 +25,9 @@ import com.arthurlcy0x1.quantizedinformatics.blocks.other.Wire;
 import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.DraftIO;
 import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.DraftTE;
 import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.ISignalManager;
-import com.arthurlcy0x1.quantizedinformatics.logic.LogicDiagram;
-import com.arthurlcy0x1.quantizedinformatics.logic.LogicDiagram.GateContainer;
-import com.arthurlcy0x1.quantizedinformatics.logic.LogicDiagram.ParentDiagram;
+import com.arthurlcy0x1.quantizedinformatics.utils.logic.LogicDiagram;
+import com.arthurlcy0x1.quantizedinformatics.utils.logic.LogicDiagram.GateContainer;
+import com.arthurlcy0x1.quantizedinformatics.utils.logic.LogicDiagram.ParentDiagram;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

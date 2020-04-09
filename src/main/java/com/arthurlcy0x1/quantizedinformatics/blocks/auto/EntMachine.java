@@ -7,7 +7,7 @@ import java.util.Set;
 import com.arthurlcy0x1.quantizedinformatics.blocks.BaseBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.BlockProp;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
-import com.arthurlcy0x1.quantizedinformatics.items.MaxwellItem;
+import com.arthurlcy0x1.quantizedinformatics.items.battle.MaxwellItem;
 
 import net.minecraft.block.RedstoneTorchBlock;
 import net.minecraft.entity.Entity;

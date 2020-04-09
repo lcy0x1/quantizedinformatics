@@ -1,6 +1,3 @@
 {
-    "parent": "block/cube_all",
-    "textures": {
-        "all": "quantizedinformatics:blocks/quantum_ore"
-    }
+    "parent": "quantizedinformatics:block/quantum_ore"
 }

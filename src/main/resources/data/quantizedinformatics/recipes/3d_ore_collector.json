@@ -20,7 +20,7 @@
     ],
     "keys": {
         "0": "quantizedinformatics:craft_frame",
-        "1": "quantizedinformatics:craft_center"
+        "1": "quantizedinformatics:craft_3d"
     },
     "out": "quantizedinformatics:ore_collector"
 }

@@ -7,7 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
-import com.arthurlcy0x1.quantizedinformatics.items.MaxwellItem;
+import com.arthurlcy0x1.quantizedinformatics.items.battle.MaxwellItem;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.entity.Entity;
@@ -231,10 +231,6 @@ public class EntSpawn extends EntMachine {
 			success++;
 		}
 
-		private boolean detect(Entity e) {
-			return e instanceof LivingEntity && !(e instanceof PlayerEntity);
-		}
-
 		@Override
 		public CompoundNBT write(CompoundNBT tag) {
 			super.write(tag);
@@ -247,6 +243,10 @@ public class EntSpawn extends EntMachine {
 		@Override
 		protected void onChange(int ind) {
 			dirty = true;
+		}
+
+		private boolean detect(Entity e) {
+			return e instanceof LivingEntity && !(e instanceof PlayerEntity);
 		}
 
 	}

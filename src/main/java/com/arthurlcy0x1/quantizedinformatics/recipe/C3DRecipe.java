@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
-import com.arthurlcy0x1.quantizedinformatics.logic.LogicRE;
+import com.arthurlcy0x1.quantizedinformatics.utils.logic.LogicRE;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-import com.arthurlcy0x1.quantizedinformatics.logic.LogicRE;
+import com.arthurlcy0x1.quantizedinformatics.utils.logic.LogicRE;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -31,12 +31,13 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-public abstract class BaseBlock extends Block {
+public class BaseBlock extends Block {
 
 	public static class BlockImplementor {
 
 		private final Properties props;
-		private final List<IState> stateList = new ArrayList<IState>();
+		private final List<IState> stateList = new ArrayList<>();
+		private final List<IRep> repList = new ArrayList<>();
 
 		private IRotMir rotmir;
 		private IFace face;
@@ -52,6 +53,8 @@ public abstract class BaseBlock extends Block {
 		public BlockImplementor addImpl(IImpl impl) {
 			if (impl instanceof IState)
 				stateList.add((IState) impl);
+			if (impl instanceof IRep)
+				repList.add((IRep) impl);
 			if (impl instanceof STE)
 				impl = new TEPvd((STE) impl);
 			for (Field f : getClass().getDeclaredFields())
@@ -87,6 +90,12 @@ public abstract class BaseBlock extends Block {
 	public static interface ILight extends IImpl {
 
 		public int getLightValue(BlockState bs);
+
+	}
+
+	public static interface IRep extends IImpl {
+
+		public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving);
 
 	}
 
@@ -239,6 +248,10 @@ public abstract class BaseBlock extends Block {
 		super(handler(bimpl));
 	}
 
+	public BaseBlock(BlockProp p, IImpl... impl) {
+		this(construct(p).addImpls(impl));
+	}
+
 	@Override
 	public final boolean canProvidePower(BlockState bs) {
 		return impl.power != null;
@@ -311,6 +324,8 @@ public abstract class BaseBlock extends Block {
 				worldIn.removeTileEntity(pos);
 			}
 		}
+		for (IRep irep : impl.repList)
+			irep.onReplaced(state, worldIn, pos, newState, isMoving);
 	}
 
 	@Override

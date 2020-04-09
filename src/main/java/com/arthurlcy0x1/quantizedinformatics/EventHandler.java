@@ -1,7 +1,7 @@
 package com.arthurlcy0x1.quantizedinformatics;
 
-import com.arthurlcy0x1.quantizedinformatics.items.SoulItem.SoulMarker;
-import com.arthurlcy0x1.quantizedinformatics.items.Telescope;
+import com.arthurlcy0x1.quantizedinformatics.items.battle.Telescope;
+import com.arthurlcy0x1.quantizedinformatics.items.battle.SoulItem.SoulMarker;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;

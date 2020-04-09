@@ -1,13 +1,10 @@
 package com.arthurlcy0x1.quantizedinformatics;
 
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
-
-import org.apache.logging.log4j.LogManager;
 
 import com.arthurlcy0x1.quantizedinformatics.blocks.BlockProp;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
@@ -35,37 +32,52 @@ import com.arthurlcy0x1.quantizedinformatics.blocks.other.RedFn;
 import com.arthurlcy0x1.quantizedinformatics.blocks.other.Wire;
 import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect;
 import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect.DraftIO;
-import com.arthurlcy0x1.quantizedinformatics.items.ALUItem;
-import com.arthurlcy0x1.quantizedinformatics.items.AutoRecipe;
-import com.arthurlcy0x1.quantizedinformatics.items.DraftGateItem;
+import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.MazeWall;
+import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.QTeleBlock;
+import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.QuanAir;
+import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.QuanAirBarrier;
+import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.QuanBarrier;
+import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.QuanBlock;
+import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.QuanChest;
+import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.QuanKey;
+import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.StandHead;
+import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.StoneStand;
+import com.arthurlcy0x1.quantizedinformatics.entities.QuanFly;
+import com.arthurlcy0x1.quantizedinformatics.entities.QuanStand;
 import com.arthurlcy0x1.quantizedinformatics.items.EncItem;
-import com.arthurlcy0x1.quantizedinformatics.items.EntityCannon.DefEC;
-import com.arthurlcy0x1.quantizedinformatics.items.EntityCannon.FogBall;
-import com.arthurlcy0x1.quantizedinformatics.items.EntityCannon.ItemPicker;
-import com.arthurlcy0x1.quantizedinformatics.items.EntityCannon.PotionEC;
-import com.arthurlcy0x1.quantizedinformatics.items.EntityCannon.SmartTNT;
-import com.arthurlcy0x1.quantizedinformatics.items.EntityCannon.SmartTNTRender;
-import com.arthurlcy0x1.quantizedinformatics.items.EntityCannon.TNTEC;
-import com.arthurlcy0x1.quantizedinformatics.items.LogicDraft;
-import com.arthurlcy0x1.quantizedinformatics.items.MaxwellItem;
-import com.arthurlcy0x1.quantizedinformatics.items.OreCollect;
-import com.arthurlcy0x1.quantizedinformatics.items.PrepChip;
-import com.arthurlcy0x1.quantizedinformatics.items.SoulItem.SoulBottle;
-import com.arthurlcy0x1.quantizedinformatics.items.SoulItem.SoulCollector;
-import com.arthurlcy0x1.quantizedinformatics.items.SoulItem.SoulMarker;
-import com.arthurlcy0x1.quantizedinformatics.items.SoulItem.SoulTrap;
-import com.arthurlcy0x1.quantizedinformatics.items.Telescope;
+import com.arthurlcy0x1.quantizedinformatics.items.battle.MaxArmor;
+import com.arthurlcy0x1.quantizedinformatics.items.battle.MaxwellItem;
+import com.arthurlcy0x1.quantizedinformatics.items.battle.OreCollect;
+import com.arthurlcy0x1.quantizedinformatics.items.battle.Telescope;
+import com.arthurlcy0x1.quantizedinformatics.items.battle.EntityCannon.ArrowEC;
+import com.arthurlcy0x1.quantizedinformatics.items.battle.EntityCannon.DefEC;
+import com.arthurlcy0x1.quantizedinformatics.items.battle.EntityCannon.FogBall;
+import com.arthurlcy0x1.quantizedinformatics.items.battle.EntityCannon.ItemPicker;
+import com.arthurlcy0x1.quantizedinformatics.items.battle.EntityCannon.PotionEC;
+import com.arthurlcy0x1.quantizedinformatics.items.battle.EntityCannon.SmartTNT;
+import com.arthurlcy0x1.quantizedinformatics.items.battle.EntityCannon.SmartTNTRender;
+import com.arthurlcy0x1.quantizedinformatics.items.battle.EntityCannon.TNTEC;
+import com.arthurlcy0x1.quantizedinformatics.items.battle.EntityCannon.TridentEC;
+import com.arthurlcy0x1.quantizedinformatics.items.battle.MaxArmor.MaxMat;
+import com.arthurlcy0x1.quantizedinformatics.items.battle.SoulItem.SoulBottle;
+import com.arthurlcy0x1.quantizedinformatics.items.battle.SoulItem.SoulCollector;
+import com.arthurlcy0x1.quantizedinformatics.items.battle.SoulItem.SoulMarker;
+import com.arthurlcy0x1.quantizedinformatics.items.battle.SoulItem.SoulTrap;
+import com.arthurlcy0x1.quantizedinformatics.items.logic.ALUItem;
+import com.arthurlcy0x1.quantizedinformatics.items.logic.AutoRecipe;
+import com.arthurlcy0x1.quantizedinformatics.items.logic.DraftGateItem;
+import com.arthurlcy0x1.quantizedinformatics.items.logic.LogicDraft;
+import com.arthurlcy0x1.quantizedinformatics.items.logic.PrepChip;
 import com.arthurlcy0x1.quantizedinformatics.recipe.C3DRecipe;
 import com.arthurlcy0x1.quantizedinformatics.recipe.ChipOxiRec;
 import com.arthurlcy0x1.quantizedinformatics.recipe.ChipRedRec;
 import com.arthurlcy0x1.quantizedinformatics.recipe.EnchantOxiRec;
 import com.arthurlcy0x1.quantizedinformatics.recipe.FixCollector;
-import com.arthurlcy0x1.quantizedinformatics.recipe.FixWeapon;
+import com.arthurlcy0x1.quantizedinformatics.recipe.FixMaxItem;
 import com.arthurlcy0x1.quantizedinformatics.recipe.MaxwellRecipe;
 import com.arthurlcy0x1.quantizedinformatics.recipe.OxiRecipe;
 import com.arthurlcy0x1.quantizedinformatics.recipe.RedRecipe;
 import com.arthurlcy0x1.quantizedinformatics.recipe.TeleRecipe;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
@@ -77,6 +89,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.EnderPearlEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ThrowableEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
@@ -91,11 +104,8 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.registries.ForgeRegistryEntry;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 
 public class Registrar extends ItemGroup {
 
@@ -127,6 +137,19 @@ public class Registrar extends ItemGroup {
 	public static final Block BAME_ATR = addName(new EntAttr(), "ent_attract");
 	public static final Block BAME_SPA = addName(new EntSpawn(), "ent_spawn");
 
+	public static final Block B_STAND = addName(new StoneStand(), "stone_stand");
+	public static final Block B_STANDHEAD = addName(new StandHead(), "stone_stand_head");
+
+	public static final Block BQ_AIR = generate("quantum_world_air", QuanAir::new);
+	public static final Block BQ_PORTAL = generate("quantum_world_portal", QTeleBlock::new);
+	public static final Block BQ_STONE = generate("quantum_world_stone", QuanBlock::new);
+	public static final Block BQ_CORE = generate("quantum_world_core", QuanBlock::new);
+	public static final Block BQ_BARRIER = generate("quantum_world_barrier", QuanBarrier::new);
+	public static final Block BQ_BARAIR = generate("quantum_world_barrier_air", QuanAirBarrier::new);
+	public static final Block BQ_MAZEWALL = generate("quantum_world_maze_wall", MazeWall::new);
+	public static final Block BQ_KEY = generate("quantum_world_key", QuanKey::new);
+	public static final Block BQ_CHEST = generate("quantum_world_chest", QuanChest::new);
+
 	public static final List<Block> BDS = Arrays.asList(BD_CNTR, BD_GATE, BD_IN, BD_OUT, BD_LNR);
 
 	public static final ItemGroup ITEM_GROUP = new Registrar();
@@ -157,6 +180,16 @@ public class Registrar extends ItemGroup {
 	public static final Item IBME_ATR = convert(BAME_ATR);
 	public static final Item IBME_SPA = convert(BAME_SPA);
 
+	public static final Item IB_STAND = convert(B_STAND);
+
+	public static final Item IBQ_PORTAL = convert(BQ_PORTAL);
+	public static final Item IBQ_STONE = convert(BQ_STONE);
+	public static final Item IBQ_CORE = convert(BQ_CORE);
+	public static final Item IBQ_BARRIER = convert(BQ_BARRIER);
+	public static final Item IBQ_MAZEWALL = convert(BQ_MAZEWALL);
+	public static final Item IBQ_KEY = convert(BQ_KEY);
+	public static final Item IBQ_CHEST = convert(BQ_CHEST);
+
 	// items
 	public static final Item IE_P = generate("elem_p", 64);
 	public static final Item IE_B = generate("elem_b", 64);
@@ -183,18 +216,35 @@ public class Registrar extends ItemGroup {
 	public static final Item IMW_MAGN = genMaxwell("maxwell_wrap_magnetic", 7);
 	public static final Item IMU_ATK = genMaxwell("maxwell_attack", 8);
 	public static final Item IMU_DEF = genMaxwell("maxwell_defense", 8);
+	public static final Item IMU_FIX = generate("maxwell_fix", 64);
 	public static final Item IMU_TNT = genMaxwell("maxwell_tnt", 2);
 	public static final Item IS_MARKER = generate("soul_marker", 1, SoulMarker::new);
 	public static final Item IS_TRAP = generate("soul_trap", 1, SoulTrap::new);
 	public static final Item IS_COLL = generate("soul_collector", 1, SoulCollector::new);
 	public static final Item IS_EXP = generate("soul_bottle", 1, SoulBottle::new);
-	public static final Item I_OREC = generate("ore_collector", 1, OreCollect::new);
+
+	public static final Item IW_OREC = generate("ore_collector", 1, OreCollect::new);
 	public static final Item IW_TNT = generate("weapon_tnt", 1, TNTEC::new);
 	public static final Item IW_POTION = generate("weapon_potion", 1, PotionEC::new);
+	public static final Item IW_TRIDENT = generate("weapon_trident", 1, TridentEC::new);
+	public static final Item IW_ARROW = generate("weapon_arrow", 1, ArrowEC::new);
 	public static final Item IW_ENDER = genDefEC("weapon_ender", Items.ENDER_PEARL, EnderPearlEntity::new);
 	public static final Item IW_FOG = genDefEC("weapon_fog", I_FOGBALL, FogBall::new);
 	public static final Item IW_IP = genDefEC("weapon_picker", I_ITEMPICK, ItemPicker::new);
 	public static final Item IW_TELE = generate("telescope", 1, Telescope.TelescopeItem::new);
+
+	public static final Item IM_H2 = genArmor("maxwell_2_helmet", MaxArmor.LV2, 3);
+	public static final Item IM_C2 = genArmor("maxwell_2_chestplate", MaxArmor.LV2, 2);
+	public static final Item IM_L2 = genArmor("maxwell_2_leggings", MaxArmor.LV2, 1);
+	public static final Item IM_B2 = genArmor("maxwell_2_boots", MaxArmor.LV2, 0);
+	public static final Item IM_H3 = genArmor("maxwell_3_helmet", MaxArmor.LV3, 3);
+	public static final Item IM_C3 = genArmor("maxwell_3_chestplate", MaxArmor.LV3, 2);
+	public static final Item IM_L3 = genArmor("maxwell_3_leggings", MaxArmor.LV3, 1);
+	public static final Item IM_B3 = genArmor("maxwell_3_boots", MaxArmor.LV3, 0);
+	public static final Item IM_H4 = genArmor("maxwell_4_helmet", MaxArmor.LV4, 3);
+	public static final Item IM_C4 = genArmor("maxwell_4_chestplate", MaxArmor.LV4, 2);
+	public static final Item IM_L4 = genArmor("maxwell_4_leggings", MaxArmor.LV4, 1);
+	public static final Item IM_B4 = genArmor("maxwell_4_boots", MaxArmor.LV4, 0);
 
 	// draft related
 	public static final Item ID_N = generate("gate_dope_n", 64);
@@ -246,6 +296,7 @@ public class Registrar extends ItemGroup {
 	public static final ContainerType<EntRepel.Cont> CTME_REP = getCT(EntRepel.Cont::new, "ent_repel_c");
 	public static final ContainerType<EntAttr.Cont> CTME_ATR = getCT(EntAttr.Cont::new, "ent_attract_c");
 	public static final ContainerType<EntSpawn.Cont> CTME_SPA = getCT(EntSpawn.Cont::new, "ent_spawn_c");
+	public static final ContainerType<QuanChest.Cont> CTQ_CHEST = getCT(QuanChest.Cont::new, "qw_chest_c");
 
 	public static final TileEntityType<OxiFn.TE> TET_OXIFN = getTET(OxiFn.TE::new, B_OXIFN, "oxidation_furnace_te");
 	public static final TileEntityType<RedFn.TE> TET_REDFN = getTET(RedFn.TE::new, B_REDFN, "reduction_furnace_te");
@@ -263,10 +314,13 @@ public class Registrar extends ItemGroup {
 	public static final TileEntityType<EntRepel.TE> TETME_REP = getTET(EntRepel.TE::new, BAME_REP, "ent_repel_te");
 	public static final TileEntityType<EntAttr.TE> TETME_ATR = getTET(EntAttr.TE::new, BAME_ATR, "ent_attract_te");
 	public static final TileEntityType<EntSpawn.TE> TETME_SPA = getTET(EntSpawn.TE::new, BAME_SPA, "ent_spawn_te");
+	public static final TileEntityType<QuanChest.TE> TETQ_CHEST = getTET(QuanChest.TE::new, BQ_CHEST, "wq_chest_te");
 
 	public static final EntityType<SmartTNT> ET_STNT = getET(SmartTNT::new, "smart_tnt");
 	public static final EntityType<FogBall> ET_FB = getET(FogBall::new, "fog_ball");
 	public static final EntityType<ItemPicker> ET_IP = getET(ItemPicker::new, "item_picker");
+	public static final EntityType<QuanFly> ETM_QF = getQET(QuanFly::new, "quantum_fly", 1.9f, 0.9f);
+	public static final EntityType<QuanStand> ETM_QS = getQET(QuanStand::new, "quantum_stand", 0.6f, 1.9f);
 
 	public static final IRecipeType<OxiRecipe> RT_OXI = IRecipeType.register(MODID + ":oxidation");
 	public static final IRecipeType<RedRecipe> RT_RED = IRecipeType.register(MODID + ":reduction");
@@ -280,20 +334,24 @@ public class Registrar extends ItemGroup {
 	public static final IRecipeSerializer<?> RSC_RED = getRS(new ChipRedRec.Serializer(), "chip_red");
 	public static final IRecipeSerializer<?> RS_TELE = getRS(new TeleRecipe.Serializer(), "telescope");
 	public static final IRecipeSerializer<?> RSF_OC = getRS(new FixCollector.Serializer(), "fix_collector");
-	public static final IRecipeSerializer<?> RSF_WP = getRS(new FixWeapon.Serializer(), "fix_weapon");
+	public static final IRecipeSerializer<?> RSF_WP = getRS(new FixMaxItem.Serializer(), "fix_weapon");
 	public static final IRecipeSerializer<?> RS_EOXI = getRS(new EnchantOxiRec.Serializer(), "enchant_oxi");
 
 	public static final ContainerType<?>[] CTS = { CT_OXIFN, CT_REDFN, CTD_CNTR, CTD_GATE, CTD_IN, CTD_OUT, CTD_LNR,
-			CTA_CRAFT, CTA_REC, CTA_SOUL, CTAP_HEAD, CTAP_CORE, CTME_ATK, CTME_REP, CTME_ATR, CTME_SPA };
+			CTA_CRAFT, CTA_REC, CTA_SOUL, CTAP_HEAD, CTAP_CORE, CTME_ATK, CTME_REP, CTME_ATR, CTME_SPA, CTQ_CHEST };
 
 	public static final TileEntityType<?>[] TETS = { TET_OXIFN, TET_REDFN, TETD_CNTR, TETD_GATE, TETD_IN, TETD_OUT,
 			TETD_LNR, TETA_CRAFT, TETA_REC, TETA_SOUL, TETAP_HEAD, TETAP_CORE, TETME_ATK, TETME_REP, TETME_ATR,
-			TETME_SPA };
+			TETME_SPA, TETQ_CHEST };
 
-	public static final EntityType<?>[] ETS = { ET_STNT, ET_FB, ET_IP };
+	public static final EntityType<?>[] ETS = { ET_STNT, ET_FB, ET_IP, ETM_QF, ETM_QS };
 
 	public static final IRecipeSerializer<?>[] RSS = { RS_OXI, RS_RED, RS_C3D, RS_MAX, RSC_OXI, RSC_RED, RS_TELE,
 			RSF_OC, RSF_WP, RS_EOXI };
+
+	public static <T extends ForgeRegistryEntry<T>> T addName(T t, String name) {
+		return t.setRegistryName(MODID, name);
+	}
 
 	@OnlyIn(Dist.CLIENT)
 	public static void registerRender() {
@@ -313,35 +371,28 @@ public class Registrar extends ItemGroup {
 		ScreenManager.registerFactory(CTME_REP, EntRepel.Scr::new);
 		ScreenManager.registerFactory(CTME_ATR, EntAttr.Scr::new);
 		ScreenManager.registerFactory(CTME_SPA, EntSpawn.Scr::new);
-
+		ScreenManager.registerFactory(CTQ_CHEST, QuanChest.Scr::new);
 		ItemRenderer ir = Minecraft.getInstance().getItemRenderer();
 
 		RenderingRegistry.registerEntityRenderingHandler(ET_STNT, SmartTNTRender::new);
 		RenderingRegistry.registerEntityRenderingHandler(ET_FB, m -> new SpriteRenderer<>(m, ir, 1, true));
 		RenderingRegistry.registerEntityRenderingHandler(ET_IP, m -> new SpriteRenderer<>(m, ir, 1, true));
-	}
-
-	@SuppressWarnings("unchecked")
-	protected static <T extends IForgeRegistryEntry<T>> void getList(RegistryEvent.Register<T> event, Class<T> cls) {
-		try {
-			IForgeRegistry<T> reg = event.getRegistry();
-			Field[] fs = Registrar.class.getDeclaredFields();
-			for (Field f : fs)
-				if (cls.isAssignableFrom(f.getType()))
-					reg.register((T) f.get(null));
-		} catch (Exception e) {
-			LogManager.getLogger().error(e);
-		}
-	}
-
-	private static <T extends ForgeRegistryEntry<T>> T addName(T t, String name) {
-		return t.setRegistryName(MODID, name);
+		RenderingRegistry.registerEntityRenderingHandler(ETM_QF, QuanFly.Renderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(ETM_QS, QuanStand.Renderer::new);
 	}
 
 	private static Item convert(Block block) {
 		Item.Properties p = new Item.Properties();
 		p.group(ITEM_GROUP);
 		return new BlockItem(block, p).setRegistryName(block.getRegistryName());
+	}
+
+	private static Item genArmor(String str, MaxMat mat, int i) {
+		Item.Properties p = new Item.Properties();
+		p.group(ITEM_GROUP);
+		p.maxStackSize(1);
+		EquipmentSlotType type = EquipmentSlotType.func_220318_a(EquipmentSlotType.Group.ARMOR, i);
+		return addName(new MaxArmor(p, type, mat), str);
 	}
 
 	private static Item genDefEC(String str, Item item, BiFunction<World, PlayerEntity, ThrowableEntity> f) {
@@ -375,6 +426,10 @@ public class Registrar extends ItemGroup {
 		return addName(f.apply(p), str);
 	}
 
+	private static Block generate(String str, Supplier<Block> b) {
+		return addName(b.get(), str);
+	}
+
 	private static Item genMaxwell(String str, int max) {
 		Item.Properties p = new Item.Properties();
 		p.group(ITEM_GROUP);
@@ -391,6 +446,13 @@ public class Registrar extends ItemGroup {
 	private static <T extends Entity> EntityType<T> getET(EntityType.IFactory<T> f, String str) {
 		EntityType<T> ans = EntityType.Builder.<T>create(f, EntityClassification.MISC)
 				.setShouldReceiveVelocityUpdates(true).build(str);
+		ans.setRegistryName(MODID, str);
+		return ans;
+	}
+
+	private static <T extends Entity> EntityType<T> getQET(EntityType.IFactory<T> f, String str, float w, float h) {
+		EntityType<T> ans = EntityType.Builder.<T>create(f, EntityClassification.MONSTER).immuneToFire().size(w, h)
+				.build(str);
 		ans.setRegistryName(MODID, str);
 		return ans;
 	}

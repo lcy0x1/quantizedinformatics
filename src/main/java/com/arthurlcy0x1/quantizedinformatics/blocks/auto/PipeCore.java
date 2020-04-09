@@ -10,7 +10,7 @@ import com.arthurlcy0x1.quantizedinformatics.blocks.BlockProp;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.other.Wire;
 import com.arthurlcy0x1.quantizedinformatics.blocks.other.WireConnect;
-import com.arthurlcy0x1.quantizedinformatics.items.ALUItem;
+import com.arthurlcy0x1.quantizedinformatics.items.logic.ALUItem;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.block.Block;
