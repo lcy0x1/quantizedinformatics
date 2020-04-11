@@ -15,6 +15,7 @@ public class BlockProp {
 	public static final BlockProp M_CRAFT = new BlockProp(Material.ROCK, 2, 2).setTool(ToolType.PICKAXE, 0);
 	public static final BlockProp M_PIPE = new BlockProp(Material.WOOD, 2, 2).setTool(ToolType.AXE, 0);
 	public static final BlockProp M_ENT = new BlockProp(Material.ROCK, 2, 2).setTool(ToolType.PICKAXE, 0);
+	public static final BlockProp M_POWER = new BlockProp(Material.ROCK, 2, 2).setTool(ToolType.PICKAXE, 0);
 	public static final BlockProp QUANTUM_WORLD = new BlockProp(Material.ROCK, -1, 3600000);
 	public static final BlockProp QW_BREAK = new BlockProp(Material.ROCK, 2, 3600000);
 	public static final BlockProp STONE_STAND = new BlockProp(

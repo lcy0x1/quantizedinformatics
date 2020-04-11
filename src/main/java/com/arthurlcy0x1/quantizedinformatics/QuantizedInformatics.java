@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.arthurlcy0x1.quantizedinformatics.power.blocks.QuanFluid;
 import com.arthurlcy0x1.quantizedinformatics.world.RegWorld;
 import com.arthurlcy0x1.quantizedinformatics.world.WorldGen;
 
@@ -16,6 +17,7 @@ import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.ChunkGeneratorType;
 import net.minecraft.world.gen.feature.Feature;
@@ -35,6 +37,7 @@ import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
+import net.minecraftforge.registries.RegistryBuilder;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod("quantizedinformatics")
@@ -49,6 +52,12 @@ public class QuantizedInformatics {
 		public static void onModDimensionRegister(final RegisterDimensionsEvent event) {
 			LOGGER.warn("dimension type registered");// TODO
 			RegWorld.regDimType();
+		}
+
+		@SubscribeEvent
+		public static void newReg(final RegistryEvent.NewRegistry event) {
+			new RegistryBuilder<QuanFluid>().setName(new ResourceLocation(MODID, "fluid")).setType(QuanFluid.class)
+					.create();
 		}
 
 		@SubscribeEvent

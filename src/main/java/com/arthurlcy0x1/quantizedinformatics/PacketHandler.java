@@ -5,6 +5,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftCntr;
+import com.arthurlcy0x1.quantizedinformatics.power.blocks.IFluidTE;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.container.Container;
@@ -67,13 +68,14 @@ public class PacketHandler {
 	public static void registerPackets() {
 		reg(IntMsg.class, IntMsg::encode, IntMsg::decode, IntMsg::handle);
 		reg(DraftCntr.Msg.class, DraftCntr.Msg::encode, DraftCntr.Msg::decode, DraftCntr.Msg::handle);
+		reg(IFluidTE.Msg.class, IFluidTE.Msg::encode, IFluidTE.Msg::decode, IFluidTE.Msg::handle);
 	}
 
 	public static <T> void send(T msg) {
 		CH.sendToServer(msg);
 	}
 
-	public static <T> void update(T msg) {
+	public static <T> void toClient(T msg) {
 		NetworkManager manager = Minecraft.getInstance().getConnection().getNetworkManager();
 		NetworkDirection dir = NetworkDirection.PLAY_TO_CLIENT;
 		CH.sendTo(msg, manager, dir);
