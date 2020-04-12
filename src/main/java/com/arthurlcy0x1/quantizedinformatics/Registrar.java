@@ -176,10 +176,10 @@ public class Registrar extends ItemGroup {
 	public static final Block B_STAND = addName(new StoneStand(), "stone_stand");
 	public static final Block B_STANDHEAD = addName(new StandHead(), "stone_stand_head");
 
-	public static final Block BPW_FE = addName(new PowerWire(), "power_wire_iron");
-	public static final Block BPW_CU = addName(new PowerWire(), "power_wire_copper");
-	public static final Block BPW_AG = addName(new PowerWire(), "power_wire_silver");
-	public static final Block BPW_AL = addName(new PowerWire(), "power_wire_aluminum");
+	public static final Block BPW_FE = addName(new PowerWire(), "iron_wire");
+	public static final Block BPW_CU = addName(new PowerWire(), "copper_wire");
+	public static final Block BPW_AG = addName(new PowerWire(), "silver_wire");
+	public static final Block BPW_AL = addName(new PowerWire(), "aluminum_wire");
 	public static final Block BP_TR = addName(new PMBlock(Transistor.TE::new, false), "pm_transistor");
 	public static final Block BPG_TH = addName(new PMBlock(GenThermal.TE::new, true), "pmg_thermal");
 	public static final Block BPC_FN = addName(new PMBlock(ConFurnace.TE::new, false), "pmc_furnace");

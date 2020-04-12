@@ -41,27 +41,10 @@ public class Test {
 		private static final String wimstr = "{\"parent\":\"quantizedinformatics:block/^_core\"}";
 		private static final String wbsstr = "{\"multipart\":[{\"when\":{\"OR\":[{\"north\":\"false\"},{\"east\":\"false\"},{\"south\":\"false\"},{\"west\":\"false\"},{\"up\":\"false\"},{\"down\":\"false\"}]},\"apply\":{\"model\":\"quantizedinformatics:block/^_core\"}},{\"when\":{\"north\":\"true\"},\"apply\":{\"model\":\"quantizedinformatics:block/^_side\"}},{\"when\":{\"east\":\"true\"},\"apply\":{\"model\":\"quantizedinformatics:block/^_side\",\"y\":90}},{\"when\":{\"south\":\"true\"},\"apply\":{\"model\":\"quantizedinformatics:block/^_side\",\"y\":180}},{\"when\":{\"west\":\"true\"},\"apply\":{\"model\":\"quantizedinformatics:block/^_side\",\"y\":270}},{\"when\":{\"up\":\"true\"},\"apply\":{\"model\":\"quantizedinformatics:block/^_side\",\"x\":270}},{\"when\":{\"down\":\"true\"},\"apply\":{\"model\":\"quantizedinformatics:block/^_side\",\"x\":90}}]}";
 
-		private static void write(String name, String cont) throws IOException {
-			File f = new File(name);
-			if (!f.exists())
-				f.createNewFile();
-			PrintStream ps = new PrintStream(f);
-			ps.println(cont);
-			ps.close();
-		}
-
 		public static void addBlockAssets(String block) throws IOException {
 			write(bs + block + ".json", bsstr.replaceAll("\\^", block));
 			write(bm + block + ".json", bmstr.replaceAll("\\^", block));
 			write(im + block + ".json", bimstr.replaceAll("\\^", block));
-			write(lt + block + ".json", ltstr.replaceAll("\\^", block));
-		}
-		
-		public static void addWireAssets(String block) throws IOException {
-			write(bs + block + ".json", wbsstr.replaceAll("\\^", block));
-			write(bm + block + "_core.json", wbmstrc.replaceAll("\\^", block));
-			write(bm + block + "_side.json", wbmstrs.replaceAll("\\^", block));
-			write(im + block + ".json", wimstr.replaceAll("\\^", block));
 			write(lt + block + ".json", ltstr.replaceAll("\\^", block));
 		}
 
@@ -74,6 +57,23 @@ public class Test {
 
 		public static void addItemAssets(String item) throws IOException {
 			write(im + item + ".json", imstr.replaceAll("\\^", item));
+		}
+
+		public static void addWireAssets(String block) throws IOException {
+			write(bs + block + ".json", wbsstr.replaceAll("\\^", block));
+			write(bm + block + "_core.json", wbmstrc.replaceAll("\\^", block));
+			write(bm + block + "_side.json", wbmstrs.replaceAll("\\^", block));
+			write(im + block + ".json", wimstr.replaceAll("\\^", block));
+			write(lt + block + ".json", ltstr.replaceAll("\\^", block));
+		}
+
+		private static void write(String name, String cont) throws IOException {
+			File f = new File(name);
+			if (!f.exists())
+				f.createNewFile();
+			PrintStream ps = new PrintStream(f);
+			ps.println(cont);
+			ps.close();
 		}
 
 	}

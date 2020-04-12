@@ -22,6 +22,7 @@ public class QuanFluid extends ForgeRegistryEntry<QuanFluid> {
 		}
 
 	}
+
 	public static final QuanFluid MC_WATER = Registrar.addName(new RealFluid(Fluids.WATER), "water");
 
 	public static final QuanFluid MC_LAVA = Registrar.addName(new RealFluid(Fluids.LAVA), "lava");

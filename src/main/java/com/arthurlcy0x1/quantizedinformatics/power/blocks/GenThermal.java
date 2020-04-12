@@ -62,6 +62,7 @@ public class GenThermal {
 		private static final int CAP = 0, FUEL = 3;
 
 		private static final double WATER_COST = 1e3, LUB_COST = 1e-3;
+
 		private static boolean isValid(int ind, ItemStack is) {
 			if (ind == CAP)
 				return is.getItem() instanceof ItemCapacitor;
