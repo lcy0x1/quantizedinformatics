@@ -1,6 +1,5 @@
 package com.arthurlcy0x1.quantizedinformatics;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -9,8 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-
-import javax.imageio.ImageIO;
 
 import com.arthurlcy0x1.quantizedinformatics.utils.logic.Estimator;
 import com.arthurlcy0x1.quantizedinformatics.utils.logic.LogicDiagram;
@@ -25,22 +22,60 @@ import net.minecraft.world.gen.SimplexNoiseGenerator;
 
 public class Test {
 
-	public static void addBlocks() throws IOException {
-		String[] list = { "quantum_fog", "craft_frame", "craft_3d", "oxidation_furnace", "reduction_furnace",
-				"draft_wire", "draft_center", "draft_gate", "draft_in", "draft_out", "draft_listener", "auto_craft",
-				"recipe_maker", "pipe_body", "pipe_head", "pipe_core" };
-		String path = "./src/main/resources/data/quantizedinformatics/loot_tables/blocks/";
-		String pre = "{\"type\": \"minecraft:block\",\"pools\": [{\"rolls\": 1,\"entries\": [{\"type\": \"minecraft:item\",\"name\": \"quantizedinformatics:";
-		String post = "\"}],\"conditions\": [{\"condition\": \"minecraft:survives_explosion\"}]}]}";
-		for (String b : list) {
-			String name = path + b + ".json";
+	private static class AssetGen {
+
+		private static final String bs = "./src/main/resources/assets/quantizedinformatics/blockstates/";
+		private static final String bm = "./src/main/resources/assets/quantizedinformatics/models/block/";
+		private static final String im = "./src/main/resources/assets/quantizedinformatics/models/item/";
+		private static final String lt = "./src/main/resources/data/quantizedinformatics/loot_tables/blocks/";
+		private static final String bsstr = "{\"variants\":{\"\":{\"model\":\"quantizedinformatics:block/^\"}}}";
+		private static final String fbsstr = "{\"variants\":{\"facing=north\":{\"model\":\"quantizedinformatics:block/^\"},\"facing=east\":{\"model\": \"quantizedinformatics:block/^\",\"y\": 90},\"facing=south\": {\"model\":\"quantizedinformatics:block/^\",\"y\": 180},\"facing=west\":{\"model\":\"quantizedinformatics:block/^\",\"y\": 270}}}";
+		private static final String bmstr = "{\"parent\":\"block/cube_all\",\"textures\":{\"all\":\"quantizedinformatics:blocks/^\"}}";
+		private static final String fbmstr = "{\"parent\":\"block/cube\",\"textures\":{\"north\":\"quantizedinformatics:blocks/^f\",\"up\":\"quantizedinformatics:blocks/^t\",\"down\":\"quantizedinformatics:blocks/^t\",\"south\":\"quantizedinformatics:blocks/^s\",\"west\":\"quantizedinformatics:blocks/^s\",\"east\":\"quantizedinformatics:blocks/^s\",\"particle\":\"quantizedinformatics:blocks/^t\"}}";
+		private static final String bimstr = "{\"parent\":\"quantizedinformatics:block/^\"}";
+		private static final String imstr = "{\"parent\":\"item/generated\",\"textures\":{\"layer0\":\"quantizedinformatics:items/^\"}}";
+		private static final String ltstr = "{\"type\":\"minecraft:block\",\"pools\":[{\"rolls\":1,\"entries\":[{\"type\":\"minecraft:item\",\"name\":\"quantizedinformatics:^\"}],\"conditions\":[{\"condition\":\"minecraft:survives_explosion\"}]}]}";
+
+		private static final String wbmstrc = "{\"parent\": \"quantizedinformatics:block/ab_wire_core\",\"textures\":{\"wire\":\"quantizedinformatics:blocks/^\"}}";
+		private static final String wbmstrs = "{\"parent\": \"quantizedinformatics:block/ab_wire_side\",\"textures\":{\"wire\":\"quantizedinformatics:blocks/^\"}}";
+		private static final String wimstr = "{\"parent\":\"quantizedinformatics:block/^_core\"}";
+		private static final String wbsstr = "{\"multipart\":[{\"when\":{\"OR\":[{\"north\":\"false\"},{\"east\":\"false\"},{\"south\":\"false\"},{\"west\":\"false\"},{\"up\":\"false\"},{\"down\":\"false\"}]},\"apply\":{\"model\":\"quantizedinformatics:block/^_core\"}},{\"when\":{\"north\":\"true\"},\"apply\":{\"model\":\"quantizedinformatics:block/^_side\"}},{\"when\":{\"east\":\"true\"},\"apply\":{\"model\":\"quantizedinformatics:block/^_side\",\"y\":90}},{\"when\":{\"south\":\"true\"},\"apply\":{\"model\":\"quantizedinformatics:block/^_side\",\"y\":180}},{\"when\":{\"west\":\"true\"},\"apply\":{\"model\":\"quantizedinformatics:block/^_side\",\"y\":270}},{\"when\":{\"up\":\"true\"},\"apply\":{\"model\":\"quantizedinformatics:block/^_side\",\"x\":270}},{\"when\":{\"down\":\"true\"},\"apply\":{\"model\":\"quantizedinformatics:block/^_side\",\"x\":90}}]}";
+
+		private static void write(String name, String cont) throws IOException {
 			File f = new File(name);
 			if (!f.exists())
 				f.createNewFile();
 			PrintStream ps = new PrintStream(f);
-			ps.println(pre + b + post);
+			ps.println(cont);
 			ps.close();
 		}
+
+		public static void addBlockAssets(String block) throws IOException {
+			write(bs + block + ".json", bsstr.replaceAll("\\^", block));
+			write(bm + block + ".json", bmstr.replaceAll("\\^", block));
+			write(im + block + ".json", bimstr.replaceAll("\\^", block));
+			write(lt + block + ".json", ltstr.replaceAll("\\^", block));
+		}
+		
+		public static void addWireAssets(String block) throws IOException {
+			write(bs + block + ".json", wbsstr.replaceAll("\\^", block));
+			write(bm + block + "_core.json", wbmstrc.replaceAll("\\^", block));
+			write(bm + block + "_side.json", wbmstrs.replaceAll("\\^", block));
+			write(im + block + ".json", wimstr.replaceAll("\\^", block));
+			write(lt + block + ".json", ltstr.replaceAll("\\^", block));
+		}
+
+		public static void addDireBlockAssets(String block, String f, String s, String t) throws IOException {
+			write(bs + block + ".json", fbsstr.replaceAll("\\^", block));
+			write(bm + block + ".json", fbmstr.replaceAll("\\^f", f).replaceAll("\\^s", s).replaceAll("\\^t", t));
+			write(im + block + ".json", bimstr.replaceAll("\\^", block));
+			write(lt + block + ".json", ltstr.replaceAll("\\^", block));
+		}
+
+		public static void addItemAssets(String item) throws IOException {
+			write(im + item + ".json", imstr.replaceAll("\\^", item));
+		}
+
 	}
 
 	public static void addGroup() throws IOException {
@@ -140,67 +175,46 @@ public class Test {
 		return diag.toGate();
 	}
 
-	public static void generateItemModel() throws IOException {
-		String[] ss0 = { "red", "mos", "imp" };
-		String[] ss1 = { "empty", "dirty", "buff", "not", "nand", "nor", "and", "or", "xor" };
-		String path = "./src/main/resources/assets/quantizedinformatics/models/item/";
-		String pre = "{\n\t\"parent\": \"item/generated\",\n\t\"textures\": {\n\t\"layer0\": \"quantizedinformatics:items/";
-		String post = "\"\n\t}\n}";
-		for (String s0 : ss0)
-			for (String s1 : ss1) {
-				String name = "gate_" + s0 + "_" + s1;
-				File f = new File(path + name + ".json");
-				if (!f.exists())
-					f.createNewFile();
-				PrintStream ps = new PrintStream(f);
-				ps.println(pre + name + post);
-				ps.close();
-			}
-	}
-
 	public static void main(String[] args) throws IOException {
-		System.out.println(1 << (2 ^ 1));
+		String[] metal = { "iron", "gold", "copper", "silver", "tin", "lead", "tungsten", "aluminum", "steel", "bronze",
+				"al_alloy" };
+		int[] ingot = { 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+		int[] powder = { 0, 1, 2, 3, 4, 5, 6, 7, 9, 10 };
+		int[] plate = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+		int[] wire = { 0, 1, 2, 3, 6, 7 };
 
-	}
-
-	public static double normal(double x, double mean, double stdev) {
-		double n = (x - mean) / stdev;
-		return Math.exp(-0.5 * n * n) / stdev / Math.sqrt(2 * Math.PI);
-	}
-
-	public static void recolor() throws IOException {
-		File fp = new File("./src/main/resources/assets/quantizedinformatics/textures/items/elem_p.png");
-		File fb = new File("./src/main/resources/assets/quantizedinformatics/textures/items/elem_si.png");
-		BufferedImage bimg = ImageIO.read(fp);
-		int w = bimg.getWidth();
-		int h = bimg.getHeight();
-		for (int i = 0; i < w; i++)
-			for (int j = 0; j < h; j++) {
-				int p = bimg.getRGB(i, j);
-				int b = p & 255;
-				int g = p >> 8 & 255;
-				int r = p >> 16 & 255;
-				int a = p >> 24;
-				p = a << 24 | b << 16 | r << 8 | g;
-				bimg.setRGB(i, j, p);
+		String[] ore_metal = { "coal", "iron", "gold", "copper", "tin", "silver", "lead", "uranium", "aluminum",
+				"tungsten", "graphite", "borax", "beryllium" };
+		String[] blocks = { "pm_transistor", "pmc_pump" };
+		String[] dblocks = { "pmg_thermal", "pmg_lava", "pmc_furnace", "pmc_plate", "pmc_wire", "pmc_cut",
+				"pmc_centrifuge", "pmc_wash", "pmc_powder", "pmc_electrolysis" };
+		String[] items = { "rubber", "elem_alo", "elem_cao", "elem_caco3", "elem_beo" };
+		for (int i = 0; i < ore_metal.length; i++) {
+			String ore = ore_metal[i];
+			if (i > 2) {
+				AssetGen.addBlockAssets(ore + "_ore");
 			}
-		ImageIO.write(bimg, "PNG", fb);
-
-	}
-
-	public static void renameItemTexture() throws IOException {
-		String[] ss0 = { "red", "mos", "imp" };
-		String[] ss1 = { "empty", "dirty", "buff", "not", "nand", "nor", "and", "or", "xor" };
-		String path = "./src/main/resources/assets/quantizedinformatics/textures/items/";
-
-		for (String s0 : ss0)
-			for (String s1 : ss1) {
-				String n0 = "gate" + s0 + s1;
-				String n1 = "gate_" + s0 + "_" + s1;
-				File f = new File(path + n0 + ".png");
-				f.renameTo(new File(path + n1 + ".png"));
-
-			}
+			AssetGen.addItemAssets(ore + "_ore_powder");
+			AssetGen.addItemAssets(ore + "_ore_powder_clean");
+		}
+		for (String block : blocks)
+			AssetGen.addBlockAssets(block);
+		for (String block : dblocks)
+			AssetGen.addDireBlockAssets(block, block + "_front", block + "_top", block + "_side");
+		for (String item : items)
+			AssetGen.addItemAssets(item);
+		for (int i : ingot)
+			AssetGen.addItemAssets(metal[i] + "_ingot");
+		for (int i : ingot)
+			AssetGen.addItemAssets(metal[i] + "_nugget");
+		for (int i : powder)
+			AssetGen.addItemAssets(metal[i] + "_powder");
+		for (int i : powder)
+			AssetGen.addItemAssets(metal[i] + "_powder_tiny");
+		for (int i : plate)
+			AssetGen.addItemAssets(metal[i] + "_plate");
+		for (int i : wire)
+			AssetGen.addItemAssets(metal[i] + "_wire");
 	}
 
 	public static void testEsti() {

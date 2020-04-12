@@ -1,0 +1,1 @@
+{"variants":{"facing=north":{"model":"quantizedinformatics:block/pmc_electrolysis"},"facing=east":{"model": "quantizedinformatics:block/pmc_electrolysis","y": 90},"facing=south": {"model":"quantizedinformatics:block/pmc_electrolysis","y": 180},"facing=west":{"model":"quantizedinformatics:block/pmc_electrolysis","y": 270}}}

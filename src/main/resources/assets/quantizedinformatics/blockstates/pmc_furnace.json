@@ -1,0 +1,1 @@
+{"variants":{"facing=north":{"model":"quantizedinformatics:block/pmc_furnace"},"facing=east":{"model": "quantizedinformatics:block/pmc_furnace","y": 90},"facing=south": {"model":"quantizedinformatics:block/pmc_furnace","y": 180},"facing=west":{"model":"quantizedinformatics:block/pmc_furnace","y": 270}}}
