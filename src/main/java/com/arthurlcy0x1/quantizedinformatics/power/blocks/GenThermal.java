@@ -24,6 +24,18 @@ import net.minecraftforge.common.ForgeHooks;
 
 public class GenThermal {
 
+	public static class Cont extends FluidPowerCont<TE, Cont> {
+
+		public Cont(int id, PlayerInventory inv) {
+			this(id, inv, new Inventory(SIZE), new IntArray(LEN));
+		}
+
+		protected Cont(int id, PlayerInventory inv, IInventory ent, IIntArray arr) {
+			super(Registrar.CTPG_TH, id, inv, ent, 0, arr, 3);// TODO
+		}
+
+	}
+
 	public static class Scr extends CTEBlock.CommScr<Cont> {
 
 		private static final ResourceLocation GUI = new ResourceLocation(Registrar.MODID,
@@ -45,20 +57,11 @@ public class GenThermal {
 
 	}
 
-	public static class Cont extends FluidPowerCont<TE, Cont> {
-
-		public Cont(int id, PlayerInventory inv) {
-			this(id, inv, new Inventory(SIZE), new IntArray(LEN));
-		}
-
-		protected Cont(int id, PlayerInventory inv, IInventory ent, IIntArray arr) {
-			super(Registrar.CTPG_TH, id, inv, ent, 0, arr, 3);// TODO
-		}
-
-	}
-
 	public static class TE extends IPower.GenTE<TE, Cont> implements ICapMachine, FluidManagerTE {
 
+		private static final int CAP = 0, FUEL = 3;
+
+		private static final double WATER_COST = 1e3, LUB_COST = 1e-3;
 		private static boolean isValid(int ind, ItemStack is) {
 			if (ind == CAP)
 				return is.getItem() instanceof ItemCapacitor;
@@ -66,9 +69,6 @@ public class GenThermal {
 				return CTECont.isFuel(is);
 			return false;
 		}
-
-		private static final int CAP = 0, FUEL = 3;
-		private static final double WATER_COST = 1e3, LUB_COST = 1e-3;
 
 		private final FluidTank waterTank = new FluidTank(Priority.CONSUMER, QuanFluid.MC_WATER);
 		private final FluidTank lubTank = new FluidTank(Priority.CONSUMER, QuanFluid.OIL_LUB);
@@ -101,29 +101,6 @@ public class GenThermal {
 		}
 
 		@Override
-		public void set(int index, int value) {
-		}
-
-		public boolean isItemValidForSlot(int ind, ItemStack is) {
-			return isValid(ind, is);
-		}
-
-		@Override
-		public int size() {
-			return LEN;
-		}
-
-		@Override
-		public ITextComponent getDisplayName() {
-			return Translator.getCont("pmg_thermal");
-		}
-
-		protected void onChange(int index) {
-			if (index == -1 || index == CAP)
-				cap = null;
-		}
-
-		@Override
 		public ICapacitor getCapacitor() {
 			if (cap != null)
 				return cap;
@@ -133,37 +110,22 @@ public class GenThermal {
 			return cap = ICapacitor.NULL;
 		}
 
-		public void tick() {
-			super.tick();
-			if (world.isRemote)
-				return;
-
+		@Override
+		public ITextComponent getDisplayName() {
+			return Translator.getCont("pmg_thermal");
 		}
 
-		private void tickWork(double speed) {
-			if (prog > 0) {
-				prog -= speed;
-				waterTank.addStorage(-speed * WATER_COST);
-				lubTank.addStorage(-speed * speed * LUB_COST);
-			}
-			if (prog <= 0) {
-				max_prog = 0;
-				ItemStack is = getStackInSlot(FUEL);
-				if (!is.isEmpty()) {
-					decrStackSize(FUEL, 1);
-					max_prog = ForgeHooks.getBurnTime(is);
-					if (is.hasContainerItem())
-						this.setInventorySlotContents(FUEL, is.getContainerItem());
-				} else if (fuelTank.getFluidType() != null) {
-					QuanFluid t = fuelTank.getFluidType();
-					double get = Math.max(200 / t.getFuelValue(), fuelTank.getStorage());
-					fuelTank.addStorage(-get);
-					max_prog = (int) (t.getFuelValue() * get);
-				}
-				prog += max_prog;
-			}
+		@Override
+		public FluidManager getManager() {
+			return fluidManager;
 		}
 
+		@Override
+		public boolean isItemValidForSlot(int ind, ItemStack is) {
+			return isValid(ind, is);
+		}
+
+		@Override
 		public void read(CompoundNBT tag) {
 			super.read(tag);
 			fluidManager.read(tag.getCompound("fluids"));
@@ -171,6 +133,24 @@ public class GenThermal {
 			max_prog = tag.getInt("power.max_prog");
 		}
 
+		@Override
+		public void set(int index, int value) {
+		}
+
+		@Override
+		public int size() {
+			return LEN;
+		}
+
+		@Override
+		public void tick() {
+			super.tick();
+			if (world.isRemote)
+				return;
+
+		}
+
+		@Override
 		public CompoundNBT write(CompoundNBT tag) {
 			super.write(tag);
 			tag.put("fluids", fluidManager.write(new CompoundNBT()));
@@ -217,8 +197,33 @@ public class GenThermal {
 		}
 
 		@Override
-		public FluidManager getManager() {
-			return fluidManager;
+		protected void onChange(int index) {
+			if (index == -1 || index == CAP)
+				cap = null;
+		}
+
+		private void tickWork(double speed) {
+			if (prog > 0) {
+				prog -= speed;
+				waterTank.addStorage(-speed * WATER_COST);
+				lubTank.addStorage(-speed * speed * LUB_COST);
+			}
+			if (prog <= 0) {
+				max_prog = 0;
+				ItemStack is = getStackInSlot(FUEL);
+				if (!is.isEmpty()) {
+					decrStackSize(FUEL, 1);
+					max_prog = ForgeHooks.getBurnTime(is);
+					if (is.hasContainerItem())
+						this.setInventorySlotContents(FUEL, is.getContainerItem());
+				} else if (fuelTank.getFluidType() != null) {
+					QuanFluid t = fuelTank.getFluidType();
+					double get = Math.max(200 / t.getFuelValue(), fuelTank.getStorage());
+					fuelTank.addStorage(-get);
+					max_prog = (int) (t.getFuelValue() * get);
+				}
+				prog += max_prog;
+			}
 		}
 
 	}

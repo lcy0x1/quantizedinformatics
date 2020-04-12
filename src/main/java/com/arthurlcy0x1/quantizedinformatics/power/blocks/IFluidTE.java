@@ -27,237 +27,6 @@ import net.minecraftforge.fml.network.NetworkEvent.Context;
 
 public interface IFluidTE {
 
-	public static class Msg {
-
-		public static Msg getMsg(int id, QuanFluid[] fs) {
-			String[] val = new String[fs.length];
-			for (int i = 0; i < fs.length; i++)
-				val[i] = fs[i] == null ? "" : fs[i].getRegistryName().toString();
-			return new Msg(id, val);
-		}
-
-		public static Msg decode(PacketBuffer packet) {
-			int wid = packet.readInt();
-			int n = packet.readVarInt();
-			String[] rls = new String[n];
-			for (int i = 0; i < n; i++)
-				rls[i] = packet.readString();
-			return new Msg(wid, rls);
-		}
-
-		private final String[] val;
-		private final int wid;
-
-		public Msg(int id, String... strs) {
-			wid = id;
-			val = strs;
-		}
-
-		public void encode(PacketBuffer packet) {
-			packet.writeInt(wid);
-			packet.writeVarInt(val.length);
-			for (String rl : val)
-				packet.writeString(rl);
-		}
-
-		public void handle(Supplier<Context> sup) {
-			Context ctx = sup.get();
-			ctx.enqueueWork(() -> this.handle(ctx));
-			ctx.setPacketHandled(true);
-		}
-
-		private void handle(Context ctx) {
-			Container c = Minecraft.getInstance().player.openContainer;
-			if (c != null && c.windowId == wid && c instanceof IFluidCont) {
-				QuanFluid[] fluids = new QuanFluid[val.length];
-				for (int i = 0; i < val.length; i++) {
-					if (val[i].length() == 0)
-						continue;
-					ResourceLocation rl = new ResourceLocation(val[i]);
-					fluids[i] = GameRegistry.findRegistry(QuanFluid.class).getValue(rl);
-				}
-				((IFluidCont) c).setFluids(fluids);
-			}
-		}
-
-	}
-
-	public static interface IFluidCont {
-
-		public void setFluids(QuanFluid[] val);
-
-	}
-
-	public static class FluidPowerCont<T extends PowerTE<T, C> & IFluidTE, C extends FluidPowerCont<T, C>>
-			extends PowerCont<T, C> implements IFluidCont {
-
-		protected final QuanFluid[] fluids;
-
-		protected FluidPowerCont(ContainerType<C> type, int id, PlayerInventory inv, IInventory ent, int h,
-				IIntArray arr, int fluidCount) {
-			super(type, id, inv, ent, h, arr);
-			fluids = new QuanFluid[fluidCount];
-		}
-
-		@Override
-		public void setFluids(QuanFluid[] val) {
-			for (int i = 0; i < Math.min(val.length, fluids.length); i++)
-				fluids[i] = val[i];
-		}
-
-		@Override
-		public void detectAndSendChanges() {
-			super.detectAndSendChanges();
-			boolean send = false;
-			for (int i = 0; i < fluids.length; i++) {
-				if (fluids[i] != te.getFluidType(i))
-					send = true;
-				fluids[i] = te.getFluidType(i);
-			}
-			if (send)
-				PacketHandler.toClient(Msg.getMsg(windowId, fluids));
-		}
-
-	}
-
-	public static interface NullFluidTE {
-
-		public default boolean acceptNewFluid(QuanFluid f) {
-			return false;
-		}
-
-		public default Set<QuanFluid> getFluidTypes() {
-			return new HashSet<>();
-		}
-
-		public default double getInFlowLimit(QuanFluid f) {
-			return 0;
-		}
-
-		public default double getMaxStorage(QuanFluid f) {
-			return 0;
-		}
-
-		public default double getOutFlowLimit(QuanFluid f) {
-			return 0;
-		}
-
-		public default Priority getPriority(QuanFluid f) {
-			return null;
-		}
-
-		public default double getStorage(QuanFluid f) {
-			return 0;
-		}
-
-		public default double addStorage(QuanFluid f, double q) {
-			return q;
-		}
-
-		public default boolean hasFluidType(Priority p, QuanFluid f) {
-			return false;
-		}
-
-	}
-
-	public static class FluidUpdator {
-
-		private static class SingleUpdator {
-
-			private final QuanFluid fluid;
-			private final List<IFluidTE> pro = new ArrayList<>();
-			private final List<IFluidTE> sto = new ArrayList<>();
-			private final List<IFluidTE> con = new ArrayList<>();
-			private final double flow, useStoFlow, useSupFlow, useConFlow;
-			private double supFlow, conFlow, stoSup, stoCon;
-
-			private SingleUpdator(QuanFluid f, List<IFluidTE> list) {
-				fluid = f;
-				for (IFluidTE cont : list)
-					if (cont.hasFluidType(Priority.PRODUCER, fluid))
-						pro.add(cont);
-					else if (cont.hasFluidType(Priority.STORAGE, fluid))
-						sto.add(cont);
-					else if (cont.hasFluidType(Priority.CONSUMER, fluid))
-						con.add(cont);
-				for (IFluidTE c : pro)
-					supFlow += c.getOutFlowLimit(fluid);
-				for (IFluidTE c : con)
-					conFlow += c.getInFlowLimit(fluid);
-				for (IFluidTE c : sto) {
-					stoSup += c.getOutFlowLimit(fluid);
-					stoCon += c.getInFlowLimit(fluid);
-				}
-				if (supFlow >= conFlow) {
-					useStoFlow = Math.min(stoCon, supFlow - conFlow);
-					useSupFlow = conFlow + useStoFlow;
-					useConFlow = conFlow;
-					flow = useSupFlow;
-
-				} else {
-					useStoFlow = -Math.min(stoSup, conFlow - supFlow);
-					useConFlow = supFlow - useStoFlow;
-					useSupFlow = supFlow;
-					flow = useConFlow;
-				}
-			}
-
-			private void update(double fac) {
-				for (IFluidTE c : pro) {
-					double max = c.getOutFlowLimit(fluid);
-					c.addStorage(fluid, -max * fac * useSupFlow / supFlow);
-				}
-				for (IFluidTE c : con) {
-					double max = c.getInFlowLimit(fluid);
-					c.addStorage(fluid, max * fac * useConFlow / conFlow);
-				}
-				for (IFluidTE c : pro)
-					if (useStoFlow > 0) {
-						double max = c.getInFlowLimit(fluid);
-						c.addStorage(fluid, max * fac * useStoFlow / stoCon);
-					} else {
-						double max = c.getOutFlowLimit(fluid);
-						c.addStorage(fluid, max * fac * useStoFlow / stoSup);
-					}
-			}
-
-		}
-
-		private final List<IFluidTE> list = new ArrayList<>();
-
-		/** return required power */
-		public double update(double power) {
-			Set<QuanFluid> set = new HashSet<>();
-			for (IFluidTE pro : list)
-				set.addAll(pro.getFluidTypes());
-			double reqPow = 0;
-			for (QuanFluid fluid : set) {
-				SingleUpdator su = new SingleUpdator(fluid, list);
-				double p = fluid.getViscocity() * su.flow * su.flow;
-				reqPow += p;
-				if (p == 0 || power == 0)
-					continue;
-				if (p <= power) {
-					power -= p;
-					su.update(1);
-				} else {
-					su.update(Math.sqrt(power / fluid.getViscocity()) / su.flow);
-					power = 0;
-				}
-			}
-			return reqPow;
-		}
-
-		public void add(IFluidTE te) {
-			list.add(te);
-		}
-
-		public void clear() {
-			list.clear();
-		}
-
-	}
-
 	public static class FluidManager implements IFluidTE {
 
 		public static class FluidTank implements SingleFluidTank {
@@ -272,6 +41,7 @@ public interface IFluidTE {
 				type = t;
 			}
 
+			@Override
 			public double addStorage(double ncur) {
 				if (Math.abs(ncur) < getMaxStorage())
 					ncur = ncur >= 0 ? 0 : -getMaxStorage() * ERR;
@@ -315,6 +85,7 @@ public interface IFluidTE {
 				cur = tag.getDouble("cur");
 			}
 
+			@Override
 			public void setMaxStorage(double nmax) {
 				max = nmax;
 				if (cur > max)
@@ -407,10 +178,12 @@ public interface IFluidTE {
 				type = pred;
 			}
 
+			@Override
 			public boolean acceptNewFluid(QuanFluid f) {
 				return fluid == null && type.test(f);
 			}
 
+			@Override
 			public double addStorage(double ncur) {
 				if (Math.abs(ncur) < getMaxStorage())
 					ncur = ncur >= 0 ? 0 : -getMaxStorage() * ERR;
@@ -455,10 +228,12 @@ public interface IFluidTE {
 
 			}
 
+			@Override
 			public void setFluidType(QuanFluid f) {
 				fluid = f;
 			}
 
+			@Override
 			public void setMaxStorage(double nmax) {
 				max = nmax;
 				if (cur > max)
@@ -492,6 +267,7 @@ public interface IFluidTE {
 			return false;
 		}
 
+		@Override
 		public double addStorage(QuanFluid type, double max) {
 			for (SingleFluidTank t : tanks)
 				if (t.getFluidType() == type || t.acceptNewFluid(type)) {
@@ -500,6 +276,11 @@ public interface IFluidTE {
 					return t.addStorage(max);
 				}
 			return max;
+		}
+
+		@Override
+		public QuanFluid getFluidType(int ind) {
+			return tanks[ind].getFluidType();
 		}
 
 		@Override
@@ -551,6 +332,7 @@ public interface IFluidTE {
 			return 0;
 		}
 
+		@Override
 		public boolean hasFluidType(Priority p, QuanFluid f) {
 			for (SingleFluidTank t : tanks)
 				if (t.getPriority() == p && (t.getFluidType() == f || p != Priority.PRODUCER && t.acceptNewFluid(f)))
@@ -576,55 +358,291 @@ public interface IFluidTE {
 			return tag;
 		}
 
-		@Override
-		public QuanFluid getFluidType(int ind) {
-			return tanks[ind].getFluidType();
-		}
-
 	}
 
 	public static interface FluidManagerTE extends IFluidTE {
 
+		@Override
 		public default boolean acceptNewFluid(QuanFluid f) {
 			return getManager().acceptNewFluid(f);
 		}
 
+		@Override
+		public default double addStorage(QuanFluid f, double q) {
+			return getManager().addStorage(f, q);
+		}
+
+		@Override
+		public default QuanFluid getFluidType(int ind) {
+			return getManager().getFluidType(ind);
+		}
+
+		@Override
 		public default Set<QuanFluid> getFluidTypes() {
 			return getManager().getFluidTypes();
 		}
 
+		@Override
 		public default double getInFlowLimit(QuanFluid f) {
 			return getManager().getInFlowLimit(f);
 		}
 
 		public FluidManager getManager();
 
+		@Override
 		public default double getMaxStorage(QuanFluid f) {
 			return getManager().getMaxStorage(f);
 		}
 
+		@Override
 		public default double getOutFlowLimit(QuanFluid f) {
 			return getManager().getOutFlowLimit(f);
 		}
 
+		@Override
 		public default Priority getPriority(QuanFluid f) {
 			return getManager().getPriority(f);
 		}
 
+		@Override
 		public default double getStorage(QuanFluid f) {
 			return getManager().getStorage(f);
 		}
 
-		public default double addStorage(QuanFluid f, double q) {
-			return getManager().addStorage(f, q);
-		}
-
+		@Override
 		public default boolean hasFluidType(Priority p, QuanFluid f) {
 			return getManager().hasFluidType(p, f);
 		}
 
-		public default QuanFluid getFluidType(int ind) {
-			return getManager().getFluidType(ind);
+	}
+
+	public static class FluidPowerCont<T extends PowerTE<T, C> & IFluidTE, C extends FluidPowerCont<T, C>>
+			extends PowerCont<T, C> implements IFluidCont {
+
+		protected final QuanFluid[] fluids;
+
+		protected FluidPowerCont(ContainerType<C> type, int id, PlayerInventory inv, IInventory ent, int h,
+				IIntArray arr, int fluidCount) {
+			super(type, id, inv, ent, h, arr);
+			fluids = new QuanFluid[fluidCount];
+		}
+
+		@Override
+		public void detectAndSendChanges() {
+			super.detectAndSendChanges();
+			boolean send = false;
+			for (int i = 0; i < fluids.length; i++) {
+				if (fluids[i] != te.getFluidType(i))
+					send = true;
+				fluids[i] = te.getFluidType(i);
+			}
+			if (send)
+				PacketHandler.toClient(Msg.getMsg(windowId, fluids));
+		}
+
+		@Override
+		public void setFluids(QuanFluid[] val) {
+			for (int i = 0; i < Math.min(val.length, fluids.length); i++)
+				fluids[i] = val[i];
+		}
+
+	}
+
+	public static class FluidUpdator {
+
+		private static class SingleUpdator {
+
+			private final QuanFluid fluid;
+			private final List<IFluidTE> pro = new ArrayList<>();
+			private final List<IFluidTE> sto = new ArrayList<>();
+			private final List<IFluidTE> con = new ArrayList<>();
+			private final double flow, useStoFlow, useSupFlow, useConFlow;
+			private double supFlow, conFlow, stoSup, stoCon;
+
+			private SingleUpdator(QuanFluid f, List<IFluidTE> list) {
+				fluid = f;
+				for (IFluidTE cont : list)
+					if (cont.hasFluidType(Priority.PRODUCER, fluid))
+						pro.add(cont);
+					else if (cont.hasFluidType(Priority.STORAGE, fluid))
+						sto.add(cont);
+					else if (cont.hasFluidType(Priority.CONSUMER, fluid))
+						con.add(cont);
+				for (IFluidTE c : pro)
+					supFlow += c.getOutFlowLimit(fluid);
+				for (IFluidTE c : con)
+					conFlow += c.getInFlowLimit(fluid);
+				for (IFluidTE c : sto) {
+					stoSup += c.getOutFlowLimit(fluid);
+					stoCon += c.getInFlowLimit(fluid);
+				}
+				if (supFlow >= conFlow) {
+					useStoFlow = Math.min(stoCon, supFlow - conFlow);
+					useSupFlow = conFlow + useStoFlow;
+					useConFlow = conFlow;
+					flow = useSupFlow;
+
+				} else {
+					useStoFlow = -Math.min(stoSup, conFlow - supFlow);
+					useConFlow = supFlow - useStoFlow;
+					useSupFlow = supFlow;
+					flow = useConFlow;
+				}
+			}
+
+			private void update(double fac) {
+				for (IFluidTE c : pro) {
+					double max = c.getOutFlowLimit(fluid);
+					c.addStorage(fluid, -max * fac * useSupFlow / supFlow);
+				}
+				for (IFluidTE c : con) {
+					double max = c.getInFlowLimit(fluid);
+					c.addStorage(fluid, max * fac * useConFlow / conFlow);
+				}
+				for (IFluidTE c : pro)
+					if (useStoFlow > 0) {
+						double max = c.getInFlowLimit(fluid);
+						c.addStorage(fluid, max * fac * useStoFlow / stoCon);
+					} else {
+						double max = c.getOutFlowLimit(fluid);
+						c.addStorage(fluid, max * fac * useStoFlow / stoSup);
+					}
+			}
+
+		}
+
+		private final List<IFluidTE> list = new ArrayList<>();
+
+		public void add(IFluidTE te) {
+			list.add(te);
+		}
+
+		public void clear() {
+			list.clear();
+		}
+
+		/** return required power */
+		public double update(double power) {
+			Set<QuanFluid> set = new HashSet<>();
+			for (IFluidTE pro : list)
+				set.addAll(pro.getFluidTypes());
+			double reqPow = 0;
+			for (QuanFluid fluid : set) {
+				SingleUpdator su = new SingleUpdator(fluid, list);
+				double p = fluid.getViscocity() * su.flow * su.flow;
+				reqPow += p;
+				if (p == 0 || power == 0)
+					continue;
+				if (p <= power) {
+					power -= p;
+					su.update(1);
+				} else {
+					su.update(Math.sqrt(power / fluid.getViscocity()) / su.flow);
+					power = 0;
+				}
+			}
+			return reqPow;
+		}
+
+	}
+
+	public static interface IFluidCont {
+
+		public void setFluids(QuanFluid[] val);
+
+	}
+
+	public static class Msg {
+
+		public static Msg decode(PacketBuffer packet) {
+			int wid = packet.readInt();
+			int n = packet.readVarInt();
+			String[] rls = new String[n];
+			for (int i = 0; i < n; i++)
+				rls[i] = packet.readString();
+			return new Msg(wid, rls);
+		}
+
+		public static Msg getMsg(int id, QuanFluid[] fs) {
+			String[] val = new String[fs.length];
+			for (int i = 0; i < fs.length; i++)
+				val[i] = fs[i] == null ? "" : fs[i].getRegistryName().toString();
+			return new Msg(id, val);
+		}
+
+		private final String[] val;
+		private final int wid;
+
+		public Msg(int id, String... strs) {
+			wid = id;
+			val = strs;
+		}
+
+		public void encode(PacketBuffer packet) {
+			packet.writeInt(wid);
+			packet.writeVarInt(val.length);
+			for (String rl : val)
+				packet.writeString(rl);
+		}
+
+		public void handle(Supplier<Context> sup) {
+			Context ctx = sup.get();
+			ctx.enqueueWork(() -> this.handle(ctx));
+			ctx.setPacketHandled(true);
+		}
+
+		private void handle(Context ctx) {
+			Container c = Minecraft.getInstance().player.openContainer;
+			if (c != null && c.windowId == wid && c instanceof IFluidCont) {
+				QuanFluid[] fluids = new QuanFluid[val.length];
+				for (int i = 0; i < val.length; i++) {
+					if (val[i].length() == 0)
+						continue;
+					ResourceLocation rl = new ResourceLocation(val[i]);
+					fluids[i] = GameRegistry.findRegistry(QuanFluid.class).getValue(rl);
+				}
+				((IFluidCont) c).setFluids(fluids);
+			}
+		}
+
+	}
+
+	public static interface NullFluidTE {
+
+		public default boolean acceptNewFluid(QuanFluid f) {
+			return false;
+		}
+
+		public default double addStorage(QuanFluid f, double q) {
+			return q;
+		}
+
+		public default Set<QuanFluid> getFluidTypes() {
+			return new HashSet<>();
+		}
+
+		public default double getInFlowLimit(QuanFluid f) {
+			return 0;
+		}
+
+		public default double getMaxStorage(QuanFluid f) {
+			return 0;
+		}
+
+		public default double getOutFlowLimit(QuanFluid f) {
+			return 0;
+		}
+
+		public default Priority getPriority(QuanFluid f) {
+			return null;
+		}
+
+		public default double getStorage(QuanFluid f) {
+			return 0;
+		}
+
+		public default boolean hasFluidType(Priority p, QuanFluid f) {
+			return false;
 		}
 
 	}
@@ -637,13 +655,15 @@ public interface IFluidTE {
 
 	public boolean acceptNewFluid(QuanFluid f);
 
+	public double addStorage(QuanFluid f, double q);
+
+	public QuanFluid getFluidType(int ind);
+
 	public Set<QuanFluid> getFluidTypes();
 
 	public double getInFlowLimit(QuanFluid f);
 
 	public double getMaxStorage(QuanFluid f);
-
-	public double addStorage(QuanFluid f, double q);
 
 	public double getOutFlowLimit(QuanFluid f);
 
@@ -656,7 +676,5 @@ public interface IFluidTE {
 	public double getStorage(QuanFluid f);
 
 	public boolean hasFluidType(Priority p, QuanFluid f);
-
-	public QuanFluid getFluidType(int ind);
 
 }

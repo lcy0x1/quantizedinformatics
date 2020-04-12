@@ -24,8 +24,20 @@ import net.minecraft.util.text.ITextComponent;
 
 public class ConPump {
 
+	public static class Cont extends PowerCont<TE, Cont> {
+
+		public Cont(int id, PlayerInventory inv) {
+			this(id, inv, new Inventory(SIZE), new IntArray(LEN));
+		}
+
+		protected Cont(int id, PlayerInventory inv, IInventory ent, IIntArray arr) {
+			super(Registrar.CTPC_PU, id, inv, ent, 0, arr);// TODO height
+		}
+
+	}
+
 	public static class Scr extends CTEBlock.CommScr<Cont> {
-		
+
 		private static final ResourceLocation GUI = new ResourceLocation(Registrar.MODID,
 				"textures/gui/container/pmc_pump.png");
 
@@ -44,18 +56,6 @@ public class ConPump {
 
 	}
 
-	public static class Cont extends PowerCont<TE,Cont> {
-
-		public Cont(int id, PlayerInventory inv) {
-			this(id, inv, new Inventory(SIZE), new IntArray(LEN));
-		}
-
-		protected Cont(int id, PlayerInventory inv, IInventory ent, IIntArray arr) {
-			super(Registrar.CTPC_PU, id, inv, ent, 0, arr);// TODO height
-		}
-
-	}
-
 	public static class TE extends ConTE<TE, Cont> implements ICapMachine, NullFluidTE {
 
 		private static final int CAP = 0;
@@ -69,17 +69,25 @@ public class ConPump {
 		}
 
 		@Override
+		public ICapacitor getCapacitor() {
+			ItemStack is = getStackInSlot(CAP);
+			if (is.getItem() instanceof ItemCapacitor)
+				return ((ItemCapacitor) is.getItem()).getICap(is);
+			return ICapacitor.NULL;
+		}
+
+		@Override
+		public ITextComponent getDisplayName() {
+			return Translator.getCont("pmc_pump");
+		}
+
+		@Override
 		public void set(int index, int value) {
 		}
 
 		@Override
 		public int size() {
 			return LEN;
-		}
-
-		@Override
-		public ITextComponent getDisplayName() {
-			return Translator.getCont("pmc_pump");
 		}
 
 		@Override
@@ -97,18 +105,6 @@ public class ConPump {
 			updateFluid(0);
 		}
 
-		private void updateFluid(double power) {
-			BlockPos[] ps = Wire.queryFluid(world, getPos());
-			upd.clear();
-			for (BlockPos pos : ps) {
-				TileEntity te = world.getTileEntity(pos);
-				if (te == null || !(te instanceof IFluidTE))
-					continue;
-				upd.add((IFluidTE) te);
-			}
-			req = upd.update(power);
-		}
-
 		@Override
 		protected int getHighPowerInternal() {
 			return 0;
@@ -119,12 +115,16 @@ public class ConPump {
 			return (int) Math.ceil(req);
 		}
 
-		@Override
-		public ICapacitor getCapacitor() {
-			ItemStack is = getStackInSlot(CAP);
-			if (is.getItem() instanceof ItemCapacitor)
-				return ((ItemCapacitor) is.getItem()).getICap(is);
-			return ICapacitor.NULL;
+		private void updateFluid(double power) {
+			BlockPos[] ps = Wire.queryFluid(world, getPos());
+			upd.clear();
+			for (BlockPos pos : ps) {
+				TileEntity te = world.getTileEntity(pos);
+				if (te == null || !(te instanceof IFluidTE))
+					continue;
+				upd.add((IFluidTE) te);
+			}
+			req = upd.update(power);
 		}
 
 	}

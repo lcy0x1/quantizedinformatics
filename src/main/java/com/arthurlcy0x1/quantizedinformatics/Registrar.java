@@ -78,6 +78,12 @@ import com.arthurlcy0x1.quantizedinformatics.power.blocks.GenThermal;
 import com.arthurlcy0x1.quantizedinformatics.power.blocks.PMBlock;
 import com.arthurlcy0x1.quantizedinformatics.power.blocks.PowerWire;
 import com.arthurlcy0x1.quantizedinformatics.power.blocks.Transistor;
+import com.arthurlcy0x1.quantizedinformatics.power.recipe.ICutRecipe;
+import com.arthurlcy0x1.quantizedinformatics.power.recipe.IElecRecipe;
+import com.arthurlcy0x1.quantizedinformatics.power.recipe.IPowderRecipe;
+import com.arthurlcy0x1.quantizedinformatics.power.recipe.IPlateRecipe;
+import com.arthurlcy0x1.quantizedinformatics.power.recipe.ICentRecipe;
+import com.arthurlcy0x1.quantizedinformatics.power.recipe.IWashRecipe;
 import com.arthurlcy0x1.quantizedinformatics.recipe.C3DRecipe;
 import com.arthurlcy0x1.quantizedinformatics.recipe.ChipOxiRec;
 import com.arthurlcy0x1.quantizedinformatics.recipe.ChipRedRec;
@@ -354,6 +360,12 @@ public class Registrar extends ItemGroup {
 	public static final IRecipeType<OxiRecipe> RT_OXI = IRecipeType.register(MODID + ":oxidation");
 	public static final IRecipeType<RedRecipe> RT_RED = IRecipeType.register(MODID + ":reduction");
 	public static final IRecipeType<C3DRecipe> RT_C3D = IRecipeType.register(MODID + ":craft_3d");
+	public static final IRecipeType<IPowderRecipe> RTP_PDR = IRecipeType.register(MODID + ":power_powder");
+	public static final IRecipeType<IPlateRecipe> RTP_PLA = IRecipeType.register(MODID + ":power_plate");
+	public static final IRecipeType<ICutRecipe> RTP_CUT = IRecipeType.register(MODID + ":power_cut");
+	public static final IRecipeType<IWashRecipe> RTP_WSH = IRecipeType.register(MODID + ":power_wash");
+	public static final IRecipeType<IElecRecipe> RTP_ELE = IRecipeType.register(MODID + ":power_electrolysis");
+	public static final IRecipeType<ICentRecipe> RTP_CEN = IRecipeType.register(MODID + ":power_centrifuge");
 
 	public static final IRecipeSerializer<?> RS_OXI = getRS(new OxiRecipe.Serializer(), "oxidation");
 	public static final IRecipeSerializer<?> RS_RED = getRS(new RedRecipe.Serializer(), "reduction");
@@ -365,6 +377,12 @@ public class Registrar extends ItemGroup {
 	public static final IRecipeSerializer<?> RSF_OC = getRS(new FixCollector.Serializer(), "fix_collector");
 	public static final IRecipeSerializer<?> RSF_WP = getRS(new FixMaxItem.Serializer(), "fix_weapon");
 	public static final IRecipeSerializer<?> RS_EOXI = getRS(new EnchantOxiRec.Serializer(), "enchant_oxi");
+	public static final IRecipeSerializer<?> RSP_PDR = getRS(IPowderRecipe.SERIALIZER, "power_powder");
+	public static final IRecipeSerializer<?> RSP_PLA = getRS(IPlateRecipe.SERIALIZER, "power_plate");
+	public static final IRecipeSerializer<?> RSP_CUT = getRS(ICutRecipe.SERIALIZER, "power_cut");
+	public static final IRecipeSerializer<?> RSP_WSH = getRS(IWashRecipe.SERIALIZER, "power_wash");
+	public static final IRecipeSerializer<?> RSP_ELE = getRS(IElecRecipe.SERIALIZER, "power_electrolysis");
+	public static final IRecipeSerializer<?> RSP_CEN = getRS(ICentRecipe.SERIALIZER, "power_centrifuge");
 
 	public static final ContainerType<?>[] CTS = { CT_OXIFN, CT_REDFN, CTD_CNTR, CTD_GATE, CTD_IN, CTD_OUT, CTD_LNR,
 			CTA_CRAFT, CTA_REC, CTA_SOUL, CTAP_HEAD, CTAP_CORE, CTME_ATK, CTME_REP, CTME_ATR, CTME_SPA, CTQ_CHEST,
@@ -377,7 +395,7 @@ public class Registrar extends ItemGroup {
 	public static final EntityType<?>[] ETS = { ET_STNT, ET_FB, ET_IP, ETM_QF, ETM_QS };
 
 	public static final IRecipeSerializer<?>[] RSS = { RS_OXI, RS_RED, RS_C3D, RS_MAX, RSC_OXI, RSC_RED, RS_TELE,
-			RSF_OC, RSF_WP, RS_EOXI };
+			RSF_OC, RSF_WP, RS_EOXI, RSP_PDR };
 
 	public static <T extends ForgeRegistryEntry<T>> T addName(T t, String name) {
 		return t.setRegistryName(MODID, name);

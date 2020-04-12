@@ -19,7 +19,405 @@ import net.minecraft.util.IIntArray;
 
 public interface IPower {
 
+	public static abstract class ConTE<T extends ConTE<T, C>, C extends PowerCont<T, C>> extends PowerTE<T, C>
+			implements IConsumer, TempStorage {
+
+		private int temp, powIn, powCon;
+
+		public ConTE(TileEntityType<T> type, IPowerContFactory<T, C> fac, int size) {
+			super(type, fac, size);
+		}
+
+		@Override
+		public int get(int ind) {
+			if (ind == 0)
+				return temp;
+			if (ind == 1)
+				return getMaxStorage();
+			if (ind == 2)
+				return powIn;
+			if (ind == 3)
+				return powCon;
+			return 0;
+		}
+
+		@Override
+		public final int getMaxInputPower() {
+			int max = getMaxPowerInternal();
+			int sp = getSpace();
+			if (sp < max)
+				return sp;
+			return max;
+		}
+
+		@Override
+		public final int getMinInputPower() {
+			int min = getMinPowerInternal();
+			int sp = getSpace();
+			if (sp < min)
+				return sp;
+			return min;
+		}
+
+		@Override
+		public final int getStorage() {
+			return temp;
+		}
+
+		@Override
+		public void read(CompoundNBT tag) {
+			super.read(tag);
+			temp = tag.getInt("power.temp");
+		}
+
+		@Override
+		public final void setPowerIn(int pow) {
+			temp += pow;
+			powIn = pow;
+		}
+
+		@Override
+		public void tick() {
+			if (world.isRemote)
+				return;
+			powCon = 0;
+			if (temp > getMaxStorage())
+				temp = getMaxStorage();
+			if (temp < 0)
+				temp = 0;
+			if (temp == 0 || temp < getLowPowerInternal())
+				doNoPower();
+			else if (temp < getMaxStorage() * FAC) {
+				temp -= powCon = getLowPowerInternal();
+				doLowPower();
+			} else {
+				temp -= powCon = getHighPowerInternal();
+				doHighPower();
+			}
+			temp = (int) (temp * (1 - getDecayRate()));
+		}
+
+		@Override
+		public CompoundNBT write(CompoundNBT tag) {
+			super.write(tag);
+			tag.putInt("power.temp", temp);
+			return tag;
+		}
+
+		protected abstract void doHighPower();
+
+		protected abstract void doLowPower();
+
+		protected abstract void doNoPower();
+
+		protected abstract int getHighPowerInternal();
+
+		protected abstract int getLowPowerInternal();
+
+		protected final void takeTempStorage(int sto) {
+			temp -= sto;
+		}
+
+	}
+
+	public static abstract class GenTE<T extends GenTE<T, C>, C extends PowerCont<T, C>> extends PowerTE<T, C>
+			implements IGenerator, TempStorage {
+
+		private int temp, powOut, powSup;
+
+		public GenTE(TileEntityType<T> type, IPowerContFactory<T, C> fac, int size) {
+			super(type, fac, size);
+		}
+
+		@Override
+		public int get(int ind) {
+			if (ind == 0)
+				return temp;
+			if (ind == 1)
+				return getMaxStorage();
+			if (ind == 2)
+				return powOut;
+			if (ind == 3)
+				return powSup;
+			return 0;
+		}
+
+		@Override
+		public final int getMaxOutputPower() {
+			if (temp < getMinPowerInternal())
+				return 0;
+			if (temp < getMaxPowerInternal())
+				return temp;
+			return getMaxPowerInternal();
+		}
+
+		@Override
+		public final int getMinOutputPower() {
+			if (temp < getMinPowerInternal())
+				return 0;
+			return getMinPowerInternal();
+		}
+
+		@Override
+		public final int getStorage() {
+			return temp;
+		}
+
+		@Override
+		public void read(CompoundNBT tag) {
+			super.read(tag);
+			temp = tag.getInt("power.temp");
+		}
+
+		@Override
+		public final void setPowerDrawn(int pow) {
+			temp -= pow;
+			powOut = pow;
+		}
+
+		@Override
+		public void tick() {
+			if (world.isRemote)
+				return;
+			temp = (int) (temp * (1 - getDecayRate()));
+			if (temp < 0)
+				temp = 0;
+			if (temp > getMaxStorage())
+				temp = getMaxStorage();
+			powSup = 0;
+			int sp = getSpace();
+			if (sp == 0 || sp < getLowPowerInternal())
+				doNoPower();
+			else if (sp < getMaxStorage() * FAC) {
+				temp += powSup = getLowPowerInternal();
+				doLowPower();
+			} else {
+				temp += powSup = getHighPowerInternal();
+				doHighPower();
+			}
+		}
+
+		@Override
+		public CompoundNBT write(CompoundNBT tag) {
+			super.write(tag);
+			tag.putInt("power.temp", temp);
+			return tag;
+		}
+
+		protected abstract void doHighPower();
+
+		protected abstract void doLowPower();
+
+		protected abstract void doNoPower();
+
+		protected abstract int getHighPowerInternal();
+
+		protected abstract int getLowPowerInternal();
+
+	}
+
+	public static interface ICapacitor {
+
+		public static class NullCapacitor implements ICapacitor {
+
+			private NullCapacitor() {
+			}
+
+			@Override
+			public double getDecayRate() {
+				return 0;
+			}
+
+			@Override
+			public int getMaxPower() {
+				return 0;
+			}
+
+			@Override
+			public int getMaxStorage() {
+				return 0;
+			}
+
+			@Override
+			public int getMinPower() {
+				return 0;
+			}
+
+		}
+
+		public static ICapacitor NULL = new NullCapacitor();
+
+		public double getDecayRate();
+
+		public int getMaxPower();
+
+		public int getMaxStorage();
+
+		public int getMinPower();
+
+	}
+
+	public static interface ICapMachine extends TempStorage {
+
+		public ICapacitor getCapacitor();
+
+		@Override
+		public default double getDecayRate() {
+			ICapacitor cap = getCapacitor();
+			return cap == null ? 0 : cap.getDecayRate();
+		}
+
+		@Override
+		public default int getMaxPowerInternal() {
+			ICapacitor cap = getCapacitor();
+			return cap == null ? 0 : cap.getMaxPower();
+		}
+
+		@Override
+		public default int getMaxStorage() {
+			ICapacitor cap = getCapacitor();
+			return cap == null ? 0 : cap.getMaxStorage();
+		}
+
+		@Override
+		public default int getMinPowerInternal() {
+			ICapacitor cap = getCapacitor();
+			return cap == null ? 0 : cap.getMinPower();
+		}
+
+	}
+
+	public static interface IConsumer extends IPower {
+
+		public int getMaxInputPower();
+
+		public int getMinInputPower();
+
+		@Override
+		public default Type getPowerType() {
+			return Type.CONSUMER;
+		}
+
+		public void setPowerIn(int powerIn);
+
+	}
+
+	public static interface IGenerator extends IPower {
+
+		public int getMaxOutputPower();
+
+		public int getMinOutputPower();
+
+		@Override
+		public default Type getPowerType() {
+			return Type.GENERATOR;
+		}
+
+		public void setPowerDrawn(int powerOut);
+
+	}
+
 	public static interface IPowerBlock extends WireConnect {
+
+	}
+
+	public static interface IStorage extends IPower {
+
+		@Override
+		public default Type getPowerType() {
+			return Type.STORAGE;
+		}
+
+		public int maxInputPower();
+
+		public int maxOutputPower();
+
+		public void setNetPower(int powerIn);
+
+	}
+
+	public static interface ItemCapacitor {
+
+		public static class ICap implements ICapacitor {
+
+			private final ItemCapacitor ic;
+			private final ItemStack is;
+
+			private ICap(ItemCapacitor icIn, ItemStack isIn) {
+				ic = icIn;
+				is = isIn;
+			}
+
+			@Override
+			public double getDecayRate() {
+				return ic.getDecayRate(is);
+			}
+
+			@Override
+			public int getMaxPower() {
+				return ic.getMaxPower(is);
+			}
+
+			@Override
+			public int getMaxStorage() {
+				return ic.getMaxStorage(is);
+			}
+
+			@Override
+			public int getMinPower() {
+				return ic.getMinPower(is);
+			}
+
+		}
+
+		public double getDecayRate(ItemStack is);
+
+		public default ICapacitor getICap(ItemStack is) {
+			return new ICap(this, is);
+		}
+
+		public int getMaxPower(ItemStack is);
+
+		public int getMaxStorage(ItemStack is);
+
+		public int getMinPower(ItemStack is);
+
+	}
+
+	public static abstract class PowerCont<T extends PowerTE<T, C>, C extends PowerCont<T, C>>
+			extends CTEBlock.CommCont {
+
+		protected T te;
+
+		@SuppressWarnings("unchecked")
+		protected PowerCont(ContainerType<C> type, int id, PlayerInventory inv, IInventory ent, int h, IIntArray arr) {
+			super(type, id, inv, ent, h, arr);
+			if (ent instanceof PowerTE)
+				te = (T) ent;
+		}
+
+	}
+
+	public static abstract class PowerTE<T extends PowerTE<T, C>, C extends PowerCont<T, C>> extends CTEBlock.CTETE<T>
+			implements ITickableTileEntity, IIntArray, IPower {
+
+		public interface IPowerContFactory<T extends PowerTE<T, C>, C extends PowerCont<T, C>> {
+
+			public C get(int wid, PlayerInventory inv, IInventory te, IIntArray ia);
+
+		}
+
+		private final IPowerContFactory<T, C> genCont;
+
+		public PowerTE(TileEntityType<T> type, IPowerContFactory<T, C> fac, int size) {
+			super(type, size);
+			genCont = fac;
+		}
+
+		@Override
+		public Container createMenu(int wid, PlayerInventory inv, PlayerEntity pl) {
+			return genCont.get(wid, inv, this, this);
+		}
 
 	}
 
@@ -105,353 +503,7 @@ public interface IPower {
 
 	}
 
-	public static abstract class ConTE<T extends ConTE<T, C>, C extends PowerCont<T,C>> extends PowerTE<T, C>
-			implements IConsumer, TempStorage {
-
-		private int temp, powIn, powCon;
-
-		public ConTE(TileEntityType<T> type, IPowerContFactory<T, C> fac, int size) {
-			super(type, fac, size);
-		}
-
-		public final int getMaxInputPower() {
-			int max = getMaxPowerInternal();
-			int sp = getSpace();
-			if (sp < max)
-				return sp;
-			return max;
-		}
-
-		public final int getMinInputPower() {
-			int min = getMinPowerInternal();
-			int sp = getSpace();
-			if (sp < min)
-				return sp;
-			return min;
-		}
-
-		public final int getStorage() {
-			return temp;
-		}
-
-		public void read(CompoundNBT tag) {
-			super.read(tag);
-			temp = tag.getInt("power.temp");
-		}
-
-		public final void setPowerIn(int pow) {
-			temp += pow;
-			powIn = pow;
-		}
-
-		public int get(int ind) {
-			if (ind == 0)
-				return temp;
-			if (ind == 1)
-				return getMaxStorage();
-			if (ind == 2)
-				return powIn;
-			if (ind == 3)
-				return powCon;
-			return 0;
-		}
-
-		public void tick() {
-			if (world.isRemote)
-				return;
-			powCon = 0;
-			if (temp > getMaxStorage())
-				temp = getMaxStorage();
-			if (temp < 0)
-				temp = 0;
-			if (temp == 0 || temp < getLowPowerInternal())
-				doNoPower();
-			else if (temp < getMaxStorage() * FAC) {
-				temp -= powCon = getLowPowerInternal();
-				doLowPower();
-			} else {
-				temp -= powCon = getHighPowerInternal();
-				doHighPower();
-			}
-			temp = (int) (temp * (1 - getDecayRate()));
-		}
-
-		public CompoundNBT write(CompoundNBT tag) {
-			super.write(tag);
-			tag.putInt("power.temp", temp);
-			return tag;
-		}
-
-		protected abstract void doHighPower();
-
-		protected abstract void doLowPower();
-
-		protected abstract void doNoPower();
-
-		protected abstract int getHighPowerInternal();
-
-		protected abstract int getLowPowerInternal();
-
-		protected final void takeTempStorage(int sto) {
-			temp -= sto;
-		}
-
-	}
-
-	public static abstract class GenTE<T extends GenTE<T, C>, C extends PowerCont<T,C>> extends PowerTE<T, C>
-			implements IGenerator, TempStorage {
-
-		private int temp, powOut, powSup;
-
-		public GenTE(TileEntityType<T> type, IPowerContFactory<T, C> fac, int size) {
-			super(type, fac, size);
-		}
-
-		public final int getMaxOutputPower() {
-			if (temp < getMinPowerInternal())
-				return 0;
-			if (temp < getMaxPowerInternal())
-				return temp;
-			return getMaxPowerInternal();
-		}
-
-		public final int getMinOutputPower() {
-			if (temp < getMinPowerInternal())
-				return 0;
-			return getMinPowerInternal();
-		}
-
-		public final int getStorage() {
-			return temp;
-		}
-
-		public void read(CompoundNBT tag) {
-			super.read(tag);
-			temp = tag.getInt("power.temp");
-		}
-
-		public final void setPowerDrawn(int pow) {
-			temp -= pow;
-			powOut = pow;
-		}
-
-		public int get(int ind) {
-			if (ind == 0)
-				return temp;
-			if (ind == 1)
-				return getMaxStorage();
-			if (ind == 2)
-				return powOut;
-			if (ind == 3)
-				return powSup;
-			return 0;
-		}
-
-		public void tick() {
-			if (world.isRemote)
-				return;
-			temp = (int) (temp * (1 - getDecayRate()));
-			if (temp < 0)
-				temp = 0;
-			if (temp > getMaxStorage())
-				temp = getMaxStorage();
-			powSup = 0;
-			int sp = getSpace();
-			if (sp == 0 || sp < getLowPowerInternal())
-				doNoPower();
-			else if (sp < getMaxStorage() * FAC) {
-				temp += powSup = getLowPowerInternal();
-				doLowPower();
-			} else {
-				temp += powSup = getHighPowerInternal();
-				doHighPower();
-			}
-		}
-
-		public CompoundNBT write(CompoundNBT tag) {
-			super.write(tag);
-			tag.putInt("power.temp", temp);
-			return tag;
-		}
-
-		protected abstract void doHighPower();
-
-		protected abstract void doLowPower();
-
-		protected abstract void doNoPower();
-
-		protected abstract int getHighPowerInternal();
-
-		protected abstract int getLowPowerInternal();
-
-	}
-
-	public static interface ICapacitor {
-
-		public static class NullCapacitor implements ICapacitor {
-
-			private NullCapacitor() {
-			}
-
-			@Override
-			public int getMaxPower() {
-				return 0;
-			}
-
-			@Override
-			public int getMaxStorage() {
-				return 0;
-			}
-
-			@Override
-			public int getMinPower() {
-				return 0;
-			}
-
-			public double getDecayRate() {
-				return 0;
-			}
-
-		}
-
-		public static ICapacitor NULL = new NullCapacitor();
-
-		public int getMaxPower();
-
-		public int getMaxStorage();
-
-		public int getMinPower();
-
-		public double getDecayRate();
-
-	}
-
-	public static interface ItemCapacitor {
-
-		public static class ICap implements ICapacitor {
-
-			private final ItemCapacitor ic;
-			private final ItemStack is;
-
-			private ICap(ItemCapacitor icIn, ItemStack isIn) {
-				ic = icIn;
-				is = isIn;
-			}
-
-			@Override
-			public int getMaxPower() {
-				return ic.getMaxPower(is);
-			}
-
-			@Override
-			public int getMaxStorage() {
-				return ic.getMaxStorage(is);
-			}
-
-			@Override
-			public int getMinPower() {
-				return ic.getMinPower(is);
-			}
-
-			public double getDecayRate() {
-				return ic.getDecayRate(is);
-			}
-
-		}
-
-		public default ICapacitor getICap(ItemStack is) {
-			return new ICap(this, is);
-		}
-
-		public int getMaxPower(ItemStack is);
-
-		public int getMaxStorage(ItemStack is);
-
-		public int getMinPower(ItemStack is);
-
-		public double getDecayRate(ItemStack is);
-
-	}
-
-	public static interface IConsumer extends IPower {
-
-		public int getMaxInputPower();
-
-		public int getMinInputPower();
-
-		public default Type getPowerType() {
-			return Type.CONSUMER;
-		}
-
-		public void setPowerIn(int powerIn);
-
-	}
-
-	public static interface IGenerator extends IPower {
-
-		public int getMaxOutputPower();
-
-		public int getMinOutputPower();
-
-		public default Type getPowerType() {
-			return Type.GENERATOR;
-		}
-
-		public void setPowerDrawn(int powerOut);
-
-	}
-
-	public static interface IStorage extends IPower {
-
-		public default Type getPowerType() {
-			return Type.STORAGE;
-		}
-
-		public int maxInputPower();
-
-		public int maxOutputPower();
-
-		public void setNetPower(int powerIn);
-
-	}
-
-	public static abstract class PowerCont<T extends PowerTE<T,C>,C extends PowerCont<T,C>> extends CTEBlock.CommCont {
-
-		protected T te;
-		
-		@SuppressWarnings("unchecked")
-		protected PowerCont(ContainerType<C> type, int id, PlayerInventory inv, IInventory ent, int h, IIntArray arr) {
-			super(type, id, inv, ent, h, arr);
-			if(ent instanceof PowerTE)
-				te = (T) ent;
-		}
-
-	}
-
-	public static abstract class PowerTE<T extends PowerTE<T, C>, C extends PowerCont<T,C>> extends CTEBlock.CTETE<T>
-			implements ITickableTileEntity, IIntArray, IPower {
-
-		public interface IPowerContFactory<T extends PowerTE<T, C>, C extends PowerCont<T,C>> {
-
-			public C get(int wid, PlayerInventory inv, IInventory te, IIntArray ia);
-
-		}
-
-		private final IPowerContFactory<T, C> genCont;
-
-		public PowerTE(TileEntityType<T> type, IPowerContFactory<T, C> fac, int size) {
-			super(type, size);
-			genCont = fac;
-		}
-
-		@Override
-		public Container createMenu(int wid, PlayerInventory inv, PlayerEntity pl) {
-			return genCont.get(wid, inv, this, this);
-		}
-
-	}
-
-	public static abstract class StoTE<T extends StoTE<T, C>, C extends PowerCont<T,C>> extends PowerTE<T, C>
+	public static abstract class StoTE<T extends StoTE<T, C>, C extends PowerCont<T, C>> extends PowerTE<T, C>
 			implements IStorage {
 
 		private int energy;
@@ -461,12 +513,14 @@ public interface IPower {
 			super(type, fac, size);
 		}
 
+		@Override
 		public void read(CompoundNBT tag) {
 			super.read(tag);
 			energy = tag.getInt("power.energy");
 			temp = tag.getInt("power.temp");
 		}
 
+		@Override
 		public final void setNetPower(int pow) {
 			if (pow > 0)
 				temp += input(pow);
@@ -474,6 +528,7 @@ public interface IPower {
 				temp -= output(-pow);
 		}
 
+		@Override
 		public void tick() {
 			if (world.isRemote)
 				return;
@@ -481,6 +536,7 @@ public interface IPower {
 			temp = 0;
 		}
 
+		@Override
 		public CompoundNBT write(CompoundNBT tag) {
 			super.write(tag);
 			tag.putInt("power.energy", energy);
@@ -502,45 +558,19 @@ public interface IPower {
 
 	public static interface TempStorage {
 
+		public double getDecayRate();
+
+		public int getMaxPowerInternal();
+
 		public int getMaxStorage();
+
+		public int getMinPowerInternal();
 
 		public default int getSpace() {
 			return getMaxStorage() - getStorage();
 		}
 
 		public int getStorage();
-
-		public int getMaxPowerInternal();
-
-		public int getMinPowerInternal();
-
-		public double getDecayRate();
-
-	}
-
-	public static interface ICapMachine extends TempStorage {
-
-		public default int getMaxStorage() {
-			ICapacitor cap = getCapacitor();
-			return cap == null ? 0 : cap.getMaxStorage();
-		}
-
-		public ICapacitor getCapacitor();
-
-		public default int getMaxPowerInternal() {
-			ICapacitor cap = getCapacitor();
-			return cap == null ? 0 : cap.getMaxPower();
-		}
-
-		public default int getMinPowerInternal() {
-			ICapacitor cap = getCapacitor();
-			return cap == null ? 0 : cap.getMinPower();
-		}
-
-		public default double getDecayRate() {
-			ICapacitor cap = getCapacitor();
-			return cap == null ? 0 : cap.getDecayRate();
-		}
 
 	}
 

@@ -11,20 +11,6 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class FluidContItem extends Item {
 
-	public static ItemStack setFluid(ItemStack is, QuanFluid f, double val) {
-		if (is.isEmpty() || !(is.getItem() instanceof FluidContItem))
-			return is;
-		String fluid = f.getRegistryName().toString();
-		if (val < getMaxStorage(is) * IFluidTE.ERR) {
-			val = 0;
-			fluid = "";
-		}
-		CompoundNBT tag = is.getOrCreateChildTag("quanfluid");
-		tag.putString("fluid", fluid);
-		tag.putDouble("amount", val);
-		return is;
-	}
-
 	public static QuanFluid getFluid(ItemStack is) {
 		if (is.isEmpty() || !(is.getItem() instanceof FluidContItem))
 			return null;
@@ -51,6 +37,20 @@ public class FluidContItem extends Item {
 			return 0;
 		CompoundNBT tag = is.getOrCreateChildTag("quanfluid");
 		return tag.getDouble("amount");
+	}
+
+	public static ItemStack setFluid(ItemStack is, QuanFluid f, double val) {
+		if (is.isEmpty() || !(is.getItem() instanceof FluidContItem))
+			return is;
+		String fluid = f.getRegistryName().toString();
+		if (val < getMaxStorage(is) * IFluidTE.ERR) {
+			val = 0;
+			fluid = "";
+		}
+		CompoundNBT tag = is.getOrCreateChildTag("quanfluid");
+		tag.putString("fluid", fluid);
+		tag.putDouble("amount", val);
+		return is;
 	}
 
 	private final double defMax;

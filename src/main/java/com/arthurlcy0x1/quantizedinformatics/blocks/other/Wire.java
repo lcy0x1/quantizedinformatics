@@ -25,6 +25,38 @@ import net.minecraft.world.World;
 
 public class Wire extends SixWayBlock implements WireConnect {
 
+	public static BlockPos[] queryFluid(World w, BlockPos c) {
+		Set<BlockPos> set = new HashSet<>();
+		List<BlockPos> head = new ArrayList<>();
+		Queue<BlockPos> q = new ArrayDeque<>();
+		set.add(c);
+		q.add(c);
+		while (q.size() > 0) {
+			BlockPos p0 = q.poll();
+			BlockState s = w.getBlockState(p0);
+			WireConnect cn = (WireConnect) s.getBlock();
+			for (Direction d : Direction.values())
+				if (cn.canConnectFrom(FLUID, s, d)) {
+					BlockPos p = p0.offset(d);
+					if (set.contains(p))
+						continue;
+					BlockState bs = w.getBlockState(p);
+					if (bs.getBlock() instanceof WireConnect) {
+						WireConnect wc = (WireConnect) bs.getBlock();
+						if (wc.canConnectFrom(FLUID, bs, d.getOpposite()))
+							q.add(p);
+						if (bs.getBlock() instanceof IPowerBlock)
+							if (wc.canConnectFrom(FLUID, bs, d.getOpposite()))
+								head.add(p);
+							else
+								continue;
+					}
+					set.add(p);
+				}
+		}
+		return head.toArray(new BlockPos[0]);
+	}
+
 	/**
 	 * return 2 arrays of BlockPos. <br>
 	 * Array 0 is an array of Blocks that reads from the wire <br>
@@ -60,70 +92,6 @@ public class Wire extends SixWayBlock implements WireConnect {
 		}
 		BlockPos[][] ret = { ins.toArray(new BlockPos[0]), ans.toArray(new BlockPos[0]) };
 		return ret;
-	}
-
-	public static BlockPos[] queryPower(World w, BlockPos c) {
-		Set<BlockPos> set = new HashSet<>();
-		List<BlockPos> head = new ArrayList<>();
-		Queue<BlockPos> q = new ArrayDeque<>();
-		set.add(c);
-		q.add(c);
-		while (q.size() > 0) {
-			BlockPos p0 = q.poll();
-			BlockState s = w.getBlockState(p0);
-			WireConnect cn = (WireConnect) s.getBlock();
-			for (Direction d : Direction.values())
-				if (cn.canConnectFrom(POWER, s, d)) {
-					BlockPos p = p0.offset(d);
-					if (set.contains(p))
-						continue;
-					BlockState bs = w.getBlockState(p);
-					if (bs.getBlock() instanceof WireConnect) {
-						WireConnect wc = (WireConnect) bs.getBlock();
-						if (wc.canConnectFrom(POWER, bs, d.getOpposite()))
-							q.add(p);
-						if (bs.getBlock() instanceof IPowerBlock)
-							if (wc.canConnectFrom(POWER, bs, d.getOpposite()))
-								head.add(p);
-							else
-								continue;
-					}
-					set.add(p);
-				}
-		}
-		return head.toArray(new BlockPos[0]);
-	}
-	
-	public static BlockPos[] queryFluid(World w, BlockPos c) {
-		Set<BlockPos> set = new HashSet<>();
-		List<BlockPos> head = new ArrayList<>();
-		Queue<BlockPos> q = new ArrayDeque<>();
-		set.add(c);
-		q.add(c);
-		while (q.size() > 0) {
-			BlockPos p0 = q.poll();
-			BlockState s = w.getBlockState(p0);
-			WireConnect cn = (WireConnect) s.getBlock();
-			for (Direction d : Direction.values())
-				if (cn.canConnectFrom(FLUID, s, d)) {
-					BlockPos p = p0.offset(d);
-					if (set.contains(p))
-						continue;
-					BlockState bs = w.getBlockState(p);
-					if (bs.getBlock() instanceof WireConnect) {
-						WireConnect wc = (WireConnect) bs.getBlock();
-						if (wc.canConnectFrom(FLUID, bs, d.getOpposite()))
-							q.add(p);
-						if (bs.getBlock() instanceof IPowerBlock)
-							if (wc.canConnectFrom(FLUID, bs, d.getOpposite()))
-								head.add(p);
-							else
-								continue;
-					}
-					set.add(p);
-				}
-		}
-		return head.toArray(new BlockPos[0]);
 	}
 
 	/** get a list of PipeHeads */
@@ -191,6 +159,38 @@ public class Wire extends SixWayBlock implements WireConnect {
 				}
 		}
 		return ans.toArray(new BlockPos[0]);
+	}
+
+	public static BlockPos[] queryPower(World w, BlockPos c) {
+		Set<BlockPos> set = new HashSet<>();
+		List<BlockPos> head = new ArrayList<>();
+		Queue<BlockPos> q = new ArrayDeque<>();
+		set.add(c);
+		q.add(c);
+		while (q.size() > 0) {
+			BlockPos p0 = q.poll();
+			BlockState s = w.getBlockState(p0);
+			WireConnect cn = (WireConnect) s.getBlock();
+			for (Direction d : Direction.values())
+				if (cn.canConnectFrom(POWER, s, d)) {
+					BlockPos p = p0.offset(d);
+					if (set.contains(p))
+						continue;
+					BlockState bs = w.getBlockState(p);
+					if (bs.getBlock() instanceof WireConnect) {
+						WireConnect wc = (WireConnect) bs.getBlock();
+						if (wc.canConnectFrom(POWER, bs, d.getOpposite()))
+							q.add(p);
+						if (bs.getBlock() instanceof IPowerBlock)
+							if (wc.canConnectFrom(POWER, bs, d.getOpposite()))
+								head.add(p);
+							else
+								continue;
+					}
+					set.add(p);
+				}
+		}
+		return head.toArray(new BlockPos[0]);
 	}
 
 	/** get a list of SubPipeHeads */

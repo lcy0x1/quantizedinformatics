@@ -11,6 +11,7 @@ public class PowerWire extends Wire {
 		super(POWER);
 	}
 
+	@Override
 	public boolean canConnectFrom(int type, BlockState bs, Direction dire) {
 		if (bs.getBlock() instanceof PowerWire)
 			return bs.getBlock() == this;

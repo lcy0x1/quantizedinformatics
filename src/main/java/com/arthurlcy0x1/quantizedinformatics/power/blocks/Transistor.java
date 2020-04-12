@@ -20,6 +20,18 @@ import net.minecraft.util.text.ITextComponent;
 
 public class Transistor {
 
+	public static class Cont extends PowerCont<TE, Cont> {
+
+		public Cont(int id, PlayerInventory inv) {
+			this(id, inv, new Inventory(SIZE), new IntArray(LEN));
+		}
+
+		protected Cont(int id, PlayerInventory inv, IInventory ent, IIntArray arr) {
+			super(Registrar.CTP_TR, id, inv, ent, 0, arr);// TODO height
+		}
+
+	}
+
 	public static class Scr extends CTEBlock.CommScr<Cont> {
 
 		private static final ResourceLocation GUI = new ResourceLocation(Registrar.MODID,
@@ -40,18 +52,6 @@ public class Transistor {
 
 	}
 
-	public static class Cont extends PowerCont<TE,Cont> {
-
-		public Cont(int id, PlayerInventory inv) {
-			this(id, inv, new Inventory(SIZE), new IntArray(LEN));
-		}
-
-		protected Cont(int id, PlayerInventory inv, IInventory ent, IIntArray arr) {
-			super(Registrar.CTP_TR, id, inv, ent, 0, arr);// TODO height
-		}
-
-	}
-
 	public static class TE extends PowerTE<TE, Cont> {
 
 		public TE() {
@@ -64,6 +64,16 @@ public class Transistor {
 		}
 
 		@Override
+		public ITextComponent getDisplayName() {
+			return Translator.getCont("transistor");
+		}
+
+		@Override
+		public Type getPowerType() {
+			return null;
+		}
+
+		@Override
 		public void set(int index, int value) {
 		}
 
@@ -73,10 +83,6 @@ public class Transistor {
 		}
 
 		@Override
-		public Type getPowerType() {
-			return null;
-		}
-
 		public void tick() {
 			if (world.isRemote)
 				return;
@@ -89,11 +95,6 @@ public class Transistor {
 				art.add((IPower) te);
 			}
 			art.update();
-		}
-
-		@Override
-		public ITextComponent getDisplayName() {
-			return Translator.getCont("transistor");
 		}
 
 	}

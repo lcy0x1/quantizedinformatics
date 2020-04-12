@@ -21,6 +21,17 @@ import net.minecraft.util.text.ITextComponent;
 
 public class ConFurnace {
 
+	public static class Cont extends PowerCont<TE, Cont> {
+
+		public Cont(int id, PlayerInventory inv) {
+			this(id, inv, new Inventory(SIZE), new IntArray(LEN));
+		}
+
+		protected Cont(int id, PlayerInventory inv, IInventory ent, IIntArray arr) {
+			super(Registrar.CTPC_FN, id, inv, ent, 0, arr);// TODO
+		}
+	}
+
 	public static class Scr extends CTEBlock.CommScr<Cont> {
 
 		private static final ResourceLocation GUI = new ResourceLocation(Registrar.MODID,
@@ -42,18 +53,9 @@ public class ConFurnace {
 
 	}
 
-	public static class Cont extends PowerCont<TE,Cont> {
-
-		public Cont(int id, PlayerInventory inv) {
-			this(id, inv, new Inventory(SIZE), new IntArray(LEN));
-		}
-
-		protected Cont(int id, PlayerInventory inv, IInventory ent, IIntArray arr) {
-			super(Registrar.CTPC_FN, id, inv, ent, 0, arr);// TODO
-		}
-	}
-
 	public static class TE extends IPower.ConTE<TE, Cont> implements IPower.ICapMachine {
+
+		private static final int CAP = 2, INGD = 0, RESULT = 1;
 
 		private static boolean isValid(int ind, ItemStack is) {
 			if (ind == CAP)
@@ -62,8 +64,6 @@ public class ConFurnace {
 				return true;
 			return false;
 		}
-
-		private static final int CAP = 2, INGD = 0, RESULT = 1;
 
 		private float prog = 0;
 		private int max_prog = 0;
@@ -85,29 +85,6 @@ public class ConFurnace {
 		}
 
 		@Override
-		public void set(int index, int value) {
-		}
-
-		public boolean isItemValidForSlot(int ind, ItemStack is) {
-			return isValid(ind, is);
-		}
-
-		@Override
-		public int size() {
-			return LEN;
-		}
-
-		@Override
-		public ITextComponent getDisplayName() {
-			return Translator.getCont("pmc_furnace");
-		}
-
-		protected void onChange(int index) {
-			if (index == -1 || index == 0)
-				cap = null;
-		}
-
-		@Override
 		public ICapacitor getCapacitor() {
 			if (cap != null)
 				return cap;
@@ -117,33 +94,33 @@ public class ConFurnace {
 			return cap = ICapacitor.NULL;
 		}
 
-		private void tickWork(int speed) {
-			ItemStack is = getStackInSlot(INGD);
-			FurnaceRecipe r = is.isEmpty() ? null
-					: world.getRecipeManager().getRecipe(IRecipeType.SMELTING, this, world).orElse(null);
-			if (r == null || !CTETE.canMerge(r.getCraftingResult(this), getStackInSlot(RESULT)))
-				prog = max_prog = 0;
-			else if (max_prog == 0) {
-				max_prog = r.getCookTime();
-				prog = 0;
-			}
-			if (prog < max_prog)
-				prog++;
-			if (max_prog > 0 && prog >= max_prog) {
-				decrStackSize(INGD, 1);
-				if (is.hasContainerItem())
-					setInventorySlotContents(INGD, is.getContainerItem());
-				incrOrSet(RESULT, r.getCraftingResult(this));
-				prog = max_prog = 0;
-			}
+		@Override
+		public ITextComponent getDisplayName() {
+			return Translator.getCont("pmc_furnace");
 		}
 
+		@Override
+		public boolean isItemValidForSlot(int ind, ItemStack is) {
+			return isValid(ind, is);
+		}
+
+		@Override
 		public void read(CompoundNBT tag) {
 			super.read(tag);
 			prog = tag.getFloat("power.prog");
 			max_prog = tag.getInt("power.max_prog");
 		}
 
+		@Override
+		public void set(int index, int value) {
+		}
+
+		@Override
+		public int size() {
+			return LEN;
+		}
+
+		@Override
 		public CompoundNBT write(CompoundNBT tag) {
 			super.write(tag);
 			tag.putFloat("power.prog", prog);
@@ -174,6 +151,33 @@ public class ConFurnace {
 		@Override
 		protected int getLowPowerInternal() {
 			return max_prog == 0 ? 0 : 500;
+		}
+
+		@Override
+		protected void onChange(int index) {
+			if (index == -1 || index == 0)
+				cap = null;
+		}
+
+		private void tickWork(int speed) {
+			ItemStack is = getStackInSlot(INGD);
+			FurnaceRecipe r = is.isEmpty() ? null
+					: world.getRecipeManager().getRecipe(IRecipeType.SMELTING, this, world).orElse(null);
+			if (r == null || !CTETE.canMerge(r.getCraftingResult(this), getStackInSlot(RESULT)))
+				prog = max_prog = 0;
+			else if (max_prog == 0) {
+				max_prog = r.getCookTime();
+				prog = 0;
+			}
+			if (prog < max_prog)
+				prog++;
+			if (max_prog > 0 && prog >= max_prog) {
+				decrStackSize(INGD, 1);
+				if (is.hasContainerItem())
+					setInventorySlotContents(INGD, is.getContainerItem());
+				incrOrSet(RESULT, r.getCraftingResult(this));
+				prog = max_prog = 0;
+			}
 		}
 
 	}

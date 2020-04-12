@@ -49,15 +49,15 @@ public class QuantizedInformatics {
 	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 	public static class RegistryEvents {
 		@SubscribeEvent
-		public static void onModDimensionRegister(final RegisterDimensionsEvent event) {
-			LOGGER.warn("dimension type registered");// TODO
-			RegWorld.regDimType();
-		}
-
-		@SubscribeEvent
 		public static void newReg(final RegistryEvent.NewRegistry event) {
 			new RegistryBuilder<QuanFluid>().setName(new ResourceLocation(MODID, "fluid")).setType(QuanFluid.class)
 					.create();
+		}
+
+		@SubscribeEvent
+		public static void onModDimensionRegister(final RegisterDimensionsEvent event) {
+			LOGGER.warn("dimension type registered");// TODO
+			RegWorld.regDimType();
 		}
 
 		@SubscribeEvent

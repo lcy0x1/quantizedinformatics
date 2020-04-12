@@ -9,27 +9,6 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 /** liquid unit: ml */
 public class QuanFluid extends ForgeRegistryEntry<QuanFluid> {
 
-	public static final QuanFluid MC_WATER = Registrar.addName(new RealFluid(Fluids.WATER), "water");
-	public static final QuanFluid MC_LAVA = Registrar.addName(new RealFluid(Fluids.LAVA), "lava");
-
-	public static final QuanFluid GAS_O2 = reg("gas_oxygen");
-	public static final QuanFluid GAS_H2 = reg("gas_hydrogen");
-	public static final QuanFluid GAS_N2 = reg("gas_nitrogen");
-	public static final QuanFluid GAS_AIR = reg("gas_air");
-
-	public static final QuanFluid LIQ_O2 = reg("liquid_oxygen");
-	public static final QuanFluid LIQ_H2 = reg("liquid_hydrogen");
-	public static final QuanFluid LIQ_N2 = reg("liquid_nitrogen");
-
-	public static final QuanFluid OIL_CRUDE = reg("oil_crude");
-	public static final QuanFluid OIL_FUEL = reg("oil_fuel");
-	public static final QuanFluid OIL_LUB = reg("oil_lubricant");
-	public static final QuanFluid OIL_GAS = reg("oil_gas");
-
-	private static QuanFluid reg(String str) {
-		return Registrar.addName(new QuanFluid(), str);
-	}
-
 	public static class RealFluid extends QuanFluid {
 
 		private Fluid fluid;
@@ -43,9 +22,26 @@ public class QuanFluid extends ForgeRegistryEntry<QuanFluid> {
 		}
 
 	}
+	public static final QuanFluid MC_WATER = Registrar.addName(new RealFluid(Fluids.WATER), "water");
 
-	public boolean isFuel() {
-		return false;
+	public static final QuanFluid MC_LAVA = Registrar.addName(new RealFluid(Fluids.LAVA), "lava");
+	public static final QuanFluid GAS_O2 = reg("gas_oxygen");
+	public static final QuanFluid GAS_H2 = reg("gas_hydrogen");
+	public static final QuanFluid GAS_N2 = reg("gas_nitrogen");
+
+	public static final QuanFluid GAS_AIR = reg("gas_air");
+	public static final QuanFluid LIQ_O2 = reg("liquid_oxygen");
+	public static final QuanFluid LIQ_H2 = reg("liquid_hydrogen");
+
+	public static final QuanFluid LIQ_N2 = reg("liquid_nitrogen");
+	public static final QuanFluid OIL_CRUDE = reg("oil_crude");
+	public static final QuanFluid OIL_FUEL = reg("oil_fuel");
+	public static final QuanFluid OIL_LUB = reg("oil_lubricant");
+
+	public static final QuanFluid OIL_GAS = reg("oil_gas");
+
+	private static QuanFluid reg(String str) {
+		return Registrar.addName(new QuanFluid(), str);
 	}
 
 	public double getFuelValue() {
@@ -54,6 +50,10 @@ public class QuanFluid extends ForgeRegistryEntry<QuanFluid> {
 
 	public double getViscocity() {
 		return 1e-6;
+	}
+
+	public boolean isFuel() {
+		return false;
 	}
 
 }
