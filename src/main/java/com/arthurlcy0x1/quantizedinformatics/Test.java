@@ -63,7 +63,7 @@ public class Test {
 			write(bs + block + ".json", wbsstr.replaceAll("\\^", block));
 			write(bm + block + "_core.json", wbmstrc.replaceAll("\\^", block));
 			write(bm + block + "_side.json", wbmstrs.replaceAll("\\^", block));
-			write(im + block + ".json", wimstr.replaceAll("\\^", block));
+			write(im + block + ".json", imstr.replaceAll("\\^", block));
 			write(lt + block + ".json", ltstr.replaceAll("\\^", block));
 		}
 
@@ -177,18 +177,20 @@ public class Test {
 
 	public static void main(String[] args) throws IOException {
 		String[] metal = { "iron", "gold", "copper", "silver", "tin", "lead", "tungsten", "aluminum", "steel", "bronze",
-				"al_alloy" };
-		int[] ingot = { 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-		int[] powder = { 0, 1, 2, 3, 4, 5, 6, 7, 9, 10 };
-		int[] plate = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+				"al_alloy", "nickel", "cobalt", "manganese", "titanium", "platinum" };
+		int[] ingot = { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+		int[] powder = { 0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15 };
+		int[] plate = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
 		int[] wire = { 0, 1, 2, 3, 6, 7 };
 
 		String[] ore_metal = { "coal", "iron", "gold", "copper", "tin", "silver", "lead", "uranium", "aluminum",
-				"tungsten", "graphite", "borax", "beryllium" };
+				"tungsten", "graphite", "borax", "beryllium", "nickel", "manganese", "titanium" };
 		String[] blocks = { "pm_transistor", "pmc_pump" };
 		String[] dblocks = { "pmg_thermal", "pmg_lava", "pmc_furnace", "pmc_plate", "pmc_wire", "pmc_cut",
 				"pmc_centrifuge", "pmc_wash", "pmc_powder", "pmc_electrolysis" };
-		String[] items = { "rubber", "elem_alo", "elem_cao", "elem_caco3", "elem_beo" };
+		String[] items = { "rubber", "elem_alo", "elem_cao", "elem_caco3", "elem_beo", "elem_wo", "elem_tio", "elem_uo",
+				"elem_aso", "elem_as", "elem_s", "elem_alo_tiny", "elem_aso_tiny", "elem_beo_tiny", "elem_wo_tiny",
+				"elem_tio_tiny", "elem_uo_tiny", "elem_s_tiny" };
 		for (int i = 0; i < ore_metal.length; i++) {
 			String ore = ore_metal[i];
 			if (i > 2) {
