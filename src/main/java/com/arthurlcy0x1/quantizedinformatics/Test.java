@@ -198,6 +198,7 @@ public class Test {
 			}
 			AssetGen.addItemAssets(ore + "_ore_powder");
 			AssetGen.addItemAssets(ore + "_ore_powder_clean");
+			AssetGen.addItemAssets(ore + "_ore_powder_clean_tiny");
 		}
 		for (String block : blocks)
 			AssetGen.addBlockAssets(block);

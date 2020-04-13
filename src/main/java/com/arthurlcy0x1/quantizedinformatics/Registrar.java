@@ -251,7 +251,8 @@ public class Registrar extends ItemGroup {
 	public static final Item IBPC_PU = convert(BPC_PU);
 
 	// items
-
+	public static final Item IOP_FE = generate("iron_ore_powder", 64);
+	public static final Item IOP_AU = generate("gold_ore_powder", 64);
 	public static final Item IOP_CU = generate("copper_ore_powder", 64);
 	public static final Item IOP_SN = generate("tin_ore_powder", 64);
 	public static final Item IOP_AG = generate("silver_ore_powder", 64);
@@ -266,6 +267,8 @@ public class Registrar extends ItemGroup {
 	public static final Item IOP_MN = generate("manganese_ore_powder", 64);
 	public static final Item IOP_TI = generate("titanium_ore_powder", 64);
 
+	public static final Item IOPC_FE = generate("iron_ore_powder_clean", 64);
+	public static final Item IOPC_AU = generate("gold_ore_powder_clean", 64);
 	public static final Item IOPC_CU = generate("copper_ore_powder_clean", 64);
 	public static final Item IOPC_SN = generate("tin_ore_powder_clean", 64);
 	public static final Item IOPC_AG = generate("silver_ore_powder_clean", 64);
@@ -279,6 +282,22 @@ public class Registrar extends ItemGroup {
 	public static final Item IOP_NIC = generate("nickel_ore_powder_clean", 64);
 	public static final Item IOP_MNC = generate("manganese_ore_powder_clean", 64);
 	public static final Item IOP_TIC = generate("titanium_ore_powder_clean", 64);
+
+	public static final Item IOPCT_FE = generate("iron_ore_powder_clean_tiny", 64);
+	public static final Item IOPCT_AU = generate("gold_ore_powder_clean_tiny", 64);
+	public static final Item IOPCT_CU = generate("copper_ore_powder_clean_tiny", 64);
+	public static final Item IOPCT_SN = generate("tin_ore_powder_clean_tiny", 64);
+	public static final Item IOPCT_AG = generate("silver_ore_powder_clean_tiny", 64);
+	public static final Item IOPCT_PB = generate("lead_ore_powder_clean_tiny", 64);
+	public static final Item IOPCT_U = generate("uranium_ore_powder_clean_tiny", 64);
+	public static final Item IOPCT_AL = generate("aluminum_ore_powder_clean_tiny", 64);
+	public static final Item IOPCT_W = generate("tungsten_ore_powder_clean_tiny", 64);
+	public static final Item IOPCT_GRAPHITE = generate("graphite_ore_powder_clean_tiny", 64);
+	public static final Item IOPCT_BORAX = generate("borax_ore_powder_clean_tiny", 64);
+	public static final Item IOPCT_BE = generate("beryllium_ore_powder_clean_tiny", 64);
+	public static final Item IOPT_NIC = generate("nickel_ore_powder_clean_tiny", 64);
+	public static final Item IOPT_MNC = generate("manganese_ore_powder_clean_tiny", 64);
+	public static final Item IOPT_TIC = generate("titanium_ore_powder_clean_tiny", 64);
 
 	public static final Item IMI_CU = generate("copper_ingot", 64);
 	public static final Item IMI_AG = generate("silver_ingot", 64);
