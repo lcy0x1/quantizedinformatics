@@ -74,7 +74,6 @@ import com.arthurlcy0x1.quantizedinformatics.power.blocks.ConFurnace;
 import com.arthurlcy0x1.quantizedinformatics.power.blocks.ConPump;
 import com.arthurlcy0x1.quantizedinformatics.power.blocks.GenThermal;
 import com.arthurlcy0x1.quantizedinformatics.power.blocks.PMBlock;
-import com.arthurlcy0x1.quantizedinformatics.power.blocks.PowerWire;
 import com.arthurlcy0x1.quantizedinformatics.power.blocks.Transistor;
 import com.arthurlcy0x1.quantizedinformatics.power.recipe.ICutRecipe;
 import com.arthurlcy0x1.quantizedinformatics.power.recipe.IElecRecipe;
@@ -126,21 +125,8 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 public class Registrar extends ItemGroup {
 
 	public static final String MODID = "quantizedinformatics";
-
-	// blocks
-	public static final Block BO_CU = generate("copper_ore", ORE_1);
-	public static final Block BO_SN = generate("tin_ore", ORE_1);
-	public static final Block BO_AG = generate("silver_ore", ORE_1);
-	public static final Block BO_PB = generate("lead_ore", ORE_1);
-	public static final Block BO_U = generate("uranium_ore", ORE_2);
-	public static final Block BO_AL = generate("aluminum_ore", ORE_0);
-	public static final Block BO_W = generate("tungsten_ore", ORE_2);
-	public static final Block BO_GRAPHITE = generate("graphite_ore", ORE_0);
-	public static final Block BO_BORAX = generate("borax_ore", ORE_0);
-	public static final Block BO_BE = generate("beryllium_ore", ORE_0);
-	public static final Block BO_NI = generate("nickel_ore", ORE_1);
-	public static final Block BO_MN = generate("manganese_ore", ORE_1);
-	public static final Block BO_TI = generate("titanium_ore", ORE_2);
+	
+	public static final ItemGroup ITEM_GROUP = new Registrar();
 
 	public static final Block B_FOGORE = addName(new QuantumOre(), "quantum_ore");
 	public static final Block B_FOG = generate("quantum_fog", QUANTUM_FOG);
@@ -179,33 +165,14 @@ public class Registrar extends ItemGroup {
 	public static final Block B_STAND = addName(new StoneStand(), "stone_stand");
 	public static final Block B_STANDHEAD = addName(new StandHead(), "stone_stand_head");
 
-	public static final Block BPW_FE = addName(new PowerWire(), "iron_wire");
-	public static final Block BPW_CU = addName(new PowerWire(), "copper_wire");
-	public static final Block BPW_AG = addName(new PowerWire(), "silver_wire");
-	public static final Block BPW_AL = addName(new PowerWire(), "aluminum_wire");
 	public static final Block BP_TR = addName(new PMBlock(Transistor.TE::new, false), "pm_transistor");
 	public static final Block BPG_TH = addName(new PMBlock(GenThermal.TE::new, true), "pmg_thermal");
 	public static final Block BPC_FN = addName(new PMBlock(ConFurnace.TE::new, false), "pmc_furnace");
 	public static final Block BPC_PU = addName(new PMBlock(ConPump.TE::new, true), "pmc_pump");
-
+	
 	public static final List<Block> BDS = Arrays.asList(BD_CNTR, BD_GATE, BD_IN, BD_OUT, BD_LNR);
 
-	public static final ItemGroup ITEM_GROUP = new Registrar();
-
 	// block items
-	public static final Item IBO_CU = convert(BO_CU);
-	public static final Item IBO_SN = convert(BO_SN);
-	public static final Item IBO_AG = convert(BO_AG);
-	public static final Item IBO_PB = convert(BO_PB);
-	public static final Item IBO_U = convert(BO_U);
-	public static final Item IBO_AL = convert(BO_AL);
-	public static final Item IBO_W = convert(BO_W);
-	public static final Item IBO_GRAPHITE = convert(BO_GRAPHITE);
-	public static final Item IBO_BORAX = convert(BO_BORAX);
-	public static final Item IBO_BE = convert(BO_BE);
-	public static final Item IBO_NI = convert(BO_NI);
-	public static final Item IBO_MN = convert(BO_MN);
-	public static final Item IBO_TI = convert(BO_TI);
 
 	public static final Item IB_FOGORE = convert(B_FOGORE);
 	public static final Item IB_FOG = convert(B_FOG);
@@ -241,168 +208,12 @@ public class Registrar extends ItemGroup {
 	public static final Item IBQ_CHEST = convert(BQ_CHEST);
 	public static final Item IB_STAND = convert(B_STAND);
 
-	public static final Item IBPW_FE = convert(BPW_FE);
-	public static final Item IBPW_CU = convert(BPW_CU);
-	public static final Item IBPW_AG = convert(BPW_AG);
-	public static final Item IBPW_AL = convert(BPW_AL);
 	public static final Item IBP_TR = convert(BP_TR);
 	public static final Item IBPG_TH = convert(BPG_TH);
 	public static final Item IBPC_FN = convert(BPC_FN);
 	public static final Item IBPC_PU = convert(BPC_PU);
 
 	// items
-	public static final Item IOP_FE = generate("iron_ore_powder", 64);
-	public static final Item IOP_AU = generate("gold_ore_powder", 64);
-	public static final Item IOP_CU = generate("copper_ore_powder", 64);
-	public static final Item IOP_SN = generate("tin_ore_powder", 64);
-	public static final Item IOP_AG = generate("silver_ore_powder", 64);
-	public static final Item IOP_PB = generate("lead_ore_powder", 64);
-	public static final Item IOP_U = generate("uranium_ore_powder", 64);
-	public static final Item IOP_AL = generate("aluminum_ore_powder", 64);
-	public static final Item IOP_W = generate("tungsten_ore_powder", 64);
-	public static final Item IOP_GRAPHITE = generate("graphite_ore_powder", 64);
-	public static final Item IOP_BORAX = generate("borax_ore_powder", 64);
-	public static final Item IOP_BE = generate("beryllium_ore_powder", 64);
-	public static final Item IOP_NI = generate("nickel_ore_powder", 64);
-	public static final Item IOP_MN = generate("manganese_ore_powder", 64);
-	public static final Item IOP_TI = generate("titanium_ore_powder", 64);
-
-	public static final Item IOPC_FE = generate("iron_ore_powder_clean", 64);
-	public static final Item IOPC_AU = generate("gold_ore_powder_clean", 64);
-	public static final Item IOPC_CU = generate("copper_ore_powder_clean", 64);
-	public static final Item IOPC_SN = generate("tin_ore_powder_clean", 64);
-	public static final Item IOPC_AG = generate("silver_ore_powder_clean", 64);
-	public static final Item IOPC_PB = generate("lead_ore_powder_clean", 64);
-	public static final Item IOPC_U = generate("uranium_ore_powder_clean", 64);
-	public static final Item IOPC_AL = generate("aluminum_ore_powder_clean", 64);
-	public static final Item IOPC_W = generate("tungsten_ore_powder_clean", 64);
-	public static final Item IOPC_GRAPHITE = generate("graphite_ore_powder_clean", 64);
-	public static final Item IOPC_BORAX = generate("borax_ore_powder_clean", 64);
-	public static final Item IOPC_BE = generate("beryllium_ore_powder_clean", 64);
-	public static final Item IOP_NIC = generate("nickel_ore_powder_clean", 64);
-	public static final Item IOP_MNC = generate("manganese_ore_powder_clean", 64);
-	public static final Item IOP_TIC = generate("titanium_ore_powder_clean", 64);
-
-	public static final Item IOPCT_FE = generate("iron_ore_powder_clean_tiny", 64);
-	public static final Item IOPCT_AU = generate("gold_ore_powder_clean_tiny", 64);
-	public static final Item IOPCT_CU = generate("copper_ore_powder_clean_tiny", 64);
-	public static final Item IOPCT_SN = generate("tin_ore_powder_clean_tiny", 64);
-	public static final Item IOPCT_AG = generate("silver_ore_powder_clean_tiny", 64);
-	public static final Item IOPCT_PB = generate("lead_ore_powder_clean_tiny", 64);
-	public static final Item IOPCT_U = generate("uranium_ore_powder_clean_tiny", 64);
-	public static final Item IOPCT_AL = generate("aluminum_ore_powder_clean_tiny", 64);
-	public static final Item IOPCT_W = generate("tungsten_ore_powder_clean_tiny", 64);
-	public static final Item IOPCT_GRAPHITE = generate("graphite_ore_powder_clean_tiny", 64);
-	public static final Item IOPCT_BORAX = generate("borax_ore_powder_clean_tiny", 64);
-	public static final Item IOPCT_BE = generate("beryllium_ore_powder_clean_tiny", 64);
-	public static final Item IOPT_NIC = generate("nickel_ore_powder_clean_tiny", 64);
-	public static final Item IOPT_MNC = generate("manganese_ore_powder_clean_tiny", 64);
-	public static final Item IOPT_TIC = generate("titanium_ore_powder_clean_tiny", 64);
-
-	public static final Item IMI_CU = generate("copper_ingot", 64);
-	public static final Item IMI_AG = generate("silver_ingot", 64);
-	public static final Item IMI_SN = generate("tin_ingot", 64);
-	public static final Item IMI_PB = generate("lead_ingot", 64);
-	public static final Item IMI_W = generate("tungsten_ingot", 64);
-	public static final Item IMI_AL = generate("aluminum_ingot", 64);
-	public static final Item IMI_STEEL = generate("steel_ingot", 64);
-	public static final Item IMI_BRONZE = generate("bronze_ingot", 64);
-	public static final Item IMI_NI = generate("nickel_ingot", 64);
-	public static final Item IMI_CO = generate("cobalt_ingot", 64);
-	public static final Item IMI_MN = generate("manganese_ingot", 64);
-	public static final Item IMI_TI = generate("titanium_ingot", 64);
-	public static final Item IMI_PT = generate("platinum_ingot", 64);
-
-	public static final Item IMN_CU = generate("copper_nugget", 64);
-	public static final Item IMN_AG = generate("silver_nugget", 64);
-	public static final Item IMN_SN = generate("tin_nugget", 64);
-	public static final Item IMN_PB = generate("lead_nugget", 64);
-	public static final Item IMN_W = generate("tungsten_nugget", 64);
-	public static final Item IMN_AL = generate("aluminum_nugget", 64);
-	public static final Item IMN_STEEL = generate("steel_nugget", 64);
-	public static final Item IMN_BRONZE = generate("bronze_nugget", 64);
-	public static final Item IMN_NI = generate("nickel_nugget", 64);
-	public static final Item IMN_CO = generate("cobalt_nugget", 64);
-	public static final Item IMN_MN = generate("manganese_nugget", 64);
-	public static final Item IMN_TI = generate("titanium_nugget", 64);
-	public static final Item IMN_PT = generate("platinum_nugget", 64);
-
-	public static final Item IMPD_FE = generate("iron_powder", 64);
-	public static final Item IMPD_AU = generate("gold_powder", 64);
-	public static final Item IMPD_CU = generate("copper_powder", 64);
-	public static final Item IMPD_AG = generate("silver_powder", 64);
-	public static final Item IMPD_SN = generate("tin_powder", 64);
-	public static final Item IMPD_PB = generate("lead_powder", 64);
-	public static final Item IMPD_W = generate("tungsten_powder", 64);
-	public static final Item IMPD_AL = generate("aluminum_powder", 64);
-	public static final Item IMPD_BRONZE = generate("bronze_powder", 64);
-	public static final Item IMPD_NI = generate("nickel_powder", 64);
-	public static final Item IMPD_CO = generate("cobalt_powder", 64);
-	public static final Item IMPD_MN = generate("manganese_powder", 64);
-	public static final Item IMPD_TI = generate("titanium_powder", 64);
-	public static final Item IMPD_PT = generate("platinum_powder", 64);
-
-	public static final Item IE_P = generate("elem_p", 64);
-	public static final Item IE_B = generate("elem_b", 64);
-	public static final Item IE_PO = generate("elem_po", 64);
-	public static final Item IE_BO = generate("elem_bo", 64);
-	public static final Item IE_SI = generate("elem_si", 64);
-	public static final Item IE_FEO = generate("elem_feo", 64);
-	public static final Item IE_CAO = generate("elem_cao", 64);
-	public static final Item IE_CACO3 = generate("elem_caco3", 64);
-
-	public static final Item IE_S = generate("elem_s", 64);
-	public static final Item IE_AS = generate("elem_as", 64);
-	public static final Item IE_ASO = generate("elem_aso", 64);
-	public static final Item IE_ALO = generate("elem_alo", 64);
-	public static final Item IE_WO = generate("elem_wo", 64);
-	public static final Item IE_TIO = generate("elem_tio", 64);
-	public static final Item IE_UO = generate("elem_uo", 64);
-	public static final Item IE_BEO = generate("elem_beo", 64);
-
-	public static final Item IMPT_FE = generate("iron_powder_tiny", 64);
-	public static final Item IMPT_AU = generate("gold_powder_tiny", 64);
-	public static final Item IMPT_CU = generate("copper_powder_tiny", 64);
-	public static final Item IMPT_AG = generate("silver_powder_tiny", 64);
-	public static final Item IMPT_SN = generate("tin_powder_tiny", 64);
-	public static final Item IMPT_PB = generate("lead_powder_tiny", 64);
-	public static final Item IMPT_W = generate("tungsten_powder_tiny", 64);
-	public static final Item IMPT_AL = generate("aluminum_powder_tiny", 64);
-	public static final Item IMPT_BRONZE = generate("bronze_powder_tiny", 64);
-	public static final Item IMPT_NI = generate("nickel_powder_tiny", 64);
-	public static final Item IMPT_CO = generate("cobalt_powder_tiny", 64);
-	public static final Item IMPT_MN = generate("manganese_powder_tiny", 64);
-	public static final Item IMPT_TI = generate("titanium_powder_tiny", 64);
-	public static final Item IMPT_PT = generate("platinum_powder_tiny", 64);
-
-	public static final Item IET_S = generate("elem_s_tiny", 64);
-	public static final Item IET_ASO = generate("elem_aso_tiny", 64);
-	public static final Item IET_WO = generate("elem_wo_tiny", 64);
-	public static final Item IET_UO = generate("elem_uo_tiny", 64);
-	public static final Item IET_BEO = generate("elem_beo_tiny", 64);
-	public static final Item IET_TIO = generate("elem_tio_tiny", 64);
-	public static final Item IET_ALO = generate("elem_alo_tiny", 64);
-
-	public static final Item IMPL_FE = generate("iron_plate", 64);
-	public static final Item IMPL_AU = generate("gold_plate", 64);
-	public static final Item IMPL_CU = generate("copper_plate", 64);
-	public static final Item IMPL_AG = generate("silver_plate", 64);
-	public static final Item IMPL_SN = generate("tin_plate", 64);
-	public static final Item IMPL_PB = generate("lead_plate", 64);
-	public static final Item IMPL_W = generate("tungsten_plate", 64);
-	public static final Item IMPL_AL = generate("aluminum_plate", 64);
-	public static final Item IMPL_STEEL = generate("steel_plate", 64);
-	public static final Item IMPL_BRONZE = generate("bronze_plate", 64);
-	public static final Item IMPL_NI = generate("nickel_plate", 64);
-	public static final Item IMPL_CO = generate("cobalt_plate", 64);
-	public static final Item IMPL_MN = generate("manganese_plate", 64);
-	public static final Item IMPL_TI = generate("titanium_plate", 64);
-	public static final Item IMPL_PT = generate("platinum_plate", 64);
-
-	public static final Item IMW_AU = generate("gold_wire", 64);
-	public static final Item IMW_W = generate("tungsten_wire", 64);
-
-	public static final Item I_RUBBER = generate("rubber", 64);
 	public static final Item IE_DARK = generate("elem_dark", 64, EncItem::new);
 	public static final Item IE_SOUL = generate("elem_soul", 64, EncItem::new);
 	public static final Item IE_SPACE = generate("elem_space", 64, EncItem::new);
@@ -640,7 +451,7 @@ public class Registrar extends ItemGroup {
 		return addName(new DraftGateItem(p, c), str);
 	}
 
-	private static Block generate(String str, BlockProp mat) {
+	public static Block generate(String str, BlockProp mat) {
 		return addName(new Block(mat.getProps()), str);
 	}
 

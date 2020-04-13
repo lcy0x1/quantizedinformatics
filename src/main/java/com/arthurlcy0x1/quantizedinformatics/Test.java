@@ -135,6 +135,10 @@ public class Test {
 			write(im + item + ".json", imstr.replaceAll("\\^", item));
 		}
 
+		public static void addItemAssets(String item, String res) throws IOException {
+			write(im + item + ".json", imstr.replaceAll("\\^", res));
+		}
+
 		public static void addWireAssets(String block) throws IOException {
 			write(bs + block + ".json", wbsstr.replaceAll("\\^", block));
 			write(bm + block + "_core.json", wbmstrc.replaceAll("\\^", block));
@@ -285,20 +289,25 @@ public class Test {
 		}
 		for (int i : plate)
 			check(metal[i] + "_plate");
+
+		String[] type = { "_ingot", "_nugget", "_plate" };
+
 		for (String ali : allv)
 			for (int i = 0; i < 4; i++) {
 				String alloy = ali + "_" + i;
-				check(alloy + "_ingot");
-				check(alloy + "_nugget");
 				RecipeGen.doIngot(alloy);
-				check(alloy + "_plate");
+				for (String s : type) {
+					check(alloy + s);
+					AssetGen.addItemAssets(alloy + s, ali + s);
+				}
 			}
 
 		for (String alloy : al) {
-			check(alloy + "_ingot");
-			check(alloy + "_nugget");
+			for (String s : type) {
+				check(alloy + s);
+				AssetGen.addItemAssets(alloy + s);
+			}
 			RecipeGen.doIngot(alloy);
-			check(alloy + "_plate");
 		}
 		for (int i : wire)
 			check(metal[i] + "_wire");
