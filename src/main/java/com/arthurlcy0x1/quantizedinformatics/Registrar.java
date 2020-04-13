@@ -307,7 +307,6 @@ public class Registrar extends ItemGroup {
 	public static final Item IMI_AL = generate("aluminum_ingot", 64);
 	public static final Item IMI_STEEL = generate("steel_ingot", 64);
 	public static final Item IMI_BRONZE = generate("bronze_ingot", 64);
-	public static final Item IMI_ALALLOY = generate("al_alloy_ingot", 64);
 	public static final Item IMI_NI = generate("nickel_ingot", 64);
 	public static final Item IMI_CO = generate("cobalt_ingot", 64);
 	public static final Item IMI_MN = generate("manganese_ingot", 64);
@@ -322,7 +321,6 @@ public class Registrar extends ItemGroup {
 	public static final Item IMN_AL = generate("aluminum_nugget", 64);
 	public static final Item IMN_STEEL = generate("steel_nugget", 64);
 	public static final Item IMN_BRONZE = generate("bronze_nugget", 64);
-	public static final Item IMN_ALALLOY = generate("al_alloy_nugget", 64);
 	public static final Item IMN_NI = generate("nickel_nugget", 64);
 	public static final Item IMN_CO = generate("cobalt_nugget", 64);
 	public static final Item IMN_MN = generate("manganese_nugget", 64);
@@ -338,7 +336,6 @@ public class Registrar extends ItemGroup {
 	public static final Item IMPD_W = generate("tungsten_powder", 64);
 	public static final Item IMPD_AL = generate("aluminum_powder", 64);
 	public static final Item IMPD_BRONZE = generate("bronze_powder", 64);
-	public static final Item IMPD_ALALLOW = generate("al_alloy_powder", 64);
 	public static final Item IMPD_NI = generate("nickel_powder", 64);
 	public static final Item IMPD_CO = generate("cobalt_powder", 64);
 	public static final Item IMPD_MN = generate("manganese_powder", 64);
@@ -372,7 +369,6 @@ public class Registrar extends ItemGroup {
 	public static final Item IMPT_W = generate("tungsten_powder_tiny", 64);
 	public static final Item IMPT_AL = generate("aluminum_powder_tiny", 64);
 	public static final Item IMPT_BRONZE = generate("bronze_powder_tiny", 64);
-	public static final Item IMPT_ALALLOW = generate("al_alloy_powder_tiny", 64);
 	public static final Item IMPT_NI = generate("nickel_powder_tiny", 64);
 	public static final Item IMPT_CO = generate("cobalt_powder_tiny", 64);
 	public static final Item IMPT_MN = generate("manganese_powder_tiny", 64);
@@ -397,7 +393,6 @@ public class Registrar extends ItemGroup {
 	public static final Item IMPL_AL = generate("aluminum_plate", 64);
 	public static final Item IMPL_STEEL = generate("steel_plate", 64);
 	public static final Item IMPL_BRONZE = generate("bronze_plate", 64);
-	public static final Item IMPL_ALALLOW = generate("al_alloy_plate", 64);
 	public static final Item IMPL_NI = generate("nickel_plate", 64);
 	public static final Item IMPL_CO = generate("cobalt_plate", 64);
 	public static final Item IMPL_MN = generate("manganese_plate", 64);

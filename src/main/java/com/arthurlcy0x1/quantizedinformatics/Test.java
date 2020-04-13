@@ -22,6 +22,82 @@ import net.minecraft.world.gen.SimplexNoiseGenerator;
 
 public class Test {
 
+	private static class RecipeGen {
+
+		private static final String modid = "quantizedinformatics:";
+		private static final String path = "./src/main/resources/data/quantizedinformatics/recipes/";
+		private static final String shapeless = "{\"group\":\"^g\",\"type\": \"minecraft:crafting_shapeless\",\"ingredients\":[^i],\"result\":^r}";
+		private static final String shaped = "{\"group\":\"^g\",\"type\":\"minecraft:crafting_shaped\",\"pattern\":[\"###\",\"###\",\"###\"],\"key\":{\"#\":^i},\"result\":^r}";
+		private static final String single = "{\"item\":\"^i\"}";
+		private static final String multi = "{\"item\":\"^i\",\"count\":^n}";
+
+		private static final String p2t(String metal) {
+			String i = single.replaceAll("\\^i", metal + "_powder");
+			String r = multi.replaceAll("\\^i", metal + "_powder_tiny").replaceAll("\\^n", "9");
+			return shapeless.replaceAll("\\^g", modid + "powder_to_tiny").replaceAll("\\^i", i).replaceAll("\\^r", r);
+		}
+
+		private static final String t2p(String metal) {
+			String i = single.replaceAll("\\^i", metal + "_powder_tiny");
+			String r = single.replaceAll("\\^i", metal + "_powder");
+			return shaped.replaceAll("\\^g", modid + "tiny_to_powder").replaceAll("\\^i", i).replaceAll("\\^r", r);
+		}
+
+		private static final String op2t(String metal) {
+			String i = single.replaceAll("\\^i", metal + "_ore_clean_powder");
+			String r = multi.replaceAll("\\^i", metal + "_ore_clean_powder_tiny").replaceAll("\\^n", "9");
+			return shapeless.replaceAll("\\^g", modid + "powder_to_tiny").replaceAll("\\^i", i).replaceAll("\\^r", r);
+		}
+
+		private static final String ot2p(String metal) {
+			String i = single.replaceAll("\\^i", metal + "_ore_clean_powder_tiny");
+			String r = single.replaceAll("\\^i", metal + "_ore_clean_powder");
+			return shaped.replaceAll("\\^g", modid + "tiny_to_powder").replaceAll("\\^i", i).replaceAll("\\^r", r);
+		}
+
+		private static final String i2n(String metal) {
+			String i = single.replaceAll("\\^i", metal + "_ingot");
+			String r = multi.replaceAll("\\^i", metal + "_nugget").replaceAll("\\^n", "9");
+			return shapeless.replaceAll("\\^g", modid + "ingot_to_nugget").replaceAll("\\^i", i).replaceAll("\\^r", r);
+		}
+
+		private static final String n2i(String metal) {
+			String i = single.replaceAll("\\^i", metal + "_nugget");
+			String r = single.replaceAll("\\^i", metal + "_ingot");
+			return shaped.replaceAll("\\^g", modid + "nugget_to_ingot").replaceAll("\\^i", i).replaceAll("\\^r", r);
+		}
+
+		private static final String b2i(String metal) {
+			String i = single.replaceAll("\\^i", metal + "_block");
+			String r = multi.replaceAll("\\^i", metal + "_ingot").replaceAll("\\^n", "9");
+			return shapeless.replaceAll("\\^g", modid + "block_to_ingot").replaceAll("\\^i", i).replaceAll("\\^r", r);
+		}
+
+		private static final String i2b(String metal) {
+			String i = single.replaceAll("\\^i", metal + "_ingot");
+			String r = single.replaceAll("\\^i", metal + "_block");
+			return shaped.replaceAll("\\^g", modid + "ingot_to_block").replaceAll("\\^i", i).replaceAll("\\^r", r);
+		}
+
+		private static final void doPowder(String metal) throws IOException {
+			AssetGen.write(path + "z_autogen_" + metal + "_powder_to_tiny.json", p2t(modid + metal));
+			AssetGen.write(path + "z_autogen_" + metal + "_tiny_to_powder.json", t2p(modid + metal));
+		}
+
+		private static final void doOrePowder(String metal) throws IOException {
+			AssetGen.write(path + "z_autogen_" + metal + "_ore_powder_to_tiny.json", op2t(modid + metal));
+			AssetGen.write(path + "z_autogen_" + metal + "_ore_tiny_to_powder.json", ot2p(modid + metal));
+		}
+
+		private static final void doIngot(String metal) throws IOException {
+			AssetGen.write(path + "z_autogen_" + metal + "_ingot_to_nugget.json", i2n(modid + metal));
+			AssetGen.write(path + "z_autogen_" + metal + "_nugget_to_ingot.json", n2i(modid + metal));
+			AssetGen.write(path + "z_autogen_" + metal + "_block_to_ingot.json", b2i(modid + metal));
+			AssetGen.write(path + "z_autogen_" + metal + "_ingot_to_block.json", i2b(modid + metal));
+		}
+
+	}
+
 	private static class AssetGen {
 
 		private static final String bs = "./src/main/resources/assets/quantizedinformatics/blockstates/";
@@ -176,11 +252,71 @@ public class Test {
 	}
 
 	public static void main(String[] args) throws IOException {
-		String[] metal = { "iron", "gold", "copper", "silver", "tin", "lead", "tungsten", "aluminum", "steel", "bronze",
-				"al_alloy", "nickel", "cobalt", "manganese", "titanium", "platinum" };
-		int[] ingot = { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
-		int[] powder = { 0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15 };
-		int[] plate = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+		String[] metal = { "iron", "gold", "copper", "silver", "tin", "lead", "tungsten", "aluminum", "nickel",
+				"cobalt", "manganese", "titanium", "platinum" };
+
+		String[] allv = { "bronze", "steel", "al_alloy" };
+		String[] al = { "bronze_c", "steel_c", "steel_n", "pb_alloy", "w_alloy", "ti_alloy", "co_alloy", "adv_alloy" };
+
+		int[] ingot = { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+		int[] powder = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12 };
+		int[] plate = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+		int[] wire = { 0, 1, 2, 3, 6, 7 };
+
+		String[] ore_metal = { "coal", "iron", "gold", "copper", "tin", "silver", "lead", "uranium", "aluminum",
+				"tungsten", "borax", "beryllium", "nickel", "manganese", "titanium" };
+
+		for (int i = 0; i < ore_metal.length; i++) {
+			String ore = ore_metal[i];
+			check(ore + "_ore_powder");
+			check(ore + "_ore_powder_clean");
+			check(ore + "_ore_powder_clean_tiny");
+			RecipeGen.doOrePowder(ore);
+		}
+		for (int i : ingot) {
+			check(metal[i] + "_ingot");
+			check(metal[i] + "_nugget");
+			RecipeGen.doIngot(metal[i]);
+		}
+		for (int i : powder) {
+			check(metal[i] + "_powder");
+			check(metal[i] + "_powder_tiny");
+			RecipeGen.doPowder(metal[i]);
+		}
+		for (int i : plate)
+			check(metal[i] + "_plate");
+		for (String ali : allv)
+			for (int i = 0; i < 4; i++) {
+				String alloy = ali + "_" + i;
+				check(alloy + "_ingot");
+				check(alloy + "_nugget");
+				RecipeGen.doIngot(alloy);
+				check(alloy + "_plate");
+			}
+
+		for (String alloy : al) {
+			check(alloy + "_ingot");
+			check(alloy + "_nugget");
+			RecipeGen.doIngot(alloy);
+			check(alloy + "_plate");
+		}
+		for (int i : wire)
+			check(metal[i] + "_wire");
+
+	}
+
+	public static void check(String str) {
+		if (!new File("./metal_asset/" + str + ".png").exists())
+			System.out.println(str);
+	}
+
+	public static void addMetals() throws IOException {
+
+		String[] metal = { "iron", "gold", "copper", "silver", "tin", "lead", "tungsten", "aluminum", "nickel",
+				"cobalt", "manganese", "titanium", "platinum" };
+		int[] ingot = { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+		int[] powder = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12 };
+		int[] plate = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
 		int[] wire = { 0, 1, 2, 3, 6, 7 };
 
 		String[] ore_metal = { "coal", "iron", "gold", "copper", "tin", "silver", "lead", "uranium", "aluminum",
