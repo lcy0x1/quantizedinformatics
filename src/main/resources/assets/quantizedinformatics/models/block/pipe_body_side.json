@@ -1,6 +1,7 @@
 {
-	"parent": "quantizedinformatics:block/ab_wire_side",
-	"textures": {
-		"wire": "quantizedinformatics:blocks/pipe_body"
-	}
+    "parent": "quantizedinformatics:block/ab_wire_side",
+    "textures": {
+        "wire": "quantizedinformatics:blocks/pipe_body"
+    }
 }
+

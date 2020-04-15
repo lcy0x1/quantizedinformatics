@@ -1,1 +1,8 @@
-{"variants":{"":{"model":"quantizedinformatics:block/uranium_ore"}}}
+{
+    "variants": {
+        "": {
+            "model": "quantizedinformatics:block/uranium_ore"
+        }
+    }
+}
+

@@ -1,0 +1,16 @@
+{
+	"group": "quantizedinformatics:none",
+	"type": "quantizedinformatics:oxidation",
+	"time": 800,
+	"in_main": {
+		"item": "quantizedinformatics:quantum_ore"
+	},
+	"in_side": {
+		"item": "quantizedinformatics:quantum_fog"
+	},
+	"in_side_count": 32,
+	"out_main": "quantizedinformatics:quantum_ore",
+	"out_main_count": 1,
+	"out_side": "quantizedinformatics:quantum_fog",
+	"out_side_count": 64
+}

@@ -1,1 +1,8 @@
-{"variants":{"":{"model":"quantizedinformatics:block/copper_ore"}}}
+{
+    "variants": {
+        "": {
+            "model": "quantizedinformatics:block/copper_ore"
+        }
+    }
+}
+

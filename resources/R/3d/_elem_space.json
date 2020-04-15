@@ -1,0 +1,25 @@
+{
+	"group": "quantizedinformatics:none",
+    "type": "quantizedinformatics:craft_3d",
+    "pattern": [
+        [
+            "000",
+            "000",
+            "000"
+        ],
+        [
+            "000",
+            "000",
+            "000"
+        ],
+        [
+            "000",
+            "000",
+            "000"
+        ]
+    ],
+    "keys": {
+        "0": "nether_portal"
+    },
+    "out": "quantizedinformatics:elem_space"
+}

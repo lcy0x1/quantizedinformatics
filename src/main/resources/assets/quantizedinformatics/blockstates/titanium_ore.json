@@ -1,1 +1,8 @@
-{"variants":{"":{"model":"quantizedinformatics:block/titanium_ore"}}}
+{
+    "variants": {
+        "": {
+            "model": "quantizedinformatics:block/titanium_ore"
+        }
+    }
+}
+

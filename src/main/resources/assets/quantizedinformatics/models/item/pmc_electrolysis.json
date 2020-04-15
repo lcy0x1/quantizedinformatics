@@ -1,1 +1,4 @@
-{"parent":"quantizedinformatics:block/pmc_electrolysis"}
+{
+    "parent": "quantizedinformatics:block/pmc_electrolysis"
+}
+

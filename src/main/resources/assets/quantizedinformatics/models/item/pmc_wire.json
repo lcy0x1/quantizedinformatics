@@ -1,1 +1,4 @@
-{"parent":"quantizedinformatics:block/pmc_wire"}
+{
+    "parent": "quantizedinformatics:block/pmc_wire"
+}
+

@@ -1,0 +1,32 @@
+{
+    "": {
+        "3-6": {
+            "gate_mos": [
+                "_or^",
+                "_nor^",
+                "_and^",
+                "_nand^"
+            ],
+            "gate_red": [
+                "_or^",
+                "_nor^",
+                "_and^",
+                "_nand^"
+            ],
+            "gate_imp": [
+                "_or^",
+                "_nor^",
+                "_and^",
+                "_nand^"
+            ]
+        },
+        "2-4": {
+            "maxwell": [
+                "^_boots",
+                "^_chestplate",
+                "^_helmet",
+                "^_leggings"
+            ]
+        }
+    }
+}

@@ -1,1 +1,4 @@
-{"parent":"quantizedinformatics:block/pmc_furnace"}
+{
+    "parent": "quantizedinformatics:block/pmc_furnace"
+}
+

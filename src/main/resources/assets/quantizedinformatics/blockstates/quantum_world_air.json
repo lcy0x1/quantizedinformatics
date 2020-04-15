@@ -1,5 +1,8 @@
 {
     "variants": {
-        "": { "model": "block/air" }
+        "": {
+            "model": "block/air"
+        }
     }
 }
+

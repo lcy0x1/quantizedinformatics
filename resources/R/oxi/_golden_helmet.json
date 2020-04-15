@@ -1,0 +1,12 @@
+{
+	"group": "quantizedinformatics:none",
+	"type": "quantizedinformatics:oxidation",
+	"time": 200,
+	"in_main": {
+	"item": "golden_helmet"
+	},
+	"out_main": "gold_ingot",
+	"out_main_count": 3,
+	"out_side": "gold_nugget",
+	"out_side_count": 3
+}

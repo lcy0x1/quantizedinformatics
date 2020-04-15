@@ -1,1 +1,4 @@
-{"parent":"quantizedinformatics:block/pmc_plate"}
+{
+    "parent": "quantizedinformatics:block/pmc_plate"
+}
+

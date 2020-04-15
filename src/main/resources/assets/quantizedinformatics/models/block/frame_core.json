@@ -1,6 +1,0 @@
-{
-	"parent": "quantizedinformatics:block/ab_wire_core",
-	"textures": {
-		"wire": "quantizedinformatics:blocks/quantum_fog"
-	}
-}

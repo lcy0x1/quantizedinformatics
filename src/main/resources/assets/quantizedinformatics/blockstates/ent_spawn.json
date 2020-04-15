@@ -1,10 +1,11 @@
 {
-  "variants": {
-    "lit=true": {
-      "model": "quantizedinformatics:block/ent_spawn_a"
-    },
-    "lit=false": {
-      "model": "quantizedinformatics:block/ent_spawn"
+    "variants": {
+        "lit=true": {
+            "model": "quantizedinformatics:block/ent_spawn_a"
+        },
+        "lit=false": {
+            "model": "quantizedinformatics:block/ent_spawn"
+        }
     }
-  }
 }
+

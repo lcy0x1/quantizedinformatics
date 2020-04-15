@@ -1,0 +1,128 @@
+{
+    "": {
+        "": {
+            "": [
+                "pipe_core",
+                "quantum_fog",
+                "quantum_ore",
+                "stone_stand_head"
+            ],
+            "quantum_world": [
+                "_barrier",
+                "_chest",
+                "_core",
+                "_key",
+                "_maze_wall",
+                "_portal",
+                "_stone"
+            ]
+        },
+        "air":{
+            "quantum_world": [
+                "_air",
+                "_barrier_air"
+            ]
+        },
+        "lit": {
+            "ent": [
+                "_attack",
+                "_attract",
+                "_repel",
+                "_spawn"
+            ]
+        },
+        "face": {
+            "": [
+                "auto_craft",
+                "craft_3d",
+                "oxidation_furnace",
+                "pipe_head",
+                "pipe_sub_head",
+                "recipe_maker",
+                "reduction_furnace",
+                "soul_extracter",
+                "stone_stand"
+            ],
+            "draft": [
+                "_center",
+                "_gate",
+                "_in",
+                "_out"
+            ]
+        },
+        "wire": {
+            "": [
+                "craft_frame",
+                "draft_wire",
+                "pipe_body",
+                "pipe_sub_body"
+            ]
+        }
+    },
+    "industry": {
+        "": {
+            "": [
+                "pm_transistor",
+                "pmc_pump"
+            ],
+            "ore": [
+                "aluminum_",
+                "beryllium_",
+                "borax_",
+                "copper_",
+                "graphite_",
+                "lead_",
+                "manganese_",
+                "nickel_",
+                "silver_",
+                "tin_",
+                "titanium_",
+                "tungsten_",
+                "uranium_",
+                "sulfur_"
+            ],
+            "block": [
+                "aluminum_",
+                "beryllium_",
+                "copper_",
+                "graphite_",
+                "lead_",
+                "manganese_",
+                "nickel_",
+                "silver_",
+                "tin_",
+                "titanium_",
+                "tungsten_",
+                "uranium_",
+                "sulfur_",
+                "cobalt_",
+                "bronze_",
+                "steel_"
+            ]
+        },
+        "lit&face": {
+            "pmc": [
+                "_centrifuge",
+                "_cut",
+                "_electrolysis",
+                "_furnace",
+                "_plate",
+                "_powder",
+                "_wash",
+                "_wire"
+            ],
+            "pmg": [
+                "_thermal",
+                "_lava"
+            ]
+        },
+        "wire": {
+            "wire": [
+                "aluminum_",
+                "iron_",
+                "copper_",
+                "silver_"
+            ]
+        }
+    }
+}

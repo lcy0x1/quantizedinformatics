@@ -1,1 +1,20 @@
-{"variants":{"facing=north":{"model":"quantizedinformatics:block/pmg_lava"},"facing=east":{"model": "quantizedinformatics:block/pmg_lava","y": 90},"facing=south": {"model":"quantizedinformatics:block/pmg_lava","y": 180},"facing=west":{"model":"quantizedinformatics:block/pmg_lava","y": 270}}}
+{
+    "variants": {
+        "facing=north": {
+            "model": "quantizedinformatics:block/pmg_lava"
+        },
+        "facing=east": {
+            "model": "quantizedinformatics:block/pmg_lava",
+            "y": 90
+        },
+        "facing=south": {
+            "model": "quantizedinformatics:block/pmg_lava",
+            "y": 180
+        },
+        "facing=west": {
+            "model": "quantizedinformatics:block/pmg_lava",
+            "y": 270
+        }
+    }
+}
+

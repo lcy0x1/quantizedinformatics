@@ -1,19 +1,20 @@
 {
-  "variants": {
-    "facing=north": {
-      "model": "quantizedinformatics:block/draft_out"
-    },
-    "facing=east": {
-      "model": "quantizedinformatics:block/draft_out",
-      "y": 90
-    },
-    "facing=south": {
-      "model": "quantizedinformatics:block/draft_out",
-      "y": 180
-    },
-    "facing=west": {
-      "model": "quantizedinformatics:block/draft_out",
-      "y": 270
+    "variants": {
+        "facing=north": {
+            "model": "quantizedinformatics:block/draft_out"
+        },
+        "facing=east": {
+            "model": "quantizedinformatics:block/draft_out",
+            "y": 90
+        },
+        "facing=south": {
+            "model": "quantizedinformatics:block/draft_out",
+            "y": 180
+        },
+        "facing=west": {
+            "model": "quantizedinformatics:block/draft_out",
+            "y": 270
+        }
     }
-  }
 }
+

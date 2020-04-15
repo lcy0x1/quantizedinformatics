@@ -1,6 +1,0 @@
-{
-	"parent": "quantizedinformatics:block/ab_wire_side",
-	"textures": {
-		"wire": "quantizedinformatics:blocks/wire"
-	}
-}

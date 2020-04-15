@@ -1,1 +1,8 @@
-{"variants":{"":{"model":"quantizedinformatics:block/silver_ore"}}}
+{
+    "variants": {
+        "": {
+            "model": "quantizedinformatics:block/silver_ore"
+        }
+    }
+}
+

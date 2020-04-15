@@ -48,6 +48,7 @@ public class QuantizedInformatics {
 	// Event bus for receiving Registry Events)
 	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 	public static class RegistryEvents {
+
 		@SubscribeEvent
 		public static void newReg(final RegistryEvent.NewRegistry event) {
 			new RegistryBuilder<QuanFluid>().setName(new ResourceLocation(MODID, "fluid")).setType(QuanFluid.class)
@@ -68,6 +69,7 @@ public class QuantizedInformatics {
 		@SubscribeEvent
 		public static void regBlock(final RegistryEvent.Register<Block> event) {
 			getList(Registrar.class, event, Block.class);
+			getList(OreReg.class, event, Block.class);
 		}
 
 		@SubscribeEvent
@@ -98,8 +100,12 @@ public class QuantizedInformatics {
 		@SubscribeEvent
 		public static void regItem(final RegistryEvent.Register<Item> event) {
 			getList(Registrar.class, event, Item.class);
-			for (Item[] its : Registrar.IDS)
-				event.getRegistry().registerAll(its);
+			getList(OreReg.class, event, Item.class);
+			Item[][][] items = { Registrar.IDS, OreReg.IOPS, OreReg.IMPS, OreReg.IMAS };
+			for (Item[][] ites : items)
+				for (Item[] its : ites)
+					event.getRegistry().registerAll(its);
+
 		}
 
 		@SubscribeEvent

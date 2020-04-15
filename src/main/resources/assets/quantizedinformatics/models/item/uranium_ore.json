@@ -1,1 +1,4 @@
-{"parent":"quantizedinformatics:block/uranium_ore"}
+{
+    "parent": "quantizedinformatics:block/uranium_ore"
+}
+

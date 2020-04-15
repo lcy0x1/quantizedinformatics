@@ -1,0 +1,20 @@
+{
+	"group": "quantizedinformatics:gate_red_empty",
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "000",
+        "010",
+        "000"
+    ],
+    "key": {
+        "0": {
+            "item": "quantizedinformatics:quantum_fog"
+        },
+        "1": {
+            "item": "quartz"
+        }
+    },
+    "result": {
+        "item": "quantizedinformatics:gate_red_empty"
+    }
+}

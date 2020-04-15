@@ -1,1 +1,4 @@
-{"parent":"quantizedinformatics:block/lead_ore"}
+{
+    "parent": "quantizedinformatics:block/lead_ore"
+}
+

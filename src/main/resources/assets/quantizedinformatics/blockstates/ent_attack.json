@@ -1,10 +1,11 @@
 {
-  "variants": {
-    "lit=true": {
-      "model": "quantizedinformatics:block/ent_attack_a"
-    },
-    "lit=false": {
-      "model": "quantizedinformatics:block/ent_attack"
+    "variants": {
+        "lit=true": {
+            "model": "quantizedinformatics:block/ent_attack_a"
+        },
+        "lit=false": {
+            "model": "quantizedinformatics:block/ent_attack"
+        }
     }
-  }
 }
+

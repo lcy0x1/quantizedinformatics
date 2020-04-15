@@ -1,6 +1,7 @@
 {
-	"parent": "item/generated",
-	"textures": {
-		"layer0": "quantizedinformatics:items/item_picker"
-	}
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "quantizedinformatics:items/item_picker"
+    }
 }
+

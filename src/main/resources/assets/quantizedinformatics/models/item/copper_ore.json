@@ -1,1 +1,4 @@
-{"parent":"quantizedinformatics:block/copper_ore"}
+{
+    "parent": "quantizedinformatics:block/copper_ore"
+}
+

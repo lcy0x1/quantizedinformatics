@@ -1,1 +1,4 @@
-{"parent":"quantizedinformatics:block/pm_transistor"}
+{
+    "parent": "quantizedinformatics:block/pm_transistor"
+}
+

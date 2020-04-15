@@ -1,7 +1,8 @@
 {
-  "variants": {
-    "": {
-      "model": "quantizedinformatics:block/pipe_core"
+    "variants": {
+        "": {
+            "model": "quantizedinformatics:block/pipe_core"
+        }
     }
-  }
 }
+

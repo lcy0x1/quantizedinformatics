@@ -1,7 +1,8 @@
 {
-  "variants": {
-    "": {
-      "model": "quantizedinformatics:block/quantum_world_portal"
+    "variants": {
+        "": {
+            "model": "quantizedinformatics:block/quantum_world_portal"
+        }
     }
-  }
 }
+

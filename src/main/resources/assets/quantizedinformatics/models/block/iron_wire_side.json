@@ -1,1 +1,7 @@
-{"parent": "quantizedinformatics:block/ab_wire_side","textures":{"wire":"quantizedinformatics:blocks/iron_wire"}}
+{
+    "parent": "quantizedinformatics:block/ab_wire_side",
+    "textures": {
+        "wire": "quantizedinformatics:blocks/iron_wire"
+    }
+}
+

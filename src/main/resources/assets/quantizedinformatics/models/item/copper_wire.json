@@ -1,1 +1,4 @@
-{"parent":"item/generated","textures":{"layer0":"quantizedinformatics:items/copper_wire"}}
+{
+    "parent": "quantizedinformatics:block/copper_wire_core"
+}
+

@@ -1,6 +1,7 @@
 {
-	"parent": "item/generated",
-	"textures": {
-	"layer0": "quantizedinformatics:items/gate_imp_not"
-	}
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "quantizedinformatics:items/gate_imp_not"
+    }
 }
+
