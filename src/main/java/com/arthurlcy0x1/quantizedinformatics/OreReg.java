@@ -96,12 +96,13 @@ public class OreReg extends ItemGroup {
 		IMAS = new Item[n][m];
 		for (int j = 0; j < m; j++) {
 			for (int i = 0; i < allv.length; i++)
-				for (int k = 0; k < 3; k++)
+				for (int k = 0; k < 4; k++)
 					IMAS[i * 4 + k][j] = generate(allv[i] + "_" + k + type[j], 64);
 			for (int i = 0; i < al.length; i++)
 				IMAS[allv.length * 4 + i][j] = generate(al[i] + type[j], 64);
 		}
 	}
+
 
 	public static final Item IMPD_BRONZE = generate("bronze_powder", 64);
 	public static final Item IE_P = generate("elem_p", 64);
@@ -121,7 +122,7 @@ public class OreReg extends ItemGroup {
 	public static final Item IE_TIO = generate("elem_tio", 64);
 	public static final Item IE_UO = generate("elem_uo", 64);
 	public static final Item IE_BEO = generate("elem_beo", 64);
-	
+
 	public static final Item IET_ASO = generate("elem_aso_tiny", 64);
 	public static final Item IET_WO = generate("elem_wo_tiny", 64);
 	public static final Item IET_UO = generate("elem_uo_tiny", 64);

@@ -18,13 +18,14 @@ public class ResourceManager {
 
 	private static class AssetGen {
 
-		private static final String BS_L, BS_, BS_A, IM_, BM_, IM_B, BS_F, BS_W, LT_, IM_W, BM_WS, BM_WC;
+		private static final String BS_L, BS_, BS_A, BS_AD, IM_, BM_, IM_B, BS_F, BS_W, LT_, IM_W, BM_WS, BM_WC;
 
 		static {
 			String path = "./resources/";
 			BS_ = readFile(path + "BS/-.json");
 			BS_A = readFile(path + "BS/-air.json");
 			BS_L = readFile(path + "BS/-lit.json");
+			BS_AD = readFile(path + "BS/-alldire.json");
 			BS_F = readFile(path + "BS/-face.json");
 			BS_W = readFile(path + "BS/-wire.json");
 
@@ -60,6 +61,10 @@ public class ResourceManager {
 			write(IM + block + ".json", IM_B.replaceAll("\\^", block));
 		}
 
+		private static void addBlockItemAssets(String block) throws IOException {
+			write(IM + block + ".json", IM_B.replaceAll("\\^", block));
+		}
+
 		private static void addBlockAssetsLit(String block) throws IOException {
 			write(BS + block + ".json", BS_L.replaceAll("\\^", block));
 			write(BM + block + ".json", BM_.replaceAll("\\^", block));
@@ -82,6 +87,11 @@ public class ResourceManager {
 
 		private static void addBlockAssetsFace(String block) throws IOException {
 			write(BS + block + ".json", BS_F.replaceAll("\\^", block));
+			write(IM + block + ".json", IM_B.replaceAll("\\^", block));
+		}
+
+		private static void addBlockAssetsAllDire(String block) throws IOException {
+			write(BS + block + ".json", BS_AD.replaceAll("\\^", block));
 			write(IM + block + ".json", IM_B.replaceAll("\\^", block));
 		}
 
@@ -156,12 +166,16 @@ public class ResourceManager {
 		List<String> ignore = map.get("ignore");
 		map = readJson("./resources/BS/-info.json");
 		List<String> blocks = orgImpl("BS");
+		for (String block : blocks)
+			AssetGen.addBlockItemAssets(block);
 		for (String block : map.get(""))
 			AssetGen.addBlockAssets(block);
 		for (String block : map.get("air"))
 			AssetGen.addBlockAssetsAir(block);
 		for (String block : map.get("lit"))
 			AssetGen.addBlockAssetsLit(block);
+		for (String block : map.get("alldire"))
+			AssetGen.addBlockAssetsAllDire(block);
 		for (String block : map.get("face"))
 			AssetGen.addBlockAssetsFace(block);
 		for (String block : map.get("wire"))
@@ -252,9 +266,8 @@ public class ResourceManager {
 			str += name;
 		} else if (ch >= '0' && ch <= '9' || ch >= 'a' && ch <= 'z') {
 			String[] ss = name.split("\\.");
-
 			if (ss[0].endsWith("_"))
-				str = name + str + ss[1];
+				str = ss[ss.length - 1] + str;
 			else
 				str = name;
 		} else {

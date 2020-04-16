@@ -17,7 +17,7 @@
                 "_stone"
             ]
         },
-        "air":{
+        "air": {
             "quantum_world": [
                 "_air",
                 "_barrier_air"
@@ -31,13 +31,17 @@
                 "_spawn"
             ]
         },
+        "alldire": {
+            "": [
+                "pipe_head",
+                "pipe_sub_head"
+            ]
+        },
         "face": {
             "": [
                 "auto_craft",
                 "craft_3d",
                 "oxidation_furnace",
-                "pipe_head",
-                "pipe_sub_head",
                 "recipe_maker",
                 "reduction_furnace",
                 "soul_extracter",
