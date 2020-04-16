@@ -18,7 +18,7 @@ public class ResourceManager {
 
 	private static class AssetGen {
 
-		private static final String BS_L, BS_, BS_A, BS_AD, IM_, BM_, IM_B, BS_F, BS_W, LT_, IM_W, BM_WS, BM_WC;
+		private static final String BS_L, BS_, BS_A, BS_AD, IM_, BM_, BM_M, IM_B, BS_F, BS_W, LT_, IM_W, BM_WS, BM_WC;
 
 		static {
 			String path = "./resources/";
@@ -30,6 +30,7 @@ public class ResourceManager {
 			BS_W = readFile(path + "BS/-wire.json");
 
 			BM_ = readFile(path + "BM/-.json");
+			BM_M = readFile(path + "BM/-machine.json");
 			BM_WS = readFile(path + "BM/-wire_side.json");
 			BM_WC = readFile(path + "BM/-wire_core.json");
 
@@ -69,6 +70,12 @@ public class ResourceManager {
 			write(BS + block + ".json", BS_L.replaceAll("\\^", block));
 			write(BM + block + ".json", BM_.replaceAll("\\^", block));
 			write(BM + block + "_a.json", BM_.replaceAll("\\^", block + "_a"));
+			write(IM + block + ".json", IM_B.replaceAll("\\^", block));
+		}
+		
+		private static void addBlockAssetsMachine(String block) throws IOException {
+			write(BS + block + ".json", BS_F.replaceAll("\\^", block));
+			write(BM + block + ".json", BM_M.replaceAll("\\^", block));
 			write(IM + block + ".json", IM_B.replaceAll("\\^", block));
 		}
 
@@ -173,6 +180,8 @@ public class ResourceManager {
 			AssetGen.addBlockAssetsAllDire(block);
 		for (String block : map.get("face"))
 			AssetGen.addBlockAssetsFace(block);
+		for (String block : map.get("machine"))
+			AssetGen.addBlockAssetsMachine(block);
 		for (String block : map.get("wire"))
 			AssetGen.addBlockAssetsWire(block);
 		map.forEach((k, v) -> blocks.addAll(v));

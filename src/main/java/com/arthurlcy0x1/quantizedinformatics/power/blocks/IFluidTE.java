@@ -437,7 +437,7 @@ public interface IFluidTE {
 				fluids[i] = te.getFluidType(i);
 			}
 			if (send)
-				PacketHandler.toClient(Msg.getMsg(windowId, fluids));
+				PacketHandler.send(Msg.getMsg(windowId, fluids));
 		}
 
 		@Override

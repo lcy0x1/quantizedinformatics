@@ -1,1 +1,13 @@
-{"parent":"block/cube","textures":{"north":"quantizedinformatics:blocks/pmc_centrifuge_front","up":"quantizedinformatics:blocks/pmc_centrifuge_side","down":"quantizedinformatics:blocks/pmc_centrifuge_side","south":"quantizedinformatics:blocks/pmc_centrifuge_top","west":"quantizedinformatics:blocks/pmc_centrifuge_top","east":"quantizedinformatics:blocks/pmc_centrifuge_top","particle":"quantizedinformatics:blocks/pmc_centrifuge_side"}}
+{
+	"parent": "block/cube",
+	"textures": {
+		"north": "quantizedinformatics:blocks/pmc_centrifuge",
+		"up": "quantizedinformatics:blocks/pm_side",
+		"down": "quantizedinformatics:blocks/pm_side",
+		"south": "quantizedinformatics:blocks/pm_side",
+		"west": "quantizedinformatics:blocks/pm_side",
+		"east": "quantizedinformatics:blocks/pm_side",
+		"particle": "quantizedinformatics:blocks/pm_side"
+	}
+}
+

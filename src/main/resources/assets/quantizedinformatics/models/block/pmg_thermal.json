@@ -1,12 +1,13 @@
 {
-    "parent": "block/cube",
-    "textures": {
-        "north": "quantizedinformatics:blocks/pmg_thermal_front",
-        "up": "quantizedinformatics:blocks/pmg_thermal_side",
-        "down": "quantizedinformatics:blocks/pmg_thermal_side",
-        "south": "quantizedinformatics:blocks/pmg_thermal_top",
-        "west": "quantizedinformatics:blocks/pmg_thermal_top",
-        "east": "quantizedinformatics:blocks/pmg_thermal_top",
-        "particle": "quantizedinformatics:blocks/pmg_thermal_side"
-    }
+	"parent": "block/cube",
+	"textures": {
+		"north": "quantizedinformatics:blocks/pmg_thermal",
+		"up": "quantizedinformatics:blocks/pm_side",
+		"down": "quantizedinformatics:blocks/pm_side",
+		"south": "quantizedinformatics:blocks/pm_side",
+		"west": "quantizedinformatics:blocks/pm_side",
+		"east": "quantizedinformatics:blocks/pm_side",
+		"particle": "quantizedinformatics:blocks/pm_side"
+	}
 }
+

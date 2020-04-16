@@ -72,7 +72,8 @@ public class BaseBlock extends Block {
 
 		public BlockImplementor addImpls(IImpl... impls) {
 			for (IImpl impl : impls)
-				addImpl(impl);
+				if (impl != null)
+					addImpl(impl);
 			return this;
 		}
 

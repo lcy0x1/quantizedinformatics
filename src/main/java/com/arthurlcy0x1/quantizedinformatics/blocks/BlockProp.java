@@ -10,6 +10,11 @@ public class BlockProp {
 	public static final BlockProp ORE_0 = new BlockProp(Material.ROCK, 3, 3).setTool(ToolType.PICKAXE, 0);
 	public static final BlockProp ORE_1 = new BlockProp(Material.ROCK, 3, 3).setTool(ToolType.PICKAXE, 1);
 	public static final BlockProp ORE_2 = new BlockProp(Material.ROCK, 3, 3).setTool(ToolType.PICKAXE, 2);
+	
+
+	public static final BlockProp METAL_0 = new BlockProp(Material.ROCK, 3, 3).setTool(ToolType.PICKAXE, 0);
+	public static final BlockProp METAL_1 = new BlockProp(Material.ROCK, 3, 3).setTool(ToolType.PICKAXE, 1);
+	public static final BlockProp METAL_2 = new BlockProp(Material.ROCK, 3, 3).setTool(ToolType.PICKAXE, 2);
 
 	public static final BlockProp WIRE = new BlockProp(Material.MISCELLANEOUS, 0.2f, 0.2f);
 	public static final BlockProp FURNACE = new BlockProp(Material.ROCK, 50, 1200).setTool(ToolType.PICKAXE, 3);

@@ -167,8 +167,16 @@ public class Registrar extends ItemGroup {
 
 	public static final Block BP_TR = addName(new PMBlock(Transistor.TE::new, false), "pm_transistor");
 	public static final Block BPG_TH = addName(new PMBlock(GenThermal.TE::new, true), "pmg_thermal");
+	public static final Block BPG_GT = addName(new PMBlock(null, true), "pmg_lava");//TODO
 	public static final Block BPC_FN = addName(new PMBlock(ConFurnace.TE::new, false), "pmc_furnace");
 	public static final Block BPC_PU = addName(new PMBlock(ConPump.TE::new, true), "pmc_pump");
+	public static final Block BPC_PDR = addName(new PMBlock(null, true), "pmc_powder");//TODO
+	public static final Block BPC_WSH = addName(new PMBlock(null, true), "pmc_wash");//TODO
+	public static final Block BPC_TC = addName(new PMBlock(null, true), "pmc_centrifuge");//TODO
+	public static final Block BPC_PLA = addName(new PMBlock(null, true), "pmc_plate");//TODO
+	public static final Block BPC_CUT = addName(new PMBlock(null, true), "pmc_cut");//TODO
+	public static final Block BPC_WIR = addName(new PMBlock(null, true), "pmc_wire");//TODO
+	public static final Block BPC_ELE = addName(new PMBlock(null, true), "pmc_electrolysis");//TODO
 	
 	public static final List<Block> BDS = Arrays.asList(BD_CNTR, BD_GATE, BD_IN, BD_OUT, BD_LNR);
 
@@ -210,8 +218,16 @@ public class Registrar extends ItemGroup {
 
 	public static final Item IBP_TR = convert(BP_TR);
 	public static final Item IBPG_TH = convert(BPG_TH);
+	public static final Item IBPG_GT = convert(BPG_GT);
 	public static final Item IBPC_FN = convert(BPC_FN);
 	public static final Item IBPC_PU = convert(BPC_PU);
+	public static final Item IBPC_PDR = convert(BPC_PDR);
+	public static final Item IBPC_WSH = convert(BPC_WSH);
+	public static final Item IBPC_TC = convert(BPC_TC);
+	public static final Item IBPC_PLA = convert(BPC_PLA);
+	public static final Item IBPC_WIR = convert(BPC_WIR);
+	public static final Item IBPC_CUT = convert(BPC_CUT);
+	public static final Item IBPC_ELE = convert(BPC_ELE);
 
 	// items
 	public static final Item IE_DARK = generate("elem_dark", 64, EncItem::new);

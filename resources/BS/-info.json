@@ -83,13 +83,12 @@
                 "titanium_",
                 "tungsten_",
                 "uranium_",
-                "sulfur_"
+                "sulfur_",
+                "platinum_"
             ],
             "block": [
                 "aluminum_",
-                "beryllium_",
                 "copper_",
-                "graphite_",
                 "lead_",
                 "manganese_",
                 "nickel_",
@@ -97,14 +96,13 @@
                 "tin_",
                 "titanium_",
                 "tungsten_",
-                "uranium_",
-                "sulfur_",
                 "cobalt_",
                 "bronze_",
-                "steel_"
+                "steel_",
+                "platinum_"
             ]
         },
-        "face": {
+        "machine": {
             "pmc": [
                 "_centrifuge",
                 "_cut",
