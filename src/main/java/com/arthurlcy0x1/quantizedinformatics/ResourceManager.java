@@ -72,11 +72,6 @@ public class ResourceManager {
 			write(IM + block + ".json", IM_B.replaceAll("\\^", block));
 		}
 
-		private static void addBlockAssetsLitAndFace(String block) throws IOException {
-			write(BS + block + ".json", BS_F.replaceAll("\\^", block));
-			write(IM + block + ".json", IM_B.replaceAll("\\^", block));
-		}
-
 		private static void addBlockAssetsAir(String block) throws IOException {
 			write(BS + block + ".json", BS_A);
 		}
@@ -180,8 +175,6 @@ public class ResourceManager {
 			AssetGen.addBlockAssetsFace(block);
 		for (String block : map.get("wire"))
 			AssetGen.addBlockAssetsWire(block);
-		for (String block : map.get("lit&face"))// TODO
-			AssetGen.addBlockAssetsLitAndFace(block);
 		map.forEach((k, v) -> blocks.addAll(v));
 		for (String block : blocks)
 			if (!ignore.contains(block))
@@ -267,7 +260,7 @@ public class ResourceManager {
 		} else if (ch >= '0' && ch <= '9' || ch >= 'a' && ch <= 'z') {
 			String[] ss = name.split("\\.");
 			if (ss[0].endsWith("_"))
-				str = ss[ss.length - 1] + str;
+				str = ss[0] + str + (ss.length > 1 ? "." + ss[1] : "");
 			else
 				str = name;
 		} else {

@@ -1,4 +1,7 @@
 {
-    "parent": "quantizedinformatics:block/aluminum_wire_core"
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "quantizedinformatics:items/aluminum_wire"
+    }
 }
 
