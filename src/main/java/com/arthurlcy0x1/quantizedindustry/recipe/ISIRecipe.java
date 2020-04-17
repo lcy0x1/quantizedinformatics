@@ -59,7 +59,7 @@ public interface ISIRecipe<T extends ISIRecipe.Inv> extends IMachineRecipe<T> {
 		@Nonnull
 		public T read(@Nonnull ResourceLocation id, @Nonnull JsonObject json) {
 			Ingredient in;
-			int time = JSONUtils.getInt(json, "time");
+			int time = JSONUtils.getInt(json, "cost");
 			in = Ingredient.deserialize(JSONUtils.getJsonObject(json, "in"));
 			return jread.read(id, json, in, time);
 		}

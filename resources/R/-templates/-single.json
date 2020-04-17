@@ -1,0 +1,8 @@
+{
+    "group": "^g",
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        "^i"
+    ],
+    "result": "^r"
+}

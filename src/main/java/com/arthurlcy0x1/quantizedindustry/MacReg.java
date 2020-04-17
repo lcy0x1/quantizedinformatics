@@ -12,6 +12,8 @@ import com.arthurlcy0x1.quantizedindustry.recipe.IPlateRecipe;
 import com.arthurlcy0x1.quantizedindustry.recipe.IPowderRecipe;
 import com.arthurlcy0x1.quantizedindustry.recipe.IWashRecipe;
 import com.arthurlcy0x1.quantizedindustry.recipe.IWireRecipe;
+import com.arthurlcy0x1.quantizedindustry.tables.PlateST;
+import com.arthurlcy0x1.quantizedindustry.tables.StoneTable;
 import com.arthurlcy0x1.quantizedinformatics.AbReg;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.ScreenManager;
@@ -29,6 +31,8 @@ public class MacReg extends AbReg {
 
 	public static final MacReg ITEM_GROUP = new MacReg();
 
+	public static final Block BST_PLA = addName(new StoneTable(PlateST.TE::new), "stonetable_plate");
+
 	public static final Block BP_TR = addName(new PMBlock(Transistor.TE::new, false), "pm_transistor");
 	public static final Block BPG_TH = addName(new PMBlock(GenThermal.TE::new, true), "pmg_thermal");
 	public static final Block BPG_GT = addName(new PMBlock(null, true), "pmg_lava");// TODO
@@ -42,7 +46,7 @@ public class MacReg extends AbReg {
 	public static final Block BPC_WIR = addName(new PMBlock(null, true), "pmc_wire");// TODO
 	public static final Block BPC_ELE = addName(new PMBlock(null, true), "pmc_electrolysis");// TODO
 
-	public static final Item I_RUBBER = generate("rubber", 64);
+	public static final Item IBST_PLA = convert(BST_PLA);
 
 	public static final Item IBP_TR = convert(BP_TR);
 	public static final Item IBPG_TH = convert(BPG_TH);
@@ -57,10 +61,16 @@ public class MacReg extends AbReg {
 	public static final Item IBPC_CUT = convert(BPC_CUT);
 	public static final Item IBPC_ELE = convert(BPC_ELE);
 
+	public static final Item I_RUBBER = generate("rubber", 64);
+
+	public static final ContainerType<PlateST.Cont> CTST_PLA = getCT(PlateST.Cont::new, "stonetable_plate_c");
+
 	public static final ContainerType<Transistor.Cont> CTP_TR = getCT(Transistor.Cont::new, "pm_transistor_c");
 	public static final ContainerType<GenThermal.Cont> CTPG_TH = getCT(GenThermal.Cont::new, "pmg_thermal_c");
 	public static final ContainerType<ConFurnace.Cont> CTPC_FN = getCT(ConFurnace.Cont::new, "pmc_furnace_c");
 	public static final ContainerType<ConPump.Cont> CTPC_PU = getCT(ConPump.Cont::new, "pmc_pump_c");
+
+	public static final TileEntityType<PlateST.TE> TETST_PLA = getTET(PlateST.TE::new, BST_PLA, "stonetable_plate_te");
 
 	public static final TileEntityType<Transistor.TE> TETP_TR = getTET(Transistor.TE::new, BP_TR, "pm_transistor_te");
 	public static final TileEntityType<GenThermal.TE> TETPG_TH = getTET(GenThermal.TE::new, BPG_TH, "pmg_thermal_te");
@@ -83,9 +93,9 @@ public class MacReg extends AbReg {
 	public static final IRecipeSerializer<?> RSP_ELE = getRS(IElecRecipe.SERIALIZER, "power_electrolysis");
 	public static final IRecipeSerializer<?> RSP_CEN = getRS(ICentRecipe.SERIALIZER, "power_centrifuge");
 
-	public static final ContainerType<?>[] CTS = { CTP_TR, CTPG_TH, CTPC_FN, CTPC_PU };
+	public static final ContainerType<?>[] CTS = { CTST_PLA, CTP_TR, CTPG_TH, CTPC_FN, CTPC_PU };
 
-	public static final TileEntityType<?>[] TETS = { TETP_TR, TETPG_TH, TETPC_FN, TETPC_PU };
+	public static final TileEntityType<?>[] TETS = { TETST_PLA, TETP_TR, TETPG_TH, TETPC_FN, TETPC_PU };
 
 	public static final IRecipeSerializer<?>[] RSS = { RSP_PDR, RSP_PLA, RSP_CUT, RSP_WIR, RSP_WSH, RSP_ELE, RSP_CEN };
 
@@ -110,7 +120,6 @@ public class MacReg extends AbReg {
 
 	public MacReg() {
 		super(MODID + "_machine");
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

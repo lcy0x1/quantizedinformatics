@@ -56,7 +56,7 @@ public interface ISSRecipe<T extends ISSRecipe.Inv> extends ISIRecipe<T> {
 	}
 
 	public static <T extends SSRecipe<C>, C extends Inv> Ser<T, C> getSingleSer(ISSRFactory<T, C> f) {
-		return new Ser<T, C>((id, json, ingr, t) -> f.get(id, ingr, decItem(json), t),
+		return new Ser<T, C>((id, json, ingr, t) -> f.get(id, ingr, decItem(json.get("out")), t),
 				(id, data, ingr, t) -> f.get(id, ingr, data.readItemStack(), t),
 				(data, r) -> data.writeItemStack(r.getRecipeOutput()));
 	}

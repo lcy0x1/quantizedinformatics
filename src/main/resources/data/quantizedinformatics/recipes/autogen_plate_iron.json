@@ -1,0 +1,7 @@
+{
+    "group": "quantizedinformatics:autogen_plate",
+    "type": "quantizedinformatics:plate",
+    "in": {"item":"iron_ingot"},
+    "out": {"item":"quantizedinformatics:iron_plate","count":2}
+}
+

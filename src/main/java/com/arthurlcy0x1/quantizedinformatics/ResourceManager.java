@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Consumer;
+
 import com.google.common.io.Files;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -122,6 +124,213 @@ public class ResourceManager {
 
 	}
 
+	private static class RecipeGen {
+
+		private static final List<Consumer<String>> ITEM_KEY = new ArrayList<>();
+
+		private static final String MODID = "quantizedinformatics:";
+		private static final String RPATH = "./src/main/resources/data/quantizedinformatics/recipes/";
+		private static final String NS, SC, PLA;
+		private static final String SI = "{\"item\":\"^i\"}";
+		private static final String ML = "{\"item\":\"^i\",\"count\":^n}";
+
+		static {
+			NS = AssetGen.readFile("./resources/R/-templates/-single.json");
+			SC = AssetGen.readFile("./resources/R/-templates/-merge.json");
+			PLA = AssetGen.readFile("./resources/R/-templates/-plate.json");
+			ITEM_KEY.add(RecipeGen::genPlate);
+		}
+
+		private static final String rep(String... src) {
+			for (int i = 1; i < src.length; i += 2) {
+				src[0] = src[0].replaceAll(src[i], src[i + 1]);
+			}
+			return src[0];
+		}
+
+		private static final void genPlate(String str) {
+			if (str.endsWith("_plate")) {
+				String prev = str.substring(0, str.length() - 6);
+				String target = prev + "_ingot";
+				if (!prev.equals("iron") && !prev.equals("gold"))
+					target = MODID + target;
+				String ing = MODID + str;
+				String cont = rep(PLA, "\"\\^i\"", rep(SI, "\\^i", target), "\"\\^r\"",
+						rep(ML, "\\^i", ing, "\\^n", "2"));
+				try {
+					AssetGen.write(RPATH + "autogen_plate_" + prev + ".json", cont);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		private static void doIngot(String str) {
+			// if(str.endsWith("_tiny"))
+		}
+
+		private static void doMerge(String metal, String lr, String sm) {
+			String l = rep(SI, "\\^i", metal + "_" + lr);
+			String s = rep(SI, "\\^i", metal + "_" + sm);
+			String s9 = rep(ML, "\\^i", metal + "_" + sm).replaceAll("\\^n", "9");
+			rep(NS, "\\^g", MODID + lr + "_to_" + sm, "\"\\^i\"", l, "\"\\^r\"", s9);
+			rep(SC, "\\^g", MODID + sm + "_to_" + lr, "\"\\^i\"", s, "\"\\^r\"", l);
+		}
+
+	}
+
+	private static class AssetMove {
+
+		private static final Map<String, String> PATHMAP = new HashMap<>();
+
+		static {
+			PATHMAP.put("ASSETS", PATH_ASSET);
+			PATHMAP.put("BS", BS);
+			PATHMAP.put("BM", BM);
+			PATHMAP.put("BT", BT);
+			PATHMAP.put("BL", BL);
+			PATHMAP.put("IM", IM);
+			PATHMAP.put("IT", IT);
+			PATHMAP.put("R", R);
+
+		}
+
+		private static void copyTo(File file, String path) throws IOException {
+			File f = new File(path);
+			check(f);
+			Files.copy(file, f);
+		}
+
+		private static void orgBlocks() throws IOException {
+			orgImpl("BT");
+			Map<String, List<String>> map;
+			map = readJson("./resources/BL/-info.json");
+			List<String> ignore = map.get("ignore");
+			map = readJson("./resources/BS/-info.json");
+			List<String> blocks = orgImpl("BS");
+			for (String block : blocks)
+				AssetGen.addBlockItemAssets(block);
+			for (String block : map.get(""))
+				AssetGen.addBlockAssets(block);
+			for (String block : map.get("air"))
+				AssetGen.addBlockAssetsAir(block);
+			for (String block : map.get("lit"))
+				AssetGen.addBlockAssetsLit(block);
+			for (String block : map.get("alldire"))
+				AssetGen.addBlockAssetsAllDire(block);
+			for (String block : map.get("face"))
+				AssetGen.addBlockAssetsFace(block);
+			for (String block : map.get("machine"))
+				AssetGen.addBlockAssetsMachine(block);
+			for (String block : map.get("wire"))
+				AssetGen.addBlockAssetsWire(block);
+			map.forEach((k, v) -> blocks.addAll(v));
+			for (String block : blocks)
+				if (!ignore.contains(block))
+					AssetGen.addLootTable(block);
+			orgImpl("BM");
+			orgImpl("BL");
+		}
+
+		private static void orgImpl(File file, List<String> list, String path, String str) throws IOException {
+			String name = file.getName();
+			char ch = name.charAt(0);
+			if (ch == '.' || ch == '-')
+				return;
+			else if (ch >= 'A' && ch <= 'Z') {
+				path = PATHMAP.get(name);
+				str = "";
+			} else if (ch == '@') {
+				path += name.substring(1) + "/";
+				str = "";
+			} else if (ch == '_') {
+				str += name;
+			} else if (ch >= '0' && ch <= '9' || ch >= 'a' && ch <= 'z') {
+				String[] ss = name.split("\\.");
+				if (ss[0].endsWith("_"))
+					str = ss[0] + str + (ss.length > 1 ? "." + ss[1] : "");
+				else
+					str = name;
+			} else {
+				System.out.println("invalid filename: " + path + ", " + str);
+			}
+			if (file.isDirectory()) {
+				for (File fi : file.listFiles())
+					orgImpl(fi, list, path, str);
+			} else {
+				if (list != null)
+					list.add(str.split("\\.")[0]);
+				copyTo(file, path + str);
+			}
+		}
+
+		private static List<String> orgImpl(String path) throws IOException {
+			List<String> list = new ArrayList<>();
+			orgImpl(new File("./resources/" + path + "/"), list, PATHMAP.get(path), "");
+			return list;
+		}
+
+		private static void orgItems() throws IOException {
+			Map<String, List<String>> map = readJson("./resources/IT/-info.json");
+			List<String> list = orgImpl("IT");
+			for (String item : list) {
+				if (!map.get("ignore").contains(item))
+					AssetGen.addItemAssets(item);
+				RecipeGen.ITEM_KEY.forEach(e -> e.accept(item));
+			}
+			map = readJson("./resources/IM/-info.json");
+			for (Entry<String, List<String>> ent : map.entrySet()) {
+				String key = ent.getKey();
+				int lo = key.charAt(0) - '0';
+				int hi = key.charAt(2) - '0';
+				for (String str : ent.getValue())
+					for (int i = lo; i <= hi; i++)
+						AssetGen.addItemAssets(str.replaceAll("\\^", "_" + i), str.replaceAll("\\^", ""));
+			}
+			orgImpl("IM");
+		}
+
+		private static Map<String, List<String>> readJson(String path) throws IOException {
+			File f = new File(path);
+			JsonReader r = new JsonReader(Files.newReader(f, Charset.defaultCharset()));
+			JsonElement e = new JsonParser().parse(r);
+			r.close();
+			Map<String, List<String>> ans = new HashMap<>();
+			e.getAsJsonObject().entrySet()
+					.forEach(ent0 -> ent0.getValue().getAsJsonObject().entrySet().forEach(ent1 -> {
+						String key = ent1.getKey();
+						List<String> list;
+						if (ans.containsKey(key))
+							list = ans.get(key);
+						else
+							ans.put(key, list = new ArrayList<>());
+						ent1.getValue().getAsJsonObject().entrySet().forEach(ent2 -> {
+							String group = ent2.getKey();
+							ent2.getValue().getAsJsonArray().forEach(ent3 -> {
+								String name = ent3.getAsString();
+								if (name.startsWith("_") || name.startsWith("^"))
+									list.add(group + name);
+								else if (name.endsWith("_"))
+									list.add(name + group);
+								else
+									list.add(name);
+							});
+						});
+					}));
+			return ans;
+		}
+
+		public static void organize() throws IOException {
+			delete(new File(PATH_ASSET));
+			delete(new File(PATH_DATA));
+			orgImpl("ASSETS");
+			orgBlocks();
+			orgItems();
+			orgImpl("R");
+		}
+
+	}
+
 	private static final String PATH_PRE = "./src/main/resources/";
 	private static final String PATH_ASSET = PATH_PRE + "assets/quantizedinformatics/";
 	private static final String PATH_DATA = PATH_PRE + "data/quantizedinformatics/";
@@ -134,44 +343,8 @@ public class ResourceManager {
 	private static final String IT = PATH_ASSET + "textures/items/";
 	private static final String R = PATH_DATA + "recipes/";
 
-	private static final Map<String, String> PATHMAP = new HashMap<>();
-
-	static {
-		PATHMAP.put("ASSETS", PATH_ASSET);
-		PATHMAP.put("BS", BS);
-		PATHMAP.put("BM", BM);
-		PATHMAP.put("BT", BT);
-		PATHMAP.put("BL", BL);
-		PATHMAP.put("IM", IM);
-		PATHMAP.put("IT", IT);
-		PATHMAP.put("R", R);
-
-	}
-
 	public static void main(String[] strs) throws IOException {
-		organize();
-	}
-
-	public static void organize() throws IOException {
-		delete(new File(PATH_ASSET));
-		delete(new File(PATH_DATA));
-		orgImpl("ASSETS");
-		orgBlocks();
-		orgItems();
-		orgImpl("R");
-	}
-
-	private static void check(File f) throws IOException {
-		if (!f.getParentFile().exists())
-			f.getParentFile().mkdirs();
-		if (!f.exists())
-			f.createNewFile();
-	}
-
-	private static void copyTo(File file, String path) throws IOException {
-		File f = new File(path);
-		check(f);
-		Files.copy(file, f);
+		AssetMove.organize();
 	}
 
 	private static void delete(File f) {
@@ -183,119 +356,11 @@ public class ResourceManager {
 		f.delete();
 	}
 
-	private static void orgBlocks() throws IOException {
-		orgImpl("BT");
-		Map<String, List<String>> map;
-		map = readJson("./resources/BL/-info.json");
-		List<String> ignore = map.get("ignore");
-		map = readJson("./resources/BS/-info.json");
-		List<String> blocks = orgImpl("BS");
-		for (String block : blocks)
-			AssetGen.addBlockItemAssets(block);
-		for (String block : map.get(""))
-			AssetGen.addBlockAssets(block);
-		for (String block : map.get("air"))
-			AssetGen.addBlockAssetsAir(block);
-		for (String block : map.get("lit"))
-			AssetGen.addBlockAssetsLit(block);
-		for (String block : map.get("alldire"))
-			AssetGen.addBlockAssetsAllDire(block);
-		for (String block : map.get("face"))
-			AssetGen.addBlockAssetsFace(block);
-		for (String block : map.get("machine"))
-			AssetGen.addBlockAssetsMachine(block);
-		for (String block : map.get("wire"))
-			AssetGen.addBlockAssetsWire(block);
-		map.forEach((k, v) -> blocks.addAll(v));
-		for (String block : blocks)
-			if (!ignore.contains(block))
-				AssetGen.addLootTable(block);
-		orgImpl("BM");
-		orgImpl("BL");
-	}
-
-	private static void orgImpl(File file, List<String> list, String path, String str) throws IOException {
-		String name = file.getName();
-		char ch = name.charAt(0);
-		if (ch == '.' || ch == '-')
-			return;
-		else if (ch >= 'A' && ch <= 'Z') {
-			path = PATHMAP.get(name);
-			str = "";
-		} else if (ch == '@') {
-			path += name.substring(1) + "/";
-			str = "";
-		} else if (ch == '_') {
-			str += name;
-		} else if (ch >= '0' && ch <= '9' || ch >= 'a' && ch <= 'z') {
-			String[] ss = name.split("\\.");
-			if (ss[0].endsWith("_"))
-				str = ss[0] + str + (ss.length > 1 ? "." + ss[1] : "");
-			else
-				str = name;
-		} else {
-			System.out.println("invalid filename: " + path + ", " + str);
-		}
-		if (file.isDirectory()) {
-			for (File fi : file.listFiles())
-				orgImpl(fi, list, path, str);
-		} else {
-			if (list != null)
-				list.add(str.split("\\.")[0]);
-			copyTo(file, path + str);
-		}
-	}
-
-	private static List<String> orgImpl(String path) throws IOException {
-		List<String> list = new ArrayList<>();
-		orgImpl(new File("./resources/" + path + "/"), list, PATHMAP.get(path), "");
-		return list;
-	}
-
-	private static void orgItems() throws IOException {
-		Map<String, List<String>> map = readJson("./resources/IT/-info.json");
-		for (String item : orgImpl("IT"))
-			if (!map.get("ignore").contains(item))
-				AssetGen.addItemAssets(item);
-		map = readJson("./resources/IM/-info.json");
-		for (Entry<String, List<String>> ent : map.entrySet()) {
-			String key = ent.getKey();
-			int lo = key.charAt(0) - '0';
-			int hi = key.charAt(2) - '0';
-			for (String str : ent.getValue())
-				for (int i = lo; i <= hi; i++)
-					AssetGen.addItemAssets(str.replaceAll("\\^", "_" + i), str.replaceAll("\\^", ""));
-		}
-		orgImpl("IM");
-	}
-
-	private static Map<String, List<String>> readJson(String path) throws IOException {
-		File f = new File(path);
-		JsonReader r = new JsonReader(Files.newReader(f, Charset.defaultCharset()));
-		JsonElement e = new JsonParser().parse(r);
-		r.close();
-		Map<String, List<String>> ans = new HashMap<>();
-		e.getAsJsonObject().entrySet().forEach(ent0 -> ent0.getValue().getAsJsonObject().entrySet().forEach(ent1 -> {
-			String key = ent1.getKey();
-			List<String> list;
-			if (ans.containsKey(key))
-				list = ans.get(key);
-			else
-				ans.put(key, list = new ArrayList<>());
-			ent1.getValue().getAsJsonObject().entrySet().forEach(ent2 -> {
-				String group = ent2.getKey();
-				ent2.getValue().getAsJsonArray().forEach(ent3 -> {
-					String name = ent3.getAsString();
-					if (name.startsWith("_") || name.startsWith("^"))
-						list.add(group + name);
-					else if (name.endsWith("_"))
-						list.add(name + group);
-					else
-						list.add(name);
-				});
-			});
-		}));
-		return ans;
+	private static void check(File f) throws IOException {
+		if (!f.getParentFile().exists())
+			f.getParentFile().mkdirs();
+		if (!f.exists())
+			f.createNewFile();
 	}
 
 }
