@@ -1,4 +1,4 @@
-package com.arthurlcy0x1.quantizedinformatics.power.blocks;
+package com.arthurlcy0x1.quantizedindustry;
 
 import java.util.ArrayList;
 import java.util.List;

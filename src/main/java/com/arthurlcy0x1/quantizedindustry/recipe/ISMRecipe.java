@@ -1,4 +1,4 @@
-package com.arthurlcy0x1.quantizedinformatics.power.recipe;
+package com.arthurlcy0x1.quantizedindustry.recipe;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

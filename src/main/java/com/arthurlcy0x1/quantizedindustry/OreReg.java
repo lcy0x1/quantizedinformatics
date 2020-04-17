@@ -1,23 +1,23 @@
-package com.arthurlcy0x1.quantizedinformatics;
+package com.arthurlcy0x1.quantizedindustry;
 
 import static com.arthurlcy0x1.quantizedinformatics.blocks.BlockProp.ORE_0;
 import static com.arthurlcy0x1.quantizedinformatics.blocks.BlockProp.ORE_1;
 import static com.arthurlcy0x1.quantizedinformatics.blocks.BlockProp.ORE_2;
+
+import com.arthurlcy0x1.quantizedindustry.machines.PowerWire;
+
 import static com.arthurlcy0x1.quantizedinformatics.blocks.BlockProp.METAL_0;
 import static com.arthurlcy0x1.quantizedinformatics.blocks.BlockProp.METAL_1;
 import static com.arthurlcy0x1.quantizedinformatics.blocks.BlockProp.METAL_2;
 
-import com.arthurlcy0x1.quantizedinformatics.blocks.BlockProp;
-import com.arthurlcy0x1.quantizedinformatics.power.blocks.PowerWire;
+import com.arthurlcy0x1.quantizedinformatics.AbReg;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 
-import static com.arthurlcy0x1.quantizedinformatics.Registrar.addName;
-
-public class OreReg extends ItemGroup {
+public class OreReg extends AbReg {
 
 	public static final ItemGroup ITEM_GROUP = new OreReg();
 
@@ -137,7 +137,7 @@ public class OreReg extends ItemGroup {
 	}
 
 	public static final Item IMPD_BRONZE = generate("bronze_powder", 64);
-	
+
 	public static final Item IE_P = generate("elem_p", 64);
 	public static final Item IE_B = generate("elem_b", 64);
 	public static final Item IE_PO = generate("elem_po", 64);
@@ -153,7 +153,7 @@ public class OreReg extends ItemGroup {
 	public static final Item IE_UO = generate("elem_uo", 64);
 	public static final Item IE_BE = generate("elem_be", 64);
 	public static final Item IE_BEO = generate("elem_beo", 64);
-	
+
 	public static final Item IET_P = generate("elem_p_tiny", 64);
 	public static final Item IET_B = generate("elem_b_tiny", 64);
 	public static final Item IET_PO = generate("elem_po_tiny", 64);
@@ -170,19 +170,13 @@ public class OreReg extends ItemGroup {
 	public static final Item IET_BE = generate("elem_be_tiny", 64);
 	public static final Item IET_BEO = generate("elem_beo_tiny", 64);
 
-
 	public static final Item IMW_AU = generate("gold_wire", 64);
 	public static final Item IMW_W = generate("tungsten_wire", 64);
-	public static final Item I_RUBBER = generate("rubber", 64);
 
 	private static Item convert(Block block) {
 		Item.Properties p = new Item.Properties();
 		p.group(ITEM_GROUP);
 		return new BlockItem(block, p).setRegistryName(block.getRegistryName());
-	}
-
-	private static Block generate(String str, BlockProp mat) {
-		return Registrar.generate(str, mat);
 	}
 
 	private static Item generate(String str, int size) {
@@ -193,7 +187,7 @@ public class OreReg extends ItemGroup {
 	}
 
 	private OreReg() {
-		super(Registrar.MODID + "_ore");
+		super(MODID + "_ore");
 	}
 
 	@Override

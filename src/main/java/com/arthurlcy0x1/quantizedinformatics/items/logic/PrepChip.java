@@ -2,7 +2,7 @@ package com.arthurlcy0x1.quantizedinformatics.items.logic;
 
 import java.util.List;
 
-import com.arthurlcy0x1.quantizedinformatics.OreReg;
+import com.arthurlcy0x1.quantizedindustry.OreReg;
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
 

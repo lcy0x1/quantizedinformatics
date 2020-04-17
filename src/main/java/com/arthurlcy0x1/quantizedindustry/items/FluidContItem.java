@@ -1,7 +1,7 @@
-package com.arthurlcy0x1.quantizedinformatics.power.items;
+package com.arthurlcy0x1.quantizedindustry.items;
 
-import com.arthurlcy0x1.quantizedinformatics.power.blocks.IFluidTE;
-import com.arthurlcy0x1.quantizedinformatics.power.blocks.QuanFluid;
+import com.arthurlcy0x1.quantizedindustry.IFluidTE;
+import com.arthurlcy0x1.quantizedindustry.QuanFluid;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

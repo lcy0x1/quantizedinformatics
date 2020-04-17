@@ -1,6 +1,6 @@
-package com.arthurlcy0x1.quantizedinformatics.power.recipe;
+package com.arthurlcy0x1.quantizedindustry.recipe;
 
-import com.arthurlcy0x1.quantizedinformatics.Registrar;
+import com.arthurlcy0x1.quantizedindustry.MacReg;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
@@ -17,7 +17,7 @@ public interface IPowderRecipe extends ISSRecipe<IPowderRecipe.Inv> {
 	public static class PowderRecipe extends SSRecipe<Inv> implements IPowderRecipe {
 
 		public PowderRecipe(ResourceLocation rl, Ingredient ingr, ItemStack is, int t) {
-			super(rl, Registrar.RSP_PDR, Registrar.RTP_PDR, ingr, is, t);
+			super(rl, MacReg.RSP_PDR, MacReg.RTP_PDR, ingr, is, t);
 		}
 	}
 

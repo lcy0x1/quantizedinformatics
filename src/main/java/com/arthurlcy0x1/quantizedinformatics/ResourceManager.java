@@ -42,6 +42,62 @@ public class ResourceManager {
 
 		}
 
+		private static void addBlockAssets(String block) throws IOException {
+			write(BS + block + ".json", BS_.replaceAll("\\^", block));
+			write(BM + block + ".json", BM_.replaceAll("\\^", block));
+			write(IM + block + ".json", IM_B.replaceAll("\\^", block));
+		}
+
+		private static void addBlockAssetsAir(String block) throws IOException {
+			write(BS + block + ".json", BS_A);
+		}
+
+		private static void addBlockAssetsAllDire(String block) throws IOException {
+			write(BS + block + ".json", BS_AD.replaceAll("\\^", block));
+			write(IM + block + ".json", IM_B.replaceAll("\\^", block));
+		}
+
+		private static void addBlockAssetsFace(String block) throws IOException {
+			write(BS + block + ".json", BS_F.replaceAll("\\^", block));
+			write(IM + block + ".json", IM_B.replaceAll("\\^", block));
+		}
+
+		private static void addBlockAssetsLit(String block) throws IOException {
+			write(BS + block + ".json", BS_L.replaceAll("\\^", block));
+			write(BM + block + ".json", BM_.replaceAll("\\^", block));
+			write(BM + block + "_a.json", BM_.replaceAll("\\^", block + "_a"));
+			write(IM + block + ".json", IM_B.replaceAll("\\^", block));
+		}
+
+		private static void addBlockAssetsMachine(String block) throws IOException {
+			write(BS + block + ".json", BS_F.replaceAll("\\^", block));
+			write(BM + block + ".json", BM_M.replaceAll("\\^", block));
+			write(IM + block + ".json", IM_B.replaceAll("\\^", block));
+		}
+
+		private static void addBlockAssetsWire(String block) throws IOException {
+			write(BS + block + ".json", BS_W.replaceAll("\\^", block));
+			write(BM + block + "_core.json", BM_WC.replaceAll("\\^", block));
+			write(BM + block + "_side.json", BM_WS.replaceAll("\\^", block));
+			write(IM + block + ".json", IM_W.replaceAll("\\^", block));
+		}
+
+		private static void addBlockItemAssets(String block) throws IOException {
+			write(IM + block + ".json", IM_B.replaceAll("\\^", block));
+		}
+
+		private static void addItemAssets(String item) throws IOException {
+			write(IM + item + ".json", IM_.replaceAll("\\^", item));
+		}
+
+		private static void addItemAssets(String item, String res) throws IOException {
+			write(IM + item + ".json", IM_.replaceAll("\\^", res));
+		}
+
+		private static void addLootTable(String block) throws IOException {
+			write(BL + block + ".json", LT_.replaceAll("\\^", block));
+		}
+
 		private static String readFile(String path) {
 			List<String> list = null;
 			try {
@@ -54,62 +110,6 @@ public class ResourceManager {
 			for (String s : list)
 				str += s + "\n";
 			return str;
-		}
-
-		private static void addBlockAssets(String block) throws IOException {
-			write(BS + block + ".json", BS_.replaceAll("\\^", block));
-			write(BM + block + ".json", BM_.replaceAll("\\^", block));
-			write(IM + block + ".json", IM_B.replaceAll("\\^", block));
-		}
-
-		private static void addBlockItemAssets(String block) throws IOException {
-			write(IM + block + ".json", IM_B.replaceAll("\\^", block));
-		}
-
-		private static void addBlockAssetsLit(String block) throws IOException {
-			write(BS + block + ".json", BS_L.replaceAll("\\^", block));
-			write(BM + block + ".json", BM_.replaceAll("\\^", block));
-			write(BM + block + "_a.json", BM_.replaceAll("\\^", block + "_a"));
-			write(IM + block + ".json", IM_B.replaceAll("\\^", block));
-		}
-		
-		private static void addBlockAssetsMachine(String block) throws IOException {
-			write(BS + block + ".json", BS_F.replaceAll("\\^", block));
-			write(BM + block + ".json", BM_M.replaceAll("\\^", block));
-			write(IM + block + ".json", IM_B.replaceAll("\\^", block));
-		}
-
-		private static void addBlockAssetsAir(String block) throws IOException {
-			write(BS + block + ".json", BS_A);
-		}
-
-		private static void addLootTable(String block) throws IOException {
-			write(BL + block + ".json", LT_.replaceAll("\\^", block));
-		}
-
-		private static void addBlockAssetsFace(String block) throws IOException {
-			write(BS + block + ".json", BS_F.replaceAll("\\^", block));
-			write(IM + block + ".json", IM_B.replaceAll("\\^", block));
-		}
-
-		private static void addBlockAssetsAllDire(String block) throws IOException {
-			write(BS + block + ".json", BS_AD.replaceAll("\\^", block));
-			write(IM + block + ".json", IM_B.replaceAll("\\^", block));
-		}
-
-		private static void addItemAssets(String item) throws IOException {
-			write(IM + item + ".json", IM_.replaceAll("\\^", item));
-		}
-
-		private static void addItemAssets(String item, String res) throws IOException {
-			write(IM + item + ".json", IM_.replaceAll("\\^", res));
-		}
-
-		private static void addBlockAssetsWire(String block) throws IOException {
-			write(BS + block + ".json", BS_W.replaceAll("\\^", block));
-			write(BM + block + "_core.json", BM_WC.replaceAll("\\^", block));
-			write(BM + block + "_side.json", BM_WS.replaceAll("\\^", block));
-			write(IM + block + ".json", IM_W.replaceAll("\\^", block));
 		}
 
 		private static void write(String name, String cont) throws IOException {
@@ -148,6 +148,32 @@ public class ResourceManager {
 
 	}
 
+	public static void main(String[] strs) throws IOException {
+		organize();
+	}
+
+	public static void organize() throws IOException {
+		delete(new File(PATH_ASSET));
+		delete(new File(PATH_DATA));
+		orgImpl("ASSETS");
+		orgBlocks();
+		orgItems();
+		orgImpl("R");
+	}
+
+	private static void check(File f) throws IOException {
+		if (!f.getParentFile().exists())
+			f.getParentFile().mkdirs();
+		if (!f.exists())
+			f.createNewFile();
+	}
+
+	private static void copyTo(File file, String path) throws IOException {
+		File f = new File(path);
+		check(f);
+		Files.copy(file, f);
+	}
+
 	private static void delete(File f) {
 		if (!f.exists())
 			return;
@@ -155,10 +181,6 @@ public class ResourceManager {
 			for (File fi : f.listFiles())
 				delete(fi);
 		f.delete();
-	}
-
-	public static void main(String[] strs) throws IOException {
-		organize();
 	}
 
 	private static void orgBlocks() throws IOException {
@@ -190,67 +212,6 @@ public class ResourceManager {
 				AssetGen.addLootTable(block);
 		orgImpl("BM");
 		orgImpl("BL");
-	}
-
-	private static void orgItems() throws IOException {
-		Map<String, List<String>> map = readJson("./resources/IT/-info.json");
-		for (String item : orgImpl("IT"))
-			if (!map.get("ignore").contains(item))
-				AssetGen.addItemAssets(item);
-		map = readJson("./resources/IM/-info.json");
-		for (Entry<String, List<String>> ent : map.entrySet()) {
-			String key = ent.getKey();
-			int lo = key.charAt(0) - '0';
-			int hi = key.charAt(2) - '0';
-			for (String str : ent.getValue())
-				for (int i = lo; i <= hi; i++)
-					AssetGen.addItemAssets(str.replaceAll("\\^", "_" + i), str.replaceAll("\\^", ""));
-		}
-		orgImpl("IM");
-	}
-
-	public static void organize() throws IOException {
-		delete(new File(PATH_ASSET));
-		delete(new File(PATH_DATA));
-		orgImpl("ASSETS");
-		orgBlocks();
-		orgItems();
-		orgImpl("R");
-	}
-
-	private static Map<String, List<String>> readJson(String path) throws IOException {
-		File f = new File(path);
-		JsonReader r = new JsonReader(Files.newReader(f, Charset.defaultCharset()));
-		JsonElement e = new JsonParser().parse(r);
-		r.close();
-		Map<String, List<String>> ans = new HashMap<>();
-		e.getAsJsonObject().entrySet().forEach(ent0 -> ent0.getValue().getAsJsonObject().entrySet().forEach(ent1 -> {
-			String key = ent1.getKey();
-			List<String> list;
-			if (ans.containsKey(key))
-				list = ans.get(key);
-			else
-				ans.put(key, list = new ArrayList<>());
-			ent1.getValue().getAsJsonObject().entrySet().forEach(ent2 -> {
-				String group = ent2.getKey();
-				ent2.getValue().getAsJsonArray().forEach(ent3 -> {
-					String name = ent3.getAsString();
-					if (name.startsWith("_") || name.startsWith("^"))
-						list.add(group + name);
-					else if (name.endsWith("_"))
-						list.add(name + group);
-					else
-						list.add(name);
-				});
-			});
-		}));
-		return ans;
-	}
-
-	private static List<String> orgImpl(String path) throws IOException {
-		List<String> list = new ArrayList<>();
-		orgImpl(new File("./resources/" + path + "/"), list, PATHMAP.get(path), "");
-		return list;
 	}
 
 	private static void orgImpl(File file, List<String> list, String path, String str) throws IOException {
@@ -285,17 +246,56 @@ public class ResourceManager {
 		}
 	}
 
-	private static void copyTo(File file, String path) throws IOException {
-		File f = new File(path);
-		check(f);
-		Files.copy(file, f);
+	private static List<String> orgImpl(String path) throws IOException {
+		List<String> list = new ArrayList<>();
+		orgImpl(new File("./resources/" + path + "/"), list, PATHMAP.get(path), "");
+		return list;
 	}
 
-	private static void check(File f) throws IOException {
-		if (!f.getParentFile().exists())
-			f.getParentFile().mkdirs();
-		if (!f.exists())
-			f.createNewFile();
+	private static void orgItems() throws IOException {
+		Map<String, List<String>> map = readJson("./resources/IT/-info.json");
+		for (String item : orgImpl("IT"))
+			if (!map.get("ignore").contains(item))
+				AssetGen.addItemAssets(item);
+		map = readJson("./resources/IM/-info.json");
+		for (Entry<String, List<String>> ent : map.entrySet()) {
+			String key = ent.getKey();
+			int lo = key.charAt(0) - '0';
+			int hi = key.charAt(2) - '0';
+			for (String str : ent.getValue())
+				for (int i = lo; i <= hi; i++)
+					AssetGen.addItemAssets(str.replaceAll("\\^", "_" + i), str.replaceAll("\\^", ""));
+		}
+		orgImpl("IM");
+	}
+
+	private static Map<String, List<String>> readJson(String path) throws IOException {
+		File f = new File(path);
+		JsonReader r = new JsonReader(Files.newReader(f, Charset.defaultCharset()));
+		JsonElement e = new JsonParser().parse(r);
+		r.close();
+		Map<String, List<String>> ans = new HashMap<>();
+		e.getAsJsonObject().entrySet().forEach(ent0 -> ent0.getValue().getAsJsonObject().entrySet().forEach(ent1 -> {
+			String key = ent1.getKey();
+			List<String> list;
+			if (ans.containsKey(key))
+				list = ans.get(key);
+			else
+				ans.put(key, list = new ArrayList<>());
+			ent1.getValue().getAsJsonObject().entrySet().forEach(ent2 -> {
+				String group = ent2.getKey();
+				ent2.getValue().getAsJsonArray().forEach(ent3 -> {
+					String name = ent3.getAsString();
+					if (name.startsWith("_") || name.startsWith("^"))
+						list.add(group + name);
+					else if (name.endsWith("_"))
+						list.add(name + group);
+					else
+						list.add(name);
+				});
+			});
+		}));
+		return ans;
 	}
 
 }

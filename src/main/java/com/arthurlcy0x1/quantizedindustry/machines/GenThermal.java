@@ -1,14 +1,17 @@
-package com.arthurlcy0x1.quantizedinformatics.power.blocks;
+package com.arthurlcy0x1.quantizedindustry.machines;
 
+import com.arthurlcy0x1.quantizedindustry.IPower;
+import com.arthurlcy0x1.quantizedindustry.QuanFluid;
+import com.arthurlcy0x1.quantizedindustry.IFluidTE.FluidManagerTE;
+import com.arthurlcy0x1.quantizedindustry.IFluidTE.FluidPowerCont;
+import com.arthurlcy0x1.quantizedindustry.IFluidTE.FluidManager.FluidTank;
+import com.arthurlcy0x1.quantizedindustry.IFluidTE.FluidManager.VarFluidTank;
+import com.arthurlcy0x1.quantizedindustry.IPower.ICapMachine;
+import com.arthurlcy0x1.quantizedindustry.MacReg;
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock.CTECont;
-import com.arthurlcy0x1.quantizedinformatics.power.blocks.IFluidTE.FluidManagerTE;
-import com.arthurlcy0x1.quantizedinformatics.power.blocks.IFluidTE.FluidPowerCont;
-import com.arthurlcy0x1.quantizedinformatics.power.blocks.IFluidTE.FluidManager.FluidTank;
-import com.arthurlcy0x1.quantizedinformatics.power.blocks.IFluidTE.FluidManager.VarFluidTank;
-import com.arthurlcy0x1.quantizedinformatics.power.blocks.IPower.ICapMachine;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.entity.player.PlayerInventory;
@@ -31,7 +34,7 @@ public class GenThermal {
 		}
 
 		protected Cont(int id, PlayerInventory inv, IInventory ent, IIntArray arr) {
-			super(Registrar.CTPG_TH, id, inv, ent, 0, arr, 3);// TODO
+			super(MacReg.CTPG_TH, id, inv, ent, 0, arr, 3);// TODO
 		}
 
 	}
@@ -81,7 +84,7 @@ public class GenThermal {
 		private ICapacitor cap = null;
 
 		public TE() {
-			super(Registrar.TETPG_TH, Cont::new, SIZE);
+			super(MacReg.TETPG_TH, Cont::new, SIZE);
 		}
 
 		@Override

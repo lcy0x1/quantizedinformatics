@@ -1,4 +1,4 @@
-package com.arthurlcy0x1.quantizedinformatics.power.blocks;
+package com.arthurlcy0x1.quantizedindustry.machines;
 
 import com.arthurlcy0x1.quantizedinformatics.blocks.other.Wire;
 

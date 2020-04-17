@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
+import com.arthurlcy0x1.quantizedindustry.IPower.IPowerBlock;
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.blocks.BlockProp;
-import com.arthurlcy0x1.quantizedinformatics.power.blocks.IPower.IPowerBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

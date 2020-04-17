@@ -8,7 +8,6 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import com.arthurlcy0x1.quantizedinformatics.blocks.BlockProp;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.AutoCraft;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.EntAttack;
@@ -70,18 +69,6 @@ import com.arthurlcy0x1.quantizedinformatics.items.logic.AutoRecipe;
 import com.arthurlcy0x1.quantizedinformatics.items.logic.DraftGateItem;
 import com.arthurlcy0x1.quantizedinformatics.items.logic.LogicDraft;
 import com.arthurlcy0x1.quantizedinformatics.items.logic.PrepChip;
-import com.arthurlcy0x1.quantizedinformatics.power.blocks.ConFurnace;
-import com.arthurlcy0x1.quantizedinformatics.power.blocks.ConPump;
-import com.arthurlcy0x1.quantizedinformatics.power.blocks.GenThermal;
-import com.arthurlcy0x1.quantizedinformatics.power.blocks.PMBlock;
-import com.arthurlcy0x1.quantizedinformatics.power.blocks.Transistor;
-import com.arthurlcy0x1.quantizedinformatics.power.recipe.ICutRecipe;
-import com.arthurlcy0x1.quantizedinformatics.power.recipe.IElecRecipe;
-import com.arthurlcy0x1.quantizedinformatics.power.recipe.IPowderRecipe;
-import com.arthurlcy0x1.quantizedinformatics.power.recipe.IPlateRecipe;
-import com.arthurlcy0x1.quantizedinformatics.power.recipe.ICentRecipe;
-import com.arthurlcy0x1.quantizedinformatics.power.recipe.IWashRecipe;
-import com.arthurlcy0x1.quantizedinformatics.power.recipe.IWireRecipe;
 import com.arthurlcy0x1.quantizedinformatics.recipe.C3DRecipe;
 import com.arthurlcy0x1.quantizedinformatics.recipe.ChipOxiRec;
 import com.arthurlcy0x1.quantizedinformatics.recipe.ChipRedRec;
@@ -105,7 +92,6 @@ import net.minecraft.entity.item.EnderPearlEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -114,18 +100,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
-public class Registrar extends ItemGroup {
+public class Registrar extends AbReg {
 
-	public static final String MODID = "quantizedinformatics";
-	
 	public static final ItemGroup ITEM_GROUP = new Registrar();
 
 	public static final Block B_FOGORE = addName(new QuantumOre(), "quantum_ore");
@@ -165,19 +147,6 @@ public class Registrar extends ItemGroup {
 	public static final Block B_STAND = addName(new StoneStand(), "stone_stand");
 	public static final Block B_STANDHEAD = addName(new StandHead(), "stone_stand_head");
 
-	public static final Block BP_TR = addName(new PMBlock(Transistor.TE::new, false), "pm_transistor");
-	public static final Block BPG_TH = addName(new PMBlock(GenThermal.TE::new, true), "pmg_thermal");
-	public static final Block BPG_GT = addName(new PMBlock(null, true), "pmg_lava");//TODO
-	public static final Block BPC_FN = addName(new PMBlock(ConFurnace.TE::new, false), "pmc_furnace");
-	public static final Block BPC_PU = addName(new PMBlock(ConPump.TE::new, true), "pmc_pump");
-	public static final Block BPC_PDR = addName(new PMBlock(null, true), "pmc_powder");//TODO
-	public static final Block BPC_WSH = addName(new PMBlock(null, true), "pmc_wash");//TODO
-	public static final Block BPC_TC = addName(new PMBlock(null, true), "pmc_centrifuge");//TODO
-	public static final Block BPC_PLA = addName(new PMBlock(null, true), "pmc_plate");//TODO
-	public static final Block BPC_CUT = addName(new PMBlock(null, true), "pmc_cut");//TODO
-	public static final Block BPC_WIR = addName(new PMBlock(null, true), "pmc_wire");//TODO
-	public static final Block BPC_ELE = addName(new PMBlock(null, true), "pmc_electrolysis");//TODO
-	
 	public static final List<Block> BDS = Arrays.asList(BD_CNTR, BD_GATE, BD_IN, BD_OUT, BD_LNR);
 
 	// block items
@@ -215,19 +184,6 @@ public class Registrar extends ItemGroup {
 	public static final Item IBQ_KEY = convert(BQ_KEY);
 	public static final Item IBQ_CHEST = convert(BQ_CHEST);
 	public static final Item IB_STAND = convert(B_STAND);
-
-	public static final Item IBP_TR = convert(BP_TR);
-	public static final Item IBPG_TH = convert(BPG_TH);
-	public static final Item IBPG_GT = convert(BPG_GT);
-	public static final Item IBPC_FN = convert(BPC_FN);
-	public static final Item IBPC_PU = convert(BPC_PU);
-	public static final Item IBPC_PDR = convert(BPC_PDR);
-	public static final Item IBPC_WSH = convert(BPC_WSH);
-	public static final Item IBPC_TC = convert(BPC_TC);
-	public static final Item IBPC_PLA = convert(BPC_PLA);
-	public static final Item IBPC_WIR = convert(BPC_WIR);
-	public static final Item IBPC_CUT = convert(BPC_CUT);
-	public static final Item IBPC_ELE = convert(BPC_ELE);
 
 	// items
 	public static final Item IE_DARK = generate("elem_dark", 64, EncItem::new);
@@ -330,10 +286,6 @@ public class Registrar extends ItemGroup {
 	public static final ContainerType<EntAttr.Cont> CTME_ATR = getCT(EntAttr.Cont::new, "ent_attract_c");
 	public static final ContainerType<EntSpawn.Cont> CTME_SPA = getCT(EntSpawn.Cont::new, "ent_spawn_c");
 	public static final ContainerType<QuanChest.Cont> CTQ_CHEST = getCT(QuanChest.Cont::new, "qw_chest_c");
-	public static final ContainerType<Transistor.Cont> CTP_TR = getCT(Transistor.Cont::new, "pm_transistor_c");
-	public static final ContainerType<GenThermal.Cont> CTPG_TH = getCT(GenThermal.Cont::new, "pmg_thermal_c");
-	public static final ContainerType<ConFurnace.Cont> CTPC_FN = getCT(ConFurnace.Cont::new, "pmc_furnace_c");
-	public static final ContainerType<ConPump.Cont> CTPC_PU = getCT(ConPump.Cont::new, "pmc_pump_c");
 
 	public static final TileEntityType<OxiFn.TE> TET_OXIFN = getTET(OxiFn.TE::new, B_OXIFN, "oxidation_furnace_te");
 	public static final TileEntityType<RedFn.TE> TET_REDFN = getTET(RedFn.TE::new, B_REDFN, "reduction_furnace_te");
@@ -352,10 +304,6 @@ public class Registrar extends ItemGroup {
 	public static final TileEntityType<EntAttr.TE> TETME_ATR = getTET(EntAttr.TE::new, BAME_ATR, "ent_attract_te");
 	public static final TileEntityType<EntSpawn.TE> TETME_SPA = getTET(EntSpawn.TE::new, BAME_SPA, "ent_spawn_te");
 	public static final TileEntityType<QuanChest.TE> TETQ_CHEST = getTET(QuanChest.TE::new, BQ_CHEST, "wq_chest_te");
-	public static final TileEntityType<Transistor.TE> TETP_TR = getTET(Transistor.TE::new, BP_TR, "pm_transistor_te");
-	public static final TileEntityType<GenThermal.TE> TETPG_TH = getTET(GenThermal.TE::new, BPG_TH, "pmg_thermal_te");
-	public static final TileEntityType<ConFurnace.TE> TETPC_FN = getTET(ConFurnace.TE::new, BPC_FN, "pmc_furnace_te");
-	public static final TileEntityType<ConPump.TE> TETPC_PU = getTET(ConPump.TE::new, BPC_PU, "pmc_pump_te");
 
 	public static final EntityType<SmartTNT> ET_STNT = getET(SmartTNT::new, "smart_tnt");
 	public static final EntityType<FogBall> ET_FB = getET(FogBall::new, "fog_ball");
@@ -366,13 +314,6 @@ public class Registrar extends ItemGroup {
 	public static final IRecipeType<OxiRecipe> RT_OXI = IRecipeType.register(MODID + ":oxidation");
 	public static final IRecipeType<RedRecipe> RT_RED = IRecipeType.register(MODID + ":reduction");
 	public static final IRecipeType<C3DRecipe> RT_C3D = IRecipeType.register(MODID + ":craft_3d");
-	public static final IRecipeType<IPowderRecipe> RTP_PDR = IRecipeType.register(MODID + ":power_powder");
-	public static final IRecipeType<IPlateRecipe> RTP_PLA = IRecipeType.register(MODID + ":power_plate");
-	public static final IRecipeType<ICutRecipe> RTP_CUT = IRecipeType.register(MODID + ":power_cut");
-	public static final IRecipeType<ICutRecipe> RTP_WIR = IRecipeType.register(MODID + ":power_wire");
-	public static final IRecipeType<IWashRecipe> RTP_WSH = IRecipeType.register(MODID + ":power_wash");
-	public static final IRecipeType<IElecRecipe> RTP_ELE = IRecipeType.register(MODID + ":power_electrolysis");
-	public static final IRecipeType<ICentRecipe> RTP_CEN = IRecipeType.register(MODID + ":power_centrifuge");
 
 	public static final IRecipeSerializer<?> RS_OXI = getRS(new OxiRecipe.Serializer(), "oxidation");
 	public static final IRecipeSerializer<?> RS_RED = getRS(new RedRecipe.Serializer(), "reduction");
@@ -384,30 +325,18 @@ public class Registrar extends ItemGroup {
 	public static final IRecipeSerializer<?> RSF_OC = getRS(new FixCollector.Serializer(), "fix_collector");
 	public static final IRecipeSerializer<?> RSF_WP = getRS(new FixMaxItem.Serializer(), "fix_weapon");
 	public static final IRecipeSerializer<?> RS_EOXI = getRS(new EnchantOxiRec.Serializer(), "enchant_oxi");
-	public static final IRecipeSerializer<?> RSP_PDR = getRS(IPowderRecipe.SERIALIZER, "power_powder");
-	public static final IRecipeSerializer<?> RSP_PLA = getRS(IPlateRecipe.SERIALIZER, "power_plate");
-	public static final IRecipeSerializer<?> RSP_CUT = getRS(ICutRecipe.SERIALIZER, "power_cut");
-	public static final IRecipeSerializer<?> RSP_WIR = getRS(IWireRecipe.SERIALIZER, "power_wire");
-	public static final IRecipeSerializer<?> RSP_WSH = getRS(IWashRecipe.SERIALIZER, "power_wash");
-	public static final IRecipeSerializer<?> RSP_ELE = getRS(IElecRecipe.SERIALIZER, "power_electrolysis");
-	public static final IRecipeSerializer<?> RSP_CEN = getRS(ICentRecipe.SERIALIZER, "power_centrifuge");
 
 	public static final ContainerType<?>[] CTS = { CT_OXIFN, CT_REDFN, CTD_CNTR, CTD_GATE, CTD_IN, CTD_OUT, CTD_LNR,
-			CTA_CRAFT, CTA_REC, CTA_SOUL, CTAP_HEAD, CTAP_CORE, CTME_ATK, CTME_REP, CTME_ATR, CTME_SPA, CTQ_CHEST,
-			CTP_TR, CTPG_TH, CTPC_FN, CTPC_PU };
+			CTA_CRAFT, CTA_REC, CTA_SOUL, CTAP_HEAD, CTAP_CORE, CTME_ATK, CTME_REP, CTME_ATR, CTME_SPA, CTQ_CHEST, };
 
 	public static final TileEntityType<?>[] TETS = { TET_OXIFN, TET_REDFN, TETD_CNTR, TETD_GATE, TETD_IN, TETD_OUT,
 			TETD_LNR, TETA_CRAFT, TETA_REC, TETA_SOUL, TETAP_HEAD, TETAP_CORE, TETME_ATK, TETME_REP, TETME_ATR,
-			TETME_SPA, TETQ_CHEST, TETP_TR, TETPG_TH, TETPC_FN, TETPC_PU };
+			TETME_SPA, TETQ_CHEST };
 
 	public static final EntityType<?>[] ETS = { ET_STNT, ET_FB, ET_IP, ETM_QF, ETM_QS };
 
 	public static final IRecipeSerializer<?>[] RSS = { RS_OXI, RS_RED, RS_C3D, RS_MAX, RSC_OXI, RSC_RED, RS_TELE,
-			RSF_OC, RSF_WP, RS_EOXI, RSP_PDR };
-
-	public static <T extends ForgeRegistryEntry<T>> T addName(T t, String name) {
-		return t.setRegistryName(MODID, name);
-	}
+			RSF_OC, RSF_WP, RS_EOXI };
 
 	@OnlyIn(Dist.CLIENT)
 	public static void registerRender() {
@@ -428,8 +357,6 @@ public class Registrar extends ItemGroup {
 		ScreenManager.registerFactory(CTME_ATR, EntAttr.Scr::new);
 		ScreenManager.registerFactory(CTME_SPA, EntSpawn.Scr::new);
 		ScreenManager.registerFactory(CTQ_CHEST, QuanChest.Scr::new);
-		ScreenManager.registerFactory(CTPG_TH, GenThermal.Scr::new);
-		ScreenManager.registerFactory(CTPC_FN, ConFurnace.Scr::new);
 
 		ItemRenderer ir = Minecraft.getInstance().getItemRenderer();
 
@@ -467,10 +394,6 @@ public class Registrar extends ItemGroup {
 		return addName(new DraftGateItem(p, c), str);
 	}
 
-	public static Block generate(String str, BlockProp mat) {
-		return addName(new Block(mat.getProps()), str);
-	}
-
 	private static Item generate(String str, int size) {
 		Item.Properties p = new Item.Properties();
 		p.group(ITEM_GROUP);
@@ -496,12 +419,6 @@ public class Registrar extends ItemGroup {
 		return addName(new MaxwellItem(p, max), str);
 	}
 
-	private static <T extends Container> ContainerType<T> getCT(ContainerType.IFactory<T> fact, String str) {
-		ContainerType<T> ans = new ContainerType<>(fact);
-		ans.setRegistryName(MODID, str);
-		return ans;
-	}
-
 	private static <T extends Entity> EntityType<T> getET(EntityType.IFactory<T> f, String str) {
 		EntityType<T> ans = EntityType.Builder.<T>create(f, EntityClassification.MISC)
 				.setShouldReceiveVelocityUpdates(true).build(str);
@@ -512,17 +429,6 @@ public class Registrar extends ItemGroup {
 	private static <T extends Entity> EntityType<T> getQET(EntityType.IFactory<T> f, String str, float w, float h) {
 		EntityType<T> ans = EntityType.Builder.<T>create(f, EntityClassification.MONSTER).immuneToFire().size(w, h)
 				.build(str);
-		ans.setRegistryName(MODID, str);
-		return ans;
-	}
-
-	private static <T extends ForgeRegistryEntry<IRecipeSerializer<?>>> T getRS(T rs, String str) {
-		rs.setRegistryName(MODID, str);
-		return rs;
-	}
-
-	private static <T extends TileEntity> TileEntityType<T> getTET(Supplier<T> fact, Block b, String str) {
-		TileEntityType<T> ans = TileEntityType.Builder.create(fact, b).build(null);
 		ans.setRegistryName(MODID, str);
 		return ans;
 	}

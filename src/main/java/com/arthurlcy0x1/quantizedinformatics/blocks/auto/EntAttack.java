@@ -1,5 +1,6 @@
 package com.arthurlcy0x1.quantizedinformatics.blocks.auto;
 
+import com.arthurlcy0x1.quantizedinformatics.AbReg;
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
@@ -131,7 +132,7 @@ public class EntAttack extends EntMachine {
 		private final TE ent;
 
 		public Source(TE te) {
-			super(Registrar.MODID + ".ent_attack");
+			super(AbReg.MODID + ".ent_attack");
 			ent = te;
 		}
 

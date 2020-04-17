@@ -1,10 +1,12 @@
-package com.arthurlcy0x1.quantizedinformatics.power.blocks;
+package com.arthurlcy0x1.quantizedindustry.machines;
 
+import com.arthurlcy0x1.quantizedindustry.IPower;
+import com.arthurlcy0x1.quantizedindustry.IPower.PowerCont;
+import com.arthurlcy0x1.quantizedindustry.MacReg;
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock.CTETE;
-import com.arthurlcy0x1.quantizedinformatics.power.blocks.IPower.PowerCont;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.entity.player.PlayerInventory;
@@ -28,7 +30,7 @@ public class ConFurnace {
 		}
 
 		protected Cont(int id, PlayerInventory inv, IInventory ent, IIntArray arr) {
-			super(Registrar.CTPC_FN, id, inv, ent, 0, arr);// TODO
+			super(MacReg.CTPC_FN, id, inv, ent, 0, arr);// TODO
 		}
 	}
 
@@ -70,7 +72,7 @@ public class ConFurnace {
 		private ICapacitor cap = null;
 
 		public TE() {
-			super(Registrar.TETPC_FN, Cont::new, SIZE);
+			super(MacReg.TETPC_FN, Cont::new, SIZE);
 		}
 
 		@Override

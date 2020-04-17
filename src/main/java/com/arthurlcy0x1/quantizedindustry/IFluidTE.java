@@ -1,4 +1,4 @@
-package com.arthurlcy0x1.quantizedinformatics.power.blocks;
+package com.arthurlcy0x1.quantizedindustry;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -7,10 +7,10 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import com.arthurlcy0x1.quantizedindustry.IPower.PowerCont;
+import com.arthurlcy0x1.quantizedindustry.IPower.PowerTE;
+import com.arthurlcy0x1.quantizedindustry.items.FluidContItem;
 import com.arthurlcy0x1.quantizedinformatics.PacketHandler;
-import com.arthurlcy0x1.quantizedinformatics.power.blocks.IPower.PowerCont;
-import com.arthurlcy0x1.quantizedinformatics.power.blocks.IPower.PowerTE;
-import com.arthurlcy0x1.quantizedinformatics.power.items.FluidContItem;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerInventory;

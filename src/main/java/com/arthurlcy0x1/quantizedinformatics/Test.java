@@ -22,183 +22,7 @@ import net.minecraft.world.gen.SimplexNoiseGenerator;
 
 public class Test {
 
-	private static class RecipeGen {
-
-		private static final String modid = "quantizedinformatics:";
-		private static final String path = "./src/main/resources/data/quantizedinformatics/recipes/";
-		private static final String shapeless = "{\"group\":\"^g\",\"type\": \"minecraft:crafting_shapeless\",\"ingredients\":[^i],\"result\":^r}";
-		private static final String shaped = "{\"group\":\"^g\",\"type\":\"minecraft:crafting_shaped\",\"pattern\":[\"###\",\"###\",\"###\"],\"key\":{\"#\":^i},\"result\":^r}";
-		private static final String single = "{\"item\":\"^i\"}";
-		private static final String multi = "{\"item\":\"^i\",\"count\":^n}";
-
-		private static final String p2t(String metal) {
-			String i = single.replaceAll("\\^i", metal + "_powder");
-			String r = multi.replaceAll("\\^i", metal + "_powder_tiny").replaceAll("\\^n", "9");
-			return shapeless.replaceAll("\\^g", modid + "powder_to_tiny").replaceAll("\\^i", i).replaceAll("\\^r", r);
-		}
-
-		private static final String t2p(String metal) {
-			String i = single.replaceAll("\\^i", metal + "_powder_tiny");
-			String r = single.replaceAll("\\^i", metal + "_powder");
-			return shaped.replaceAll("\\^g", modid + "tiny_to_powder").replaceAll("\\^i", i).replaceAll("\\^r", r);
-		}
-
-		private static final String op2t(String metal) {
-			String i = single.replaceAll("\\^i", metal + "_ore_clean_powder");
-			String r = multi.replaceAll("\\^i", metal + "_ore_clean_powder_tiny").replaceAll("\\^n", "9");
-			return shapeless.replaceAll("\\^g", modid + "powder_to_tiny").replaceAll("\\^i", i).replaceAll("\\^r", r);
-		}
-
-		private static final String ot2p(String metal) {
-			String i = single.replaceAll("\\^i", metal + "_ore_clean_powder_tiny");
-			String r = single.replaceAll("\\^i", metal + "_ore_clean_powder");
-			return shaped.replaceAll("\\^g", modid + "tiny_to_powder").replaceAll("\\^i", i).replaceAll("\\^r", r);
-		}
-
-		private static final String i2n(String metal) {
-			String i = single.replaceAll("\\^i", metal + "_ingot");
-			String r = multi.replaceAll("\\^i", metal + "_nugget").replaceAll("\\^n", "9");
-			return shapeless.replaceAll("\\^g", modid + "ingot_to_nugget").replaceAll("\\^i", i).replaceAll("\\^r", r);
-		}
-
-		private static final String n2i(String metal) {
-			String i = single.replaceAll("\\^i", metal + "_nugget");
-			String r = single.replaceAll("\\^i", metal + "_ingot");
-			return shaped.replaceAll("\\^g", modid + "nugget_to_ingot").replaceAll("\\^i", i).replaceAll("\\^r", r);
-		}
-
-		private static final String b2i(String metal) {
-			String i = single.replaceAll("\\^i", metal + "_block");
-			String r = multi.replaceAll("\\^i", metal + "_ingot").replaceAll("\\^n", "9");
-			return shapeless.replaceAll("\\^g", modid + "block_to_ingot").replaceAll("\\^i", i).replaceAll("\\^r", r);
-		}
-
-		private static final String i2b(String metal) {
-			String i = single.replaceAll("\\^i", metal + "_ingot");
-			String r = single.replaceAll("\\^i", metal + "_block");
-			return shaped.replaceAll("\\^g", modid + "ingot_to_block").replaceAll("\\^i", i).replaceAll("\\^r", r);
-		}
-
-		private static final void doPowder(String metal) throws IOException {
-			AssetGen.write(path + "z_autogen_" + metal + "_powder_to_tiny.json", p2t(modid + metal));
-			AssetGen.write(path + "z_autogen_" + metal + "_tiny_to_powder.json", t2p(modid + metal));
-		}
-
-		private static final void doOrePowder(String metal) throws IOException {
-			AssetGen.write(path + "z_autogen_" + metal + "_ore_powder_to_tiny.json", op2t(modid + metal));
-			AssetGen.write(path + "z_autogen_" + metal + "_ore_tiny_to_powder.json", ot2p(modid + metal));
-		}
-
-		private static final void doIngot(String metal) throws IOException {
-			AssetGen.write(path + "z_autogen_" + metal + "_ingot_to_nugget.json", i2n(modid + metal));
-			AssetGen.write(path + "z_autogen_" + metal + "_nugget_to_ingot.json", n2i(modid + metal));
-			AssetGen.write(path + "z_autogen_" + metal + "_block_to_ingot.json", b2i(modid + metal));
-			AssetGen.write(path + "z_autogen_" + metal + "_ingot_to_block.json", i2b(modid + metal));
-		}
-
-	}
-
-	private static class AssetGen {
-
-		private static final String bs = "./src/main/resources/assets/quantizedinformatics/blockstates/";
-		private static final String bm = "./src/main/resources/assets/quantizedinformatics/models/block/";
-		private static final String im = "./src/main/resources/assets/quantizedinformatics/models/item/";
-		private static final String lt = "./src/main/resources/data/quantizedinformatics/loot_tables/blocks/";
-		private static final String bsstr = "{\"variants\":{\"\":{\"model\":\"quantizedinformatics:block/^\"}}}";
-		private static final String fbsstr = "{\"variants\":{\"facing=north\":{\"model\":\"quantizedinformatics:block/^\"},\"facing=east\":{\"model\": \"quantizedinformatics:block/^\",\"y\": 90},\"facing=south\": {\"model\":\"quantizedinformatics:block/^\",\"y\": 180},\"facing=west\":{\"model\":\"quantizedinformatics:block/^\",\"y\": 270}}}";
-		private static final String bmstr = "{\"parent\":\"block/cube_all\",\"textures\":{\"all\":\"quantizedinformatics:blocks/^\"}}";
-		private static final String fbmstr = "{\"parent\":\"block/cube\",\"textures\":{\"north\":\"quantizedinformatics:blocks/^f\",\"up\":\"quantizedinformatics:blocks/^t\",\"down\":\"quantizedinformatics:blocks/^t\",\"south\":\"quantizedinformatics:blocks/^s\",\"west\":\"quantizedinformatics:blocks/^s\",\"east\":\"quantizedinformatics:blocks/^s\",\"particle\":\"quantizedinformatics:blocks/^t\"}}";
-		private static final String bimstr = "{\"parent\":\"quantizedinformatics:block/^\"}";
-		private static final String imstr = "{\"parent\":\"item/generated\",\"textures\":{\"layer0\":\"quantizedinformatics:items/^\"}}";
-		private static final String ltstr = "{\"type\":\"minecraft:block\",\"pools\":[{\"rolls\":1,\"entries\":[{\"type\":\"minecraft:item\",\"name\":\"quantizedinformatics:^\"}],\"conditions\":[{\"condition\":\"minecraft:survives_explosion\"}]}]}";
-
-		private static final String wbmstrc = "{\"parent\": \"quantizedinformatics:block/ab_wire_core\",\"textures\":{\"wire\":\"quantizedinformatics:blocks/^\"}}";
-		private static final String wbmstrs = "{\"parent\": \"quantizedinformatics:block/ab_wire_side\",\"textures\":{\"wire\":\"quantizedinformatics:blocks/^\"}}";
-		private static final String wimstr = "{\"parent\":\"quantizedinformatics:block/^_core\"}";
-		private static final String wbsstr = "{\"multipart\":[{\"when\":{\"OR\":[{\"north\":\"false\"},{\"east\":\"false\"},{\"south\":\"false\"},{\"west\":\"false\"},{\"up\":\"false\"},{\"down\":\"false\"}]},\"apply\":{\"model\":\"quantizedinformatics:block/^_core\"}},{\"when\":{\"north\":\"true\"},\"apply\":{\"model\":\"quantizedinformatics:block/^_side\"}},{\"when\":{\"east\":\"true\"},\"apply\":{\"model\":\"quantizedinformatics:block/^_side\",\"y\":90}},{\"when\":{\"south\":\"true\"},\"apply\":{\"model\":\"quantizedinformatics:block/^_side\",\"y\":180}},{\"when\":{\"west\":\"true\"},\"apply\":{\"model\":\"quantizedinformatics:block/^_side\",\"y\":270}},{\"when\":{\"up\":\"true\"},\"apply\":{\"model\":\"quantizedinformatics:block/^_side\",\"x\":270}},{\"when\":{\"down\":\"true\"},\"apply\":{\"model\":\"quantizedinformatics:block/^_side\",\"x\":90}}]}";
-
-		public static void addBlockAssets(String block) throws IOException {
-			write(bs + block + ".json", bsstr.replaceAll("\\^", block));
-			write(bm + block + ".json", bmstr.replaceAll("\\^", block));
-			write(im + block + ".json", bimstr.replaceAll("\\^", block));
-			write(lt + block + ".json", ltstr.replaceAll("\\^", block));
-		}
-
-		public static void addDireBlockAssets(String block, String f, String s, String t) throws IOException {
-			write(bs + block + ".json", fbsstr.replaceAll("\\^", block));
-			write(bm + block + ".json", fbmstr.replaceAll("\\^f", f).replaceAll("\\^s", s).replaceAll("\\^t", t));
-			write(im + block + ".json", bimstr.replaceAll("\\^", block));
-			write(lt + block + ".json", ltstr.replaceAll("\\^", block));
-		}
-
-		public static void addItemAssets(String item) throws IOException {
-			write(im + item + ".json", imstr.replaceAll("\\^", item));
-		}
-
-		public static void addItemAssets(String item, String res) throws IOException {
-			write(im + item + ".json", imstr.replaceAll("\\^", res));
-		}
-
-		public static void addWireAssets(String block) throws IOException {
-			write(bs + block + ".json", wbsstr.replaceAll("\\^", block));
-			write(bm + block + "_core.json", wbmstrc.replaceAll("\\^", block));
-			write(bm + block + "_side.json", wbmstrs.replaceAll("\\^", block));
-			write(im + block + ".json", imstr.replaceAll("\\^", block));
-			write(lt + block + ".json", ltstr.replaceAll("\\^", block));
-		}
-
-		private static void write(String name, String cont) throws IOException {
-			File f = new File(name);
-			if (!f.exists())
-				f.createNewFile();
-			PrintStream ps = new PrintStream(f);
-			ps.println(cont);
-			ps.close();
-		}
-
-	}
-
 	public static class LogicTest {
-
-		public static void xor_0() {
-			LogicDiagram.ParentDiagram diag = new LogicDiagram.ParentDiagram(2, 1);
-			GateContainer and0 = diag.addGate(LogicGate.getPrimeGate(LogicGate.AND, 2));
-			GateContainer and1 = diag.addGate(LogicGate.getPrimeGate(LogicGate.AND, 2));
-			GateContainer not0 = diag.addGate(LogicGate.getPrimeGate(LogicGate.NOT, 1));
-			GateContainer not1 = diag.addGate(LogicGate.getPrimeGate(LogicGate.NOT, 1));
-			GateContainer or0 = diag.addGate(LogicGate.getPrimeGate(LogicGate.OR, 2));
-			not0.setInput(0, null, 0);
-			not1.setInput(0, null, 1);
-			and0.setInput(0, null, 0);
-			and0.setInput(1, not1, 0);
-			and1.setInput(0, null, 1);
-			and1.setInput(1, not0, 0);
-			or0.setInput(0, and0, 0);
-			or0.setInput(1, and1, 0);
-			diag.setInput(0, or0, 0);
-			LogicGate gate = diag.toGate();
-			System.out.println(gate);
-		}
-
-		public static void xor_1() {
-			LogicDiagram.ParentDiagram diag = new LogicDiagram.ParentDiagram(2, 1);
-			GateContainer and0 = diag.addGate(LogicGate.getPrimeGate(LogicGate.NAND, 2));
-			GateContainer and1 = diag.addGate(LogicGate.getPrimeGate(LogicGate.NAND, 2));
-			GateContainer not0 = diag.addGate(LogicGate.getPrimeGate(LogicGate.NOT, 1));
-			GateContainer not1 = diag.addGate(LogicGate.getPrimeGate(LogicGate.NOT, 1));
-			GateContainer or0 = diag.addGate(LogicGate.getPrimeGate(LogicGate.NAND, 2));
-			not0.setInput(0, null, 0);
-			not1.setInput(0, null, 1);
-			and0.setInput(0, null, 0);
-			and0.setInput(1, not1, 0);
-			and1.setInput(0, null, 1);
-			and1.setInput(1, not0, 0);
-			or0.setInput(0, and0, 0);
-			or0.setInput(1, and1, 0);
-			diag.setInput(0, or0, 0);
-			LogicGate gate = diag.toGate();
-			System.out.println(gate);
-		}
 
 		public static ParentDiagram alu_0() {
 			// AB0123, XY
@@ -254,6 +78,135 @@ public class Test {
 			return diag.toGate();
 		}
 
+		public static void xor_0() {
+			LogicDiagram.ParentDiagram diag = new LogicDiagram.ParentDiagram(2, 1);
+			GateContainer and0 = diag.addGate(LogicGate.getPrimeGate(LogicGate.AND, 2));
+			GateContainer and1 = diag.addGate(LogicGate.getPrimeGate(LogicGate.AND, 2));
+			GateContainer not0 = diag.addGate(LogicGate.getPrimeGate(LogicGate.NOT, 1));
+			GateContainer not1 = diag.addGate(LogicGate.getPrimeGate(LogicGate.NOT, 1));
+			GateContainer or0 = diag.addGate(LogicGate.getPrimeGate(LogicGate.OR, 2));
+			not0.setInput(0, null, 0);
+			not1.setInput(0, null, 1);
+			and0.setInput(0, null, 0);
+			and0.setInput(1, not1, 0);
+			and1.setInput(0, null, 1);
+			and1.setInput(1, not0, 0);
+			or0.setInput(0, and0, 0);
+			or0.setInput(1, and1, 0);
+			diag.setInput(0, or0, 0);
+			LogicGate gate = diag.toGate();
+			System.out.println(gate);
+		}
+
+		public static void xor_1() {
+			LogicDiagram.ParentDiagram diag = new LogicDiagram.ParentDiagram(2, 1);
+			GateContainer and0 = diag.addGate(LogicGate.getPrimeGate(LogicGate.NAND, 2));
+			GateContainer and1 = diag.addGate(LogicGate.getPrimeGate(LogicGate.NAND, 2));
+			GateContainer not0 = diag.addGate(LogicGate.getPrimeGate(LogicGate.NOT, 1));
+			GateContainer not1 = diag.addGate(LogicGate.getPrimeGate(LogicGate.NOT, 1));
+			GateContainer or0 = diag.addGate(LogicGate.getPrimeGate(LogicGate.NAND, 2));
+			not0.setInput(0, null, 0);
+			not1.setInput(0, null, 1);
+			and0.setInput(0, null, 0);
+			and0.setInput(1, not1, 0);
+			and1.setInput(0, null, 1);
+			and1.setInput(1, not0, 0);
+			or0.setInput(0, and0, 0);
+			or0.setInput(1, and1, 0);
+			diag.setInput(0, or0, 0);
+			LogicGate gate = diag.toGate();
+			System.out.println(gate);
+		}
+
+	}
+
+	private static class AssetGen {
+
+		private static void write(String name, String cont) throws IOException {
+			File f = new File(name);
+			if (!f.exists())
+				f.createNewFile();
+			PrintStream ps = new PrintStream(f);
+			ps.println(cont);
+			ps.close();
+		}
+
+	}
+
+	private static class RecipeGen {
+
+		private static final String modid = "quantizedinformatics:";
+		private static final String path = "./src/main/resources/data/quantizedinformatics/recipes/";
+		private static final String shapeless = "{\"group\":\"^g\",\"type\": \"minecraft:crafting_shapeless\",\"ingredients\":[^i],\"result\":^r}";
+		private static final String shaped = "{\"group\":\"^g\",\"type\":\"minecraft:crafting_shaped\",\"pattern\":[\"###\",\"###\",\"###\"],\"key\":{\"#\":^i},\"result\":^r}";
+		private static final String single = "{\"item\":\"^i\"}";
+		private static final String multi = "{\"item\":\"^i\",\"count\":^n}";
+
+		private static final String b2i(String metal) {
+			String i = single.replaceAll("\\^i", metal + "_block");
+			String r = multi.replaceAll("\\^i", metal + "_ingot").replaceAll("\\^n", "9");
+			return shapeless.replaceAll("\\^g", modid + "block_to_ingot").replaceAll("\\^i", i).replaceAll("\\^r", r);
+		}
+
+		private static final void doIngot(String metal) throws IOException {
+			AssetGen.write(path + "z_autogen_" + metal + "_ingot_to_nugget.json", i2n(modid + metal));
+			AssetGen.write(path + "z_autogen_" + metal + "_nugget_to_ingot.json", n2i(modid + metal));
+			AssetGen.write(path + "z_autogen_" + metal + "_block_to_ingot.json", b2i(modid + metal));
+			AssetGen.write(path + "z_autogen_" + metal + "_ingot_to_block.json", i2b(modid + metal));
+		}
+
+		private static final void doOrePowder(String metal) throws IOException {
+			AssetGen.write(path + "z_autogen_" + metal + "_ore_powder_to_tiny.json", op2t(modid + metal));
+			AssetGen.write(path + "z_autogen_" + metal + "_ore_tiny_to_powder.json", ot2p(modid + metal));
+		}
+
+		private static final void doPowder(String metal) throws IOException {
+			AssetGen.write(path + "z_autogen_" + metal + "_powder_to_tiny.json", p2t(modid + metal));
+			AssetGen.write(path + "z_autogen_" + metal + "_tiny_to_powder.json", t2p(modid + metal));
+		}
+
+		private static final String i2b(String metal) {
+			String i = single.replaceAll("\\^i", metal + "_ingot");
+			String r = single.replaceAll("\\^i", metal + "_block");
+			return shaped.replaceAll("\\^g", modid + "ingot_to_block").replaceAll("\\^i", i).replaceAll("\\^r", r);
+		}
+
+		private static final String i2n(String metal) {
+			String i = single.replaceAll("\\^i", metal + "_ingot");
+			String r = multi.replaceAll("\\^i", metal + "_nugget").replaceAll("\\^n", "9");
+			return shapeless.replaceAll("\\^g", modid + "ingot_to_nugget").replaceAll("\\^i", i).replaceAll("\\^r", r);
+		}
+
+		private static final String n2i(String metal) {
+			String i = single.replaceAll("\\^i", metal + "_nugget");
+			String r = single.replaceAll("\\^i", metal + "_ingot");
+			return shaped.replaceAll("\\^g", modid + "nugget_to_ingot").replaceAll("\\^i", i).replaceAll("\\^r", r);
+		}
+
+		private static final String op2t(String metal) {
+			String i = single.replaceAll("\\^i", metal + "_ore_clean_powder");
+			String r = multi.replaceAll("\\^i", metal + "_ore_clean_powder_tiny").replaceAll("\\^n", "9");
+			return shapeless.replaceAll("\\^g", modid + "powder_to_tiny").replaceAll("\\^i", i).replaceAll("\\^r", r);
+		}
+
+		private static final String ot2p(String metal) {
+			String i = single.replaceAll("\\^i", metal + "_ore_clean_powder_tiny");
+			String r = single.replaceAll("\\^i", metal + "_ore_clean_powder");
+			return shaped.replaceAll("\\^g", modid + "tiny_to_powder").replaceAll("\\^i", i).replaceAll("\\^r", r);
+		}
+
+		private static final String p2t(String metal) {
+			String i = single.replaceAll("\\^i", metal + "_powder");
+			String r = multi.replaceAll("\\^i", metal + "_powder_tiny").replaceAll("\\^n", "9");
+			return shapeless.replaceAll("\\^g", modid + "powder_to_tiny").replaceAll("\\^i", i).replaceAll("\\^r", r);
+		}
+
+		private static final String t2p(String metal) {
+			String i = single.replaceAll("\\^i", metal + "_powder_tiny");
+			String r = single.replaceAll("\\^i", metal + "_powder");
+			return shaped.replaceAll("\\^g", modid + "tiny_to_powder").replaceAll("\\^i", i).replaceAll("\\^r", r);
+		}
+
 	}
 
 	public static void addGroup() throws IOException {
@@ -296,7 +249,7 @@ public class Test {
 				if (group == null)
 					group = "";
 				else
-					group = Registrar.MODID + ":" + group;
+					group = AbReg.MODID + ":" + group;
 				PrintStream ps = new PrintStream(fi);
 				ps.println(bs.get(0));
 
@@ -327,6 +280,11 @@ public class Test {
 			ps.println(cont);
 			ps.close();
 		}
+	}
+
+	public static void check(String str) {
+		if (!new File("./metal_asset/" + str + ".png").exists())
+			System.out.println(str);
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -364,79 +322,18 @@ public class Test {
 		for (int i : plate)
 			check(metal[i] + "_plate");
 
-		String[] type = { "_ingot", "_nugget", "_plate" };
-
 		for (String ali : allv)
 			for (int i = 0; i < 4; i++) {
 				String alloy = ali + "_" + i;
 				RecipeGen.doIngot(alloy);
-				for (String s : type) {
-					check(alloy + s);
-					AssetGen.addItemAssets(alloy + s, ali + s);
-				}
 			}
 
 		for (String alloy : al) {
-			for (String s : type) {
-				check(alloy + s);
-				AssetGen.addItemAssets(alloy + s);
-			}
 			RecipeGen.doIngot(alloy);
 		}
 		for (int i : wire)
 			check(metal[i] + "_wire");
 
-	}
-
-	public static void check(String str) {
-		if (!new File("./metal_asset/" + str + ".png").exists())
-			System.out.println(str);
-	}
-
-	public static void addMetals() throws IOException {
-
-		String[] metal = { "iron", "gold", "copper", "silver", "tin", "lead", "tungsten", "aluminum", "nickel",
-				"cobalt", "manganese", "titanium", "platinum" };
-		int[] ingot = { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-		int[] powder = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12 };
-		int[] plate = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-		int[] wire = { 0, 1, 2, 3, 6, 7 };
-
-		String[] ore_metal = { "coal", "iron", "gold", "copper", "tin", "silver", "lead", "uranium", "aluminum",
-				"tungsten", "graphite", "borax", "beryllium", "nickel", "manganese", "titanium" };
-		String[] blocks = { "pm_transistor", "pmc_pump" };
-		String[] dblocks = { "pmg_thermal", "pmg_lava", "pmc_furnace", "pmc_plate", "pmc_wire", "pmc_cut",
-				"pmc_centrifuge", "pmc_wash", "pmc_powder", "pmc_electrolysis" };
-		String[] items = { "rubber", "elem_alo", "elem_cao", "elem_caco3", "elem_beo", "elem_wo", "elem_tio", "elem_uo",
-				"elem_aso", "elem_as", "elem_s", "elem_alo_tiny", "elem_aso_tiny", "elem_beo_tiny", "elem_wo_tiny",
-				"elem_tio_tiny", "elem_uo_tiny", "elem_s_tiny" };
-		for (int i = 0; i < ore_metal.length; i++) {
-			String ore = ore_metal[i];
-			if (i > 2) {
-				AssetGen.addBlockAssets(ore + "_ore");
-			}
-			AssetGen.addItemAssets(ore + "_ore_powder");
-			AssetGen.addItemAssets(ore + "_ore_powder_clean");
-			AssetGen.addItemAssets(ore + "_ore_powder_clean_tiny");
-		}
-		for (String block : blocks)
-			AssetGen.addBlockAssets(block);
-		for (String block : dblocks)
-			AssetGen.addDireBlockAssets(block, block + "_front", block + "_top", block + "_side");
-		for (String item : items)
-			AssetGen.addItemAssets(item);
-		for (int i : ingot)
-			AssetGen.addItemAssets(metal[i] + "_ingot");
-		for (int i : ingot)
-			AssetGen.addItemAssets(metal[i] + "_nugget");
-		for (int i : powder)
-			AssetGen.addItemAssets(metal[i] + "_powder");
-		for (int i : powder)
-			AssetGen.addItemAssets(metal[i] + "_powder_tiny");
-		for (int i : plate)
-			AssetGen.addItemAssets(metal[i] + "_plate");
-		for (int i : wire)
-			AssetGen.addItemAssets(metal[i] + "_wire");
 	}
 
 	public static void testEsti() {

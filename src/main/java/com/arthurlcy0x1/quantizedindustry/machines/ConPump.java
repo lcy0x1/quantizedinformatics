@@ -1,14 +1,16 @@
-package com.arthurlcy0x1.quantizedinformatics.power.blocks;
+package com.arthurlcy0x1.quantizedindustry.machines;
 
+import com.arthurlcy0x1.quantizedindustry.IFluidTE;
+import com.arthurlcy0x1.quantizedindustry.IFluidTE.FluidUpdator;
+import com.arthurlcy0x1.quantizedindustry.IFluidTE.NullFluidTE;
+import com.arthurlcy0x1.quantizedindustry.IPower.ConTE;
+import com.arthurlcy0x1.quantizedindustry.IPower.ICapMachine;
+import com.arthurlcy0x1.quantizedindustry.IPower.PowerCont;
+import com.arthurlcy0x1.quantizedindustry.MacReg;
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.other.Wire;
-import com.arthurlcy0x1.quantizedinformatics.power.blocks.IFluidTE.NullFluidTE;
-import com.arthurlcy0x1.quantizedinformatics.power.blocks.IFluidTE.FluidUpdator;
-import com.arthurlcy0x1.quantizedinformatics.power.blocks.IPower.ConTE;
-import com.arthurlcy0x1.quantizedinformatics.power.blocks.IPower.ICapMachine;
-import com.arthurlcy0x1.quantizedinformatics.power.blocks.IPower.PowerCont;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.entity.player.PlayerInventory;
@@ -31,7 +33,7 @@ public class ConPump {
 		}
 
 		protected Cont(int id, PlayerInventory inv, IInventory ent, IIntArray arr) {
-			super(Registrar.CTPC_PU, id, inv, ent, 0, arr);// TODO height
+			super(MacReg.CTPC_PU, id, inv, ent, 0, arr);// TODO height
 		}
 
 	}
@@ -65,7 +67,7 @@ public class ConPump {
 		private double req;
 
 		public TE() {
-			super(null, Cont::new, SIZE);
+			super(MacReg.TETPC_PU, Cont::new, SIZE);
 		}
 
 		@Override

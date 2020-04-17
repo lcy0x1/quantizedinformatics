@@ -1,5 +1,6 @@
-package com.arthurlcy0x1.quantizedinformatics.power.blocks;
+package com.arthurlcy0x1.quantizedindustry;
 
+import com.arthurlcy0x1.quantizedinformatics.AbReg;
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 
 import net.minecraft.fluid.Fluid;
@@ -42,7 +43,7 @@ public class QuanFluid extends ForgeRegistryEntry<QuanFluid> {
 	public static final QuanFluid OIL_GAS = reg("oil_gas");
 
 	private static QuanFluid reg(String str) {
-		return Registrar.addName(new QuanFluid(), str);
+		return AbReg.addName(new QuanFluid(), str);
 	}
 
 	public double getFuelValue() {

@@ -4,8 +4,8 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import com.arthurlcy0x1.quantizedindustry.IFluidTE;
 import com.arthurlcy0x1.quantizedinformatics.blocks.logic.DraftCntr;
-import com.arthurlcy0x1.quantizedinformatics.power.blocks.IFluidTE;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.container.Container;

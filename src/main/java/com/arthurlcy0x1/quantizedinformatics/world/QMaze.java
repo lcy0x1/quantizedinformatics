@@ -4,6 +4,7 @@ import java.util.Random;
 
 import org.apache.logging.log4j.LogManager;
 
+import com.arthurlcy0x1.quantizedinformatics.AbReg;
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 
 import net.minecraft.block.BlockState;
@@ -123,7 +124,7 @@ public class QMaze extends Structure<NoFeatureConfig> {
 
 	@Override
 	public String getStructureName() {
-		return Registrar.MODID + ":maze";
+		return AbReg.MODID + ":maze";
 	}
 
 	public ConfiguredFeature<?, ?> reconfigure() {

@@ -1,11 +1,13 @@
-package com.arthurlcy0x1.quantizedinformatics.power.blocks;
+package com.arthurlcy0x1.quantizedindustry.machines;
 
+import com.arthurlcy0x1.quantizedindustry.IPower;
+import com.arthurlcy0x1.quantizedindustry.IPower.PowerCont;
+import com.arthurlcy0x1.quantizedindustry.IPower.PowerTE;
+import com.arthurlcy0x1.quantizedindustry.MacReg;
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.other.Wire;
-import com.arthurlcy0x1.quantizedinformatics.power.blocks.IPower.PowerCont;
-import com.arthurlcy0x1.quantizedinformatics.power.blocks.IPower.PowerTE;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.entity.player.PlayerInventory;
@@ -27,7 +29,7 @@ public class Transistor {
 		}
 
 		protected Cont(int id, PlayerInventory inv, IInventory ent, IIntArray arr) {
-			super(Registrar.CTP_TR, id, inv, ent, 0, arr);// TODO height
+			super(MacReg.CTP_TR, id, inv, ent, 0, arr);// TODO height
 		}
 
 	}
@@ -55,7 +57,7 @@ public class Transistor {
 	public static class TE extends PowerTE<TE, Cont> {
 
 		public TE() {
-			super(Registrar.TETP_TR, Cont::new, SIZE);
+			super(MacReg.TETP_TR, Cont::new, SIZE);
 		}
 
 		@Override
