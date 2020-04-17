@@ -22,23 +22,23 @@ public class ResourceManager {
 
 		static {
 			String path = "./resources/";
-			BS_ = readFile(path + "BS/-.json");
-			BS_A = readFile(path + "BS/-air.json");
-			BS_L = readFile(path + "BS/-lit.json");
-			BS_AD = readFile(path + "BS/-alldire.json");
-			BS_F = readFile(path + "BS/-face.json");
-			BS_W = readFile(path + "BS/-wire.json");
+			BS_ = readFile(path + "BS/-templates/-.json");
+			BS_A = readFile(path + "BS/-templates/-air.json");
+			BS_L = readFile(path + "BS/-templates/-lit.json");
+			BS_AD = readFile(path + "BS/-templates/-alldire.json");
+			BS_F = readFile(path + "BS/-templates/-face.json");
+			BS_W = readFile(path + "BS/-templates/-wire.json");
 
-			BM_ = readFile(path + "BM/-.json");
-			BM_M = readFile(path + "BM/-machine.json");
-			BM_WS = readFile(path + "BM/-wire_side.json");
-			BM_WC = readFile(path + "BM/-wire_core.json");
+			BM_ = readFile(path + "BM/-templates/-.json");
+			BM_M = readFile(path + "BM/-templates/-machine.json");
+			BM_WS = readFile(path + "BM/-templates/-wire_side.json");
+			BM_WC = readFile(path + "BM/-templates/-wire_core.json");
 
-			IM_ = readFile(path + "IM/-.json");
-			IM_B = readFile(path + "IM/-block.json");
-			IM_W = readFile(path + "IM/-wire.json");
+			IM_ = readFile(path + "IM/-templates/-.json");
+			IM_B = readFile(path + "IM/-templates/-block.json");
+			IM_W = readFile(path + "IM/-templates/-wire.json");
 
-			LT_ = readFile(path + "BL/-.json");
+			LT_ = readFile(path + "BL/-templates/-.json");
 
 		}
 
