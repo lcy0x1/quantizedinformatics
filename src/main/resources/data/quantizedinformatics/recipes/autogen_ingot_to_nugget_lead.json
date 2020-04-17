@@ -1,0 +1,9 @@
+{
+    "group": "quantizedinformatics:ingot_to_nugget",
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {"item":"quantizedinformatics:lead_ingot"}
+    ],
+    "result": {"item":"quantizedinformatics:lead_nugget","count":9}
+}
+

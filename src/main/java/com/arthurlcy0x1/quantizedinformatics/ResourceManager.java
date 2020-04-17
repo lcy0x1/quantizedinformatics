@@ -160,7 +160,7 @@ public class ResourceManager {
 						rep(ML, "\\^i", ing, "\\^n", "2"));
 				writeRecipe("plate_" + prev, cont);
 				if (!prev.equals("iron") && !prev.equals("gold"))
-					doMerge(prev, "_ingot", "_nugget", "ingot", "nugget");
+					doMerge(MODID + prev, "_ingot", "_nugget", "ingot", "nugget");
 			}
 		}
 
