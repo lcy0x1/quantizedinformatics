@@ -2,6 +2,8 @@
     "group": "quantizedinformatics:autogen_plate",
     "type": "quantizedinformatics:plate",
     "in": {"item":"gold_ingot"},
-    "out": {"item":"quantizedinformatics:gold_plate","count":2}
+    "out": {"item":"quantizedinformatics:gold_plate","count":2},
+    "cost": 100,
+    "click_cost": 20
 }
 

@@ -2,5 +2,7 @@
     "group": "quantizedinformatics:autogen_plate",
     "type": "quantizedinformatics:plate",
     "in": "^i",
-    "out": "^r"
+    "out": "^r",
+    "cost": 100,
+    "click_cost": 20
 }
