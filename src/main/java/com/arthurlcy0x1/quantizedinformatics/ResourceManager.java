@@ -139,6 +139,7 @@ public class ResourceManager {
 			SC = AssetGen.readFile("./resources/R/-templates/-merge.json");
 			PLA = AssetGen.readFile("./resources/R/-templates/-plate.json");
 			ITEM_KEY.add(RecipeGen::genPlate);
+			ITEM_KEY.add(RecipeGen::genPowder);
 		}
 
 		private static final String rep(String... src) {
@@ -157,24 +158,38 @@ public class ResourceManager {
 				String ing = MODID + str;
 				String cont = rep(PLA, "\"\\^i\"", rep(SI, "\\^i", target), "\"\\^r\"",
 						rep(ML, "\\^i", ing, "\\^n", "2"));
-				try {
-					AssetGen.write(RPATH + "autogen_plate_" + prev + ".json", cont);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				writeRecipe("plate_" + prev, cont);
+				if (!prev.equals("iron") && !prev.equals("gold"))
+					doMerge(prev, "_ingot", "_nugget", "ingot", "nugget");
 			}
 		}
 
-		private static void doIngot(String str) {
-			// if(str.endsWith("_tiny"))
+		private static void genPowder(String str) {
+			if (str.endsWith("_tiny")) {
+				String prev = str.substring(0, str.length() - 5);
+				doMerge(MODID + prev, "", "_tiny", "powder", "tiny");
+			}
 		}
 
-		private static void doMerge(String metal, String lr, String sm) {
-			String l = rep(SI, "\\^i", metal + "_" + lr);
-			String s = rep(SI, "\\^i", metal + "_" + sm);
-			String s9 = rep(ML, "\\^i", metal + "_" + sm).replaceAll("\\^n", "9");
-			rep(NS, "\\^g", MODID + lr + "_to_" + sm, "\"\\^i\"", l, "\"\\^r\"", s9);
-			rep(SC, "\\^g", MODID + sm + "_to_" + lr, "\"\\^i\"", s, "\"\\^r\"", l);
+		private static void doMerge(String metal, String lr, String sm, String w0, String w1) {
+			String l = rep(SI, "\\^i", metal + lr);
+			String s = rep(SI, "\\^i", metal + sm);
+			String s9 = rep(ML, "\\^i", metal + sm).replaceAll("\\^n", "9");
+			String name, cont;
+			name = w0 + "_to_" + w1;
+			cont = rep(NS, "\\^g", MODID + name, "\"\\^i\"", l, "\"\\^r\"", s9);
+			writeRecipe(name + "_" + metal.substring(21), cont);
+			name = w1 + "_to_" + w0;
+			cont = rep(SC, "\\^g", MODID + name, "\"\\^i\"", s, "\"\\^r\"", l);
+			writeRecipe(name + "_" + metal.substring(21), cont);
+		}
+
+		private static void writeRecipe(String name, String cont) {
+			try {
+				AssetGen.write(RPATH + "autogen_" + name + ".json", cont);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 
 	}
