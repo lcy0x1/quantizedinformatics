@@ -1,0 +1,21 @@
+{
+	"group": "quantizedinformatics:gate_mos",
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "quantizedinformatics:gate_wire"
+        },
+        {
+            "item": "quantizedinformatics:gate_mos_not"
+        },
+        {
+            "item": "quantizedinformatics:gate_mos_not"
+        },
+        {
+            "item": "quantizedinformatics:gate_mos_empty"
+        }
+    ],
+    "result": {
+        "item": "quantizedinformatics:gate_mos_buff"
+    }
+}

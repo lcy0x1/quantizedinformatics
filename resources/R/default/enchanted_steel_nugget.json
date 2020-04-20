@@ -1,0 +1,13 @@
+{
+	"group": "",
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "quantizedinformatics:enchanted_gold_ingot"
+        }
+    ],
+    "result": {
+        "item": "quantizedinformatics:enchanted_gold_nugget",
+        "count": 9
+    }
+}

@@ -2,6 +2,7 @@ package com.arthurlcy0x1.quantizedinformatics.items.logic;
 
 import java.util.List;
 
+import com.arthurlcy0x1.quantizedindustry.OreReg;
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.Translator;
 
@@ -34,11 +35,11 @@ public class PrepChip extends Item {
 			tag.putInt("process", 0);
 		else {
 			tag.putInt("process", 2);
-			if (dopant == Registrar.IE_B)
+			if (dopant == OreReg.IE_B)
 				tag.putInt("status", stat < 3 ? stat + 1 : stat + 4);
-			else if (dopant == Registrar.IE_P)
+			else if (dopant == OreReg.IE_P)
 				tag.putInt("status", stat < 3 ? stat + 2 : stat + 8);
-			else if (dopant == Registrar.IE_FEO)
+			else if (dopant == OreReg.IE_FEO)
 				tag.putInt("status", stat < 16 ? stat + 16 : stat + 32);
 		}
 		return is;
@@ -55,11 +56,11 @@ public class PrepChip extends Item {
 			return proc == 3;
 		if (proc != 1)
 			return false;
-		if (dopant == Registrar.IE_B)
+		if (dopant == OreReg.IE_B)
 			return stat == 0 || stat == 2 || stat == 3 || stat == 11;
-		if (dopant == Registrar.IE_P)
+		if (dopant == OreReg.IE_P)
 			return stat == 0 || stat == 1 || stat == 3 || stat == 7;
-		if (dopant == Registrar.IE_FEO)
+		if (dopant == OreReg.IE_FEO)
 			return stat == 15 || stat == 31;
 		return false;
 	}

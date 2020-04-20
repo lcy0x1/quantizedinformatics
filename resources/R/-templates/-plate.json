@@ -1,0 +1,8 @@
+{
+    "group": "quantizedinformatics:autogen_plate",
+    "type": "quantizedinformatics:power_plate",
+    "in": "^i",
+    "out": "^r",
+    "cost": 100,
+    "click_cost": 20
+}

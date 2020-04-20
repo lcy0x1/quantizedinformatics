@@ -1,0 +1,13 @@
+{
+    "group": "^g",
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "###",
+        "###",
+        "###"
+    ],
+    "key": {
+        "#": "^i"
+    },
+    "result": "^r"
+}

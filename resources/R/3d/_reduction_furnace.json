@@ -1,0 +1,26 @@
+{
+	"group": "quantizedinformatics:none",
+    "type": "quantizedinformatics:craft_3d",
+    "pattern": [
+        [
+            "000",
+            "000",
+            "000"
+        ],
+        [
+            "000",
+            "0 0",
+            "000"
+        ],
+        [
+            "000",
+            "000",
+            "010"
+        ]
+    ],
+    "keys": {
+        "0": "obsidian",
+        "1": "furnace"
+    },
+    "out": "quantizedinformatics:reduction_furnace"
+}

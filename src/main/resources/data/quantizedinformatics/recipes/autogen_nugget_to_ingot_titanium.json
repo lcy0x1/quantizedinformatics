@@ -1,0 +1,14 @@
+{
+    "group": "quantizedinformatics:nugget_to_ingot",
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "###",
+        "###",
+        "###"
+    ],
+    "key": {
+        "#": {"item":"quantizedinformatics:titanium_nugget"}
+    },
+    "result": {"item":"quantizedinformatics:titanium_ingot"}
+}
+

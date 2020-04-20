@@ -1,0 +1,10 @@
+{
+	"group": "quantizedinformatics:none",
+    "type": "quantizedinformatics:oxidation",
+    "time": 200,
+    "in_main": {
+        "item": "enchanted_golden_apple"
+    },
+    "out_main": "quantizedinformatics:enchanted_gold_ingot",
+    "out_main_count": 8
+}

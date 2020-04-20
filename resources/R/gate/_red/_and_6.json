@@ -1,0 +1,23 @@
+{
+	"group": "quantizedinformatics:gate_red",
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "   ",
+        "012",
+        "   "
+    ],
+    "key": {
+        "0": {
+            "item": "quantizedinformatics:gate_red_empty"
+        },
+        "1": {
+            "item": "quantizedinformatics:gate_red_nand_6"
+        },
+        "2": {
+            "item": "quantizedinformatics:gate_red_not"
+        }
+    },
+    "result": {
+        "item": "quantizedinformatics:gate_red_and_6"
+    }
+}

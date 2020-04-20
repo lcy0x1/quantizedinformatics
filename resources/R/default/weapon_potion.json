@@ -1,0 +1,33 @@
+{
+	"group": "quantizedinformatics:weapon",
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "bow"
+        },
+        {
+            "item": "quantizedinformatics:alu"
+        },
+        {
+            "item": "ender_eye"
+        },
+        {
+            "item": "quantizedinformatics:telescope"
+        },
+        {
+            "item": "observer"
+        },
+        {
+            "item": "quantizedinformatics:maxwell_attack"
+        },
+        {
+            "item": "quantizedinformatics:maxwell_defense"
+        },
+        {
+            "item": "potion"
+        }
+    ],
+    "result": {
+        "item": "quantizedinformatics:weapon_potion"
+    }
+}

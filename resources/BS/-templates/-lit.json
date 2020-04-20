@@ -1,0 +1,10 @@
+{
+    "variants": {
+        "lit=true": {
+            "model": "quantizedinformatics:block/^_a"
+        },
+        "lit=false": {
+            "model": "quantizedinformatics:block/^"
+        }
+    }
+}

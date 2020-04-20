@@ -1,3 +1,4 @@
 {
-    "parent": "quantizedinformatics:block/frame_core"
+    "parent": "quantizedinformatics:block/craft_frame_core"
 }
+

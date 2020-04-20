@@ -1,0 +1,29 @@
+{
+    "side": [
+        "arrow_1",
+        "arrow_2",
+        "arrow_3"
+    ],
+    "comp": {
+        "tool": {
+            "sprite": "altas_hammer",
+            "x": 34,
+            "y": 0
+        },
+        "input": {
+            "sprite": "slot",
+            "x": 70,
+            "y": 0
+        },
+        "arrow": {
+            "sprite": "arrow_0",
+            "x": 106,
+            "y": 0
+        },
+        "result": {
+            "sprite": "result_slot",
+            "x": 142,
+            "y": 0
+        }
+    }
+}

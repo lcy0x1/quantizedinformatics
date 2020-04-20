@@ -1,0 +1,21 @@
+{
+    "": {
+        "ignore": {
+            "": [
+                "stone_stand",
+                "stone_stand_head"
+            ],
+            "quantum_world": [
+                "_air",
+                "_barrier_air",
+                "_barrier",
+                "_chest",
+                "_core",
+                "_key",
+                "_maze_wall",
+                "_portal",
+                "_stone"
+            ]
+        }
+    }
+}

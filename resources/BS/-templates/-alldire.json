@@ -1,0 +1,27 @@
+{
+    "variants": {
+      "facing=north": {
+        "model": "quantizedinformatics:block/^"
+      },
+      "facing=east": {
+        "model": "quantizedinformatics:block/^",
+        "y": 90
+      },
+      "facing=south": {
+        "model": "quantizedinformatics:block/^",
+        "y": 180
+      },
+      "facing=west": {
+        "model": "quantizedinformatics:block/^",
+        "y": 270
+      },
+      "facing=up": {
+        "model": "quantizedinformatics:block/^",
+        "x": 270
+      },
+      "facing=down": {
+        "model": "quantizedinformatics:block/^",
+        "x": 90
+      }
+    }
+  }

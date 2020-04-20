@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import com.arthurlcy0x1.quantizedinformatics.AbReg;
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 
 import io.netty.buffer.Unpooled;
@@ -69,7 +70,7 @@ public class RegWorld {
 	public static final ITeleporter TELE_Q = new QuantumTele();
 
 	public static DimensionType getDT(String str, ModDimension md) {
-		ResourceLocation key = new ResourceLocation(Registrar.MODID, str);
+		ResourceLocation key = new ResourceLocation(AbReg.MODID, str);
 		if (DimensionType.byName(key) == null)
 			return DimensionManager.registerDimension(key, md, new PacketBuffer(Unpooled.buffer()), false);
 		return DimensionType.byName(key);
@@ -86,23 +87,23 @@ public class RegWorld {
 	private static <GS extends GenerationSettings, CG extends ChunkGenerator<GS>> ChunkGeneratorType<GS, CG> getCGT(
 			String name, IChunkGeneratorFactory<GS, CG> cgnew, Supplier<GS> gsnew) {
 		ChunkGeneratorType<GS, CG> ans = new ChunkGeneratorType<>(cgnew, true, gsnew);
-		Registrar.addName(ans, name);
+		AbReg.addName(ans, name);
 		return ans;
 	}
 
 	private static ModDimension getMD(String name, ModDimension dimtype) {
-		Registrar.addName(dimtype, name);
+		AbReg.addName(dimtype, name);
 		return dimtype;
 	}
 
 	private static Biome getQIBiome(String name, QIBiome ans) {
-		Registrar.addName(ans, name);
+		AbReg.addName(ans, name);
 		BS_Q.add(ans);
 		return ans;
 	}
 
 	private static IStructurePieceType getSPT(String name, IStructurePieceType type) {
-		ResourceLocation key = new ResourceLocation(Registrar.MODID, name);
+		ResourceLocation key = new ResourceLocation(AbReg.MODID, name);
 		Registry.register(Registry.STRUCTURE_PIECE, key, type);
 		return type;
 	}

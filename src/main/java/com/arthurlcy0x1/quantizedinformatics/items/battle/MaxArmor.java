@@ -1,5 +1,6 @@
 package com.arthurlcy0x1.quantizedinformatics.items.battle;
 
+import com.arthurlcy0x1.quantizedinformatics.AbReg;
 import com.arthurlcy0x1.quantizedinformatics.Registrar;
 import com.arthurlcy0x1.quantizedinformatics.items.ItemUtil;
 import com.arthurlcy0x1.quantizedinformatics.world.RegWorld;
@@ -59,7 +60,7 @@ public class MaxArmor extends ArmorItem {
 
 		@Override
 		public String getName() {
-			return Registrar.MODID + ":maxwell";
+			return AbReg.MODID + ":maxwell";
 		}
 
 		@Override

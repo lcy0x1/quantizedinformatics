@@ -1,0 +1,9 @@
+{
+	"group": "quantizedinformatics:none",
+    "type": "quantizedinformatics:oxidation",
+    "time": 20,
+    "in_main": {
+        "item": "bone"
+    },
+    "out_main": "quantizedinformatics:elem_po"
+}

@@ -188,7 +188,7 @@ public class OxiFn {
 		public void tick() {
 			ItemStack fuel = getStackInSlot(FUEL);
 			ItemStack fc = getStackInSlot(FUEL_REMAIN);
-			ItemStack cont = fuel.getContainerItem();
+			ItemStack cont = fuel.getContainerItem().copy();
 			ItemStack main = getStackInSlot(ING_MAIN);
 			boolean canBurn = fuel != ItemStack.EMPTY && canMerge(fc, cont);
 			boolean inputCheck = !main.isEmpty() && procTime == 0 && (burnTime > 0 || canBurn);

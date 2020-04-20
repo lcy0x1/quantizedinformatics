@@ -1,18 +1,19 @@
 package com.arthurlcy0x1.quantizedinformatics;
 
+import static com.arthurlcy0x1.quantizedinformatics.blocks.BlockProp.*;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import com.arthurlcy0x1.quantizedinformatics.blocks.BlockProp;
 import com.arthurlcy0x1.quantizedinformatics.blocks.CTEBlock;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.AutoCraft;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.EntAttack;
-import com.arthurlcy0x1.quantizedinformatics.blocks.auto.EntSpawn;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.EntAttr;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.EntRepel;
+import com.arthurlcy0x1.quantizedinformatics.blocks.auto.EntSpawn;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.PipeCore;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.PipeHead;
 import com.arthurlcy0x1.quantizedinformatics.blocks.auto.RecMaker;
@@ -45,10 +46,6 @@ import com.arthurlcy0x1.quantizedinformatics.blocks.quantum.StoneStand;
 import com.arthurlcy0x1.quantizedinformatics.entities.QuanFly;
 import com.arthurlcy0x1.quantizedinformatics.entities.QuanStand;
 import com.arthurlcy0x1.quantizedinformatics.items.EncItem;
-import com.arthurlcy0x1.quantizedinformatics.items.battle.MaxArmor;
-import com.arthurlcy0x1.quantizedinformatics.items.battle.MaxwellItem;
-import com.arthurlcy0x1.quantizedinformatics.items.battle.OreCollect;
-import com.arthurlcy0x1.quantizedinformatics.items.battle.Telescope;
 import com.arthurlcy0x1.quantizedinformatics.items.battle.EntityCannon.ArrowEC;
 import com.arthurlcy0x1.quantizedinformatics.items.battle.EntityCannon.DefEC;
 import com.arthurlcy0x1.quantizedinformatics.items.battle.EntityCannon.FogBall;
@@ -58,11 +55,15 @@ import com.arthurlcy0x1.quantizedinformatics.items.battle.EntityCannon.SmartTNT;
 import com.arthurlcy0x1.quantizedinformatics.items.battle.EntityCannon.SmartTNTRender;
 import com.arthurlcy0x1.quantizedinformatics.items.battle.EntityCannon.TNTEC;
 import com.arthurlcy0x1.quantizedinformatics.items.battle.EntityCannon.TridentEC;
+import com.arthurlcy0x1.quantizedinformatics.items.battle.MaxArmor;
 import com.arthurlcy0x1.quantizedinformatics.items.battle.MaxArmor.MaxMat;
+import com.arthurlcy0x1.quantizedinformatics.items.battle.MaxwellItem;
+import com.arthurlcy0x1.quantizedinformatics.items.battle.OreCollect;
 import com.arthurlcy0x1.quantizedinformatics.items.battle.SoulItem.SoulBottle;
 import com.arthurlcy0x1.quantizedinformatics.items.battle.SoulItem.SoulCollector;
 import com.arthurlcy0x1.quantizedinformatics.items.battle.SoulItem.SoulMarker;
 import com.arthurlcy0x1.quantizedinformatics.items.battle.SoulItem.SoulTrap;
+import com.arthurlcy0x1.quantizedinformatics.items.battle.Telescope;
 import com.arthurlcy0x1.quantizedinformatics.items.logic.ALUItem;
 import com.arthurlcy0x1.quantizedinformatics.items.logic.AutoRecipe;
 import com.arthurlcy0x1.quantizedinformatics.items.logic.DraftGateItem;
@@ -78,6 +79,7 @@ import com.arthurlcy0x1.quantizedinformatics.recipe.MaxwellRecipe;
 import com.arthurlcy0x1.quantizedinformatics.recipe.OxiRecipe;
 import com.arthurlcy0x1.quantizedinformatics.recipe.RedRecipe;
 import com.arthurlcy0x1.quantizedinformatics.recipe.TeleRecipe;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
@@ -90,7 +92,6 @@ import net.minecraft.entity.item.EnderPearlEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -99,34 +100,31 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
-public class Registrar extends ItemGroup {
+public class Registrar extends AbReg {
 
-	public static final String MODID = "quantizedinformatics";
+	public static final ItemGroup ITEM_GROUP = new Registrar();
 
-	// blocks
 	public static final Block B_FOGORE = addName(new QuantumOre(), "quantum_ore");
-	public static final Block B_FOG = generate("quantum_fog", BlockProp.QUANTUM_FOG);
+	public static final Block B_FOG = generate("quantum_fog", QUANTUM_FOG);
 	public static final Block BC_FRAME = addName(new Wire(WireConnect.CRAFT), "craft_frame");
 	public static final Block B_CRAFT3D = addName(new Craft3D(), "craft_3d");
-	public static final Block B_OXIFN = addName(new CTEBlock(BlockProp.FURNACE, OxiFn.TE::new), "oxidation_furnace");
-	public static final Block B_REDFN = addName(new CTEBlock(BlockProp.FURNACE, RedFn.TE::new), "reduction_furnace");
+	public static final Block B_OXIFN = addName(new CTEBlock(FURNACE, OxiFn.TE::new), "oxidation_furnace");
+	public static final Block B_REDFN = addName(new CTEBlock(FURNACE, RedFn.TE::new), "reduction_furnace");
 	public static final Block BD_WIRE = addName(new Wire(WireConnect.GATE), "draft_wire");
 	public static final Block BD_CNTR = addName(new DIOTerm(DraftCntr.TE::new, DraftIO.OUTPUT), "draft_center");
 	public static final Block BD_GATE = addName(new DraftGate(), "draft_gate");
 	public static final Block BD_IN = addName(new DIOTerm(DraftIn.TE::new, DraftIO.OUTPUT), "draft_in");
 	public static final Block BD_OUT = addName(new DraftOut(), "draft_out");
 	public static final Block BD_LNR = addName(new DraftLnr(), "draft_listener");
-	public static final Block BA_CRAFT = addName(new CTEBlock(BlockProp.M_CRAFT, AutoCraft.TE::new), "auto_craft");
-	public static final Block BA_REC = addName(new CTEBlock(BlockProp.M_CRAFT, RecMaker.TE::new), "recipe_maker");
-	public static final Block BA_SOUL = addName(new CTEBlock(BlockProp.M_CRAFT, SoulExt.TE::new), "soul_extracter");
+	public static final Block BA_CRAFT = addName(new CTEBlock(M_CRAFT, AutoCraft.TE::new), "auto_craft");
+	public static final Block BA_REC = addName(new CTEBlock(M_CRAFT, RecMaker.TE::new), "recipe_maker");
+	public static final Block BA_SOUL = addName(new CTEBlock(M_CRAFT, SoulExt.TE::new), "soul_extracter");
 	public static final Block BAP_HEAD = addName(new PipeHead(), "pipe_head");
 	public static final Block BAP_BODY = addName(new Wire(WireConnect.PIPE), "pipe_body");
 	public static final Block BAP_CORE = addName(new PipeCore(), "pipe_core");
@@ -137,9 +135,6 @@ public class Registrar extends ItemGroup {
 	public static final Block BAME_ATR = addName(new EntAttr(), "ent_attract");
 	public static final Block BAME_SPA = addName(new EntSpawn(), "ent_spawn");
 
-	public static final Block B_STAND = addName(new StoneStand(), "stone_stand");
-	public static final Block B_STANDHEAD = addName(new StandHead(), "stone_stand_head");
-
 	public static final Block BQ_AIR = generate("quantum_world_air", QuanAir::new);
 	public static final Block BQ_PORTAL = generate("quantum_world_portal", QTeleBlock::new);
 	public static final Block BQ_STONE = generate("quantum_world_stone", QuanBlock::new);
@@ -149,12 +144,13 @@ public class Registrar extends ItemGroup {
 	public static final Block BQ_MAZEWALL = generate("quantum_world_maze_wall", MazeWall::new);
 	public static final Block BQ_KEY = generate("quantum_world_key", QuanKey::new);
 	public static final Block BQ_CHEST = generate("quantum_world_chest", QuanChest::new);
+	public static final Block B_STAND = addName(new StoneStand(), "stone_stand");
+	public static final Block B_STANDHEAD = addName(new StandHead(), "stone_stand_head");
 
 	public static final List<Block> BDS = Arrays.asList(BD_CNTR, BD_GATE, BD_IN, BD_OUT, BD_LNR);
 
-	public static final ItemGroup ITEM_GROUP = new Registrar();
-
 	// block items
+
 	public static final Item IB_FOGORE = convert(B_FOGORE);
 	public static final Item IB_FOG = convert(B_FOG);
 	public static final Item IBC_FRAME = convert(BC_FRAME);
@@ -180,8 +176,6 @@ public class Registrar extends ItemGroup {
 	public static final Item IBME_ATR = convert(BAME_ATR);
 	public static final Item IBME_SPA = convert(BAME_SPA);
 
-	public static final Item IB_STAND = convert(B_STAND);
-
 	public static final Item IBQ_PORTAL = convert(BQ_PORTAL);
 	public static final Item IBQ_STONE = convert(BQ_STONE);
 	public static final Item IBQ_CORE = convert(BQ_CORE);
@@ -189,14 +183,9 @@ public class Registrar extends ItemGroup {
 	public static final Item IBQ_MAZEWALL = convert(BQ_MAZEWALL);
 	public static final Item IBQ_KEY = convert(BQ_KEY);
 	public static final Item IBQ_CHEST = convert(BQ_CHEST);
+	public static final Item IB_STAND = convert(B_STAND);
 
 	// items
-	public static final Item IE_P = generate("elem_p", 64);
-	public static final Item IE_B = generate("elem_b", 64);
-	public static final Item IE_PO = generate("elem_po", 64);
-	public static final Item IE_BO = generate("elem_bo", 64);
-	public static final Item IE_SI = generate("elem_si", 64);
-	public static final Item IE_FEO = generate("elem_feo", 64);
 	public static final Item IE_DARK = generate("elem_dark", 64, EncItem::new);
 	public static final Item IE_SOUL = generate("elem_soul", 64, EncItem::new);
 	public static final Item IE_SPACE = generate("elem_space", 64, EncItem::new);
@@ -338,7 +327,7 @@ public class Registrar extends ItemGroup {
 	public static final IRecipeSerializer<?> RS_EOXI = getRS(new EnchantOxiRec.Serializer(), "enchant_oxi");
 
 	public static final ContainerType<?>[] CTS = { CT_OXIFN, CT_REDFN, CTD_CNTR, CTD_GATE, CTD_IN, CTD_OUT, CTD_LNR,
-			CTA_CRAFT, CTA_REC, CTA_SOUL, CTAP_HEAD, CTAP_CORE, CTME_ATK, CTME_REP, CTME_ATR, CTME_SPA, CTQ_CHEST };
+			CTA_CRAFT, CTA_REC, CTA_SOUL, CTAP_HEAD, CTAP_CORE, CTME_ATK, CTME_REP, CTME_ATR, CTME_SPA, CTQ_CHEST, };
 
 	public static final TileEntityType<?>[] TETS = { TET_OXIFN, TET_REDFN, TETD_CNTR, TETD_GATE, TETD_IN, TETD_OUT,
 			TETD_LNR, TETA_CRAFT, TETA_REC, TETA_SOUL, TETAP_HEAD, TETAP_CORE, TETME_ATK, TETME_REP, TETME_ATR,
@@ -348,10 +337,6 @@ public class Registrar extends ItemGroup {
 
 	public static final IRecipeSerializer<?>[] RSS = { RS_OXI, RS_RED, RS_C3D, RS_MAX, RSC_OXI, RSC_RED, RS_TELE,
 			RSF_OC, RSF_WP, RS_EOXI };
-
-	public static <T extends ForgeRegistryEntry<T>> T addName(T t, String name) {
-		return t.setRegistryName(MODID, name);
-	}
 
 	@OnlyIn(Dist.CLIENT)
 	public static void registerRender() {
@@ -372,6 +357,7 @@ public class Registrar extends ItemGroup {
 		ScreenManager.registerFactory(CTME_ATR, EntAttr.Scr::new);
 		ScreenManager.registerFactory(CTME_SPA, EntSpawn.Scr::new);
 		ScreenManager.registerFactory(CTQ_CHEST, QuanChest.Scr::new);
+
 		ItemRenderer ir = Minecraft.getInstance().getItemRenderer();
 
 		RenderingRegistry.registerEntityRenderingHandler(ET_STNT, SmartTNTRender::new);
@@ -408,10 +394,6 @@ public class Registrar extends ItemGroup {
 		return addName(new DraftGateItem(p, c), str);
 	}
 
-	private static Block generate(String str, BlockProp mat) {
-		return addName(new Block(mat.getProps()), str);
-	}
-
 	private static Item generate(String str, int size) {
 		Item.Properties p = new Item.Properties();
 		p.group(ITEM_GROUP);
@@ -437,12 +419,6 @@ public class Registrar extends ItemGroup {
 		return addName(new MaxwellItem(p, max), str);
 	}
 
-	private static <T extends Container> ContainerType<T> getCT(ContainerType.IFactory<T> fact, String str) {
-		ContainerType<T> ans = new ContainerType<>(fact);
-		ans.setRegistryName(MODID, str);
-		return ans;
-	}
-
 	private static <T extends Entity> EntityType<T> getET(EntityType.IFactory<T> f, String str) {
 		EntityType<T> ans = EntityType.Builder.<T>create(f, EntityClassification.MISC)
 				.setShouldReceiveVelocityUpdates(true).build(str);
@@ -453,17 +429,6 @@ public class Registrar extends ItemGroup {
 	private static <T extends Entity> EntityType<T> getQET(EntityType.IFactory<T> f, String str, float w, float h) {
 		EntityType<T> ans = EntityType.Builder.<T>create(f, EntityClassification.MONSTER).immuneToFire().size(w, h)
 				.build(str);
-		ans.setRegistryName(MODID, str);
-		return ans;
-	}
-
-	private static <T extends ForgeRegistryEntry<IRecipeSerializer<?>>> T getRS(T rs, String str) {
-		rs.setRegistryName(MODID, str);
-		return rs;
-	}
-
-	private static <T extends TileEntity> TileEntityType<T> getTET(Supplier<T> fact, Block b, String str) {
-		TileEntityType<T> ans = TileEntityType.Builder.create(fact, b).build(null);
 		ans.setRegistryName(MODID, str);
 		return ans;
 	}

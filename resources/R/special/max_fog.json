@@ -1,0 +1,7 @@
+{
+	"group": "quantizedinformatics:none",
+    "type": "quantizedinformatics:maxwell",
+    "center": "",
+    "surround": "quantizedinformatics:maxwell_fog",
+    "output": "quantizedinformatics:maxwell_fog"
+}

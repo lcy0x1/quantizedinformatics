@@ -1,6 +1,7 @@
 {
-	"parent": "item/generated",
-	"textures": {
-		"layer0": "quantizedinformatics:items/maxwell_leggings"
-	}
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "quantizedinformatics:items/maxwell_leggings"
+    }
 }
+

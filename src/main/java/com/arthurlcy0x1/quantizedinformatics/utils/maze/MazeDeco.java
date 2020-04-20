@@ -25,6 +25,7 @@ public class MazeDeco {
 	public static int[][] generate(int[][] map, int count, Random ra, DecoConfig conf) {
 		return new MazeDeco(map, count, ra, conf).gen();
 	}
+
 	private final List<int[]> list = new ArrayList<>();
 	private final int[][] map, dis, size, leaf, weight;
 	private final int w, r, count;

@@ -1,6 +1,7 @@
 {
-	"parent": "item/generated",
-	"textures": {
-	"layer0": "quantizedinformatics:items/gate_dope_p"
-	}
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "quantizedinformatics:items/gate_dope_p"
+    }
 }
+

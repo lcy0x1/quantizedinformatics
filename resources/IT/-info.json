@@ -1,0 +1,12 @@
+{
+    "": {
+        "ignore": {
+            "maxwell": [
+                "_boots",
+                "_chestplate",
+                "_helmet",
+                "_leggings"
+            ]
+        }
+    }
+}

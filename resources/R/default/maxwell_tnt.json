@@ -1,0 +1,15 @@
+{
+	"group": "",
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "tnt"
+        },
+        {
+            "item": "quantizedinformatics:alu"
+        }
+    ],
+    "result": {
+        "item": "quantizedinformatics:maxwell_tnt"
+    }
+}

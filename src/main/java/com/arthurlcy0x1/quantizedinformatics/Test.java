@@ -1,6 +1,5 @@
 package com.arthurlcy0x1.quantizedinformatics;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -9,8 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-
-import javax.imageio.ImageIO;
 
 import com.arthurlcy0x1.quantizedinformatics.utils.logic.Estimator;
 import com.arthurlcy0x1.quantizedinformatics.utils.logic.LogicDiagram;
@@ -25,22 +22,191 @@ import net.minecraft.world.gen.SimplexNoiseGenerator;
 
 public class Test {
 
-	public static void addBlocks() throws IOException {
-		String[] list = { "quantum_fog", "craft_frame", "craft_3d", "oxidation_furnace", "reduction_furnace",
-				"draft_wire", "draft_center", "draft_gate", "draft_in", "draft_out", "draft_listener", "auto_craft",
-				"recipe_maker", "pipe_body", "pipe_head", "pipe_core" };
-		String path = "./src/main/resources/data/quantizedinformatics/loot_tables/blocks/";
-		String pre = "{\"type\": \"minecraft:block\",\"pools\": [{\"rolls\": 1,\"entries\": [{\"type\": \"minecraft:item\",\"name\": \"quantizedinformatics:";
-		String post = "\"}],\"conditions\": [{\"condition\": \"minecraft:survives_explosion\"}]}]}";
-		for (String b : list) {
-			String name = path + b + ".json";
+	public static class LogicTest {
+
+		public static ParentDiagram alu_0() {
+			// AB0123, XY
+			ParentDiagram diag = new ParentDiagram(6, 2);
+			GateContainer not0 = diag.addGate(LogicGate.getPrimeGate(LogicGate.NOT, 1));
+			GateContainer and0 = diag.addGate(LogicGate.getPrimeGate(LogicGate.AND, 2));
+			GateContainer and1 = diag.addGate(LogicGate.getPrimeGate(LogicGate.AND, 2));
+			GateContainer and2 = diag.addGate(LogicGate.getPrimeGate(LogicGate.AND, 3));
+			GateContainer and3 = diag.addGate(LogicGate.getPrimeGate(LogicGate.AND, 3));
+			GateContainer nor0 = diag.addGate(LogicGate.getPrimeGate(LogicGate.NOR, 3));
+			GateContainer nor1 = diag.addGate(LogicGate.getPrimeGate(LogicGate.NOR, 2));
+			not0.setInput(0, null, 1);
+			and0.setInput(0, null, 1);
+			and0.setInput(1, null, 2);
+			and1.setInput(0, not0, 0);
+			and1.setInput(1, null, 3);
+			and2.setInput(0, null, 0);
+			and2.setInput(1, null, 4);
+			and2.setInput(2, not0, 0);
+			and3.setInput(0, null, 0);
+			and3.setInput(1, null, 1);
+			and3.setInput(2, null, 5);
+			nor0.setInput(0, and0, 0);
+			nor0.setInput(1, and1, 0);
+			nor1.setInput(0, and2, 0);
+			nor1.setInput(1, and3, 0);
+			diag.setInput(0, nor0, 0);
+			diag.setInput(1, nor1, 0);
+			return diag;// .toGate();
+		}
+
+		public static LogicGate alu_1() {
+			LogicDiagram.ParentDiagram diag = new LogicDiagram.ParentDiagram(14, 5);
+			LogicGate pre = alu_0().toGate();
+			GateContainer nm = diag.addGate(LogicGate.getPrimeGate(LogicGate.NOT, 1));
+			nm.setInput(0, null, 13);
+			GateContainer[] ps = new GateContainer[4];
+			for (int i = 0; i < 4; i++) {
+				ps[i] = diag.addGate(pre);
+				ps[i].setInput(0, null, i);
+				ps[i].setInput(1, null, i + 4);
+				for (int j = 0; j < 4; j++)
+					ps[i].setInput(j + 2, null, j + 8);
+				GateContainer xor = diag.addGate(LogicGate.getPrimeGate(LogicGate.XOR, 2));
+				xor.setInput(0, ps[i], 0);
+				xor.setInput(1, ps[i], 1);
+				GateContainer[] and = new GateContainer[i + 1];
+				for (int j = 0; j <= i; j++) {
+					and[j] = diag.addGate(LogicGate.getPrimeGate(LogicGate.AND, j + 2));
+				}
+			}
+
+			return diag.toGate();
+		}
+
+		public static void xor_0() {
+			LogicDiagram.ParentDiagram diag = new LogicDiagram.ParentDiagram(2, 1);
+			GateContainer and0 = diag.addGate(LogicGate.getPrimeGate(LogicGate.AND, 2));
+			GateContainer and1 = diag.addGate(LogicGate.getPrimeGate(LogicGate.AND, 2));
+			GateContainer not0 = diag.addGate(LogicGate.getPrimeGate(LogicGate.NOT, 1));
+			GateContainer not1 = diag.addGate(LogicGate.getPrimeGate(LogicGate.NOT, 1));
+			GateContainer or0 = diag.addGate(LogicGate.getPrimeGate(LogicGate.OR, 2));
+			not0.setInput(0, null, 0);
+			not1.setInput(0, null, 1);
+			and0.setInput(0, null, 0);
+			and0.setInput(1, not1, 0);
+			and1.setInput(0, null, 1);
+			and1.setInput(1, not0, 0);
+			or0.setInput(0, and0, 0);
+			or0.setInput(1, and1, 0);
+			diag.setInput(0, or0, 0);
+			LogicGate gate = diag.toGate();
+			System.out.println(gate);
+		}
+
+		public static void xor_1() {
+			LogicDiagram.ParentDiagram diag = new LogicDiagram.ParentDiagram(2, 1);
+			GateContainer and0 = diag.addGate(LogicGate.getPrimeGate(LogicGate.NAND, 2));
+			GateContainer and1 = diag.addGate(LogicGate.getPrimeGate(LogicGate.NAND, 2));
+			GateContainer not0 = diag.addGate(LogicGate.getPrimeGate(LogicGate.NOT, 1));
+			GateContainer not1 = diag.addGate(LogicGate.getPrimeGate(LogicGate.NOT, 1));
+			GateContainer or0 = diag.addGate(LogicGate.getPrimeGate(LogicGate.NAND, 2));
+			not0.setInput(0, null, 0);
+			not1.setInput(0, null, 1);
+			and0.setInput(0, null, 0);
+			and0.setInput(1, not1, 0);
+			and1.setInput(0, null, 1);
+			and1.setInput(1, not0, 0);
+			or0.setInput(0, and0, 0);
+			or0.setInput(1, and1, 0);
+			diag.setInput(0, or0, 0);
+			LogicGate gate = diag.toGate();
+			System.out.println(gate);
+		}
+
+	}
+
+	private static class AssetGen {
+
+		private static void write(String name, String cont) throws IOException {
 			File f = new File(name);
 			if (!f.exists())
 				f.createNewFile();
 			PrintStream ps = new PrintStream(f);
-			ps.println(pre + b + post);
+			ps.println(cont);
 			ps.close();
 		}
+
+	}
+
+	private static class RecipeGen {
+
+		private static final String modid = "quantizedinformatics:";
+		private static final String path = "./src/main/resources/data/quantizedinformatics/recipes/";
+		private static final String shapeless = "{\"group\":\"^g\",\"type\": \"minecraft:crafting_shapeless\",\"ingredients\":[^i],\"result\":^r}";
+		private static final String shaped = "{\"group\":\"^g\",\"type\":\"minecraft:crafting_shaped\",\"pattern\":[\"###\",\"###\",\"###\"],\"key\":{\"#\":^i},\"result\":^r}";
+		private static final String single = "{\"item\":\"^i\"}";
+		private static final String multi = "{\"item\":\"^i\",\"count\":^n}";
+
+		private static final String b2i(String metal) {
+			String i = single.replaceAll("\\^i", metal + "_block");
+			String r = multi.replaceAll("\\^i", metal + "_ingot").replaceAll("\\^n", "9");
+			return shapeless.replaceAll("\\^g", modid + "block_to_ingot").replaceAll("\\^i", i).replaceAll("\\^r", r);
+		}
+
+		private static final void doIngot(String metal) throws IOException {
+			AssetGen.write(path + "z_autogen_" + metal + "_ingot_to_nugget.json", i2n(modid + metal));
+			AssetGen.write(path + "z_autogen_" + metal + "_nugget_to_ingot.json", n2i(modid + metal));
+			AssetGen.write(path + "z_autogen_" + metal + "_block_to_ingot.json", b2i(modid + metal));
+			AssetGen.write(path + "z_autogen_" + metal + "_ingot_to_block.json", i2b(modid + metal));
+		}
+
+		private static final void doOrePowder(String metal) throws IOException {
+			AssetGen.write(path + "z_autogen_" + metal + "_ore_powder_to_tiny.json", op2t(modid + metal));
+			AssetGen.write(path + "z_autogen_" + metal + "_ore_tiny_to_powder.json", ot2p(modid + metal));
+		}
+
+		private static final void doPowder(String metal) throws IOException {
+			AssetGen.write(path + "z_autogen_" + metal + "_powder_to_tiny.json", p2t(modid + metal));
+			AssetGen.write(path + "z_autogen_" + metal + "_tiny_to_powder.json", t2p(modid + metal));
+		}
+
+		private static final String i2b(String metal) {
+			String i = single.replaceAll("\\^i", metal + "_ingot");
+			String r = single.replaceAll("\\^i", metal + "_block");
+			return shaped.replaceAll("\\^g", modid + "ingot_to_block").replaceAll("\\^i", i).replaceAll("\\^r", r);
+		}
+
+		private static final String i2n(String metal) {
+			String i = single.replaceAll("\\^i", metal + "_ingot");
+			String r = multi.replaceAll("\\^i", metal + "_nugget").replaceAll("\\^n", "9");
+			return shapeless.replaceAll("\\^g", modid + "ingot_to_nugget").replaceAll("\\^i", i).replaceAll("\\^r", r);
+		}
+
+		private static final String n2i(String metal) {
+			String i = single.replaceAll("\\^i", metal + "_nugget");
+			String r = single.replaceAll("\\^i", metal + "_ingot");
+			return shaped.replaceAll("\\^g", modid + "nugget_to_ingot").replaceAll("\\^i", i).replaceAll("\\^r", r);
+		}
+
+		private static final String op2t(String metal) {
+			String i = single.replaceAll("\\^i", metal + "_ore_clean_powder");
+			String r = multi.replaceAll("\\^i", metal + "_ore_clean_powder_tiny").replaceAll("\\^n", "9");
+			return shapeless.replaceAll("\\^g", modid + "powder_to_tiny").replaceAll("\\^i", i).replaceAll("\\^r", r);
+		}
+
+		private static final String ot2p(String metal) {
+			String i = single.replaceAll("\\^i", metal + "_ore_clean_powder_tiny");
+			String r = single.replaceAll("\\^i", metal + "_ore_clean_powder");
+			return shaped.replaceAll("\\^g", modid + "tiny_to_powder").replaceAll("\\^i", i).replaceAll("\\^r", r);
+		}
+
+		private static final String p2t(String metal) {
+			String i = single.replaceAll("\\^i", metal + "_powder");
+			String r = multi.replaceAll("\\^i", metal + "_powder_tiny").replaceAll("\\^n", "9");
+			return shapeless.replaceAll("\\^g", modid + "powder_to_tiny").replaceAll("\\^i", i).replaceAll("\\^r", r);
+		}
+
+		private static final String t2p(String metal) {
+			String i = single.replaceAll("\\^i", metal + "_powder_tiny");
+			String r = single.replaceAll("\\^i", metal + "_powder");
+			return shaped.replaceAll("\\^g", modid + "tiny_to_powder").replaceAll("\\^i", i).replaceAll("\\^r", r);
+		}
+
 	}
 
 	public static void addGroup() throws IOException {
@@ -83,7 +249,7 @@ public class Test {
 				if (group == null)
 					group = "";
 				else
-					group = Registrar.MODID + ":" + group;
+					group = AbReg.MODID + ":" + group;
 				PrintStream ps = new PrintStream(fi);
 				ps.println(bs.get(0));
 
@@ -116,91 +282,58 @@ public class Test {
 		}
 	}
 
-	public static LogicGate alu_1() {
-		LogicDiagram.ParentDiagram diag = new LogicDiagram.ParentDiagram(14, 5);
-		LogicGate pre = alu_0().toGate();
-		GateContainer nm = diag.addGate(LogicGate.getPrimeGate(LogicGate.NOT, 1));
-		nm.setInput(0, null, 13);
-		GateContainer[] ps = new GateContainer[4];
-		for (int i = 0; i < 4; i++) {
-			ps[i] = diag.addGate(pre);
-			ps[i].setInput(0, null, i);
-			ps[i].setInput(1, null, i + 4);
-			for (int j = 0; j < 4; j++)
-				ps[i].setInput(j + 2, null, j + 8);
-			GateContainer xor = diag.addGate(LogicGate.getPrimeGate(LogicGate.XOR, 2));
-			xor.setInput(0, ps[i], 0);
-			xor.setInput(1, ps[i], 1);
-			GateContainer[] and = new GateContainer[i + 1];
-			for (int j = 0; j <= i; j++) {
-				and[j] = diag.addGate(LogicGate.getPrimeGate(LogicGate.AND, j + 2));
-			}
-		}
-
-		return diag.toGate();
-	}
-
-	public static void generateItemModel() throws IOException {
-		String[] ss0 = { "red", "mos", "imp" };
-		String[] ss1 = { "empty", "dirty", "buff", "not", "nand", "nor", "and", "or", "xor" };
-		String path = "./src/main/resources/assets/quantizedinformatics/models/item/";
-		String pre = "{\n\t\"parent\": \"item/generated\",\n\t\"textures\": {\n\t\"layer0\": \"quantizedinformatics:items/";
-		String post = "\"\n\t}\n}";
-		for (String s0 : ss0)
-			for (String s1 : ss1) {
-				String name = "gate_" + s0 + "_" + s1;
-				File f = new File(path + name + ".json");
-				if (!f.exists())
-					f.createNewFile();
-				PrintStream ps = new PrintStream(f);
-				ps.println(pre + name + post);
-				ps.close();
-			}
+	public static void check(String str) {
+		if (!new File("./metal_asset/" + str + ".png").exists())
+			System.out.println(str);
 	}
 
 	public static void main(String[] args) throws IOException {
-		System.out.println(1 << (2 ^ 1));
+		String[] metal = { "iron", "gold", "copper", "silver", "tin", "lead", "tungsten", "aluminum", "nickel",
+				"cobalt", "manganese", "titanium", "platinum" };
 
-	}
+		String[] allv = { "bronze", "steel", "al_alloy" };
+		String[] al = { "bronze_c", "steel_c", "steel_n", "pb_alloy", "w_alloy", "ti_alloy", "co_alloy", "adv_alloy" };
 
-	public static double normal(double x, double mean, double stdev) {
-		double n = (x - mean) / stdev;
-		return Math.exp(-0.5 * n * n) / stdev / Math.sqrt(2 * Math.PI);
-	}
+		int[] ingot = { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+		int[] powder = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12 };
+		int[] plate = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+		int[] wire = { 0, 1, 2, 3, 6, 7 };
 
-	public static void recolor() throws IOException {
-		File fp = new File("./src/main/resources/assets/quantizedinformatics/textures/items/elem_p.png");
-		File fb = new File("./src/main/resources/assets/quantizedinformatics/textures/items/elem_si.png");
-		BufferedImage bimg = ImageIO.read(fp);
-		int w = bimg.getWidth();
-		int h = bimg.getHeight();
-		for (int i = 0; i < w; i++)
-			for (int j = 0; j < h; j++) {
-				int p = bimg.getRGB(i, j);
-				int b = p & 255;
-				int g = p >> 8 & 255;
-				int r = p >> 16 & 255;
-				int a = p >> 24;
-				p = a << 24 | b << 16 | r << 8 | g;
-				bimg.setRGB(i, j, p);
+		String[] ore_metal = { "coal", "iron", "gold", "copper", "tin", "silver", "lead", "uranium", "aluminum",
+				"tungsten", "borax", "beryllium", "nickel", "manganese", "titanium" };
+
+		for (int i = 0; i < ore_metal.length; i++) {
+			String ore = ore_metal[i];
+			check(ore + "_ore_powder");
+			check(ore + "_ore_powder_clean");
+			check(ore + "_ore_powder_clean_tiny");
+			RecipeGen.doOrePowder(ore);
+		}
+		for (int i : ingot) {
+			check(metal[i] + "_ingot");
+			check(metal[i] + "_nugget");
+			RecipeGen.doIngot(metal[i]);
+		}
+		for (int i : powder) {
+			check(metal[i] + "_powder");
+			check(metal[i] + "_powder_tiny");
+			RecipeGen.doPowder(metal[i]);
+		}
+		for (int i : plate)
+			check(metal[i] + "_plate");
+
+		for (String ali : allv)
+			for (int i = 0; i < 4; i++) {
+				String alloy = ali + "_" + i;
+				RecipeGen.doIngot(alloy);
 			}
-		ImageIO.write(bimg, "PNG", fb);
 
-	}
+		for (String alloy : al) {
+			RecipeGen.doIngot(alloy);
+		}
+		for (int i : wire)
+			check(metal[i] + "_wire");
 
-	public static void renameItemTexture() throws IOException {
-		String[] ss0 = { "red", "mos", "imp" };
-		String[] ss1 = { "empty", "dirty", "buff", "not", "nand", "nor", "and", "or", "xor" };
-		String path = "./src/main/resources/assets/quantizedinformatics/textures/items/";
-
-		for (String s0 : ss0)
-			for (String s1 : ss1) {
-				String n0 = "gate" + s0 + s1;
-				String n1 = "gate_" + s0 + "_" + s1;
-				File f = new File(path + n0 + ".png");
-				f.renameTo(new File(path + n1 + ".png"));
-
-			}
 	}
 
 	public static void testEsti() {
@@ -233,76 +366,6 @@ public class Test {
 				min = Math.max(min, Math.abs(val - v3));
 			}
 		System.out.println(min);
-	}
-
-	public static void xor_0() {
-		LogicDiagram.ParentDiagram diag = new LogicDiagram.ParentDiagram(2, 1);
-		GateContainer and0 = diag.addGate(LogicGate.getPrimeGate(LogicGate.AND, 2));
-		GateContainer and1 = diag.addGate(LogicGate.getPrimeGate(LogicGate.AND, 2));
-		GateContainer not0 = diag.addGate(LogicGate.getPrimeGate(LogicGate.NOT, 1));
-		GateContainer not1 = diag.addGate(LogicGate.getPrimeGate(LogicGate.NOT, 1));
-		GateContainer or0 = diag.addGate(LogicGate.getPrimeGate(LogicGate.OR, 2));
-		not0.setInput(0, null, 0);
-		not1.setInput(0, null, 1);
-		and0.setInput(0, null, 0);
-		and0.setInput(1, not1, 0);
-		and1.setInput(0, null, 1);
-		and1.setInput(1, not0, 0);
-		or0.setInput(0, and0, 0);
-		or0.setInput(1, and1, 0);
-		diag.setInput(0, or0, 0);
-		LogicGate gate = diag.toGate();
-		System.out.println(gate);
-	}
-
-	public static void xor_1() {
-		LogicDiagram.ParentDiagram diag = new LogicDiagram.ParentDiagram(2, 1);
-		GateContainer and0 = diag.addGate(LogicGate.getPrimeGate(LogicGate.NAND, 2));
-		GateContainer and1 = diag.addGate(LogicGate.getPrimeGate(LogicGate.NAND, 2));
-		GateContainer not0 = diag.addGate(LogicGate.getPrimeGate(LogicGate.NOT, 1));
-		GateContainer not1 = diag.addGate(LogicGate.getPrimeGate(LogicGate.NOT, 1));
-		GateContainer or0 = diag.addGate(LogicGate.getPrimeGate(LogicGate.NAND, 2));
-		not0.setInput(0, null, 0);
-		not1.setInput(0, null, 1);
-		and0.setInput(0, null, 0);
-		and0.setInput(1, not1, 0);
-		and1.setInput(0, null, 1);
-		and1.setInput(1, not0, 0);
-		or0.setInput(0, and0, 0);
-		or0.setInput(1, and1, 0);
-		diag.setInput(0, or0, 0);
-		LogicGate gate = diag.toGate();
-		System.out.println(gate);
-	}
-
-	private static ParentDiagram alu_0() {
-		// AB0123, XY
-		ParentDiagram diag = new ParentDiagram(6, 2);
-		GateContainer not0 = diag.addGate(LogicGate.getPrimeGate(LogicGate.NOT, 1));
-		GateContainer and0 = diag.addGate(LogicGate.getPrimeGate(LogicGate.AND, 2));
-		GateContainer and1 = diag.addGate(LogicGate.getPrimeGate(LogicGate.AND, 2));
-		GateContainer and2 = diag.addGate(LogicGate.getPrimeGate(LogicGate.AND, 3));
-		GateContainer and3 = diag.addGate(LogicGate.getPrimeGate(LogicGate.AND, 3));
-		GateContainer nor0 = diag.addGate(LogicGate.getPrimeGate(LogicGate.NOR, 3));
-		GateContainer nor1 = diag.addGate(LogicGate.getPrimeGate(LogicGate.NOR, 2));
-		not0.setInput(0, null, 1);
-		and0.setInput(0, null, 1);
-		and0.setInput(1, null, 2);
-		and1.setInput(0, not0, 0);
-		and1.setInput(1, null, 3);
-		and2.setInput(0, null, 0);
-		and2.setInput(1, null, 4);
-		and2.setInput(2, not0, 0);
-		and3.setInput(0, null, 0);
-		and3.setInput(1, null, 1);
-		and3.setInput(2, null, 5);
-		nor0.setInput(0, and0, 0);
-		nor0.setInput(1, and1, 0);
-		nor1.setInput(0, and2, 0);
-		nor1.setInput(1, and3, 0);
-		diag.setInput(0, nor0, 0);
-		diag.setInput(1, nor1, 0);
-		return diag;// .toGate();
 	}
 
 }

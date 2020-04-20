@@ -1,0 +1,14 @@
+{
+    "group": "quantizedinformatics:tiny_to_powder",
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "###",
+        "###",
+        "###"
+    ],
+    "key": {
+        "#": {"item":"quantizedinformatics:platinum_ore_powder_clean_tiny"}
+    },
+    "result": {"item":"quantizedinformatics:platinum_ore_powder_clean"}
+}
+

@@ -1,0 +1,9 @@
+{
+    "group": "quantizedinformatics:autogen_plate",
+    "type": "quantizedinformatics:power_plate",
+    "in": {"item":"quantizedinformatics:steel_2_ingot"},
+    "out": {"item":"quantizedinformatics:steel_2_plate","count":2},
+    "cost": 100,
+    "click_cost": 20
+}
+

@@ -1,3 +1,4 @@
 {
-    "parent": "quantizedinformatics:block/wire_core"
+    "parent": "quantizedinformatics:block/draft_wire_core"
 }
+

@@ -1,19 +1,20 @@
 {
-  "variants": {
-    "facing=north": {
-      "model": "quantizedinformatics:block/stone_stand"
-    },
-    "facing=east": {
-      "model": "quantizedinformatics:block/stone_stand",
-      "y": 90
-    },
-    "facing=south": {
-      "model": "quantizedinformatics:block/stone_stand",
-      "y": 180
-    },
-    "facing=west": {
-      "model": "quantizedinformatics:block/stone_stand",
-      "y": 270
+    "variants": {
+        "facing=north": {
+            "model": "quantizedinformatics:block/stone_stand"
+        },
+        "facing=east": {
+            "model": "quantizedinformatics:block/stone_stand",
+            "y": 90
+        },
+        "facing=south": {
+            "model": "quantizedinformatics:block/stone_stand",
+            "y": 180
+        },
+        "facing=west": {
+            "model": "quantizedinformatics:block/stone_stand",
+            "y": 270
+        }
     }
-  }
 }
+

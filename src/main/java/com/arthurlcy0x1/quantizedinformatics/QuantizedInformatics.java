@@ -6,16 +6,19 @@ import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.arthurlcy0x1.quantizedindustry.MacReg;
+import com.arthurlcy0x1.quantizedindustry.OreReg;
+import com.arthurlcy0x1.quantizedindustry.QuanFluid;
 import com.arthurlcy0x1.quantizedinformatics.world.RegWorld;
 import com.arthurlcy0x1.quantizedinformatics.world.WorldGen;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.ChunkGeneratorType;
 import net.minecraft.world.gen.feature.Feature;
@@ -35,16 +38,21 @@ import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
+import net.minecraftforge.registries.RegistryBuilder;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod("quantizedinformatics")
 public class QuantizedInformatics {
 
-	// You can use EventBusSubscriber to automatically subscribe events on the
-	// contained class (this is subscribing to the MOD
-	// Event bus for receiving Registry Events)
 	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 	public static class RegistryEvents {
+
+		@SubscribeEvent
+		public static void newReg(final RegistryEvent.NewRegistry event) {
+			new RegistryBuilder<QuanFluid>().setName(new ResourceLocation(MODID, "fluid")).setType(QuanFluid.class)
+					.create();
+		}
+
 		@SubscribeEvent
 		public static void onModDimensionRegister(final RegisterDimensionsEvent event) {
 			LOGGER.warn("dimension type registered");// TODO
@@ -59,6 +67,8 @@ public class QuantizedInformatics {
 		@SubscribeEvent
 		public static void regBlock(final RegistryEvent.Register<Block> event) {
 			getList(Registrar.class, event, Block.class);
+			getList(OreReg.class, event, Block.class);
+			getList(MacReg.class, event, Block.class);
 		}
 
 		@SubscribeEvent
@@ -69,6 +79,7 @@ public class QuantizedInformatics {
 		@SubscribeEvent
 		public static void regContainerType(final RegistryEvent.Register<ContainerType<?>> event) {
 			event.getRegistry().registerAll(Registrar.CTS);
+			event.getRegistry().registerAll(MacReg.CTS);
 		}
 
 		@SubscribeEvent
@@ -84,13 +95,19 @@ public class QuantizedInformatics {
 		@SubscribeEvent
 		public static void regIRecipeSerializer(RegistryEvent.Register<IRecipeSerializer<?>> event) {
 			event.getRegistry().registerAll(Registrar.RSS);
+			event.getRegistry().registerAll(MacReg.RSS);
 		}
 
 		@SubscribeEvent
 		public static void regItem(final RegistryEvent.Register<Item> event) {
 			getList(Registrar.class, event, Item.class);
-			for (Item[] its : Registrar.IDS)
-				event.getRegistry().registerAll(its);
+			getList(OreReg.class, event, Item.class);
+			getList(MacReg.class, event, Item.class);
+			Item[][][] items = { Registrar.IDS, OreReg.IOPS, OreReg.IMPS, OreReg.IMAS };
+			for (Item[][] ites : items)
+				for (Item[] its : ites)
+					event.getRegistry().registerAll(its);
+
 		}
 
 		@SubscribeEvent
@@ -106,6 +123,7 @@ public class QuantizedInformatics {
 		@SubscribeEvent
 		public static void regTileEntityType(final RegistryEvent.Register<TileEntityType<?>> event) {
 			event.getRegistry().registerAll(Registrar.TETS);
+			event.getRegistry().registerAll(MacReg.TETS);
 		}
 
 	}
@@ -134,28 +152,23 @@ public class QuantizedInformatics {
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
-
-		// Register ourselves for server and other game events we are interested in
 		MinecraftForge.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
 		PacketHandler.registerPackets();
 
 	}
 
-	// You can use SubscribeEvent and let the Event Bus discover methods to call
 	@SubscribeEvent
 	public void onServerStarting(FMLServerStartingEvent event) {
-		// do something when the server starts
 		LOGGER.info("HELLO from server starting");
 	}
 
 	private void doClientStuff(final FMLClientSetupEvent event) {
 		Registrar.registerRender();
-		LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().gameSettings);
+		MacReg.registerRender();
 	}
 
 	private void enqueueIMC(final InterModEnqueueEvent event) {
-		// some example code to dispatch IMC to another mod
 		InterModComms.sendTo("quantizedinformatics", "helloworld", () -> {
 			LOGGER.info("Hello world from the MDK");
 			return "Hello world";
@@ -163,16 +176,11 @@ public class QuantizedInformatics {
 	}
 
 	private void processIMC(final InterModProcessEvent event) {
-		// some example code to receive and process InterModComms from other mods
 		LOGGER.info("Got IMC {}",
 				event.getIMCStream().map(m -> m.getMessageSupplier().get()).collect(Collectors.toList()));
 	}
 
 	private void setup(final FMLCommonSetupEvent event) {
-		// some preinit code
-		LOGGER.info("HELLO FROM PREINIT");
-		LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
-
 		WorldGen.addOres();
 	}
 
