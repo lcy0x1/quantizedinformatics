@@ -12,13 +12,6 @@ import net.minecraft.util.ResourceLocation;
 
 public interface ISMRecipe<T extends ISMRecipe.Inv> extends ISIRecipe<T> {
 
-	public static interface Inv extends ISIRecipe.Inv {
-
-		@Override
-		public ItemStack getIngredient();
-
-	}
-
 	public static interface ISMRFactory<T extends SMRecipe<C>, C extends Inv> {
 
 		public T get(ResourceLocation rl, Ingredient in, ItemStack[] is, int time);

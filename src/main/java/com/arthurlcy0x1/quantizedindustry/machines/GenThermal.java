@@ -219,7 +219,7 @@ public class GenThermal {
 					decrStackSize(FUEL, 1);
 					max_prog = ForgeHooks.getBurnTime(is);
 					if (is.hasContainerItem())
-						this.setInventorySlotContents(FUEL, is.getContainerItem());
+						this.setInventorySlotContents(FUEL, is.getContainerItem().copy());
 				} else if (fuelTank.getFluidType() != null) {
 					QuanFluid t = fuelTank.getFluidType();
 					double get = Math.max(200 / t.getFuelValue(), fuelTank.getStorage());

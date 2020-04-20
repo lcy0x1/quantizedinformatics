@@ -176,7 +176,7 @@ public class ConFurnace {
 			if (max_prog > 0 && prog >= max_prog) {
 				decrStackSize(INGD, 1);
 				if (is.hasContainerItem())
-					setInventorySlotContents(INGD, is.getContainerItem());
+					setInventorySlotContents(INGD, is.getContainerItem().copy());
 				incrOrSet(RESULT, r.getCraftingResult(this));
 				prog = max_prog = 0;
 			}

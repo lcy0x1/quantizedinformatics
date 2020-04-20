@@ -653,6 +653,10 @@ public interface IFluidTE {
 
 	public static final double ERR = 1e-6, FLOWRATE = 1e-2;
 
+	public static boolean isFluidCont(ItemStack is) {
+		return false;// TODO fluid cont pred
+	}
+
 	public boolean acceptNewFluid(QuanFluid f);
 
 	public double addStorage(QuanFluid f, double q);

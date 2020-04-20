@@ -1,6 +1,6 @@
 {
     "group": "quantizedinformatics:reduce_cost",
-    "type": "quantizedinformatics:power_cut",
+    "type": "quantizedinformatics:power_forge",
     "pattern": [
         "0 0",
         "010",

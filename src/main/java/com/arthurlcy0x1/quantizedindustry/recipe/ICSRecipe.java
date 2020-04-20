@@ -36,10 +36,6 @@ public interface ICSRecipe<T extends ICSRecipe.Inv> extends ICIRecipe<T> {
 
 	}
 
-	public static interface Inv extends ICIRecipe.Inv {
-
-	}
-
 	public static <T extends CSRecipe<C>, C extends Inv> Ser<T, C> getSingleSer(ICSRFactory<T, C> f) {
 		return new Ser<T, C>((id, json, ingr, t) -> f.get(id, ingr, ISSRecipe.decItem(json.get("out")), t),
 				(id, data, ingr, t) -> f.get(id, ingr, data.readItemStack(), t),

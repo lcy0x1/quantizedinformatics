@@ -8,11 +8,15 @@ import com.arthurlcy0x1.quantizedindustry.machines.Transistor;
 import com.arthurlcy0x1.quantizedindustry.recipe.ICentRecipe;
 import com.arthurlcy0x1.quantizedindustry.recipe.ICutRecipe;
 import com.arthurlcy0x1.quantizedindustry.recipe.IElecRecipe;
+import com.arthurlcy0x1.quantizedindustry.recipe.IExtractRecipe;
+import com.arthurlcy0x1.quantizedindustry.recipe.IForgeRecipe;
 import com.arthurlcy0x1.quantizedindustry.recipe.IPlateRecipe;
 import com.arthurlcy0x1.quantizedindustry.recipe.IPowderRecipe;
 import com.arthurlcy0x1.quantizedindustry.recipe.IWashRecipe;
 import com.arthurlcy0x1.quantizedindustry.recipe.IWireRecipe;
 import com.arthurlcy0x1.quantizedindustry.tables.CutST;
+import com.arthurlcy0x1.quantizedindustry.tables.ExtST;
+import com.arthurlcy0x1.quantizedindustry.tables.ForgeST;
 import com.arthurlcy0x1.quantizedindustry.tables.PlateST;
 import com.arthurlcy0x1.quantizedindustry.tables.StoneTable;
 import com.arthurlcy0x1.quantizedinformatics.AbReg;
@@ -34,6 +38,8 @@ public class MacReg extends AbReg {
 
 	public static final Block BST_PLA = addName(new StoneTable(PlateST.TE::new), "stonetable_plate");
 	public static final Block BST_CUT = addName(new StoneTable(CutST.TE::new), "stonetable_cut");
+	public static final Block BST_FRG = addName(new StoneTable(ForgeST.TE::new), "stonetable_forge");
+	public static final Block BST_EXT = addName(new StoneTable(ExtST.TE::new), "stonetable_extract");
 
 	public static final Block BP_TR = addName(new PMBlock(Transistor.TE::new, false), "pm_transistor");
 	public static final Block BPG_TH = addName(new PMBlock(GenThermal.TE::new, true), "pmg_thermal");
@@ -50,6 +56,8 @@ public class MacReg extends AbReg {
 
 	public static final Item IBST_PLA = convert(BST_PLA);
 	public static final Item IBST_CUT = convert(BST_CUT);
+	public static final Item IBST_FRG = convert(BST_FRG);
+	public static final Item IBST_EXT = convert(BST_EXT);
 
 	public static final Item IBP_TR = convert(BP_TR);
 	public static final Item IBPG_TH = convert(BPG_TH);
@@ -68,6 +76,8 @@ public class MacReg extends AbReg {
 
 	public static final ContainerType<PlateST.Cont> CTST_PLA = getCT(PlateST.Cont::new, "stonetable_plate_c");
 	public static final ContainerType<CutST.Cont> CTST_CUT = getCT(CutST.Cont::new, "stonetable_cut_c");
+	public static final ContainerType<ForgeST.Cont> CTST_FRG = getCT(ForgeST.Cont::new, "stonetable_forge_c");
+	public static final ContainerType<ExtST.Cont> CTST_EXT = getCT(ExtST.Cont::new, "stonetable_extract_c");
 
 	public static final ContainerType<Transistor.Cont> CTP_TR = getCT(Transistor.Cont::new, "pm_transistor_c");
 	public static final ContainerType<GenThermal.Cont> CTPG_TH = getCT(GenThermal.Cont::new, "pmg_thermal_c");
@@ -76,6 +86,8 @@ public class MacReg extends AbReg {
 
 	public static final TileEntityType<PlateST.TE> TETST_PLA = getTET(PlateST.TE::new, BST_PLA, "stonetable_plate_te");
 	public static final TileEntityType<CutST.TE> TETST_CUT = getTET(CutST.TE::new, BST_CUT, "stonetable_cut_te");
+	public static final TileEntityType<ForgeST.TE> TETST_FRG = getTET(ForgeST.TE::new, BST_FRG, "stonetable_forge_te");
+	public static final TileEntityType<ExtST.TE> TETST_EXT = getTET(ExtST.TE::new, BST_EXT, "stonetable_extract_te");
 
 	public static final TileEntityType<Transistor.TE> TETP_TR = getTET(Transistor.TE::new, BP_TR, "pm_transistor_te");
 	public static final TileEntityType<GenThermal.TE> TETPG_TH = getTET(GenThermal.TE::new, BPG_TH, "pmg_thermal_te");
@@ -84,30 +96,41 @@ public class MacReg extends AbReg {
 
 	public static final IRecipeType<IPowderRecipe> RTP_PDR = IRecipeType.register(MODID + ":power_powder");
 	public static final IRecipeType<IPlateRecipe> RTP_PLA = IRecipeType.register(MODID + ":power_plate");
+	public static final IRecipeType<IForgeRecipe> RTP_FRG = IRecipeType.register(MODID + ":power_forge");
+	public static final IRecipeType<IExtractRecipe> RTP_EXT = IRecipeType.register(MODID + ":power_extract");
+
 	public static final IRecipeType<ICutRecipe> RTP_CUT = IRecipeType.register(MODID + ":power_cut");
-	public static final IRecipeType<ICutRecipe> RTP_WIR = IRecipeType.register(MODID + ":power_wire");
+	public static final IRecipeType<IWireRecipe> RTP_WIR = IRecipeType.register(MODID + ":power_wire");
 	public static final IRecipeType<IWashRecipe> RTP_WSH = IRecipeType.register(MODID + ":power_wash");
 	public static final IRecipeType<IElecRecipe> RTP_ELE = IRecipeType.register(MODID + ":power_electrolysis");
 	public static final IRecipeType<ICentRecipe> RTP_CEN = IRecipeType.register(MODID + ":power_centrifuge");
 
 	public static final IRecipeSerializer<?> RSP_PDR = getRS(IPowderRecipe.SERIALIZER, "power_powder");
 	public static final IRecipeSerializer<?> RSP_PLA = getRS(IPlateRecipe.SERIALIZER, "power_plate");
+	public static final IRecipeSerializer<?> RSP_FRG = getRS(IForgeRecipe.SERIALIZER, "power_forge");
+	public static final IRecipeSerializer<?> RSP_EXT = getRS(IExtractRecipe.SERIALIZER, "power_extract");
+
 	public static final IRecipeSerializer<?> RSP_CUT = getRS(ICutRecipe.SERIALIZER, "power_cut");
 	public static final IRecipeSerializer<?> RSP_WIR = getRS(IWireRecipe.SERIALIZER, "power_wire");
 	public static final IRecipeSerializer<?> RSP_WSH = getRS(IWashRecipe.SERIALIZER, "power_wash");
 	public static final IRecipeSerializer<?> RSP_ELE = getRS(IElecRecipe.SERIALIZER, "power_electrolysis");
 	public static final IRecipeSerializer<?> RSP_CEN = getRS(ICentRecipe.SERIALIZER, "power_centrifuge");
 
-	public static final ContainerType<?>[] CTS = { CTST_PLA, CTST_CUT, CTP_TR, CTPG_TH, CTPC_FN, CTPC_PU };
+	public static final ContainerType<?>[] CTS = { CTST_PLA, CTST_CUT, CTST_FRG, CTST_EXT, CTP_TR, CTPG_TH, CTPC_FN,
+			CTPC_PU };
 
-	public static final TileEntityType<?>[] TETS = { TETST_PLA, TETST_CUT, TETP_TR, TETPG_TH, TETPC_FN, TETPC_PU };
+	public static final TileEntityType<?>[] TETS = { TETST_PLA, TETST_CUT, TETST_FRG, TETST_EXT, TETP_TR, TETPG_TH,
+			TETPC_FN, TETPC_PU };
 
-	public static final IRecipeSerializer<?>[] RSS = { RSP_PDR, RSP_PLA, RSP_CUT, RSP_WIR, RSP_WSH, RSP_ELE, RSP_CEN };
+	public static final IRecipeSerializer<?>[] RSS = { RSP_PDR, RSP_PLA, RSP_FRG, RSP_EXT, RSP_CUT, RSP_WIR, RSP_WSH,
+			RSP_ELE, RSP_CEN };
 
 	@OnlyIn(Dist.CLIENT)
 	public static void registerRender() {
 		ScreenManager.registerFactory(CTST_PLA, PlateST.Scr::new);
 		ScreenManager.registerFactory(CTST_CUT, CutST.Scr::new);
+		ScreenManager.registerFactory(CTST_FRG, ForgeST.Scr::new);
+		ScreenManager.registerFactory(CTST_EXT, ExtST.Scr::new);
 		ScreenManager.registerFactory(CTPG_TH, GenThermal.Scr::new);
 		ScreenManager.registerFactory(CTPC_FN, ConFurnace.Scr::new);
 	}

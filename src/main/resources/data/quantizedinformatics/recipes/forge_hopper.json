@@ -1,6 +1,6 @@
 {
-    "group": "quantizedinformatics:reduce_cost",
-    "type": "quantizedinformatics:power_cut",
+    "group":"quantizedinformatics:reduce_cost",
+    "type": "quantizedinformatics:power_forge",
     "pattern": [
         "0 0",
         "010",
@@ -17,6 +17,6 @@
     "out": {
         "item": "hopper"
     },
-    "cost": 100,
-    "click_cost": 20
+    "cost":100,
+    "click_cost":20
 }

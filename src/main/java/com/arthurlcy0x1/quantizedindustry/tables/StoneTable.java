@@ -17,8 +17,95 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.common.ForgeHooks;
 
 public class StoneTable extends BaseBlock {
+
+	public static class FScr<C extends CTEBlock.CommCont> extends Scr<C> {
+
+		public FScr(C cont, PlayerInventory inv, ITextComponent text, SpriteManager gui) {
+			super(cont, inv, text, gui);
+		}
+
+		@Override
+		protected void drawBackground(float pt, int x, int y, ScreenRenderer renderer) {
+			super.drawBackground(pt, x, y, renderer);
+			int fuel = get(4);
+			int max_fuel = get(5);
+			if (fuel > 0)
+				renderer.drawBottomUp("fire", "fire_1", 1.0 * fuel / max_fuel);
+		}
+
+	}
+
+	public static abstract class FTE<T extends TE<T, C, I, R>, C extends CTEBlock.CommCont, I extends IInventory, R extends IClickableRecipe<I>>
+			extends TE<T, C, I, R> {
+
+		private final int fuelSlot;
+
+		private int fuel = 0, max_fuel = 0;
+
+		public FTE(TileEntityType<T> type, ISTContFac<C> fac, int size, int tool, int f, String str) {
+			super(type, fac, size, tool, str);
+			fuelSlot = f;
+		}
+
+		@Override
+		public int get(int index) {
+			if (index < 4)
+				return super.get(index);
+			if (index == 4)
+				return fuel;
+			if (index == 5)
+				return max_fuel;
+			return 0;
+		}
+
+		@Override
+		public void read(CompoundNBT tag) {
+			super.read(tag);
+			fuel = tag.getInt("fuel");
+			max_fuel = tag.getInt("max_fuel");
+		}
+
+		@Override
+		public int size() {
+			return 6;
+		}
+
+		@Override
+		public void tick() {
+			super.tick();
+			if (world.isRemote)
+				return;
+			if (fuel > 0)
+				fuel--;
+			if (fuel == 0) {
+				ItemStack is = getStackInSlot(fuelSlot);
+				if (CTEBlock.CTECont.isFuel(is)) {
+					max_fuel = fuel = ForgeHooks.getBurnTime(is);
+					if (is.hasContainerItem())
+						setInventorySlotContents(fuelSlot, is.getContainerItem().copy());
+					else
+						decrStackSize(fuelSlot, 1);
+				}
+			}
+		}
+
+		@Override
+		public CompoundNBT write(CompoundNBT tag) {
+			super.write(tag);
+			tag.putInt("fuel", fuel);
+			tag.putInt("max_fuel", max_fuel);
+			return tag;
+		}
+
+		@Override
+		protected boolean canClick() {
+			return super.canClick() && fuel > 0;
+		}
+
+	}
 
 	public static interface ISTContFac<C> {
 
@@ -29,7 +116,7 @@ public class StoneTable extends BaseBlock {
 	public static class Scr<C extends CTEBlock.CommCont> extends CTEBlock.CommScr<C> {
 
 		private boolean hov = false;
-		private final SpriteManager manager;
+		protected final SpriteManager manager;
 
 		public Scr(C cont, PlayerInventory inv, ITextComponent text, SpriteManager gui) {
 			super(cont, inv, text, gui.getHeight());
@@ -44,9 +131,7 @@ public class StoneTable extends BaseBlock {
 			return super.mouseClicked(x, y, t);
 		}
 
-		@Override
-		protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-			ScreenRenderer renderer = manager.getRenderer(this);
+		protected void drawBackground(float pt, int x, int y, ScreenRenderer renderer) {
 			renderer.start();
 			int prog = get(0);
 			int max_prog = get(1);
@@ -54,6 +139,12 @@ public class StoneTable extends BaseBlock {
 				renderer.draw("arrow", get(2) > 0 && hov ? "arrow_2" : "arrow_1");
 				renderer.drawLeftRight("arrow", "arrow_3", 1.0 * prog / max_prog);
 			}
+		}
+
+		@Override
+		protected void drawGuiContainerBackgroundLayer(float pt, int x, int y) {
+			ScreenRenderer renderer = manager.getRenderer(this);
+			drawBackground(pt, x, y, renderer);
 		}
 
 		@Override
@@ -93,10 +184,8 @@ public class StoneTable extends BaseBlock {
 				return prog;
 			if (index == 1)
 				return max_prog;
-			if (index == 2) {
-				ItemStack tool = getStackInSlot(toolSlot);
-				return max_prog == 0 || tool.isEmpty() ? 0 : 1;
-			}
+			if (index == 2)
+				return canClick() ? 1 : 0;
 			return 0;
 		}
 
@@ -129,7 +218,7 @@ public class StoneTable extends BaseBlock {
 				return;
 			if (dirty) {
 				dirty = false;
-				updateRecipe();
+				update();
 			}
 
 		}
@@ -144,6 +233,10 @@ public class StoneTable extends BaseBlock {
 
 		protected abstract void addOutput(R rec);
 
+		protected boolean canClick() {
+			return max_prog > 0 && (toolSlot < 0 || !getStackInSlot(toolSlot).isEmpty());
+		}
+
 		protected abstract boolean checkRecipe(R nr);
 
 		protected abstract void doReduce();
@@ -157,17 +250,19 @@ public class StoneTable extends BaseBlock {
 
 		protected void proceed() {
 			prog++;
-			ItemStack tool = getStackInSlot(toolSlot);
-			int d = tool.getDamage() + 1;
-			if (d < tool.getMaxDamage())
-				tool.setDamage(d);
-			else
-				setInventorySlotContents(toolSlot, ItemStack.EMPTY);
+			if (toolSlot >= 0) {
+				ItemStack tool = getStackInSlot(toolSlot);
+				int d = tool.getDamage() + 1;
+				if (d < tool.getMaxDamage())
+					tool.setDamage(d);
+				else
+					setInventorySlotContents(toolSlot, ItemStack.EMPTY);
+			}
 			markDirty();
 			dirty = true;
 		}
 
-		protected void updateRecipe() {
+		protected void update() {
 			refreshRecipe();
 			if (max_prog > 0 && prog == max_prog) {
 				doReduce();

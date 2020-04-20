@@ -59,7 +59,7 @@ public class SpriteManager {
 			Rect cr = getComp(c);
 			Rect sr = getSide(s);
 			int dh = (int) Math.round(sr.h * per);
-			scr.blit(x + cr.x, y + cr.y + sr.h - dh, sr.x, sr.y, sr.w, dh);
+			scr.blit(x + cr.x, y + cr.y + sr.h - dh, sr.x, sr.y + sr.h - dh, sr.w, dh);
 		}
 
 		public void drawLeftRight(String c, String s, double per) {
@@ -110,7 +110,7 @@ public class SpriteManager {
 
 	public int getPIH() {
 		check();
-		return height - 83;
+		return height - 82;
 	}
 
 	@OnlyIn(Dist.CLIENT)

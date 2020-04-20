@@ -12,13 +12,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public interface ISSRecipe<T extends ISSRecipe.Inv> extends ISIRecipe<T> {
 
-	public static interface Inv extends ISIRecipe.Inv {
-
-		@Override
-		public ItemStack getIngredient();
-
-	}
-
 	public static interface ISSRFactory<T extends SSRecipe<C>, C extends Inv> {
 
 		public T get(ResourceLocation rl, Ingredient in, ItemStack is, int time);

@@ -326,6 +326,7 @@ public class ResourceManager {
 			}
 
 		}
+
 		private static class Item {
 
 			private final String name, app;
