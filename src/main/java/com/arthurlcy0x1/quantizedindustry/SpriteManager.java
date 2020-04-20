@@ -20,12 +20,6 @@ import net.minecraftforge.fml.DistExecutor;
 
 public class SpriteManager {
 
-	public static interface SlotFactory<T extends Slot> {
-
-		public T getSlot(int x, int y);
-
-	}
-
 	public static class Rect {
 
 		public static final Rect ZERO = new Rect(0, 0, 0, 0);
@@ -55,16 +49,17 @@ public class SpriteManager {
 			scr = scrIn;
 		}
 
-		public void start() {
-			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-			scr.getMinecraft().getTextureManager().bindTexture(texture);
-			scr.blit(x, y, 0, 0, w, h);
-		}
-
 		public void draw(String c, String s) {
 			Rect cr = getComp(c);
 			Rect sr = getSide(s);
 			scr.blit(x + cr.x, y + cr.y, sr.x, sr.y, sr.w, sr.h);
+		}
+
+		public void drawBottomUp(String c, String s, double per) {
+			Rect cr = getComp(c);
+			Rect sr = getSide(s);
+			int dh = (int) Math.round(sr.h * per);
+			scr.blit(x + cr.x, y + cr.y + sr.h - dh, sr.x, sr.y, sr.w, dh);
 		}
 
 		public void drawLeftRight(String c, String s, double per) {
@@ -74,12 +69,17 @@ public class SpriteManager {
 			scr.blit(x + cr.x, y + cr.y, sr.x, sr.y, dw, sr.h);
 		}
 
-		public void drawBottomUp(String c, String s, double per) {
-			Rect cr = getComp(c);
-			Rect sr = getSide(s);
-			int dh = (int) Math.round(sr.h * per);
-			scr.blit(x + cr.x, y + cr.y + sr.h - dh, sr.x, sr.y, sr.w, dh);
+		public void start() {
+			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+			scr.getMinecraft().getTextureManager().bindTexture(texture);
+			scr.blit(x, y, 0, 0, w, h);
 		}
+
+	}
+
+	public static interface SlotFactory<T extends Slot> {
+
+		public T getSlot(int x, int y);
 
 	}
 
@@ -96,6 +96,49 @@ public class SpriteManager {
 		coords = new ResourceLocation(mod, "/textures/gui/coords/" + str + ".json");
 		texture = new ResourceLocation(mod, "/textures/gui/container/" + str + ".png");
 		check();
+	}
+
+	public Rect getComp(String key) {
+		check();
+		return comp.containsKey(key) ? comp.get(key) : Rect.ZERO;
+	}
+
+	public int getHeight() {
+		check();
+		return height;
+	}
+
+	public int getPIH() {
+		check();
+		return height - 83;
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public ScreenRenderer getRenderer(ContainerScreen<?> blit) {
+		check();
+		return new ScreenRenderer(blit);
+	}
+
+	public Rect getSide(String key) {
+		check();
+		return side.containsKey(key) ? side.get(key) : Rect.ZERO;
+	}
+
+	public <T extends Slot> T getSlot(String key, SlotFactory<T> fac) {
+		check();
+		Rect c = getComp(key);
+		return fac.getSlot(c.x, c.y);
+	}
+
+	@Override
+	public String toString() {
+		return name;
+	}
+
+	public boolean within(String key, double x, double y) {
+		check();
+		Rect c = getComp(key);
+		return x > c.x && x < c.x + c.w && y > c.y && y < c.y + c.h;
 	}
 
 	private void check() {
@@ -128,48 +171,6 @@ public class SpriteManager {
 			e.printStackTrace();
 		}
 		loaded = true;
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	public ScreenRenderer getRenderer(ContainerScreen<?> blit) {
-		check();
-		return new ScreenRenderer(blit);
-	}
-
-	public <T extends Slot> T getSlot(String key, SlotFactory<T> fac) {
-		check();
-		Rect c = getComp(key);
-		return fac.getSlot(c.x, c.y);
-	}
-
-	public Rect getComp(String key) {
-		check();
-		return comp.containsKey(key) ? comp.get(key) : Rect.ZERO;
-	}
-
-	public boolean within(String key, double x, double y) {
-		check();
-		Rect c = getComp(key);
-		return x > c.x && x < c.x + c.w && y > c.y && y < c.y + c.h;
-	}
-
-	public Rect getSide(String key) {
-		check();
-		return side.containsKey(key) ? side.get(key) : Rect.ZERO;
-	}
-
-	public int getHeight() {
-		check();
-		return height;
-	}
-
-	public int getPIH() {
-		check();
-		return height - 83;
-	}
-
-	public String toString() {
-		return name;
 	}
 
 }

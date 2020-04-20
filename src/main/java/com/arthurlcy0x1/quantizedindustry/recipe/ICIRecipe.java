@@ -99,8 +99,10 @@ public interface ICIRecipe<T extends ICIRecipe.Inv> extends IMachineRecipe<T> {
 						ingr = in[l][flip ? in[0].length - k - 1 : k];
 					if (!ingr.test(inv.getStackInSlot(inv.getStartIndex() + i + j * 3)))
 						return false;
+
 				}
 			}
+
 			return true;
 		}
 

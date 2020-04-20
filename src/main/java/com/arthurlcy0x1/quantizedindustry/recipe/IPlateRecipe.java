@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 
-public interface IPlateRecipe extends ISSRecipe<IPlateRecipe.Inv>, IClickableRecipe {
+public interface IPlateRecipe extends ISSRecipe<IPlateRecipe.Inv>, IClickableRecipe<IPlateRecipe.Inv> {
 
 	public static interface Inv extends ISSRecipe.Inv {
 

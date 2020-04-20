@@ -76,7 +76,7 @@ public class MacReg extends AbReg {
 
 	public static final TileEntityType<PlateST.TE> TETST_PLA = getTET(PlateST.TE::new, BST_PLA, "stonetable_plate_te");
 	public static final TileEntityType<CutST.TE> TETST_CUT = getTET(CutST.TE::new, BST_CUT, "stonetable_cut_te");
-	
+
 	public static final TileEntityType<Transistor.TE> TETP_TR = getTET(Transistor.TE::new, BP_TR, "pm_transistor_te");
 	public static final TileEntityType<GenThermal.TE> TETPG_TH = getTET(GenThermal.TE::new, BPG_TH, "pmg_thermal_te");
 	public static final TileEntityType<ConFurnace.TE> TETPC_FN = getTET(ConFurnace.TE::new, BPC_FN, "pmc_furnace_te");
@@ -98,9 +98,9 @@ public class MacReg extends AbReg {
 	public static final IRecipeSerializer<?> RSP_ELE = getRS(IElecRecipe.SERIALIZER, "power_electrolysis");
 	public static final IRecipeSerializer<?> RSP_CEN = getRS(ICentRecipe.SERIALIZER, "power_centrifuge");
 
-	public static final ContainerType<?>[] CTS = { CTST_PLA, CTP_TR, CTPG_TH, CTPC_FN, CTPC_PU };
+	public static final ContainerType<?>[] CTS = { CTST_PLA, CTST_CUT, CTP_TR, CTPG_TH, CTPC_FN, CTPC_PU };
 
-	public static final TileEntityType<?>[] TETS = { TETST_PLA, TETP_TR, TETPG_TH, TETPC_FN, TETPC_PU };
+	public static final TileEntityType<?>[] TETS = { TETST_PLA, TETST_CUT, TETP_TR, TETPG_TH, TETPC_FN, TETPC_PU };
 
 	public static final IRecipeSerializer<?>[] RSS = { RSP_PDR, RSP_PLA, RSP_CUT, RSP_WIR, RSP_WSH, RSP_ELE, RSP_CEN };
 
@@ -131,7 +131,7 @@ public class MacReg extends AbReg {
 
 	@Override
 	public ItemStack createIcon() {
-		return new ItemStack(BP_TR);
+		return new ItemStack(BST_PLA);
 	}
 
 }

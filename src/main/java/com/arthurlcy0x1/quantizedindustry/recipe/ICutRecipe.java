@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 
-public interface ICutRecipe extends ICSRecipe<ICutRecipe.Inv>, IClickableRecipe {
+public interface ICutRecipe extends ICSRecipe<ICutRecipe.Inv>, IClickableRecipe<ICutRecipe.Inv> {
 
 	public static class CutRecipe extends CSRecipe<Inv> implements ICutRecipe {
 
