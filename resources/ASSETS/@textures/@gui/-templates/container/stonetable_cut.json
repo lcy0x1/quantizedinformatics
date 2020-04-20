@@ -1,0 +1,31 @@
+{
+    "side": [
+        "arrow_1",
+        "arrow_2",
+        "arrow_3"
+    ],
+    "comp": {
+        "tool": {
+            "sprite": "altas_scissor",
+            "x": 24,
+            "y": 0
+        },
+        "input": {
+            "sprite": "slot",
+            "x": 52,
+            "y": -18,
+            "rx": 3,
+            "ry": 3
+        },
+        "arrow": {
+            "sprite": "arrow_0",
+            "x": 117,
+            "y": 0
+        },
+        "result": {
+            "sprite": "result_slot",
+            "x": 150,
+            "y": 0
+        }
+    }
+}

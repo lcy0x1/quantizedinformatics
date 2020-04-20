@@ -31,7 +31,7 @@ public interface IPlateRecipe extends ISSRecipe<IPlateRecipe.Inv>, IClickableRec
 	}
 
 	public static final Ser<PlateRecipe, Inv> SERIALIZER = new Ser<>(
-			(id, json, ingr, t) -> new PlateRecipe(id, ingr, ISSRecipe.decItem(json), t,
+			(id, json, ingr, t) -> new PlateRecipe(id, ingr, ISSRecipe.decItem(json.get("out")), t,
 					IClickableRecipe.readClickFromJson(json)),
 			(id, data, ingr, t) -> new PlateRecipe(id, ingr, data.readItemStack(), t,
 					IClickableRecipe.readClickFromData(data)),

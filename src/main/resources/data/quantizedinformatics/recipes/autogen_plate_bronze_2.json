@@ -1,6 +1,6 @@
 {
     "group": "quantizedinformatics:autogen_plate",
-    "type": "quantizedinformatics:plate",
+    "type": "quantizedinformatics:power_plate",
     "in": {"item":"quantizedinformatics:bronze_2_ingot"},
     "out": {"item":"quantizedinformatics:bronze_2_plate","count":2},
     "cost": 100,

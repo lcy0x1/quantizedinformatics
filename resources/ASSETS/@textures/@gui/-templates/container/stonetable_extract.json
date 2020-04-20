@@ -1,0 +1,45 @@
+{
+    "side": [
+        "fire_1",
+        "arrow_1",
+        "arrow_2",
+        "arrow_3"
+    ],
+    "comp": {
+        "tool": {
+            "sprite": "altas_hammer",
+            "x": 34,
+            "y": 0
+        },
+        "input": {
+            "sprite": "slot",
+            "x": 64,
+            "y": 0
+        },
+        "fuel": {
+            "sprite": "slot",
+            "x": 64,
+            "y": 36
+        },
+        "fire": {
+            "sprite": "fire_0",
+            "x": 64,
+            "y": 18
+        },
+        "arrow": {
+            "sprite": "arrow_0",
+            "x": 92,
+            "y": 0
+        },
+        "result": {
+            "sprite": "result_slot",
+            "x": 124,
+            "y": 0
+        },
+        "fluid":{
+            "sprite":"fluid_cont",
+            "x":152,
+            "y":18
+        }
+    }
+}

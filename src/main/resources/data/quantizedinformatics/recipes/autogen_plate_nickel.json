@@ -1,6 +1,6 @@
 {
     "group": "quantizedinformatics:autogen_plate",
-    "type": "quantizedinformatics:plate",
+    "type": "quantizedinformatics:power_plate",
     "in": {"item":"quantizedinformatics:nickel_ingot"},
     "out": {"item":"quantizedinformatics:nickel_plate","count":2},
     "cost": 100,

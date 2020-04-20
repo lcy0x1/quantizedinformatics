@@ -7,15 +7,15 @@ import net.minecraft.util.JSONUtils;
 
 public interface IClickableRecipe {
 
-	public static int readClickFromJson(JsonObject json) {
-		return JSONUtils.getInt(json, "click_cost", -1);
-	}
-	
 	public static int readClickFromData(PacketBuffer data) {
 		return data.readInt();
 	}
-	
-	public static void writeClickToData(PacketBuffer data,IClickableRecipe r) {
+
+	public static int readClickFromJson(JsonObject json) {
+		return JSONUtils.getInt(json, "click_cost", -1);
+	}
+
+	public static void writeClickToData(PacketBuffer data, IClickableRecipe r) {
 		data.writeInt(r.getClickCost());
 	}
 

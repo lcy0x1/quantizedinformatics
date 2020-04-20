@@ -98,7 +98,7 @@ public class OreReg extends AbReg {
 
 	static {
 		String[] ores = { "iron", "gold", "copper", "tin", "silver", "lead", "uranium", "aluminum", "tungsten", "borax",
-				"beryllium", "nickel", "manganese", "titanium" };
+				"beryllium", "nickel", "manganese", "titanium", "cobalt", "platinum" };
 		String[] type = { "_ore_powder", "_ore_powder_clean", "_ore_powder_clean_tiny" };
 		int n = ores.length;
 		int m = type.length;
@@ -109,15 +109,23 @@ public class OreReg extends AbReg {
 	}
 
 	static {
-		String[] metal = { "copper", "tin", "silver", "lead", "aluminum", "tungsten", "nickel", "manganese", "titanium",
-				"cobalt", "platinum" };
+		String[] metal = { "iron", "gold", "copper", "tin", "silver", "lead", "aluminum", "tungsten", "nickel",
+				"manganese", "titanium", "cobalt", "platinum" };
 		String[] type = { "_ingot", "_nugget", "_powder", "_powder_tiny", "_plate" };
 		int n = metal.length;
 		int m = type.length;
-		IMPS = new Item[n][m];
-		for (int i = 0; i < n; i++)
-			for (int j = 0; j < m; j++)
-				IMPS[i][j] = generate(metal[i] + type[j], 64);
+		IMPS = new Item[n][];
+		for (int i = 0; i < n; i++) {
+			if (i < 2) {
+				IMPS[i] = new Item[m - 2];
+				for (int j = 0; j < m - 2; j++)
+					IMPS[i][j] = generate(metal[i] + type[j + 2], 64);
+			} else {
+				IMPS[i] = new Item[m];
+				for (int j = 0; j < m; j++)
+					IMPS[i][j] = generate(metal[i] + type[j], 64);
+			}
+		}
 	}
 
 	static {

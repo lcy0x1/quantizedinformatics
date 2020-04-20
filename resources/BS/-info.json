@@ -103,6 +103,9 @@
             ]
         },
         "machine": {
+            "stonetable": [
+                "_plate"
+            ],
             "pmc": [
                 "_centrifuge",
                 "_cut",
