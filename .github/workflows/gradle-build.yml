@@ -3,9 +3,9 @@
 
 name: Java CI with Gradle
 
-#on:
-#  push:
-#    branches: [ dev ]
+on:
+  push:
+    branches: [ lixiang810-patch-1 ]
 
 jobs:
   build:
