@@ -1,0 +1,9 @@
+{
+    "group": "quantizedinformatics:powder_to_tiny",
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {"item":"quantizedinformatics:silver_ore_powder_clean"}
+    ],
+    "result": {"item":"quantizedinformatics:silver_ore_powder_clean_tiny","count":9}
+}
+

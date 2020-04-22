@@ -1,0 +1,20 @@
+{
+    "variants": {
+        "facing=north": {
+            "model": "quantizedinformatics:block/draft_gate"
+        },
+        "facing=east": {
+            "model": "quantizedinformatics:block/draft_gate",
+            "y": 90
+        },
+        "facing=south": {
+            "model": "quantizedinformatics:block/draft_gate",
+            "y": 180
+        },
+        "facing=west": {
+            "model": "quantizedinformatics:block/draft_gate",
+            "y": 270
+        }
+    }
+}
+

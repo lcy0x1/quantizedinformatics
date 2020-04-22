@@ -1,0 +1,29 @@
+{
+	"group": "quantizedinformatics:gate_mos",
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " p ",
+        "Io-",
+        " n "
+    ],
+    "key": {
+        "I": {
+            "item": "quantizedinformatics:gate_wire"
+        },
+        "n": {
+            "item": "quantizedinformatics:gate_nmos"
+        },
+        "p": {
+            "item": "quantizedinformatics:gate_pmos"
+        },
+        "-": {
+            "item": "quantizedinformatics:gate_mos_empty"
+        },
+        "o": {
+            "item": "quantizedinformatics:gate_mos_nor_4"
+        }
+    },
+    "result": {
+        "item": "quantizedinformatics:gate_mos_nor_5"
+    }
+}

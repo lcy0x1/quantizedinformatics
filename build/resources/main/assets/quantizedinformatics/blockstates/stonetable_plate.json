@@ -1,0 +1,20 @@
+{
+    "variants": {
+        "facing=north": {
+            "model": "quantizedinformatics:block/stonetable_plate"
+        },
+        "facing=east": {
+            "model": "quantizedinformatics:block/stonetable_plate",
+            "y": 90
+        },
+        "facing=south": {
+            "model": "quantizedinformatics:block/stonetable_plate",
+            "y": 180
+        },
+        "facing=west": {
+            "model": "quantizedinformatics:block/stonetable_plate",
+            "y": 270
+        }
+    }
+}
+

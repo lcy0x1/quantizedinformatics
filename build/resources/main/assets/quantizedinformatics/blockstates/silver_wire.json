@@ -1,0 +1,85 @@
+{
+    "multipart": [
+        {
+            "when": {
+                "OR": [
+                    {
+                        "north": "false"
+                    },
+                    {
+                        "east": "false"
+                    },
+                    {
+                        "south": "false"
+                    },
+                    {
+                        "west": "false"
+                    },
+                    {
+                        "up": "false"
+                    },
+                    {
+                        "down": "false"
+                    }
+                ]
+            },
+            "apply": {
+                "model": "quantizedinformatics:block/silver_wire_core"
+            }
+        },
+        {
+            "when": {
+                "north": "true"
+            },
+            "apply": {
+                "model": "quantizedinformatics:block/silver_wire_side"
+            }
+        },
+        {
+            "when": {
+                "east": "true"
+            },
+            "apply": {
+                "model": "quantizedinformatics:block/silver_wire_side",
+                "y": 90
+            }
+        },
+        {
+            "when": {
+                "south": "true"
+            },
+            "apply": {
+                "model": "quantizedinformatics:block/silver_wire_side",
+                "y": 180
+            }
+        },
+        {
+            "when": {
+                "west": "true"
+            },
+            "apply": {
+                "model": "quantizedinformatics:block/silver_wire_side",
+                "y": 270
+            }
+        },
+        {
+            "when": {
+                "up": "true"
+            },
+            "apply": {
+                "model": "quantizedinformatics:block/silver_wire_side",
+                "x": 270
+            }
+        },
+        {
+            "when": {
+                "down": "true"
+            },
+            "apply": {
+                "model": "quantizedinformatics:block/silver_wire_side",
+                "x": 90
+            }
+        }
+    ]
+}
+

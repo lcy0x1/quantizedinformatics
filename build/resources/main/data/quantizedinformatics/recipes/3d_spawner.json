@@ -1,0 +1,26 @@
+{
+	"group": "quantizedinformatics:none",
+    "type": "quantizedinformatics:craft_3d",
+    "pattern": [
+        [
+            "000",
+            "000",
+            "000"
+        ],
+        [
+            "000",
+            "010",
+            "000"
+        ],
+        [
+            "000",
+            "000",
+            "000"
+        ]
+    ],
+    "keys": {
+        "0": "iron_bars",
+        "1":"spawner"
+    },
+    "out": "spawner"
+}

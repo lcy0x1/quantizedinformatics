@@ -1,0 +1,22 @@
+{
+    "group":"quantizedinformatics:reduce_cost",
+    "type": "quantizedinformatics:power_forge",
+    "pattern": [
+        "0 0",
+        "010",
+        " 0 "
+    ],
+    "key": {
+        "0": {
+            "item": "quantizedinformatics:iron_plate"
+        },
+        "1": {
+            "item": "chest"
+        }
+    },
+    "out": {
+        "item": "hopper"
+    },
+    "cost":100,
+    "click_cost":20
+}

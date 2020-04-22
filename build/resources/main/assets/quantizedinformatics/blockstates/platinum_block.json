@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "": {
+            "model": "quantizedinformatics:block/platinum_block"
+        }
+    }
+}
+

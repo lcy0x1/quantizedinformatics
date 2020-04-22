@@ -1,0 +1,24 @@
+{
+	"group": "",
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "020",
+        "010",
+        "000"
+    ],
+    "key": {
+        "0": {
+            "item": "quantizedinformatics:quantum_fog"
+        },
+        "1": {
+            "item": "ender_pearl"
+        },
+        "2": {
+            "item": "quantizedinformatics:quantum_ore"
+        }
+    },
+    "result": {
+        "item": "quantizedinformatics:item_picker",
+        "count": 16
+    }
+}

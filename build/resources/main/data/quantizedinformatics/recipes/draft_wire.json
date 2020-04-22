@@ -1,0 +1,23 @@
+{
+	"group": "quantizedinformatics:draft",
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "020",
+        "212",
+        "020"
+    ],
+    "key": {
+        "0": {
+            "item": "quantizedinformatics:gate_wire"
+        },
+        "1": {
+            "item": "redstone"
+        },
+        "2":{
+            "item": "iron_nugget"
+        }
+    },
+    "result": {
+        "item": "quantizedinformatics:draft_wire"
+    }
+}

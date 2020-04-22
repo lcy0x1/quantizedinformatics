@@ -1,0 +1,18 @@
+{
+	"group": "quantizedinformatics:gate_red",
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "redstone_torch"
+        },
+        {
+            "item": "quantizedinformatics:gate_red_nand_3"
+        },
+        {
+            "item": "quantizedinformatics:gate_red_empty"
+        }
+    ],
+    "result": {
+        "item": "quantizedinformatics:gate_red_nand_4"
+    }
+}
