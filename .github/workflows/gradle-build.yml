@@ -25,10 +25,11 @@ jobs:
     - name: Build with Gradle
       run: |
         ./gradlew build
-        mv ./build/libs/quantizedinformatics-1.4.jar ./
+        mv ./build/libs/*.jar ./autobuilded.jar
     - name: Push to Github
       run: |
         git config --global user.email "lixiang3@outlook.com"
         git config --global user.name "lixiang810"
+        git add .
         git commit -am "Auto compiled and pushed."
         git push
