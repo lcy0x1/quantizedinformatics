@@ -1,8 +1,0 @@
-{
-    "variants": {
-        "": {
-            "model": "quantizedinformatics:block/tungsten_block"
-        }
-    }
-}
-

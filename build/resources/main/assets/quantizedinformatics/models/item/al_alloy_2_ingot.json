@@ -1,7 +1,0 @@
-{
-    "parent": "item/generated",
-    "textures": {
-        "layer0": "quantizedinformatics:items/al_alloy_2_ingot"
-    }
-}
-

@@ -1,7 +1,0 @@
-{
-	"group": "quantizedinformatics:none",
-    "type": "quantizedinformatics:maxwell",
-    "center": "",
-    "surround": "quantizedinformatics:maxwell_magnetic",
-    "output": "quantizedinformatics:maxwell_magnetic"
-}

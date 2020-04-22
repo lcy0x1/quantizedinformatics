@@ -1,6 +1,0 @@
-{
-    "parent": "block/air",
-    "textures": {
-        "particle": "quantizedinformatics:blocks/stone_stand"
-    }
-}

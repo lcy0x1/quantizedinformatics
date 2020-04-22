@@ -1,7 +1,0 @@
-{
-    "parent": "block/cube_all",
-    "textures": {
-        "all": "quantizedinformatics:blocks/beryllium_ore"
-    }
-}
-

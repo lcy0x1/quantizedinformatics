@@ -1,9 +1,0 @@
-{
-    "group": "quantizedinformatics:powder_to_tiny",
-    "type": "minecraft:crafting_shapeless",
-    "ingredients": [
-        {"item":"quantizedinformatics:elem_beo"}
-    ],
-    "result": {"item":"quantizedinformatics:elem_beo_tiny","count":9}
-}
-

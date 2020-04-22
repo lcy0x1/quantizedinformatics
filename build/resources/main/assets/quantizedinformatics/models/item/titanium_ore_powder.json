@@ -1,7 +1,0 @@
-{
-    "parent": "item/generated",
-    "textures": {
-        "layer0": "quantizedinformatics:items/titanium_ore_powder"
-    }
-}
-

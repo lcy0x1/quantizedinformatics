@@ -1,6 +1,0 @@
-{
-	"parent": "quantizedinformatics:block/draft_lnr",
-	"textures": {
-		"face": "quantizedinformatics:blocks/draft_listener_high"
-	}
-}

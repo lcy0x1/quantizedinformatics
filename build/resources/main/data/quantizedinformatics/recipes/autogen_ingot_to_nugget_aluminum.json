@@ -1,9 +1,0 @@
-{
-    "group": "quantizedinformatics:ingot_to_nugget",
-    "type": "minecraft:crafting_shapeless",
-    "ingredients": [
-        {"item":"quantizedinformatics:aluminum_ingot"}
-    ],
-    "result": {"item":"quantizedinformatics:aluminum_nugget","count":9}
-}
-

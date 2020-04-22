@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Implementation-Title: quantizedinformatics
-Implementation-Version: 1.4
-Specification-Vendor: QI-0x1
-Specification-Title: QuantizedInformatics
-Implementation-Timestamp: 2020-04-22T01:28:34+0000
-Specification-Version: 1
-Implementation-Vendor: QI-0x1
-

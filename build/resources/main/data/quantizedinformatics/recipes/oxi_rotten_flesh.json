@@ -1,9 +1,0 @@
-{
-	"group": "quantizedinformatics:none",
-    "type": "quantizedinformatics:oxidation",
-    "time": 20,
-    "in_main": {
-        "item": "rotten_flesh"
-    },
-    "out_main": "quantizedinformatics:elem_dark"
-}
