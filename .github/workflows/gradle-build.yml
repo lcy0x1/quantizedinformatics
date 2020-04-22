@@ -25,4 +25,8 @@ jobs:
     - name: Build with Gradle
       run: |
         ./gradlew build
-        ls
+        mv ./build/libs/quantizedinformatics-1.4.jar ./
+    - name: Push to Github
+      run: |
+        git commit -am "Auto compiled and pushed."
+        git push
