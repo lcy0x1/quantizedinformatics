@@ -28,5 +28,7 @@ jobs:
         mv ./build/libs/quantizedinformatics-1.4.jar ./
     - name: Push to Github
       run: |
+        git config --global user.email "lixiang3@outlook.com"
+        git config --global user.name "lixiang810"
         git commit -am "Auto compiled and pushed."
         git push
