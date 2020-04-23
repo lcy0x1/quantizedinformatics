@@ -8,3 +8,5 @@ logs/
 *.launch
 .DS_Store
 run/
+.idea/
+.settings
