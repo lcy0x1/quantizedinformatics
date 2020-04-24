@@ -37,7 +37,7 @@ public class QuantumBP extends BiomeProvider {
 	}
 
 	@Override
-	public Biome func_225526_b_(int x, int y, int z) {
+	public Biome getNoiseBiome(int x, int y, int z) {
 		double dx = x / 16.0;
 		double dz = z / 16.0;
 		if (Math.abs(dx) <= 2 && Math.abs(dz) <= 2)

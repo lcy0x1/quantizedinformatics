@@ -137,7 +137,7 @@ public class QIBiome extends Biome {
 		}
 
 		private ConfiguredFeature<?, ?> configure(QIFC qifc, QIPC qipc) {
-			return new ConfiguredFeature<>(this, qifc).func_227228_a_(PQI.configure(qipc));
+			return new ConfiguredFeature<>(this, qifc).withPlacement(PQI.configure(qipc));
 		}
 
 	}
@@ -149,6 +149,11 @@ public class QIBiome extends Biome {
 		}
 
 		@Override
+		public ConfiguredPlacement<QIPC> configure(QIPC qipc) {
+			return new ConfiguredPlacement<QIPC>(this, qipc);
+		}
+
+		@Override
 		protected Stream<BlockPos> getPositions(Random r, QIPC config, BlockPos pos) {
 			Stream.Builder<BlockPos> s = Stream.builder();
 			for (int h : config.getGen(r))
@@ -157,10 +162,6 @@ public class QIBiome extends Biome {
 				if (config.addGen(r, pos, i * 16))
 					s.add(getRand(r, pos, i * 16));
 			return s.build();
-		}
-
-		private ConfiguredPlacement<QIPC> configure(QIPC qipc) {
-			return new ConfiguredPlacement<QIPC>(this, qipc);
 		}
 
 		private BlockPos getRand(Random r, BlockPos pos, int h) {
@@ -229,7 +230,7 @@ public class QIBiome extends Biome {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public int func_225529_c_() {
+	public int getSkyColor() {
 		return 0;
 	}
 

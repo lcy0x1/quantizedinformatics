@@ -27,8 +27,7 @@ public class BlockProp {
 	public static final BlockProp QUANTUM_WORLD = new BlockProp(Material.ROCK, -1, 3600000);
 	public static final BlockProp QW_BREAK = new BlockProp(Material.ROCK, 2, 3600000);
 	public static final BlockProp STONE_STAND = new BlockProp(
-			Properties.create(Material.MISCELLANEOUS).noDrops().func_226896_b_(), 2, 3600000).setTool(ToolType.PICKAXE,
-					0);
+			Properties.create(Material.MISCELLANEOUS).noDrops().notSolid(), 2, 3600000).setTool(ToolType.PICKAXE, 0);
 
 	public static final BlockProp PORTAL = new BlockProp(Properties.create(Material.PORTAL).doesNotBlockMovement(), 2,
 			2);

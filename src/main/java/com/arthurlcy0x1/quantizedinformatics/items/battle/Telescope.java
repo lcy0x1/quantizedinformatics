@@ -39,7 +39,7 @@ public interface Telescope {
 		public ActionResult<ItemStack> onItemRightClick(World w, PlayerEntity pl, Hand hand) {
 			ItemStack is = pl.getHeldItem(hand);
 			pl.setActiveHand(hand);
-			return ActionResult.func_226249_b_(is);
+			return ActionResult.resultSuccess(is);
 		}
 
 	}

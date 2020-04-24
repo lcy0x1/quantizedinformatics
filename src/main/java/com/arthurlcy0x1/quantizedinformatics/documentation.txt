@@ -1,0 +1,20 @@
+General Project Structure:
+
+QuantizedInformatics: the main class, calls all Registrars
+
+AbReg: The template for Registrars
+	Registrar: the default Registrar
+	OreReg: the registrar for ores and metals
+	MacReg: the registrar for mahcines
+	RegWorld: the registrar for dimension related things
+	
+BaseBlock: my template for blocks
+BlockProp: my template for block builders
+CTEBlock: contains templates for TileEntity, Container, and Screens
+
+EventHandler: handles all Forge Game Events
+PacketHandler: send and receive Network Packets
+Translator: cache translate related stuff
+
+ResourceManager: tools to generate resources before compile
+

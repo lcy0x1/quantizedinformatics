@@ -3,10 +3,8 @@ package com.arthurlcy0x1.quantizedindustry.items;
 import com.arthurlcy0x1.quantizedindustry.IFluidTE;
 import com.arthurlcy0x1.quantizedindustry.QuanFluid;
 
-import net.minecraft.item.BowItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.SpawnEggItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -59,9 +57,9 @@ public class FluidContItem extends Item {
 
 	public FluidContItem(Properties p, double storage) {
 		super(p);
-		this.addPropertyOverride(new ResourceLocation("type"), (is,w,pl)->0);
-		BowItem b;
-		SpawnEggItem egg;
+		this.addPropertyOverride(new ResourceLocation("fill"),
+				(is, w, pl) -> (float) (1.0 * getStorage(is) / getMaxStorage(is)));
+		this.addPropertyOverride(new ResourceLocation("type"), (is, w, pl) -> QuanFluid.getID(getFluid(is)));
 		this.hasEffect(null);
 		defMax = storage;
 	}

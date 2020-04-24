@@ -72,26 +72,26 @@ public class QuanStand extends MonsterEntity implements IMob, QuanMob {
 		}
 
 		@Override
-		public void func_225597_a_(QuanStand ent, float swing, float amp, float age, float yaw, float pitch) {
+		public void render(MatrixStack mat, IVertexBuilder ver, int i0, int i1, float f0, float f1, float f2,
+				float f3) {
+			body.render(mat, ver, i0, i1, f0, f1, f2, f3);
+			head.render(mat, ver, i0, i1, f0, f1, f2, f3);
+			tail.render(mat, ver, i0, i1, f0, f1, f2, f3);
+			leftarm.render(mat, ver, i0, i1, f0, f1, f2, f3);
+			rightarm.render(mat, ver, i0, i1, f0, f1, f2, f3);
+
+		}
+
+		@Override
+		public void setRotationAngles(QuanStand ent, float swing, float amp, float age, float yaw, float pitch) {
 			head.rotateAngleZ = (float) (amp * Math.sin(swing));
 			leftarm.rotateAngleX = (float) (amp * Math.sin(swing));
 			rightarm.rotateAngleX = (float) (-amp * Math.sin(swing));
 		}
 
-		@Override
-		public void func_225598_a_(MatrixStack mat, IVertexBuilder ver, int i0, int i1, float f0, float f1, float f2,
-				float f3) {
-			body.func_228309_a_(mat, ver, i0, i1, f0, f1, f2, f3);
-			head.func_228309_a_(mat, ver, i0, i1, f0, f1, f2, f3);
-			tail.func_228309_a_(mat, ver, i0, i1, f0, f1, f2, f3);
-			leftarm.func_228309_a_(mat, ver, i0, i1, f0, f1, f2, f3);
-			rightarm.func_228309_a_(mat, ver, i0, i1, f0, f1, f2, f3);
-
-		}
-
 		private void add(ModelRenderer r, int u, int v, float x, float y, float z, int dx, int dy, int dz, float delta,
 				boolean mirror) {
-			r.func_217178_a("", x, y, z, dx, dy, dz, delta, u, v);
+			r.addBox("", x, y, z, dx, dy, dz, delta, u, v);
 		}
 
 		private void setRotationAngle(ModelRenderer r, float x, float y, float z) {
@@ -149,8 +149,8 @@ public class QuanStand extends MonsterEntity implements IMob, QuanMob {
 			Vec3d vec3d = parent.getMotion().mul(1, 0, 1);
 			LivingEntity tar = parent.getAttackTarget();
 			if (tar != null && parent.onGround && vec3d.length() < 0.01) {
-				double d1 = tar.func_226277_ct_() - parent.func_226277_ct_();
-				double d2 = tar.func_226281_cx_() - parent.func_226281_cx_();
+				double d1 = tar.getPosX() - parent.getPosX();
+				double d2 = tar.getPosZ() - parent.getPosZ();
 				parent.rotationYaw = (float) (-MathHelper.atan2(d1, d2) * 180 / Math.PI);
 			}
 			parent.renderYawOffset = parent.rotationYaw;

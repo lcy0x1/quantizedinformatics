@@ -2,16 +2,11 @@ package com.arthurlcy0x1.quantizedinformatics;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.nio.file.Files;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Random;
-import java.util.Set;
-
 import com.arthurlcy0x1.quantizedinformatics.utils.logic.Estimator;
 import com.arthurlcy0x1.quantizedinformatics.utils.logic.LogicDiagram;
 import com.arthurlcy0x1.quantizedinformatics.utils.logic.LogicGate;
+import com.google.gson.JsonObject;
 import com.arthurlcy0x1.quantizedinformatics.utils.logic.Estimator.EstiResult;
 import com.arthurlcy0x1.quantizedinformatics.utils.logic.Estimator.EstiType;
 import com.arthurlcy0x1.quantizedinformatics.utils.logic.LogicDiagram.GateContainer;
@@ -21,6 +16,13 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.gen.SimplexNoiseGenerator;
 
 public class Test {
+
+	public static class ClassTest {
+
+		public static void main() {
+		}
+
+	}
 
 	public static class LogicTest {
 
@@ -120,220 +122,14 @@ public class Test {
 
 	}
 
-	private static class AssetGen {
-
-		private static void write(String name, String cont) throws IOException {
-			File f = new File(name);
-			if (!f.exists())
-				f.createNewFile();
-			PrintStream ps = new PrintStream(f);
-			ps.println(cont);
-			ps.close();
-		}
-
-	}
-
-	private static class RecipeGen {
-
-		private static final String modid = "quantizedinformatics:";
-		private static final String path = "./src/main/resources/data/quantizedinformatics/recipes/";
-		private static final String shapeless = "{\"group\":\"^g\",\"type\": \"minecraft:crafting_shapeless\",\"ingredients\":[^i],\"result\":^r}";
-		private static final String shaped = "{\"group\":\"^g\",\"type\":\"minecraft:crafting_shaped\",\"pattern\":[\"###\",\"###\",\"###\"],\"key\":{\"#\":^i},\"result\":^r}";
-		private static final String single = "{\"item\":\"^i\"}";
-		private static final String multi = "{\"item\":\"^i\",\"count\":^n}";
-
-		private static final String b2i(String metal) {
-			String i = single.replaceAll("\\^i", metal + "_block");
-			String r = multi.replaceAll("\\^i", metal + "_ingot").replaceAll("\\^n", "9");
-			return shapeless.replaceAll("\\^g", modid + "block_to_ingot").replaceAll("\\^i", i).replaceAll("\\^r", r);
-		}
-
-		private static final void doIngot(String metal) throws IOException {
-			AssetGen.write(path + "z_autogen_" + metal + "_ingot_to_nugget.json", i2n(modid + metal));
-			AssetGen.write(path + "z_autogen_" + metal + "_nugget_to_ingot.json", n2i(modid + metal));
-			AssetGen.write(path + "z_autogen_" + metal + "_block_to_ingot.json", b2i(modid + metal));
-			AssetGen.write(path + "z_autogen_" + metal + "_ingot_to_block.json", i2b(modid + metal));
-		}
-
-		private static final void doOrePowder(String metal) throws IOException {
-			AssetGen.write(path + "z_autogen_" + metal + "_ore_powder_to_tiny.json", op2t(modid + metal));
-			AssetGen.write(path + "z_autogen_" + metal + "_ore_tiny_to_powder.json", ot2p(modid + metal));
-		}
-
-		private static final void doPowder(String metal) throws IOException {
-			AssetGen.write(path + "z_autogen_" + metal + "_powder_to_tiny.json", p2t(modid + metal));
-			AssetGen.write(path + "z_autogen_" + metal + "_tiny_to_powder.json", t2p(modid + metal));
-		}
-
-		private static final String i2b(String metal) {
-			String i = single.replaceAll("\\^i", metal + "_ingot");
-			String r = single.replaceAll("\\^i", metal + "_block");
-			return shaped.replaceAll("\\^g", modid + "ingot_to_block").replaceAll("\\^i", i).replaceAll("\\^r", r);
-		}
-
-		private static final String i2n(String metal) {
-			String i = single.replaceAll("\\^i", metal + "_ingot");
-			String r = multi.replaceAll("\\^i", metal + "_nugget").replaceAll("\\^n", "9");
-			return shapeless.replaceAll("\\^g", modid + "ingot_to_nugget").replaceAll("\\^i", i).replaceAll("\\^r", r);
-		}
-
-		private static final String n2i(String metal) {
-			String i = single.replaceAll("\\^i", metal + "_nugget");
-			String r = single.replaceAll("\\^i", metal + "_ingot");
-			return shaped.replaceAll("\\^g", modid + "nugget_to_ingot").replaceAll("\\^i", i).replaceAll("\\^r", r);
-		}
-
-		private static final String op2t(String metal) {
-			String i = single.replaceAll("\\^i", metal + "_ore_clean_powder");
-			String r = multi.replaceAll("\\^i", metal + "_ore_clean_powder_tiny").replaceAll("\\^n", "9");
-			return shapeless.replaceAll("\\^g", modid + "powder_to_tiny").replaceAll("\\^i", i).replaceAll("\\^r", r);
-		}
-
-		private static final String ot2p(String metal) {
-			String i = single.replaceAll("\\^i", metal + "_ore_clean_powder_tiny");
-			String r = single.replaceAll("\\^i", metal + "_ore_clean_powder");
-			return shaped.replaceAll("\\^g", modid + "tiny_to_powder").replaceAll("\\^i", i).replaceAll("\\^r", r);
-		}
-
-		private static final String p2t(String metal) {
-			String i = single.replaceAll("\\^i", metal + "_powder");
-			String r = multi.replaceAll("\\^i", metal + "_powder_tiny").replaceAll("\\^n", "9");
-			return shapeless.replaceAll("\\^g", modid + "powder_to_tiny").replaceAll("\\^i", i).replaceAll("\\^r", r);
-		}
-
-		private static final String t2p(String metal) {
-			String i = single.replaceAll("\\^i", metal + "_powder_tiny");
-			String r = single.replaceAll("\\^i", metal + "_powder");
-			return shaped.replaceAll("\\^g", modid + "tiny_to_powder").replaceAll("\\^i", i).replaceAll("\\^r", r);
-		}
-
-	}
-
-	public static void addGroup() throws IOException {
-		File f = new File("./src/main/resources/data/quantizedinformatics/recipes/");
-		Set<String> set = new HashSet<>();
-		for (File fi : f.listFiles())
-			if (fi.getName().endsWith(".json")) {
-				String name = fi.getName();
-				List<String> bs = Files.readAllLines(fi.toPath());
-				String type = bs.get(2).trim().substring(9);
-				set.add(type);
-				String group;
-				if (type.startsWith("m"))
-					if (name.startsWith("gate_red_empty"))
-						group = "gate_red_empty";
-					else if (name.startsWith("gate_mos_empty"))
-						group = "gate_mos_empty";
-					else if (name.startsWith("gate_red"))
-						group = "gate_red";
-					else if (name.startsWith("gate_mos"))
-						group = "gate_mos";
-					else if (name.startsWith("gate_imp"))
-						group = "gate_imp";
-					else if (name.startsWith("gate"))
-						group = "gate_other";
-					else if (name.startsWith("weapon"))
-						group = "weapon";
-					else if (name.startsWith("draft"))
-						group = "draft";
-					else if (name.startsWith("pipe"))
-						group = "pipe";
-					else if (name.startsWith("soul"))
-						group = "soul";
-					else if (name.startsWith("maxwell_electric") || name.startsWith("maxwell_magnetic"))
-						group = "maxwell";
-					else
-						group = null;
-				else
-					group = "none";
-				if (group == null)
-					group = "";
-				else
-					group = AbReg.MODID + ":" + group;
-				PrintStream ps = new PrintStream(fi);
-				ps.println(bs.get(0));
-
-				ps.println("\t\"group\": \"" + group + "\",");
-				for (int i = 2; i < bs.size(); i++)
-					ps.println(bs.get(i));
-				ps.close();
-			}
-		for (String s : set)
-			System.out.println(s);
-	}
-
-	public static void addRecipe() throws IOException {
-		String path = "./src/main/resources/data/quantizedinformatics/recipes/oxi_iron_";
-		String s0 = "{\n\t\"type\": \"quantizedinformatics:oxidation\",\n\t\"time\": 200,\n\t\"in_main\": {\n\t\"item\": \"iron_";
-		String s1 = "\"\n\t},\n\t\"out_main\": \"quantizedinformatics:elem_feo\",\n\t\"out_main_count\": ";
-		String s3 = "\n}";
-		String[] tools = { "pickaxe", "shovel", "axe", "hoe", "sword", "helmet", "chestplate", "leggings", "boots",
-				"horse_armor" };
-		int[] cost = { 3, 1, 3, 2, 2, 5, 8, 7, 4, 12 };
-		for (int i = 0; i < tools.length; i++) {
-			String cont = s0 + tools[i] + s1 + cost[i] + s3;
-			String name = path + tools[i] + ".json";
-			File f = new File(name);
-			if (!f.exists())
-				f.createNewFile();
-			PrintStream ps = new PrintStream(f);
-			ps.println(cont);
-			ps.close();
-		}
-	}
-
 	public static void check(String str) {
 		if (!new File("./metal_asset/" + str + ".png").exists())
 			System.out.println(str);
 	}
 
 	public static void main(String[] args) throws IOException {
-		String[] metal = { "iron", "gold", "copper", "silver", "tin", "lead", "tungsten", "aluminum", "nickel",
-				"cobalt", "manganese", "titanium", "platinum" };
-
-		String[] allv = { "bronze", "steel", "al_alloy" };
-		String[] al = { "bronze_c", "steel_c", "steel_n", "pb_alloy", "w_alloy", "ti_alloy", "co_alloy", "adv_alloy" };
-
-		int[] ingot = { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-		int[] powder = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12 };
-		int[] plate = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-		int[] wire = { 0, 1, 2, 3, 6, 7 };
-
-		String[] ore_metal = { "coal", "iron", "gold", "copper", "tin", "silver", "lead", "uranium", "aluminum",
-				"tungsten", "borax", "beryllium", "nickel", "manganese", "titanium" };
-
-		for (int i = 0; i < ore_metal.length; i++) {
-			String ore = ore_metal[i];
-			check(ore + "_ore_powder");
-			check(ore + "_ore_powder_clean");
-			check(ore + "_ore_powder_clean_tiny");
-			RecipeGen.doOrePowder(ore);
-		}
-		for (int i : ingot) {
-			check(metal[i] + "_ingot");
-			check(metal[i] + "_nugget");
-			RecipeGen.doIngot(metal[i]);
-		}
-		for (int i : powder) {
-			check(metal[i] + "_powder");
-			check(metal[i] + "_powder_tiny");
-			RecipeGen.doPowder(metal[i]);
-		}
-		for (int i : plate)
-			check(metal[i] + "_plate");
-
-		for (String ali : allv)
-			for (int i = 0; i < 4; i++) {
-				String alloy = ali + "_" + i;
-				RecipeGen.doIngot(alloy);
-			}
-
-		for (String alloy : al) {
-			RecipeGen.doIngot(alloy);
-		}
-		for (int i : wire)
-			check(metal[i] + "_wire");
-
+		JsonObject e = new JsonObject();
+		System.out.println(e);
 	}
 
 	public static void testEsti() {

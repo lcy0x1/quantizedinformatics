@@ -211,7 +211,7 @@ public class EntSpawn extends EntMachine {
 			double d0 = pos.getX() + 0.5 + (r.nextDouble() * 2 - 1) * range;
 			double d1 = pos.getY() + 0.5 + (r.nextDouble() * 2 - 1) * range;
 			double d2 = pos.getZ() + 0.5 + (r.nextDouble() * 2 - 1) * range;
-			if (!world.func_226664_a_(et.func_220328_a(d0, d1, d2))) {
+			if (!world.checkBlockCollision(et.func_220328_a(d0, d1, d2))) {
 				LogManager.getLogger().info("failed: collision");
 				return;
 			}
