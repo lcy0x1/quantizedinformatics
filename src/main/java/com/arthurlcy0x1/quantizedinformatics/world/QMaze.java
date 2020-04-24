@@ -128,7 +128,7 @@ public class QMaze extends Structure<NoFeatureConfig> {
 	}
 
 	public ConfiguredFeature<?, ?> reconfigure() {
-		return configure().func_227228_a_(Placement.NOPE.func_227446_a_(IPlacementConfig.NO_PLACEMENT_CONFIG));
+		return configure().withPlacement(Placement.NOPE.configure(IPlacementConfig.NO_PLACEMENT_CONFIG));
 	}
 
 }

@@ -61,7 +61,7 @@ public class QuantumCG extends ChunkGenerator<QuantumGS> {
 	}
 
 	@Override
-	public void func_225551_a_(WorldGenRegion p_225551_1_, IChunk p_225551_2_) {
+	public void generateSurface(WorldGenRegion p_225551_1_, IChunk p_225551_2_) {
 	}
 
 	@Override

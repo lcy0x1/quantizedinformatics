@@ -135,7 +135,7 @@ public abstract class EntityCannon extends ShootableItem implements Telescope, I
 		}
 
 		@Override
-		protected Item func_213885_i() {
+		protected Item getDefaultItem() {
 			return Registrar.I_FOGBALL;
 		}
 
@@ -211,7 +211,7 @@ public abstract class EntityCannon extends ShootableItem implements Telescope, I
 		}
 
 		@Override
-		protected Item func_213885_i() {
+		protected Item getDefaultItem() {
 			return Registrar.I_ITEMPICK;
 		}
 
@@ -295,9 +295,9 @@ public abstract class EntityCannon extends ShootableItem implements Telescope, I
 		public void explode() {
 			if (getRadius() <= 0)
 				return;
-			double x = func_226277_ct_();
-			double y = func_226283_e_(0.0625);
-			double z = func_226281_cx_();
+			double x = getPosX();
+			double y = getPosYHeight(0.625);
+			double z = getPosZ();
 			world.createExplosion(this, getSource(), x, y, z, getRadius(), false, Explosion.Mode.BREAK);
 		}
 
@@ -329,32 +329,32 @@ public abstract class EntityCannon extends ShootableItem implements Telescope, I
 		}
 
 		@Override
-		public void func_225623_a_(SmartTNT p_225623_1_, float p_225623_2_, float p_225623_3_, MatrixStack p_225623_4_,
+		@SuppressWarnings("deprecation")
+		public ResourceLocation getEntityTexture(SmartTNT entity) {
+			return AtlasTexture.LOCATION_BLOCKS_TEXTURE;
+		}
+
+		@Override
+		public void render(SmartTNT p_225623_1_, float p_225623_2_, float p_225623_3_, MatrixStack p_225623_4_,
 				IRenderTypeBuffer p_225623_5_, int p_225623_6_) {
-			p_225623_4_.func_227860_a_();
-			p_225623_4_.func_227861_a_(0.0D, 0.5D, 0.0D);
+			p_225623_4_.push();
+			p_225623_4_.translate(0.0D, 0.5D, 0.0D);
 			if (p_225623_1_.getFuse() - p_225623_3_ + 1.0F < 10.0F) {
 				float f = 1.0F - (p_225623_1_.getFuse() - p_225623_3_ + 1.0F) / 10.0F;
 				f = MathHelper.clamp(f, 0.0F, 1.0F);
 				f = f * f;
 				f = f * f;
 				float f1 = 1.0F + f * 0.3F;
-				p_225623_4_.func_227862_a_(f1, f1, f1);
+				p_225623_4_.scale(f1, f1, f1);
 			}
 
-			p_225623_4_.func_227863_a_(Vector3f.field_229181_d_.func_229187_a_(-90.0F));
-			p_225623_4_.func_227861_a_(-0.5D, -0.5D, 0.5D);
-			p_225623_4_.func_227863_a_(Vector3f.field_229181_d_.func_229187_a_(90.0F));
-			TNTMinecartRenderer.func_229127_a_(Blocks.TNT.getDefaultState(), p_225623_4_, p_225623_5_, p_225623_6_,
+			p_225623_4_.rotate(Vector3f.YP.rotationDegrees(-90.0F));
+			p_225623_4_.translate(-0.5D, -0.5D, 0.5D);
+			p_225623_4_.rotate(Vector3f.YP.rotationDegrees(90.0F));
+			TNTMinecartRenderer.renderTntFlash(Blocks.TNT.getDefaultState(), p_225623_4_, p_225623_5_, p_225623_6_,
 					p_225623_1_.getFuse() / 5 % 2 == 0);
-			p_225623_4_.func_227865_b_();
-			super.func_225623_a_(p_225623_1_, p_225623_2_, p_225623_3_, p_225623_4_, p_225623_5_, p_225623_6_);
-		}
-
-		@Override
-		@SuppressWarnings("deprecation")
-		public ResourceLocation getEntityTexture(SmartTNT entity) {
-			return AtlasTexture.LOCATION_BLOCKS_TEXTURE;
+			p_225623_4_.pop();
+			super.render(p_225623_1_, p_225623_2_, p_225623_3_, p_225623_4_, p_225623_5_, p_225623_6_);
 		}
 	}
 
@@ -483,15 +483,15 @@ public abstract class EntityCannon extends ShootableItem implements Telescope, I
 	public static final int DAMAGE = MaxwellItem.VALUE * 2;
 
 	private static double getPlX(PlayerEntity pl) {
-		return pl.func_226277_ct_();
+		return pl.getPosX();
 	}
 
 	private static double getPlY(PlayerEntity pl) {
-		return pl.func_226280_cw_() - 0.1;
+		return pl.getPosYEye() - 0.1;
 	}
 
 	private static double getPlZ(PlayerEntity pl) {
-		return pl.func_226281_cx_();
+		return pl.getPosZ();
 	}
 
 	private static Vec3d getRayTerm(Vec3d pos, float pitch, float yaw, double reach) {
@@ -590,7 +590,7 @@ public abstract class EntityCannon extends ShootableItem implements Telescope, I
 		float f2 = MathHelper.cos(yaw * ((float) Math.PI / 180F)) * MathHelper.cos(pitch * ((float) Math.PI / 180F));
 		Vec3d vec3d = new Vec3d(f, f1, f2).normalize().scale(velo);
 		ent.setMotion(vec3d);
-		float f3 = MathHelper.sqrt(Entity.func_213296_b(vec3d));
+		float f3 = MathHelper.sqrt(Entity.horizontalMag(vec3d));
 		ent.rotationYaw = (float) (MathHelper.atan2(vec3d.x, vec3d.z) * (180F / (float) Math.PI));
 		ent.rotationPitch = (float) (MathHelper.atan2(vec3d.y, f3) * (180F / (float) Math.PI));
 		ent.prevRotationYaw = ent.rotationYaw;
@@ -634,9 +634,9 @@ public abstract class EntityCannon extends ShootableItem implements Telescope, I
 		boolean flag = !pl.findAmmo(is).isEmpty() || pl.abilities.isCreativeMode;
 		if (flag) {
 			pl.setActiveHand(hand);
-			return ActionResult.func_226249_b_(is);
+			return ActionResult.resultSuccess(is);
 		}
-		return ActionResult.func_226251_d_(is);
+		return ActionResult.resultFail(is);
 	}
 
 	@Override

@@ -266,12 +266,6 @@ public class BaseBlock extends Block {
 	}
 
 	@Override
-	public final ActionResultType func_225533_a_(BlockState bs, World w, BlockPos pos, PlayerEntity pl, Hand h,
-			BlockRayTraceResult r) {
-		return onClick(bs, w, pos, pl, h);
-	}
-
-	@Override
 	public final int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
 		if (impl.ite == null)
 			return 0;
@@ -306,6 +300,12 @@ public class BaseBlock extends Block {
 		if (impl.rotmir != null)
 			return impl.rotmir.mirror(state, mirrorIn);
 		return state;
+	}
+
+	@Override
+	public final ActionResultType onBlockActivated(BlockState bs, World w, BlockPos pos, PlayerEntity pl, Hand h,
+			BlockRayTraceResult r) {
+		return onClick(bs, w, pos, pl, h);
 	}
 
 	public final ActionResultType onClick(BlockState bs, World w, BlockPos pos, PlayerEntity pl, Hand h) {

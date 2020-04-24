@@ -42,6 +42,10 @@ public class QuanFluid extends ForgeRegistryEntry<QuanFluid> {
 
 	public static final QuanFluid OIL_GAS = reg("oil_gas");
 
+	public static int getID(QuanFluid fluid) {
+		return -1;// TODO
+	}
+
 	private static QuanFluid reg(String str) {
 		return AbReg.addName(new QuanFluid(), str);
 	}

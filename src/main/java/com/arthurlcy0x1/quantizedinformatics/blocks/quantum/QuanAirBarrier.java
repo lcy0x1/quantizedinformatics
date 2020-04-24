@@ -24,7 +24,14 @@ public class QuanAirBarrier extends QuanAir {
 	}
 
 	@Override
-	public void func_225534_a_(BlockState bs, ServerWorld w, BlockPos pos, Random r) {
+	public void onRep(World w, BlockState cur, BlockState tar, BlockPos pos) {
+		if (tar.getBlock() == Registrar.BQ_BARAIR || tar.getBlock() == Registrar.BQ_BARRIER)
+			return;
+		w.setBlockState(pos, Registrar.BQ_BARRIER.getDefaultState(), 50);
+	}
+
+	@Override
+	public void randomTick(BlockState bs, ServerWorld w, BlockPos pos, Random r) {
 		Block b0 = w.getBlockState(pos.up()).getBlock();
 		Block b1 = w.getBlockState(pos.down()).getBlock();
 		if (isValid(b0) || isValid(b1)) {
@@ -52,13 +59,6 @@ public class QuanAirBarrier extends QuanAir {
 		}
 		for (BlockPos pi : mar)
 			w.getPendingBlockTicks().scheduleTick(pi, this, w.getRandom().nextInt(30));
-	}
-
-	@Override
-	public void onRep(World w, BlockState cur, BlockState tar, BlockPos pos) {
-		if (tar.getBlock() == Registrar.BQ_BARAIR || tar.getBlock() == Registrar.BQ_BARRIER)
-			return;
-		w.setBlockState(pos, Registrar.BQ_BARRIER.getDefaultState(), 50);
 	}
 
 	private boolean isValid(Block b) {

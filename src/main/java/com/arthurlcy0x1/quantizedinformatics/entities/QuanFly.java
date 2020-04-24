@@ -98,29 +98,29 @@ public class QuanFly extends FlyingEntity implements IMob, QuanMob {
 		}
 
 		@Override
-		public void func_225597_a_(QuanFly ent, float swing, float amp, float age, float yaw, float pitch) {
+		public void render(MatrixStack mat, IVertexBuilder ver, int i0, int i1, float f0, float f1, float f2,
+				float f3) {
+			bone.render(mat, ver, i0, i1, f0, f1, f2, f3);
+			tail.render(mat, ver, i0, i1, f0, f1, f2, f3);
+			feet1.render(mat, ver, i0, i1, f0, f1, f2, f3);
+			feet2.render(mat, ver, i0, i1, f0, f1, f2, f3);
+			wings1.render(mat, ver, i0, i1, f0, f1, f2, f3);
+			wings2.render(mat, ver, i0, i1, f0, f1, f2, f3);
+			bone2.render(mat, ver, i0, i1, f0, f1, f2, f3);
+
+		}
+
+		@Override
+		public void setRotationAngles(QuanFly ent, float swing, float amp, float age, float yaw, float pitch) {
 			double freq = 1;
 			wings1.rotateAngleZ = (float) (-0.4363f - 0.1f * Math.sin(age * freq));
 			wings2.rotateAngleZ = (float) (0.4363f + 0.1f * Math.sin(age * freq));
 
 		}
 
-		@Override
-		public void func_225598_a_(MatrixStack mat, IVertexBuilder ver, int i0, int i1, float f0, float f1, float f2,
-				float f3) {
-			bone.func_228309_a_(mat, ver, i0, i1, f0, f1, f2, f3);
-			tail.func_228309_a_(mat, ver, i0, i1, f0, f1, f2, f3);
-			feet1.func_228309_a_(mat, ver, i0, i1, f0, f1, f2, f3);
-			feet2.func_228309_a_(mat, ver, i0, i1, f0, f1, f2, f3);
-			wings1.func_228309_a_(mat, ver, i0, i1, f0, f1, f2, f3);
-			wings2.func_228309_a_(mat, ver, i0, i1, f0, f1, f2, f3);
-			bone2.func_228309_a_(mat, ver, i0, i1, f0, f1, f2, f3);
-
-		}
-
 		private void add(ModelRenderer r, int u, int v, float x, float y, float z, int dx, int dy, int dz, float delta,
 				boolean mirror) {
-			r.func_217178_a("", x, y, z, dx, dy, dz, delta, u, v);
+			r.addBox("", x, y, z, dx, dy, dz, delta, u, v);
 		}
 
 		private void setRotationAngle(ModelRenderer r, float x, float y, float z) {
@@ -169,8 +169,8 @@ public class QuanFly extends FlyingEntity implements IMob, QuanMob {
 			} else {
 				LivingEntity livingentity = parent.getAttackTarget();
 				if (livingentity.getDistanceSq(parent) < 4096.0D) {
-					double d1 = livingentity.func_226277_ct_() - parent.func_226277_ct_();
-					double d2 = livingentity.func_226281_cx_() - parent.func_226281_cx_();
+					double d1 = livingentity.getPosX() - parent.getPosX();
+					double d2 = livingentity.getPosZ() - parent.getPosZ();
 					parent.rotationYaw = (float) (-MathHelper.atan2(d1, d2) * 180 / Math.PI);
 					parent.renderYawOffset = parent.rotationYaw;
 				}
@@ -194,8 +194,7 @@ public class QuanFly extends FlyingEntity implements IMob, QuanMob {
 			if (action == MovementController.Action.MOVE_TO) {
 				if (courseChangeCooldown-- <= 0) {
 					courseChangeCooldown += parent.getRNG().nextInt(5) + 2;
-					Vec3d vec3d = new Vec3d(posX - parent.func_226277_ct_(), posY - parent.func_226278_cu_(),
-							posZ - parent.func_226281_cx_());
+					Vec3d vec3d = new Vec3d(posX - parent.getPosX(), posY - parent.getPosY(), posZ - parent.getPosZ());
 					double d0 = vec3d.length();
 					vec3d = vec3d.normalize();
 					if (func_220673_a(vec3d, MathHelper.ceil(d0)))
@@ -211,7 +210,7 @@ public class QuanFly extends FlyingEntity implements IMob, QuanMob {
 			AxisAlignedBB aabb = parent.getBoundingBox();
 			for (int i = 1; i < len; ++i) {
 				aabb = aabb.offset(pos);
-				if (!parent.world.func_226665_a__(parent, aabb))
+				if (!parent.world.hasNoCollisions(parent, aabb))
 					return false;
 			}
 			return true;
@@ -255,9 +254,9 @@ public class QuanFly extends FlyingEntity implements IMob, QuanMob {
 			if (!ctrl.isUpdating()) {
 				return true;
 			} else {
-				double d0 = ctrl.getX() - parent.func_226277_ct_();
-				double d1 = ctrl.getY() - parent.func_226278_cu_();
-				double d2 = ctrl.getZ() - parent.func_226281_cx_();
+				double d0 = ctrl.getX() - parent.getPosX();
+				double d1 = ctrl.getY() - parent.getPosY();
+				double d2 = ctrl.getZ() - parent.getPosZ();
 				double d3 = d0 * d0 + d1 * d1 + d2 * d2;
 				return d3 < 1 || d3 > 3600;
 			}
@@ -277,9 +276,9 @@ public class QuanFly extends FlyingEntity implements IMob, QuanMob {
 					vec = vec.subtract(p0.normalize());
 				vec = vec.normalize();
 			}
-			double d0 = parent.func_226277_ct_() + vec.getX() * 10;
-			double d1 = parent.func_226278_cu_() + vec.getY() * 10;
-			double d2 = parent.func_226281_cx_() + vec.getZ() * 10;
+			double d0 = parent.getPosX() + vec.getX() * 10;
+			double d1 = parent.getPosY() + vec.getY() * 10;
+			double d2 = parent.getPosZ() + vec.getZ() * 10;
 			parent.getMoveHelper().setMoveTo(d0, d1, d2, 1);
 		}
 	}
@@ -315,9 +314,9 @@ public class QuanFly extends FlyingEntity implements IMob, QuanMob {
 				++this.attackTimer;
 				if (this.attackTimer == 20) {
 					Vec3d vec3d = parent.getLook(1.0F);
-					double d2 = parent.func_226277_ct_() + vec3d.x * 1;
-					double d3 = parent.func_226283_e_(0.5D);
-					double d4 = parent.func_226281_cx_() + vec3d.z * 1;
+					double d2 = parent.getPosX() + vec3d.x * 1;
+					double d3 = parent.getPosYHeight(0.5);
+					double d4 = parent.getPosZ() + vec3d.z * 1;
 					TNTEntity te = new TNTEntity(world, d2, d3, d4, parent);
 					Vec3d p0 = te.getPositionVec();
 					Vec3d p1 = pl.getPositionVec();

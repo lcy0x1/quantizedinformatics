@@ -377,7 +377,7 @@ public class Registrar extends AbReg {
 		Item.Properties p = new Item.Properties();
 		p.group(ITEM_GROUP);
 		p.maxStackSize(1);
-		EquipmentSlotType type = EquipmentSlotType.func_220318_a(EquipmentSlotType.Group.ARMOR, i);
+		EquipmentSlotType type = EquipmentSlotType.fromSlotTypeAndIndex(EquipmentSlotType.Group.ARMOR, i);
 		return addName(new MaxArmor(p, type, mat), str);
 	}
 

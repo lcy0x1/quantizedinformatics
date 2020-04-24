@@ -31,11 +31,11 @@ public class WorldGen {
 
 		@Override
 		public boolean place(IWorld w, ChunkGenerator<?> g, Random rand, BlockPos pos, OreFeatureConfig config) {
-			if (!config.target.func_214738_b().test(w.getBlockState(pos)))
+			if (!config.target.getTargetBlockPredicate().test(w.getBlockState(pos)))
 				return false;
 			for (Direction dir : Direction.values()) {
 				BlockPos p = pos.offset(dir);
-				if (!config.target.func_214738_b().test(w.getBlockState(p)))
+				if (!config.target.getTargetBlockPredicate().test(w.getBlockState(p)))
 					return false;
 			}
 			w.setBlockState(pos, config.state, 2);
@@ -48,8 +48,8 @@ public class WorldGen {
 		FillerBlockType type = FillerBlockType.NATURAL_STONE;
 		OreFeatureConfig ofc = new OreFeatureConfig(type, bs, size);
 		CountRangeConfig crc = new CountRangeConfig(abu, 0, 0, h);
-		ConfiguredPlacement<CountRangeConfig> cp = Placement.COUNT_RANGE.func_227446_a_(crc);
-		ConfiguredFeature<?, ?> cf = f.func_225566_b_(ofc).func_227228_a_(cp);
+		ConfiguredPlacement<CountRangeConfig> cp = Placement.COUNT_RANGE.configure(crc);
+		ConfiguredFeature<?, ?> cf = f.withConfiguration(ofc).withPlacement(cp);
 
 		for (BiomeType bt : BiomeType.values())
 			for (BiomeEntry be : BiomeManager.getBiomes(bt))
