@@ -10,3 +10,4 @@ logs/
 run/
 .idea/
 .settings
+.vscode/
