@@ -4,14 +4,14 @@
 
 这个mod的主要内容包括:
 - [3D 合成 & 高级熔炉 & 自动合成](#合成)
-- [逻辑电路和逻辑门图纸](#logic-diagrams)
-- [物品管道系统](#item_pipe)
+- [逻辑电路和逻辑门图纸](#逻辑门图纸)
+- [物品管道系统](#物品管道)
 
 开发中:  
 - ALU（算术逻辑单元）与RAM（内存/随机存储器）
 - 方块机器: 移动器 & 破坏器 & 放置器
 - 高级材料: 麦克斯韦振荡器
-- [实体加农炮](#entity-cannon)
+- [实体加农炮](#实体加农炮)
 - 灵魂收集器
 - 实体机器: 探测器 & 击退者 & 拉取者 & 磨床 & 治愈者
 
@@ -27,23 +27,23 @@
 
 配方记录机让你可以记录一个配方。配方将用于自动合成台。自动合成台从左边输入而从右边输出。*你还可以插入ALU（算术逻辑单元）为其加速。（未完成）*
 
-## Logic Diagrams
+## 逻辑门图纸
 
-There are 3 types of logic gate diagrams: Redstone, CMOS, and implemented. Redstone drafts are made with quantum fogs and redstones. It follows the redstone logic. CMOS diagram are made with quantum fogs. It follows real-world CMOS logic. It takes some other starter material, but it only consumes quantum fog for mass production. One redstone diagram and one CMOS diagram can make an implemented diagram, which is ready to use in circuits.
+逻辑门图纸有三种类型: 红石、CMOS（半导体/互补金属氧化物半导体）与蓝图. 红石图纸用量子云与红石制作，遵循红石逻辑。 CMOS图纸由量子云制作，遵循现实中的CMOS半导体逻辑电路逻辑。它们还需要一些其它的基础物资来开始生产，一但量产则只需要量子云作为材料。一个红石图纸和一个CMOS图纸可合成一个用于电路中的蓝图。
 
-The logic circuit system has 6 main component: wires, Gate Container, Terminal, External Input, External Output, and Monitor. Each wire network (defined as an interconnected set of wires) has 16 channels. For small circuits, all elements can share the same wire network and adjust the input and output by switching channels. For large circuits, the input and output network might need to be separated. The input and output should be connected to the terminal by crafting frames. If there are more than one terminal in a system, it will stop working. Components not connected to terminal will have its state fixed.
+逻辑电路系统有6个主要组成部分：导线、门控制器、终端、输入、输出和监视器。每条导线有16个频道。对于小型电路，所有元件可以共用同一条导线，并通过切换通道来调整输入和输出。对于大型电路，输入输出网络可能需要分离。输入和输出应通过合成框架连接到终端。如果系统中有多个终端，它将停止工作。未连接到终端的组件将保留其默认状态。
 
-There are 4 modes for each channel: high, low, floating, and error. For logic gates, if one of the input is floating or error, all outputs will be floating or error. If two different output exists in the same channel, it will be conflicting. Potential error is shown as red in channel ID. Definite Floating is shown as yellow in channel ID. For gates, invalid input and output channel are shown as red. To switch channel for Input/Output/Monitor, just click the corresponding channel ID. Terminal can set output for all channels at the same time. Click and type 'h' for high, 'l' for low, and ' ' for floating. The channel IDs are shown from left to right, top to bottom. In terminal, if a slot shows the ID number then it is floating. Otherwise it is either high or low as it shows. For gates, the display is a little bit different. The gates are listed from top to bottom, and then from left to right for outputs and right to left for inputs, in the order of the inserted diagram's input and output. Click and type '0'-'9','a'-'f' for  channels, 'h' for high, 'l' for low (high and low are only available for inputs), and ' ' for floating (only availablee for output). Each Gate has 1 tick delay. Thus, if the circuit has loops, it can behave differently based on the initial condition. The input accepts redstone signal and the output produces redstone signal.
+每个频道有 4 种模式：高（1）、低（0）、浮点和错误。对于逻辑门，如果其中一个输入是浮点或错误，则所有输出都将是浮点或错误。若同一通道中存在两个不同的输出则会冲突。错误在通道 ID 中显示为红色。浮点在通道 ID 中显示为黄色。对于逻辑门，无效的输入和输出通道显示为红色。要切换输入/输出/监视器的通道，只需单击相应的通道 ID 即可。终端可以同时为所有通道设置输出。单击并输入“h”表示1，“l”表示0，什么都不输入表示浮点。通道指示从左到右、从上到下显示。在终端中，如果插槽显示 ID 号，则该插槽是浮点。否则，它要么显示1要么显示0。对于门，显示有点不同。门从上到下、从左到右排列输出，从右到左排列输入，按插入图的输入和输出顺序排列。单击可以十六进制（0-F）表示使用的频道。“h”表示1，“l”表示0（1和0仅适用于输入），“”（什么也不输入）表示浮点（仅适用于输出）。每个门有 1 tick的延迟。因此，若电路有回路，则其行为可能会根据初始条件而有所不同。电路也可输入输出红石信号。
 
-## Item Pipe
+## 物品管道
 
-There are 5 components in Item System: primary pipe, secondary pipe, system center, primary head, and secondary head. The system center detects and powers the entire system. If there are more than 1 center in a pipe network, both will stop working. Primary pipe network connects the center and all primary heads. Primary heads decides what item to insert or extract. It can connect one container or multiple secondary headers through secondary pipe network, which each connects one container. If there are more than one primary header connected in the same secondary pipe network, both primary heads will stop working.
+物品系统中有 5 个部分：主管道、次管道、控制中心、主接头和次接头。控制中心检测整个系统并接受电能。如果管网中有超过 1 个控制中心，则它们将停止工作。主管道网络连接控制中心和所有主接头。主接头能自定义输入或输出的物品。次管道网络连接一个容器或多个次接头，每个网络连接一个容器。如果一个次管道网络中连接了多个主接头，则这些主接头将停止工作。
 
 The priority of item handling is sorted by the distance from the primary heads to the center, and then from secondary heads to the primary head. The transportation speed is defined as follow: Each Extracting primary or secondary head connected to a container has a speed: it has a default value of 1 per second, and can be significantly increased by using ALU and RAM in the center (TBD). Thus, more heads means higher speed. The inserting heads does not decide the speed. Items extracted from a container cannot be inserted into the same container unless it is sided: which means it cannot be inserted into the same slot it is taken out. By using this mechanism, you can set insertion and extraction of the same item in the chest head, so that the chest will have a lower priority: item can be inserted, but if other containers demand this item, it can be extracted.
 
 The craftin of logic diagrams are made extremely complex and tedious in purpose. My intention is that players should utilize the auto crafter and item system when making diagrams.
 
-## Entity Cannon
+## 实体加农炮
 
 There are 5 Entity Cannons: TNT Cannon, Ender Pearl Cannon, Potion Cannon, Quantum Ball Cannon, and Item Picker Cannon.
 
