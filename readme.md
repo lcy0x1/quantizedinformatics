@@ -1,4 +1,4 @@
-[Get the dev version](https://github.com/lcy0x1/quantizedinformatics/blob/dev/autobuilded.jar)
+[![Dev version](https://img.shields.io/badge/Dev%20Version-Download-green.svg)](https://github.com/lcy0x1/quantizedinformatics/blob/dev/autobuilded.jar)
 
 This MOD is intented to make logic circuits simpler and add flexble item automation to Minecraft. The redstone logic circuits are complicated and vulnerable to chunk load events. The hopper-dispensor item transportation system is extremely resource comsuming and complicated. The logic and item system in Quantized Informatics can help players to organize their production lines and reduce the pressure on the servers.
 
